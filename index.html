@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>班表功能選單</title>
+  <style>
+    /* 基本背景與置中 */
+    body {
+      background-color: #fdf6fd;
+      font-family: "Microsoft JhengHei", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    /* 容器垂直排列，行動裝置可縮放 */
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    /* 通用按鈕樣式 */
+    .btn {
+      display: block;
+      background-color: #f7f3f8;
+      color: #5d3a91;
+      text-decoration: none;
+      border-radius: 30px;
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      box-shadow: 0 2px 6px rgba(130, 106, 174, 0.2);
+      text-align: center;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: #e9def4;
+      transform: scale(1.02);
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    /* 手機小尺寸優化 */
+    @media (max-width: 480px) {
+      .btn {
+        font-size: 15px;
+        padding: 12px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="button-container">
+    <a href="shift_schedule.html" class="btn">班表查詢</a>
+    <a href="shift_today.html" class="btn">本日班表</a>
+    <a href="check_time_off.html" class="btn">休假查詢</a>
+    <a href="shift_stats.html" class="btn">排班統計</a>
+  </div>
+</body>
+</html>
