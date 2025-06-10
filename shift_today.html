@@ -8,30 +8,37 @@
     body {
       background-color: #f8f9fa;
       font-family: "Microsoft JhengHei", sans-serif;
-      padding: 20px;
+      padding: 10px;
       margin: 0;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.5em;
     }
 
     .schedule-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 40px;
+      gap: 20px;
     }
 
     .column {
+      flex: 1 1 300px;
+      max-width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      width: 160px;
+      gap: 10px;
     }
 
     .shift-row {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      align-items: stretch;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     }
 
     .shift-label {
@@ -40,8 +47,8 @@
       text-align: center;
       font-weight: bold;
       color: #fff;
-      border-radius: 8px 0 0 8px;
       white-space: nowrap;
+      min-width: 40%;
     }
 
     .staff-name {
@@ -49,20 +56,34 @@
       padding: 8px;
       background-color: #eee;
       text-align: center;
-      border-radius: 0 8px 8px 0;
       white-space: nowrap;
     }
 
-    /* 色彩對應樣式（可再擴增） */
+    /* 色彩對應樣式 */
     .red { background-color: #c00000; }
     .green { background-color: #275317; }
     .blue { background-color: #163E64; }
-	.middle-blue { background-color: #215F9A; }
+    .middle-blue { background-color: #215F9A; }
     .light-blue { background-color: #4E95D9; }
     .purple { background-color: #78206E; }
     .middle-green { background-color: #3B7D23; }
     .blue-green { background-color: #0E9292; }
     .gray { background-color: #595959; }
+
+    @media (max-width: 480px) {
+      .shift-label, .staff-name {
+        font-size: 14px;
+        padding: 6px;
+      }
+
+      .column {
+        flex: 1 1 100%;
+      }
+
+      .schedule-grid {
+        gap: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -72,7 +93,8 @@
   <div class="schedule-grid">
     <!-- 左側班別 -->
     <div class="column">
-      <div class="shift-row">
+      <!-- 這裡放你的左側班別 shift-row -->
+	    <div class="shift-row">
         <div class="shift-label red">股　長</div>
         <div class="staff-name">－</div>
       </div>
@@ -132,12 +154,13 @@
         <div class="shift-label gray">出口接送</div>
         <div class="staff-name">－</div>
       </div>
-      <!-- 可持續新增其他班別 -->
+
     </div>
 
     <!-- 右側班別 -->
     <div class="column">
-      <div class="shift-row">
+      <!-- 這裡放你的右側班別 shift-row -->
+	  <div class="shift-row">
         <div class="shift-label blue">中班專員</div>
         <div class="staff-name">－</div>
       </div>
@@ -196,8 +219,7 @@
 	   <div class="shift-row">
         <div class="shift-label gray">大夜班 3</div>
         <div class="staff-name">－</div>
-      </div>
-      <!-- 可持續新增其他班別 -->
+
     </div>
   </div>
 
