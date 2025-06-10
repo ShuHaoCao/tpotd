@@ -98,7 +98,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>📅 本日班表</h2>
+    <h2 id="todayTitle">📅 本日班表</h2>
 
     <div class="schedule-grid">
       <!-- 左欄 -->
@@ -140,5 +140,17 @@
       </div>
     </div>
   </div>
+  <script>
+  // 取得今天的日期
+  const today = new Date();
+
+  // 格式化成 yyyy/mm/dd
+  const formatted = today.getFullYear() + '/' +
+                    String(today.getMonth() + 1).padStart(2, '0') + '/' +
+                    String(today.getDate()).padStart(2, '0');
+
+  // 將文字塞進 h2 標題
+  document.getElementById("todayTitle").textContent = `📅 本日班表（${formatted}）`;
+</script>
 </body>
 </html>
