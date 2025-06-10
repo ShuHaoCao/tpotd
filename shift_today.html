@@ -12,6 +12,11 @@
       margin: 0;
     }
 
+    .container {
+      max-width: 80%;
+      margin: 0 auto;
+    }
+
     h2 {
       text-align: center;
       margin-bottom: 20px;
@@ -84,52 +89,56 @@
       .column {
         flex: 1 1 100%;
       }
+
+      .container {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h2>📅 本日班表</h2>
 
-  <h2>📅 本日班表</h2>
+    <div class="schedule-grid">
+      <!-- 左欄 -->
+      <div class="column">
+        <div class="shift-row"><div class="shift-label red">股　長</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label green">早班專員</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label blue">內檯經辦</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label green">空袋櫃</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label green">早　班 1</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label green">早　班 2</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label green">早　班 3</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label blue-green">早　班 4</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label blue-green">新　營 1</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label blue-green">新　營 2</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label purple">自運甲線</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label purple">自運乙線</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label blue">嘉　義 B</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label gray">進口接送</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label gray">出口接送</div><div class="staff-name">－</div></div>
+      </div>
 
-  <div class="schedule-grid">
-    <!-- 左欄 -->
-    <div class="column">
-      <div class="shift-row"><div class="shift-label red">股　長</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label green">早班專員</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label blue">內檯經辦</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label green">空袋櫃</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label green">早　班 1</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label green">早　班 2</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label green">早　班 3</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label blue-green">早　班 4</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label blue-green">新　營 1</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label blue-green">新　營 2</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label purple">自運甲線</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label purple">自運乙線</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label blue">嘉　義 B</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label gray">進口接送</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label gray">出口接送</div><div class="staff-name">－</div></div>
-    </div>
-
-    <!-- 右欄 -->
-    <div class="column">
-      <div class="shift-row"><div class="shift-label blue">中班專員</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label light-blue">中　班 1</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label middle-blue">中　班 2</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label middle-blue">中　班 3</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label middle-blue">中　班 4</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label middle-blue">中　班 5</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label middle-blue">中　班 6</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label blue">中　班 7</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label light-blue">中　班 8</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label middle-blue">中　班 9</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label light-blue">中　班10</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label light-blue">中　班11</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label light-blue">中　班12</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label gray">大夜班 1</div><div class="staff-name">－</div></div>
-      <div class="shift-row"><div class="shift-label gray">大夜班 3</div><div class="staff-name">－</div></div>
+      <!-- 右欄 -->
+      <div class="column">
+        <div class="shift-row"><div class="shift-label blue">中班專員</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label light-blue">中　班 1</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label middle-blue">中　班 2</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label middle-blue">中　班 3</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label middle-blue">中　班 4</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label middle-blue">中　班 5</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label middle-blue">中　班 6</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label blue">中　班 7</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label light-blue">中　班 8</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label middle-blue">中　班 9</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label light-blue">中　班10</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label light-blue">中　班11</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label light-blue">中　班12</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label gray">大夜班 1</div><div class="staff-name">－</div></div>
+        <div class="shift-row"><div class="shift-label gray">大夜班 3</div><div class="staff-name">－</div></div>
+      </div>
     </div>
   </div>
-
 </body>
 </html>
