@@ -13,8 +13,9 @@
     }
 
     .container {
-      max-width: 80%;
       margin: 0 auto;
+      padding-left: 10%;
+      padding-right: 10%;
     }
 
     h2 {
@@ -65,7 +66,6 @@
       white-space: nowrap;
     }
 
-    /* 色彩樣式 */
     .red { background-color: #c00000; }
     .green { background-color: #275317; }
     .blue { background-color: #163E64; }
@@ -81,17 +81,15 @@
         font-size: 14px;
         padding: 6px;
       }
-
       .schedule-grid {
         gap: 12px;
       }
-
       .column {
         flex: 1 1 100%;
       }
-
       .container {
-        width: 90%;
+        padding-left: 5%;
+        padding-right: 5%;
       }
     }
   </style>
@@ -140,17 +138,37 @@
       </div>
     </div>
   </div>
+
   <script>
-  // 取得今天的日期
-  const today = new Date();
+    async function loadSchedule() {
+      const today = new Date();
+      const todayStr = today.getFullYear() + '-' +
+                      String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                      String(today.getDate()).padStart(2, '0');
+      const displayDate = todayStr.replace(/-/g, '/');
+      document.getElementById("todayTitle").textContent = `📅 本日班表（${displayDate}）`;
 
-  // 格式化成 yyyy/mm/dd
-  const formatted = today.getFullYear() + '/' +
-                    String(today.getMonth() + 1).padStart(2, '0') + '/' +
-                    String(today.getDate()).padStart(2, '0');
+      try {
+        const response = await fetch('schedule_data.json');
+        const data = await response.json();
+        const todayData = data[todayStr];
+        if (!todayData) {
+          alert("找不到今天的班表資料。");
+          return;
+        }
 
-  // 將文字塞進 h2 標題
-  document.getElementById("todayTitle").textContent = `📅 本日班表（${formatted}）`;
-</script>
+        document.querySelectorAll('.shift-row').forEach(row => {
+          const label = row.querySelector('.shift-label')?.textContent?.trim();
+          if (label && todayData[label] !== undefined) {
+            row.querySelector('.staff-name').textContent = todayData[label];
+          }
+        });
+      } catch (err) {
+        alert("載入班表資料失敗：" + err.message);
+      }
+    }
+
+    window.onload = loadSchedule;
+  </script>
 </body>
 </html>
