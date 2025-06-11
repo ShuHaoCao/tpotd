@@ -1,0 +1,302 @@
+{
+  "A01": {
+    "name": "王昭文",
+    "rate": "0.00%",
+    "approve": 30,
+    "used": "-",
+    "remain": 30,
+    "prev": 1.5,
+    "makeup": 0,
+    "remainLeave": 1.5
+  },
+  "A02": {
+    "name": "謝勝勳",
+    "rate": "0.00%",
+    "approve": 30,
+    "used": "-",
+    "remain": 30,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "A03": {
+    "name": "曹書豪",
+    "rate": "25.00%",
+    "approve": 22,
+    "used": 5.5,
+    "remain": 16.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "B01": {
+    "name": "吳家偉",
+    "rate": "10.71%",
+    "approve": 14,
+    "used": 1.5,
+    "remain": 12.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "B02": {
+    "name": "楊嶸祜",
+    "rate": "48.33%",
+    "approve": 30,
+    "used": 14.5,
+    "remain": 15.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "B03": {
+    "name": "蔡綜哲",
+    "rate": "45.71%",
+    "approve": 17.5,
+    "used": 8,
+    "remain": 9.5,
+    "prev": 1,
+    "makeup": 1,
+    "remainLeave": "-"
+  },
+  "B04": {
+    "name": "陳新安",
+    "rate": "38.33%",
+    "approve": 30,
+    "used": 11.5,
+    "remain": 18.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "C01": {
+    "name": "李翊宏",
+    "rate": "35.29%",
+    "approve": 8.5,
+    "used": 3,
+    "remain": 5.5,
+    "prev": 3,
+    "makeup": 1,
+    "remainLeave": 2
+  },
+  "C02": {
+    "name": "周耀宗",
+    "rate": "11.11%",
+    "approve": 27,
+    "used": 3,
+    "remain": 24,
+    "prev": 2,
+    "makeup": 1,
+    "remainLeave": 1
+  },
+  "C03": {
+    "name": "陳柏林",
+    "rate": "53.33%",
+    "approve": 15,
+    "used": 8,
+    "remain": 7,
+    "prev": 3,
+    "makeup": 2,
+    "remainLeave": 1
+  },
+  "C04": {
+    "name": "簡慶富",
+    "rate": "47.06%",
+    "approve": 8.5,
+    "used": 4,
+    "remain": 4.5,
+    "prev": 2,
+    "makeup": 0,
+    "remainLeave": 2
+  },
+  "C05": {
+    "name": "陳俊瑋",
+    "rate": "33.33%",
+    "approve": 28.5,
+    "used": 9.5,
+    "remain": 19,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "C06": {
+    "name": "黃仁政",
+    "rate": "46.67%",
+    "approve": 30,
+    "used": 14,
+    "remain": 16,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "C07": {
+    "name": "張智雄",
+    "rate": "53.85%",
+    "approve": 19.5,
+    "used": 10.5,
+    "remain": 9,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "C08": {
+    "name": "林養俊",
+    "rate": "35.00%",
+    "approve": 30,
+    "used": 10.5,
+    "remain": 19.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D01": {
+    "name": "王寶生",
+    "rate": "40.00%",
+    "approve": 15,
+    "used": 6,
+    "remain": 9,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D02": {
+    "name": "吳佳錚",
+    "rate": "63.16%",
+    "approve": 9.5,
+    "used": 6,
+    "remain": 3.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D03": {
+    "name": "沈銘展",
+    "rate": "36.67%",
+    "approve": 15,
+    "used": 5.5,
+    "remain": 9.5,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D04": {
+    "name": "周恆毅",
+    "rate": "23.53%",
+    "approve": 17,
+    "used": 4,
+    "remain": 13,
+    "prev": 0.5,
+    "makeup": 0.5,
+    "remainLeave": "-"
+  },
+  "D05": {
+    "name": "林凱勳",
+    "rate": "40.74%",
+    "approve": 27,
+    "used": 11,
+    "remain": 16,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D06": {
+    "name": "莊景宇",
+    "rate": "59.26%",
+    "approve": 27,
+    "used": 16,
+    "remain": 11,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D07": {
+    "name": "許瑞廷",
+    "rate": "36.67%",
+    "approve": 30,
+    "used": 11,
+    "remain": 19,
+    "prev": 1,
+    "makeup": 1,
+    "remainLeave": "-"
+  },
+  "D08": {
+    "name": "陳柏宇",
+    "rate": "6.45%",
+    "approve": 15.5,
+    "used": 1,
+    "remain": 14.5,
+    "prev": 1,
+    "makeup": 1,
+    "remainLeave": "-"
+  },
+  "D09": {
+    "name": "陳緯謙",
+    "rate": "34.88%",
+    "approve": 21.5,
+    "used": 7.5,
+    "remain": 14,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D10": {
+    "name": "程世桓",
+    "rate": "46.67%",
+    "approve": 15,
+    "used": 7,
+    "remain": 8,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "D11": {
+    "name": "鄭憲鴻",
+    "rate": "42.86%",
+    "approve": 28,
+    "used": 12,
+    "remain": 16,
+    "prev": 3,
+    "makeup": 3,
+    "remainLeave": "-"
+  },
+  "D12": {
+    "name": "葉育宏",
+    "rate": "36.36%",
+    "approve": 11,
+    "used": 4,
+    "remain": 7,
+    "prev": 2,
+    "makeup": 2,
+    "remainLeave": "-"
+  },
+  "E01": {
+    "name": "張健儀",
+    "rate": "65.00%",
+    "approve": 30,
+    "used": 19.5,
+    "remain": 10.5,
+    "prev": 1,
+    "makeup": 1,
+    "remainLeave": "-"
+  },
+  "E02": {
+    "name": "葉吉順",
+    "rate": "23.33%",
+    "approve": 30,
+    "used": 7,
+    "remain": 23,
+    "prev": "-",
+    "makeup": 0,
+    "remainLeave": "-"
+  },
+  "E03": {
+    "name": "邱俊融",
+    "rate": "34.04%",
+    "approve": 23.5,
+    "used": 8,
+    "remain": 15.5,
+    "prev": 2,
+    "makeup": 2,
+    "remainLeave": "-"
+  }
+}
