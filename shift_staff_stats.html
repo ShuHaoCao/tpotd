@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>班別值班次數統計</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      margin: 0;
+      padding: 20px 0;
+      background-color: #f8f9fa;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0 10%;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      color: #333;
+    }
+
+    select {
+      font-size: 1em;
+      padding: 5px 10px;
+    }
+
+    #tableContainer {
+      margin: 0 10%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #e9ecef;
+    }
+
+    .bar-container {
+      height: 20px;
+      background-color: #f1f1f1;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar {
+      height: 100%;
+      background-color: #2b7bb9;
+      border-radius: 4px;
+      transition: width 0.8s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>班別值班次數統計</h1>
+    <select id="shiftSelect">
+      <option value="">請選擇班別</option>
+    </select>
+  </header>
+
+  <div id="tableContainer"></div>
+
+  <script>
+    let shiftData = {};
+
+    fetch('shift_staff_stats_data.json')
+      .then(response => response.json())
+      .then(data => {
+        shiftData = data;
+        const select = document.getElementById('shiftSelect');
+
+        Object.keys(shiftData).forEach(className => {
+          const option = document.createElement('option');
+          option.value = className;
+          option.textContent = className;
+          select.appendChild(option);
+        });
+
+        select.value = "早班1";
+        renderTable("早班1");
+      });
+
+    document.getElementById('shiftSelect').addEventListener('change', function () {
+      renderTable(this.value);
+    });
+
+    function renderTable(className) {
+      const container = document.getElementById('tableContainer');
+      if (!className || !shiftData[className]) {
+        container.innerHTML = '';
+        return;
+      }
+
+      const records = shiftData[className];
+
+      const rows = records.map(item => {
+        const percentVal = parseFloat(item.百分比.replace('%', ''));
+        return `
+          <tr>
+            <td>${item.姓名}</td>
+            <td>${item.次數}</td>
+            <td>${item.百分比}</td>
+            <td>
+              <div class="bar-container">
+                <div class="bar" style="width: ${percentVal}%"></div>
+              </div>
+            </td>
+          </tr>`;
+      }).join('');
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>姓名</th><th>次數</th><th>百分比</th><th>橫向長條圖</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+  </script>
+
+</body>
+</html>
