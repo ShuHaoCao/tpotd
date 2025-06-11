@@ -3,42 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>班表功能選單</title>
+  <title>臺南郵局運輸股班表查詢</title>
   <style>
-    /* 基本背景與置中 */
     body {
       background-color: #fdf6fd;
       font-family: "Microsoft JhengHei", sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      background-image: url('logo.png'); /* 請替換為實際路徑 */
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: 100px auto;
+      background-attachment: fixed;
     }
 
-    /* 容器垂直排列，行動裝置可縮放 */
+    .container {
+      width: 80%; /* 左右各留 10% */
+      margin: 0 auto;
+      padding-top: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #5d3a91;
+      font-size: 24px;
+      margin-bottom: 24px;
+    }
+
     .button-container {
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 16px;
-      width: 100%;
-      max-width: 320px;
+      margin-bottom: 40px;
     }
 
-    /* 通用按鈕樣式 */
     .btn {
       display: block;
       background-color: #f7f3f8;
       color: #5d3a91;
       text-decoration: none;
       border-radius: 30px;
-      padding: 14px 24px;
-      font-size: 16px;
+      padding: 14px 26px;
+      font-size: 18px; /* ✅ 字體加大 */
       font-weight: bold;
       box-shadow: 0 2px 6px rgba(130, 106, 174, 0.2);
       text-align: center;
       transition: background-color 0.2s ease, transform 0.2s ease;
+      width: 100%;
     }
 
     .btn:hover {
@@ -50,21 +62,40 @@
       transform: scale(0.97);
     }
 
-    /* 手機小尺寸優化 */
+    footer {
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.85em;
+      color: #999;
+    }
+
     @media (max-width: 480px) {
+      h1 {
+        font-size: 20px;
+      }
+
       .btn {
-        font-size: 15px;
-        padding: 12px 20px;
+        font-size: 16px;
+        padding: 12px 22px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="button-container">
-    <a href="shift_schedule.html" class="btn">班表查詢</a>
-    <a href="shift_today.html" class="btn">本日班表</a>
-    <a href="check_time_off.html" class="btn">休假查詢</a>
-    <a href="shift_stats.html" class="btn">排班統計</a>
+  <div class="container">
+    <h1>臺南郵局運輸股班表查詢</h1>
+
+    <div class="button-container">
+      <a href="shift_schedule.html" class="btn">班表查詢</a>
+      <a href="shift_today.html" class="btn">本日班表</a>
+      <a href="check_time_off.html" class="btn">休假查詢</a>
+      <a href="shift_stats.html" class="btn">排班統計</a>
+    </div>
+
+    <footer>
+      © 2025 臺南郵局運輸股｜Designed by PostTech Web Design Co.<br>
+      本頁內容僅供內部使用，未經授權不得轉載。
+    </footer>
   </div>
 </body>
 </html>
