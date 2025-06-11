@@ -1,5 +1,6 @@
-{
-  "A01": {
+[
+  {
+    "id": "A01",
     "name": "王昭文",
     "past": 0,
     "now": 0,
@@ -9,9 +10,12 @@
     "remain": 30,
     "prev": 1.5,
     "makeup": 0,
-    "remainLeave": 1.5
+    "remainLeave": 1.5,
+    "": "",
+    "__1": ""
   },
-  "A02": {
+  {
+    "id": "A02",
     "name": "謝勝勳",
     "past": 0,
     "now": 0,
@@ -21,9 +25,12 @@
     "remain": 30,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "A03": {
+  {
+    "id": "A03",
     "name": "曹書豪",
     "past": 5.5,
     "now": 0,
@@ -33,9 +40,12 @@
     "remain": 16.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "B01": {
+  {
+    "id": "B01",
     "name": "吳家偉",
     "past": 0.5,
     "now": 1,
@@ -45,9 +55,12 @@
     "remain": 12.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "B02": {
+  {
+    "id": "B02",
     "name": "楊嶸祜",
     "past": 9.5,
     "now": 5,
@@ -57,9 +70,12 @@
     "remain": 15.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "B03": {
+  {
+    "id": "B03",
     "name": "蔡綜哲",
     "past": 5,
     "now": 3,
@@ -69,9 +85,12 @@
     "remain": 9.5,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "B04": {
+  {
+    "id": "B04",
     "name": "陳新安",
     "past": 11.5,
     "now": 0,
@@ -81,9 +100,12 @@
     "remain": 18.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "C01": {
+  {
+    "id": "C01",
     "name": "李翊宏",
     "past": 3,
     "now": 0,
@@ -93,9 +115,12 @@
     "remain": 5.5,
     "prev": 3,
     "makeup": 1,
-    "remainLeave": 2
+    "remainLeave": 2,
+    "": "",
+    "__1": ""
   },
-  "C02": {
+  {
+    "id": "C02",
     "name": "周耀宗",
     "past": 1,
     "now": 2,
@@ -105,9 +130,12 @@
     "remain": 24,
     "prev": 2,
     "makeup": 1,
-    "remainLeave": 1
+    "remainLeave": 1,
+    "": "",
+    "__1": ""
   },
-  "C03": {
+  {
+    "id": "C03",
     "name": "陳柏林",
     "past": 8,
     "now": 0,
@@ -117,9 +145,12 @@
     "remain": 7,
     "prev": 3,
     "makeup": 2,
-    "remainLeave": 1
+    "remainLeave": 1,
+    "": "",
+    "__1": ""
   },
-  "C04": {
+  {
+    "id": "C04",
     "name": "簡慶富",
     "past": 4,
     "now": 0,
@@ -129,9 +160,12 @@
     "remain": 4.5,
     "prev": 2,
     "makeup": 0,
-    "remainLeave": 2
+    "remainLeave": 2,
+    "": "",
+    "__1": ""
   },
-  "C05": {
+  {
+    "id": "C05",
     "name": "陳俊瑋",
     "past": 6.5,
     "now": 3,
@@ -141,9 +175,12 @@
     "remain": 19,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "C06": {
+  {
+    "id": "C06",
     "name": "黃仁政",
     "past": 14,
     "now": 0,
@@ -153,9 +190,12 @@
     "remain": 16,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "C07": {
+  {
+    "id": "C07",
     "name": "張智雄",
     "past": 8.5,
     "now": 2,
@@ -165,9 +205,12 @@
     "remain": 9,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "C08": {
+  {
+    "id": "C08",
     "name": "林養俊",
     "past": 10.5,
     "now": 0,
@@ -177,9 +220,12 @@
     "remain": 19.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D01": {
+  {
+    "id": "D01",
     "name": "王寶生",
     "past": 6,
     "now": 0,
@@ -189,9 +235,12 @@
     "remain": 9,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D02": {
+  {
+    "id": "D02",
     "name": "吳佳錚",
     "past": 6,
     "now": 0,
@@ -201,9 +250,12 @@
     "remain": 3.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D03": {
+  {
+    "id": "D03",
     "name": "沈銘展",
     "past": 4.5,
     "now": 1,
@@ -213,9 +265,12 @@
     "remain": 9.5,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D04": {
+  {
+    "id": "D04",
     "name": "周恆毅",
     "past": 2,
     "now": 2,
@@ -225,9 +280,12 @@
     "remain": 13,
     "prev": 0.5,
     "makeup": 0.5,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D05": {
+  {
+    "id": "D05",
     "name": "林凱勳",
     "past": 6,
     "now": 5,
@@ -237,9 +295,12 @@
     "remain": 16,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D06": {
+  {
+    "id": "D06",
     "name": "莊景宇",
     "past": 16,
     "now": 0,
@@ -249,9 +310,12 @@
     "remain": 11,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D07": {
+  {
+    "id": "D07",
     "name": "許瑞廷",
     "past": 10,
     "now": 1,
@@ -261,9 +325,12 @@
     "remain": 19,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D08": {
+  {
+    "id": "D08",
     "name": "陳柏宇",
     "past": 1,
     "now": 0,
@@ -273,9 +340,12 @@
     "remain": 14.5,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D09": {
+  {
+    "id": "D09",
     "name": "陳緯謙",
     "past": 7.5,
     "now": 0,
@@ -285,9 +355,12 @@
     "remain": 14,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D10": {
+  {
+    "id": "D10",
     "name": "程世桓",
     "past": 4,
     "now": 3,
@@ -297,9 +370,12 @@
     "remain": 8,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D11": {
+  {
+    "id": "D11",
     "name": "鄭憲鴻",
     "past": 8,
     "now": 4,
@@ -309,9 +385,12 @@
     "remain": 16,
     "prev": 3,
     "makeup": 3,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "D12": {
+  {
+    "id": "D12",
     "name": "葉育宏",
     "past": 1,
     "now": 3,
@@ -321,9 +400,12 @@
     "remain": 7,
     "prev": 2,
     "makeup": 2,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "E01": {
+  {
+    "id": "E01",
     "name": "張健儀",
     "past": 16.5,
     "now": 3,
@@ -333,9 +415,12 @@
     "remain": 10.5,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "E02": {
+  {
+    "id": "E02",
     "name": "葉吉順",
     "past": 6,
     "now": 1,
@@ -345,9 +430,12 @@
     "remain": 23,
     "prev": "-",
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
   },
-  "E03": {
+  {
+    "id": "E03",
     "name": "邱俊融",
     "past": 8,
     "now": 0,
@@ -357,6 +445,128 @@
     "remain": 15.5,
     "prev": 2,
     "makeup": 2,
-    "remainLeave": "-"
+    "remainLeave": "-",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "34.94%",
+    "approve": 656,
+    "used": 229,
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
+  },
+  {
+    "id": "",
+    "name": "",
+    "past": "",
+    "now": "",
+    "rate": "",
+    "approve": "",
+    "used": "",
+    "remain": "",
+    "prev": "",
+    "makeup": "",
+    "remainLeave": "",
+    "": "",
+    "__1": ""
   }
-}
+]

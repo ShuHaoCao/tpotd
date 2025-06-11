@@ -125,8 +125,19 @@
   <div class="container">
     <!-- 第1行 -->
     <div class="grid-row">
-      <div class="box big" style="grid-column: 1 / 3;" id="personName">—</div>
-      <div class="box purple" style="grid-column: 3 / 4;">
+      <div class="box gray">
+        <div class="box-inner">
+          <div class="title">1-5月輪休天數</div>
+          <div class="value" id="past">—</div>
+        </div>
+      </div>
+      <div class="box gray">
+        <div class="box-inner">
+          <div class="title">6月輪休天數</div>
+          <div class="value" id="now">—</div>
+        </div>
+      </div>
+      <div class="box purple">
         <div class="box-inner">
           <div class="title">輪休完成度(%)</div>
           <div class="value" id="rate">—</div>
@@ -186,8 +197,9 @@
       const p = leaveData[id];
       if (!p) return;
 
-      document.getElementById("personName").innerText = p.name || "—";
-      document.getElementById("rate").innerText = p.rate || "—";
+      document.getElementById("past").innerText = p.past ?? "—";
+	  document.getElementById("now").innerText = p.now ?? "—";
+      document.getElementById("rate").innerText = p.rate ?? "—";
       document.getElementById("approve").innerText = p.approve ?? "—";
       document.getElementById("used").innerText = p.used ?? "—";
       document.getElementById("remain").innerText = p.remain ?? "—";
