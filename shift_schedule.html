@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>查詢班表</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #f8f9fa;
+      padding: 10px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .date-select {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="date"] {
+      font-size: 1em;
+      padding: 6px;
+    }
+
+    .schedule-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .column {
+      flex: 1 1 300px;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .shift-row {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+
+    .shift-label {
+      flex: 1;
+      padding: 8px;
+      text-align: center;
+      font-weight: bold;
+      color: #fff;
+      white-space: nowrap;
+      min-width: 40%;
+    }
+
+    .staff-name {
+      flex: 1;
+      padding: 8px;
+      background-color: #eee;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .red { background-color: #c00000; }
+    .green { background-color: #275317; }
+    .blue { background-color: #163E64; }
+    .middle-blue { background-color: #215F9A; }
+    .light-blue { background-color: #4E95D9; }
+    .purple { background-color: #78206E; }
+    .middle-green { background-color: #3B7D23; }
+    .blue-green { background-color: #0E9292; }
+    .gray { background-color: #595959; }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    #update-time {
+      text-align: center;
+      margin-top: 10px;
+      color: #888;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📅 查詢班表</h2>
+
+  <div class="date-select">
+    <label for="date">選擇日期：</label>
+    <input type="date" id="date" />
+  </div>
+
+  <div class="schedule-grid">
+    <!-- 左側 -->
+    <div class="column" id="left-column"></div>
+    <!-- 右側 -->
+    <div class="column" id="right-column"></div>
+  </div>
+
+  <div id="update-time"></div>
+
+  <footer>
+    © 2025 臺南郵局運輸股 All rights reserved. 網頁設計與系統開發：擴果創意科技有限公司
+  </footer>
+
+  <script>
+    const shiftListLeft = [
+      { label: "股　長", color: "red" },
+      { label: "早班專員", color: "green" },
+      { label: "內檯經辦", color: "blue" },
+      { label: "空袋櫃", color: "green" },
+      { label: "早　班 1", color: "green" },
+      { label: "早　班 2", color: "green" },
+      { label: "早　班 3", color: "green" },
+      { label: "早　班 4", color: "blue-green" },
+      { label: "新　營 1", color: "blue-green" },
+      { label: "新　營 2", color: "blue-green" },
+      { label: "自運甲線", color: "purple" },
+      { label: "自運乙線", color: "purple" },
+      { label: "嘉　義 B", color: "blue" },
+      { label: "進口接送", color: "gray" },
+      { label: "出口接送", color: "gray" }
+    ];
+
+    const shiftListRight = [
+      { label: "中班專員", color: "blue" },
+      { label: "中　班 1", color: "light-blue" },
+      { label: "中　班 2", color: "middle-blue" },
+      { label: "中　班 3", color: "middle-blue" },
+      { label: "中　班 4", color: "middle-blue" },
+      { label: "中　班 5", color: "middle-blue" },
+      { label: "中　班 6", color: "middle-blue" },
+      { label: "中　班 7", color: "blue" },
+      { label: "中　班 8", color: "light-blue" },
+      { label: "中　班 9", color: "middle-blue" },
+      { label: "中　班10", color: "light-blue" },
+      { label: "中　班11", color: "light-blue" },
+      { label: "中　班12", color: "light-blue" },
+      { label: "大夜班 1", color: "gray" },
+      { label: "大夜班 3", color: "gray" }
+    ];
+
+    const createRow = (shift, name) => {
+      return `
+        <div class="shift-row">
+          <div class="shift-label ${shift.color}">${shift.label}</div>
+          <div class="staff-name">${name || '－'}</div>
+        </div>`;
+    };
+
+    const renderSchedule = (data = {}) => {
+      const left = document.getElementById('left-column');
+      const right = document.getElementById('right-column');
+      left.innerHTML = shiftListLeft.map(s => createRow(s, data[s.label])).join('');
+      right.innerHTML = shiftListRight.map(s => createRow(s, data[s.label])).join('');
+    };
+
+    const fetchSchedule = (selectedDate) => {
+      fetch('schedule_data.json')
+        .then(res => {
+          const lastModified = res.headers.get("Last-Modified");
+          if (lastModified) {
+            document.getElementById("update-time").innerText = "資料更新時間：" + new Date(lastModified).toLocaleString();
+          }
+          return res.json();
+        })
+        .then(allData => {
+          const schedule = allData[selectedDate];
+          if (schedule) {
+            renderSchedule(schedule);
+          } else {
+            renderSchedule();
+            alert('該日期無排班資料');
+          }
+        })
+        .catch(err => console.error('讀取失敗', err));
+    };
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const dateInput = document.getElementById("date");
+      const today = new Date().toISOString().split("T")[0];
+      dateInput.value = today;
+      fetchSchedule(today);
+
+      dateInput.addEventListener('change', function () {
+        fetchSchedule(this.value);
+      });
+    });
+  </script>
+
+</body>
+</html>
