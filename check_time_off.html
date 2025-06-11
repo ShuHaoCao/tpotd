@@ -65,18 +65,6 @@
       display: flex;
       flex-direction: column;
       gap: 0.5px;
-      /* 控制上下距離 */
-    }
-
-    .big {
-      background-color: #ccc;
-      color: black;
-      font-weight: bold;
-      font-size: clamp(1.5rem, 8vw, 5rem);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
     }
 
     .purple {
@@ -101,16 +89,14 @@
     .value {
       font-size: 6em;
       font-weight: bold;
+      font-family: inherit;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     @media (max-width: 768px) {
       .grid-row {
         grid-template-columns: 1fr;
-      }
-
-      .box.big {
-        grid-column: auto !important;
-        font-size: 1.2em;
       }
     }
   </style>
@@ -191,21 +177,25 @@
   </div>
 
   <script>
+    function normalize(val) {
+      return (val === null || val === undefined || val === "") ? "—" : String(val);
+    }
+
     let leaveData = {};
 
     function updateDisplay(id) {
       const p = leaveData[id];
       if (!p) return;
 
-      document.getElementById("past").innerText = p.past ?? "—";
-	  document.getElementById("now").innerText = p.now ?? "—";
-      document.getElementById("rate").innerText = p.rate ?? "—";
-      document.getElementById("approve").innerText = p.approve ?? "—";
-      document.getElementById("used").innerText = p.used ?? "—";
-      document.getElementById("remain").innerText = p.remain ?? "—";
-      document.getElementById("prev").innerText = p.prev ?? "—";
-      document.getElementById("makeup").innerText = p.makeup ?? "—";
-      document.getElementById("remainLeave").innerText = p.remainLeave ?? "—";
+      document.getElementById("past").innerText = normalize(p.past);
+      document.getElementById("now").innerText = normalize(p.now);
+      document.getElementById("rate").innerText = normalize(p.rate);
+      document.getElementById("approve").innerText = normalize(p.approve);
+      document.getElementById("used").innerText = normalize(p.used);
+      document.getElementById("remain").innerText = normalize(p.remain);
+      document.getElementById("prev").innerText = normalize(p.prev);
+      document.getElementById("makeup").innerText = normalize(p.makeup);
+      document.getElementById("remainLeave").innerText = normalize(p.remainLeave);
     }
 
     fetch("leave_data.json")
@@ -235,5 +225,4 @@
       });
   </script>
 </body>
-
 </html>

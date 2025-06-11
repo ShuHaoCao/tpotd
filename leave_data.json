@@ -5,7 +5,7 @@
     "now": 0,
     "rate": "0.00%",
     "approve": 30,
-    "used": "-",
+    "used": 0,
     "remain": 30,
     "prev": 1.5,
     "makeup": 0,
@@ -17,11 +17,11 @@
     "now": 0,
     "rate": "0.00%",
     "approve": 30,
-    "used": "-",
+    "used": 0,
     "remain": 30,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "A03": {
     "name": "曹書豪",
@@ -31,9 +31,9 @@
     "approve": 22,
     "used": 5.5,
     "remain": 16.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "B01": {
     "name": "吳家偉",
@@ -43,9 +43,9 @@
     "approve": 14,
     "used": 1.5,
     "remain": 12.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "B02": {
     "name": "楊嶸祜",
@@ -55,9 +55,9 @@
     "approve": 30,
     "used": 14.5,
     "remain": 15.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "B03": {
     "name": "蔡綜哲",
@@ -69,7 +69,7 @@
     "remain": 9.5,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "B04": {
     "name": "陳新安",
@@ -79,9 +79,9 @@
     "approve": 30,
     "used": 11.5,
     "remain": 18.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "C01": {
     "name": "李翊宏",
@@ -139,9 +139,9 @@
     "approve": 28.5,
     "used": 9.5,
     "remain": 19,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "C06": {
     "name": "黃仁政",
@@ -151,9 +151,9 @@
     "approve": 30,
     "used": 14,
     "remain": 16,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "C07": {
     "name": "張智雄",
@@ -163,9 +163,9 @@
     "approve": 19.5,
     "used": 10.5,
     "remain": 9,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "C08": {
     "name": "林養俊",
@@ -175,9 +175,9 @@
     "approve": 30,
     "used": 10.5,
     "remain": 19.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D01": {
     "name": "王寶生",
@@ -187,9 +187,9 @@
     "approve": 15,
     "used": 6,
     "remain": 9,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D02": {
     "name": "吳佳錚",
@@ -199,9 +199,9 @@
     "approve": 9.5,
     "used": 6,
     "remain": 3.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D03": {
     "name": "沈銘展",
@@ -211,9 +211,9 @@
     "approve": 15,
     "used": 5.5,
     "remain": 9.5,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D04": {
     "name": "周恆毅",
@@ -225,7 +225,7 @@
     "remain": 13,
     "prev": 0.5,
     "makeup": 0.5,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D05": {
     "name": "林凱勳",
@@ -235,9 +235,9 @@
     "approve": 27,
     "used": 11,
     "remain": 16,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D06": {
     "name": "莊景宇",
@@ -247,9 +247,9 @@
     "approve": 27,
     "used": 16,
     "remain": 11,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D07": {
     "name": "許瑞廷",
@@ -261,7 +261,7 @@
     "remain": 19,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D08": {
     "name": "陳柏宇",
@@ -273,7 +273,7 @@
     "remain": 14.5,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D09": {
     "name": "陳緯謙",
@@ -283,9 +283,9 @@
     "approve": 21.5,
     "used": 7.5,
     "remain": 14,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D10": {
     "name": "程世桓",
@@ -295,9 +295,9 @@
     "approve": 15,
     "used": 7,
     "remain": 8,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D11": {
     "name": "鄭憲鴻",
@@ -309,7 +309,7 @@
     "remain": 16,
     "prev": 3,
     "makeup": 3,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "D12": {
     "name": "葉育宏",
@@ -321,7 +321,7 @@
     "remain": 7,
     "prev": 2,
     "makeup": 2,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "E01": {
     "name": "張健儀",
@@ -333,7 +333,7 @@
     "remain": 10.5,
     "prev": 1,
     "makeup": 1,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "E02": {
     "name": "葉吉順",
@@ -343,9 +343,9 @@
     "approve": 30,
     "used": 7,
     "remain": 23,
-    "prev": "-",
+    "prev": 0,
     "makeup": 0,
-    "remainLeave": "-"
+    "remainLeave": 0
   },
   "E03": {
     "name": "邱俊融",
@@ -357,6 +357,6 @@
     "remain": 15.5,
     "prev": 2,
     "makeup": 2,
-    "remainLeave": "-"
+    "remainLeave": 0
   }
 }
