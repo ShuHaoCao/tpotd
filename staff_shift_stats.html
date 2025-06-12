@@ -1,119 +1,129 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>人員值班次數查詢</title>
-  <style>
-    body {
-      font-family: "Microsoft JhengHei", sans-serif;
-      background-color: #f8f9fa;
-      margin: 0;
-      padding: 20px 10%;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>人員值班次數查詢</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px 10%;
+        }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    h1 {
-      font-size: 1.8em;
-    }
+        h1 {
+            font-size: 1.8em;
+        }
 
-    select {
-      font-size: 1em;
-      padding: 5px 10px;
-    }
+        select {
+            font-size: 1em;
+            padding: 5px 10px;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      margin-top: 20px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            margin-top: 20px;
+        }
 
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
 
-    th {
-      background-color: #e9ecef;
-    }
+        th {
+            background-color: #e9ecef;
+        }
 
-    .bar-container {
-      height: 20px;
-      background-color: #f1f1f1;
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
-    }
+        .bar-container {
+            height: 20px;
+            background-color: #f1f1f1;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
 
-    .bar {
-      height: 100%;
-      background-color: #2b7bb9;
-      width: 0;
-      border-radius: 4px;
-      transition: width 0.8s ease;
-    }
-  </style>
+        .bar {
+            height: 100%;
+            background-color: #2b7bb9;
+            width: 0;
+            border-radius: 4px;
+            transition: width 0.8s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 0.85em;
+            color: #999;
+        }
+    </style>
 </head>
+
 <body>
 
-  <header>
-    <h1>人員值班次數查詢</h1>
-    <select id="personSelect">
-      <option value="">請選擇人員</option>
-    </select>
-  </header>
+    <header>
+        <h1>人員值班次數查詢</h1>
+        <select id="personSelect">
+            <option value="">請選擇人員</option>
+        </select>
+    </header>
 
-  <div id="tableContainer"></div>
+    <div id="tableContainer"></div>
 
-  <script>
-    let staffData = {};
+    <script>
+        let staffData = {};
 
-    fetch("staff_shift_stats_data.json")
-      .then(res => res.json())
-      .then(data => {
-        staffData = data;
-        const select = document.getElementById("personSelect");
+        fetch("staff_shift_stats_data.json")
+            .then(res => res.json())
+            .then(data => {
+                staffData = data;
+                const select = document.getElementById("personSelect");
 
-        Object.keys(data).forEach(name => {
-          const option = document.createElement("option");
-          option.value = name;
-          option.textContent = name;
-          select.appendChild(option);
+                Object.keys(data).forEach(name => {
+                    const option = document.createElement("option");
+                    option.value = name;
+                    option.textContent = name;
+                    select.appendChild(option);
+                });
+
+                // 預設選擇王寶生並顯示資料
+                select.value = "王寶生";
+                renderTable("王寶生");
+            });
+
+        document.getElementById("personSelect").addEventListener("change", function () {
+            renderTable(this.value);
         });
 
-        // 預設選擇王寶生並顯示資料
-        select.value = "王寶生";
-        renderTable("王寶生");
-      });
+        function renderTable(person) {
+            const container = document.getElementById("tableContainer");
+            if (!person || !staffData[person]) {
+                container.innerHTML = "";
+                return;
+            }
 
-    document.getElementById("personSelect").addEventListener("change", function () {
-      renderTable(this.value);
-    });
+            const records = staffData[person].filter(item => item.次數 > 0);
+            if (records.length === 0) {
+                container.innerHTML = "<p>此人員無排班紀錄</p>";
+                return;
+            }
 
-    function renderTable(person) {
-      const container = document.getElementById("tableContainer");
-      if (!person || !staffData[person]) {
-        container.innerHTML = "";
-        return;
-      }
-
-      const records = staffData[person].filter(item => item.次數 > 0);
-      if (records.length === 0) {
-        container.innerHTML = "<p>此人員無排班紀錄</p>";
-        return;
-      }
-
-      const rows = records.map(item => {
-        const percentVal = parseFloat(item.百分比.replace('%', '')) || 0;
-        return `
+            const rows = records.map(item => {
+                const percentVal = parseFloat(item.百分比.replace('%', '')) || 0;
+                return `
           <tr>
             <td>${item.班別}</td>
             <td>${item.次數}</td>
@@ -124,9 +134,9 @@
               </div>
             </td>
           </tr>`;
-      }).join("");
+            }).join("");
 
-      container.innerHTML = `
+            container.innerHTML = `
         <table>
           <thead>
             <tr><th>班別</th><th>次數</th><th>百分比</th><th>圖表</th></tr>
@@ -135,13 +145,17 @@
         </table>
       `;
 
-      setTimeout(() => {
-        document.querySelectorAll(".bar").forEach(bar => {
-          bar.style.width = bar.dataset.width;
-        });
-      }, 100);
-    }
-  </script>
-
+            setTimeout(() => {
+                document.querySelectorAll(".bar").forEach(bar => {
+                    bar.style.width = bar.dataset.width;
+                });
+            }, 100);
+        }
+    </script>
+    <footer>
+        <div>© 2025 臺南郵局運輸股</div>
+        <div>僅供內部使用，未經授權不得轉載</div>
+    </footer>
 </body>
+
 </html>
