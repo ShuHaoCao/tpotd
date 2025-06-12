@@ -67,6 +67,7 @@
       background-color: #2b7bb9;
       border-radius: 4px;
       transition: width 0.8s ease;
+      width: 0; /* 必須有這一行，才能從 0 開始動畫展開 */
     }
 
     footer {
@@ -121,9 +122,13 @@
       }
 
       const records = shiftData[className].filter(item => parseInt(item.次數) > 0);
+      if (records.length === 0) {
+        container.innerHTML = "<p>此班別無排班紀錄</p>";
+        return;
+      }
 
       const rows = records.map(item => {
-        const percentVal = parseFloat(item.百分比.replace('%', ''));
+        const percentVal = parseFloat(item.百分比.replace('%', '')) || 0;
         return `
           <tr>
             <td>${item.姓名}</td>
@@ -131,7 +136,7 @@
             <td>${item.百分比}</td>
             <td>
               <div class="bar-container">
-                <div class="bar" style="width: ${percentVal}%"></div>
+                <div class="bar" data-width="${percentVal}%"></div>
               </div>
             </td>
           </tr>`;
@@ -147,12 +152,21 @@
           <tbody>${rows}</tbody>
         </table>
       `;
+
+      // 延遲觸發動畫
+      setTimeout(() => {
+        document.querySelectorAll(".bar").forEach(bar => {
+          bar.style.width = bar.dataset.width;
+        });
+      }, 100);
     }
   </script>
+
   <footer>
     <div>© 2025 臺南郵局運輸股</div>
     <div>僅供內部使用，未經授權不得轉載</div>
   </footer>
+
 </body>
 
 </html>
