@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -88,17 +89,17 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <h1>臺南郵局運輸股班表系統</h1>
-    <p class="visitor-count">瀏覽次數：<span id="visit-count">0</span></p>
+    <h1>臺南郵局運輸股班表系統</h1><P>
 
     <div class="button-container">
       <a href="shift_schedule.html" class="btn">班表查詢</a>
       <a href="shift_today.html" class="btn">本日班表</a>
       <a href="check_time_off.html" class="btn">休假查詢</a>
       <a href="shift_staff_stats.html" class="btn">排班人員統計</a>
-       <a href="staff_shift_stats.html" class="btn">人員排班統計</a>
+      <a href="staff_shift_stats.html" class="btn">人員排班統計</a>
     </div>
 
     <footer>
@@ -106,12 +107,7 @@
     </footer>
   </div>
 
-  <script>
-    // 模擬簡單計數器（僅限本機使用 LocalStorage）
-    let count = localStorage.getItem('visitCount');
-    count = count ? parseInt(count) + 1 : 1;
-    localStorage.setItem('visitCount', count);
-    document.getElementById('visit-count').textContent = count;
-  </script>
+
 </body>
+
 </html>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>排班人員統計</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>班別人員次數統計</title>
   <style>
     body {
       font-family: "Microsoft JhengHei", sans-serif;
@@ -41,7 +42,8 @@
       background-color: white;
     }
 
-    th, td {
+    th,
+    td {
       border: 1px solid #ccc;
       padding: 8px;
       text-align: center;
@@ -75,10 +77,11 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
-    <h1>排班人員統計</h1>
+    <h1>班別人員次數統計</h1>
     <select id="shiftSelect">
       <option value="">請選擇班別</option>
     </select>
@@ -117,7 +120,7 @@
         return;
       }
 
-      const records = shiftData[className];
+      const records = shiftData[className].filter(item => parseInt(item.次數) > 0);
 
       const rows = records.map(item => {
         const percentVal = parseFloat(item.百分比.replace('%', ''));
@@ -146,8 +149,9 @@
       `;
     }
   </script>
-<footer>
-      © 2025 臺南郵局運輸股，僅供內部使用，未經授權不得轉載。
-    </footer>
+  <footer>
+    © 2025 臺南郵局運輸股，僅供內部使用，未經授權不得轉載。
+  </footer>
 </body>
+
 </html>
