@@ -14,16 +14,21 @@
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       margin: 0 10%;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
 
     h1 {
       font-size: 1.8em;
       color: #333;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    .select-wrapper {
+      margin: 0 10%;
+      text-align: left;
+      margin-bottom: 20px;
     }
 
     select {
@@ -67,7 +72,7 @@
       background-color: #2b7bb9;
       border-radius: 4px;
       transition: width 0.8s ease;
-      width: 0; /* 必須有這一行，才能從 0 開始動畫展開 */
+      width: 0;
     }
 
     footer {
@@ -83,10 +88,13 @@
 
   <header>
     <h1>各班人員次數表</h1>
+  </header>
+
+  <div class="select-wrapper">
     <select id="shiftSelect">
       <option value="">請選擇班別</option>
     </select>
-  </header>
+  </div>
 
   <div id="tableContainer"></div>
 
@@ -153,7 +161,6 @@
         </table>
       `;
 
-      // 延遲觸發動畫
       setTimeout(() => {
         document.querySelectorAll(".bar").forEach(bar => {
           bar.style.width = bar.dataset.width;
