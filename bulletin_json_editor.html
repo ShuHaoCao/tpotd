@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>布告欄JSON編輯器</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+
+    .editor, .output {
+      flex: 1 1 400px;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    label, select, input, textarea {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .entry {
+      margin: 10px 0;
+      padding: 10px;
+      background: #eef;
+      border-left: 4px solid #2196f3;
+    }
+
+    .entry button {
+      margin-right: 5px;
+    }
+
+    .edit-btn { background-color: #ff9800; }
+    .delete-btn { background-color: #e53935; }
+
+    pre {
+      white-space: pre-wrap;
+      background: #222;
+      color: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+
+    .file-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="editor">
+  <h2>布告欄JSON編輯器</h2>
+
+  <label>分類</label>
+  <select id="category">
+    <option value="shift">班表異動</option>
+    <option value="important">重要事項</option>
+    <option value="policy">政令宣導</option>
+  </select>
+
+  <label>日期：</label>
+  <input type="text" id="dateInput" placeholder="例：113/06/14">
+
+  <label>標題：</label>
+  <input type="text" id="titleInput" placeholder="請輸入標題">
+
+  <label>內容：</label>
+  <textarea id="contentInput" placeholder="請輸入內容"></textarea>
+
+  <button id="submitBtn" onclick="submitEntry()">新增</button>
+  <button id="cancelBtn" onclick="cancelEdit()" style="display:none;background-color:#999;">取消編輯</button>
+
+  <div class="file-actions">
+    <label>📥 載入 JSON：
+      <input type="file" accept=".json" onchange="importJSON(event)">
+    </label>
+    <button onclick="exportJSON()">📤 匯出 JSON</button>
+  </div>
+
+  <h3>現有資料</h3>
+  <div id="entryList"></div>
+</div>
+
+<div class="output">
+  <h2>JSON 預覽（可手動複製）</h2>
+  <pre id="jsonPreview">{}</pre>
+</div>
+
+<script>
+  let bulletin = {
+    "shift": [],
+    "important": [],
+    "policy": []
+  };
+
+  let isEditing = false;
+  let editingIndex = -1;
+  let editingCategory = "";
+
+  function refreshList() {
+    const category = document.getElementById("category").value;
+    const list = document.getElementById("entryList");
+    list.innerHTML = "";
+
+    bulletin[category].forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `<b>${item.date}</b> - ${item.title}<br>${item.content}
+        <br>
+        <button class="edit-btn" onclick="startEdit('${category}', ${index})">✏️ 編輯</button>
+        <button class="delete-btn" onclick="deleteEntry('${category}', ${index})">🗑️ 刪除</button>`;
+      list.appendChild(div);
+    });
+
+    document.getElementById("jsonPreview").textContent = JSON.stringify(bulletin, null, 2);
+  }
+
+  function submitEntry() {
+    const category = document.getElementById("category").value;
+    const date = document.getElementById("dateInput").value.trim();
+    const title = document.getElementById("titleInput").value.trim();
+    const content = document.getElementById("contentInput").value.trim();
+
+    if (!date || !title || !content) {
+      alert("請完整填寫所有欄位！");
+      return;
+    }
+
+    if (isEditing) {
+      bulletin[editingCategory][editingIndex] = { date, title, content };
+      isEditing = false;
+      editingIndex = -1;
+      document.getElementById("submitBtn").textContent = "新增";
+      document.getElementById("cancelBtn").style.display = "none";
+    } else {
+      bulletin[category].push({ date, title, content });
+    }
+
+    document.getElementById("dateInput").value = "";
+    document.getElementById("titleInput").value = "";
+    document.getElementById("contentInput").value = "";
+    refreshList();
+  }
+
+  function startEdit(category, index) {
+    const entry = bulletin[category][index];
+    document.getElementById("category").value = category;
+    document.getElementById("dateInput").value = entry.date;
+    document.getElementById("titleInput").value = entry.title;
+    document.getElementById("contentInput").value = entry.content;
+
+    isEditing = true;
+    editingIndex = index;
+    editingCategory = category;
+
+    document.getElementById("submitBtn").textContent = "更新";
+    document.getElementById("cancelBtn").style.display = "inline-block";
+  }
+
+  function cancelEdit() {
+    isEditing = false;
+    editingIndex = -1;
+    document.getElementById("submitBtn").textContent = "新增";
+    document.getElementById("cancelBtn").style.display = "none";
+
+    document.getElementById("dateInput").value = "";
+    document.getElementById("titleInput").value = "";
+    document.getElementById("contentInput").value = "";
+  }
+
+  function deleteEntry(category, index) {
+    if (confirm("確定要刪除這筆資料嗎？")) {
+      bulletin[category].splice(index, 1);
+      refreshList();
+    }
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const json = JSON.parse(e.target.result);
+        if (json.shift && json.important && json.policy) {
+          bulletin = json;
+          cancelEdit();
+          refreshList();
+        } else {
+          alert("匯入失敗：檔案結構不正確！");
+        }
+      } catch (err) {
+        alert("無法解析 JSON 檔案！");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(bulletin, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bulletin.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  refreshList();
+</script>
+
+</body>
+</html>

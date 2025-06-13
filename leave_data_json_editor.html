@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>個人休假資料JSON編輯器</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .editor, .output {
+      flex: 1 1 500px;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .form-group label {
+      font-size: 0.85em;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 4px;
+      font-size: 0.85em;
+      text-align: right;
+    }
+
+    .form-group input[type="text"] {
+      text-align: left;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .entry {
+      background: #eef;
+      padding: 10px;
+      margin-top: 10px;
+      border-left: 4px solid #2196f3;
+      font-size: 0.9em;
+    }
+
+    .entry button {
+      margin-right: 5px;
+    }
+
+    .edit-btn { background-color: #ff9800; }
+    .delete-btn { background-color: #e53935; }
+
+    pre {
+      background: #222;
+      color: #eee;
+      padding: 10px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      font-size: 0.85em;
+    }
+
+    .file-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    input[type="file"] {
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="editor">
+  <h2>個人休假資料JSON編輯器</h2>
+
+  <div class="form-grid">
+    <div class="form-group"><label>代號</label><input id="idInput" type="text"></div>
+    <div class="form-group"><label>姓名</label><input id="nameInput" type="text"></div>
+    <div class="form-group"><label>1-5月輪休天數</label><input id="pastInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>6月輪休天數</label><input id="nowInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>輪休完成度(%)</label><input id="rateInput" type="text"></div>
+    <div class="form-group"><label>核定輪休天數</label><input id="approveInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>已休輪休天數</label><input id="usedInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>剩餘輪休天數</label><input id="remainInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>上月積欠公休</label><input id="prevInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>本月補休天數</label><input id="makeupInput" type="number" step="0.1"></div>
+    <div class="form-group"><label>剩餘積欠公休</label><input id="remainLeaveInput" type="number" step="0.1"></div>
+  </div>
+
+  <button id="submitBtn" onclick="submitEntry()">新增</button>
+  <button id="cancelBtn" onclick="cancelEdit()" style="display:none;background-color:#999;">取消編輯</button>
+
+  <div class="file-actions">
+    <label>📥 載入 JSON：<input type="file" accept=".json" onchange="importJSON(event)"></label>
+    <button onclick="exportJSON()">📤 匯出 JSON</button>
+  </div>
+
+  <h3>資料列表</h3>
+  <div id="entryList"></div>
+</div>
+
+<div class="output">
+  <h2>JSON 預覽（可複製）</h2>
+  <pre id="jsonPreview">{}</pre>
+</div>
+
+<script>
+  let leaveData = {};
+  let isEditing = false;
+  let editingKey = "";
+
+  function refreshList() {
+    const list = document.getElementById("entryList");
+    list.innerHTML = "";
+    Object.keys(leaveData).forEach(key => {
+      const item = leaveData[key];
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `<b>${key}</b> - ${item.name}｜比例：${item.rate}｜核定：${item.approve}
+        <br>
+        <button class="edit-btn" onclick="startEdit('${key}')">✏️ 編輯</button>
+        <button class="delete-btn" onclick="deleteEntry('${key}')">🗑️ 刪除</button>`;
+      list.appendChild(div);
+    });
+    document.getElementById("jsonPreview").textContent = JSON.stringify(leaveData, null, 2);
+  }
+
+  function getFormData() {
+    return {
+      name: document.getElementById("nameInput").value.trim(),
+      past: parseFloat(document.getElementById("pastInput").value) || 0,
+      now: parseFloat(document.getElementById("nowInput").value) || 0,
+      rate: document.getElementById("rateInput").value.trim() || "",
+      approve: parseFloat(document.getElementById("approveInput").value) || 0,
+      used: parseFloat(document.getElementById("usedInput").value) || 0,
+      remain: parseFloat(document.getElementById("remainInput").value) || 0,
+      prev: parseFloat(document.getElementById("prevInput").value) || 0,
+      makeup: parseFloat(document.getElementById("makeupInput").value) || 0,
+      remainLeave: parseFloat(document.getElementById("remainLeaveInput").value) || 0
+    };
+  }
+
+  function setFormData(id, data) {
+    document.getElementById("idInput").value = id;
+    document.getElementById("nameInput").value = data.name;
+    document.getElementById("pastInput").value = data.past;
+    document.getElementById("nowInput").value = data.now;
+    document.getElementById("rateInput").value = data.rate;
+    document.getElementById("approveInput").value = data.approve;
+    document.getElementById("usedInput").value = data.used;
+    document.getElementById("remainInput").value = data.remain;
+    document.getElementById("prevInput").value = data.prev;
+    document.getElementById("makeupInput").value = data.makeup;
+    document.getElementById("remainLeaveInput").value = data.remainLeave;
+  }
+
+  function clearForm() {
+    document.querySelectorAll("input").forEach(input => {
+      if (input.type !== "file") input.value = "";
+    });
+  }
+
+  function submitEntry() {
+    const id = document.getElementById("idInput").value.trim();
+    if (!id) return alert("請輸入 ID");
+    const newData = getFormData();
+    if (!newData.name) return alert("請輸入姓名");
+
+    leaveData[id] = newData;
+    isEditing = false;
+    editingKey = "";
+    clearForm();
+    refreshList();
+    document.getElementById("submitBtn").textContent = "新增";
+    document.getElementById("cancelBtn").style.display = "none";
+  }
+
+  function startEdit(id) {
+    setFormData(id, leaveData[id]);
+    isEditing = true;
+    editingKey = id;
+    document.getElementById("submitBtn").textContent = "更新";
+    document.getElementById("cancelBtn").style.display = "inline-block";
+  }
+
+  function cancelEdit() {
+    isEditing = false;
+    editingKey = "";
+    clearForm();
+    document.getElementById("submitBtn").textContent = "新增";
+    document.getElementById("cancelBtn").style.display = "none";
+  }
+
+  function deleteEntry(id) {
+    if (confirm("確定要刪除這筆資料？")) {
+      delete leaveData[id];
+      refreshList();
+    }
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const json = JSON.parse(e.target.result);
+        leaveData = json;
+        refreshList();
+        cancelEdit();
+      } catch (err) {
+        alert("無法解析 JSON 檔案！");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(leaveData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "leave_data.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  refreshList();
+</script>
+
+</body>
+</html>

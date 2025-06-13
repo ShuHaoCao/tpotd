@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>臺南郵局運輸股班表查詢</title>
+    <style>
+      body {
+        background-color: #fdf6fd;
+        font-family: "Microsoft JhengHei", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url("logo.png");
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-size: 100px auto;
+        background-attachment: fixed;
+      }
+
+      .container {
+        width: 80%;
+        margin: 0 auto;
+        padding-top: 40px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #5d3a91;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 10px;
+        gap: 8px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        background-color: #e0e0e0;
+        border-radius: 8px 8px 0 0;
+        font-size: clamp(14px, 4vw, 18px);
+        white-space: nowrap;
+        text-align: center;
+        min-width: 100px;
+        flex: 1 1 auto;
+        max-width: 200px;
+      }
+
+      .tab.active {
+        background-color: #5d3a91;
+        color: white;
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+        margin: 10px auto 30px;
+        max-width: 100%;
+        background: #ffffff;
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 6px rgba(130, 106, 174, 0.2);
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .announcement {
+        border-bottom: 1px dotted #ccc;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #5d3a91;
+      }
+
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 40px;
+      }
+
+      .btn {
+        display: block;
+        background-color: #f7f3f8;
+        color: #5d3a91;
+        text-decoration: none;
+        border-radius: 30px;
+        padding: 14px 26px;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(130, 106, 174, 0.2);
+        text-align: center;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        width: 100%;
+      }
+
+      .btn:hover {
+        background-color: #e9def4;
+        transform: scale(1.02);
+      }
+
+      .btn:active {
+        transform: scale(0.97);
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 0.85em;
+        color: #999;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 20px;
+        max-width: 600px;
+        border-radius: 8px;
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 20px;
+        }
+
+        .btn {
+          font-size: 16px;
+          padding: 12px 22px;
+        }
+
+        .tabs {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>臺南郵局運輸股班表查詢</h1>
+
+      <!-- 公告布告欄頁籤區塊 -->
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('policy')">政令宣導</div>
+        <div class="tab" onclick="showTab('important')">重要事項</div>
+        <div class="tab" onclick="showTab('shift')">班表異動</div>
+      </div>
+      <div id="policy" class="tab-content active"></div>
+      <div id="important" class="tab-content"></div>
+      <div id="shift" class="tab-content"></div>
+
+      <!-- 功能按鈕區塊 -->
+      <div class="button-container">
+        <a href="shift_schedule.html" class="btn">全部班表</a>
+        <a href="shift_today.html" class="btn">本日班表</a>
+        <a href="check_time_off.html" class="btn">個人休假</a>
+        <a href="shift_staff_stats.html" class="btn">各班人員表</a>
+        <a href="staff_shift_stats.html" class="btn">人員排班表</a>
+      </div>
+
+      <!-- 頁尾 -->
+      <footer>
+        <div>© 2025 臺南郵局運輸股</div>
+        <div>僅供內部使用，未經授權不得轉載</div>
+      </footer>
+    </div>
+
+    <!-- 彈出提示視窗 -->
+    <div
+      id="popup-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      "
+    >
+      <div
+        style="
+          background: white;
+          padding: 20px 24px;
+          border-radius: 12px;
+          max-width: 80%;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          text-align: center;
+        "
+      >
+        <p style="font-size: 16px; color: #444; margin-bottom: 20px">
+          如有疑慮，請查閱紙本班表
+        </p>
+        <button
+          onclick="document.getElementById('popup-overlay').style.display='none'"
+          style="
+            padding: 8px 20px;
+            background-color: #5d3a91;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+          "
+        >
+          確認
+        </button>
+      </div>
+    </div>
+
+    <!-- 公告布告欄腳本 -->
+    <div id="modal" class="modal" onclick="closeModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <div id="modal-body"></div>
+      </div>
+    </div>
+
+    <script>
+      async function loadBulletin() {
+        const res = await fetch("bulletin.json");
+        const data = await res.json();
+
+        const sections = ["policy", "important", "shift"];
+
+        sections.forEach((section) => {
+          const container = document.getElementById(section);
+          container.innerHTML = "";
+
+          if (data[section] && data[section].length > 0) {
+            data[section].forEach((item) => {
+              const div = document.createElement("div");
+              div.className = "announcement";
+              div.innerText = `${item.date} ${item.title}`;
+              div.onclick = () => openModal(item.content);
+              container.appendChild(div);
+            });
+          } else {
+            const empty = document.createElement("div");
+            empty.style.color = "#999";
+            empty.innerText = "目前無公告內容";
+            container.appendChild(empty);
+          }
+        });
+      }
+
+      function showTab(tabId) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((content) => content.classList.remove("active"));
+        document
+          .querySelector(`.tab[onclick*='${tabId}']`)
+          .classList.add("active");
+        document.getElementById(tabId).classList.add("active");
+      }
+
+      function openModal(content) {
+        document.getElementById("modal-body").innerText = content;
+        document.getElementById("modal").style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      window.onload = loadBulletin;
+    </script>
+  </body>
+</html>
