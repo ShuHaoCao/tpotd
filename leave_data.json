@@ -92,8 +92,8 @@
     "used": 3,
     "remain": 5.5,
     "prev": 3,
-    "makeup": 1,
-    "remainLeave": 2
+    "makeup": 0,
+    "remainLeave": 3
   },
   "C02": {
     "name": "周耀宗",
@@ -314,7 +314,7 @@
   "D12": {
     "name": "葉育宏",
     "past": 1,
-    "now": 3,
+    "now": 5,
     "rate": "36.36%",
     "approve": 11,
     "used": 4,
