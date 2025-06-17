@@ -28,6 +28,13 @@
       text-align: center;
       color: #5d3a91;
       font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    #datetime {
+      text-align: center;
+      font-size: 16px;
+      color: #666;
       margin-bottom: 24px;
     }
 
@@ -86,6 +93,7 @@
 <body>
   <div class="container">
     <h1>臺南郵局運輸股班表查詢</h1>
+    <p id="datetime"></p>
 
     <div class="button-container">
       <a href="shift_schedule.html" class="btn">全部班表</a>
@@ -135,6 +143,24 @@
     function closeRoster() {
       document.getElementById('rosterModal').style.display = 'none';
     }
+
+    // 日期與時間更新
+    function updateDateTime() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
+      const date = now.getDate();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+
+      const dateStr = `${year}年${month}月${date}日`;
+      const timeStr = `${hours}:${minutes}:${seconds}`;
+      document.getElementById("datetime").textContent = `${dateStr}　${timeStr}`;
+    }
+
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
   </script>
 </body>
 
