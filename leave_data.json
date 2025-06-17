@@ -68,8 +68,8 @@
     "used": 8,
     "remain": 9.5,
     "prev": 1,
-    "makeup": 1,
-    "remainLeave": 0
+    "makeup": 0,
+    "remainLeave": 1
   },
   "B04": {
     "name": "陳新安",
