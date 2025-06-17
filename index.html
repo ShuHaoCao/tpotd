@@ -28,13 +28,6 @@
       text-align: center;
       color: #5d3a91;
       font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    .visitor-count {
-      text-align: center;
-      color: #888;
-      font-size: 16px;
       margin-bottom: 24px;
     }
 
@@ -93,7 +86,6 @@
 <body>
   <div class="container">
     <h1>臺南郵局運輸股班表查詢</h1>
-    <P>
 
     <div class="button-container">
       <a href="shift_schedule.html" class="btn">全部班表</a>
@@ -101,6 +93,7 @@
       <a href="check_time_off.html" class="btn">個人休假</a>
       <a href="shift_staff_stats.html" class="btn">各班人員表</a>
       <a href="staff_shift_stats.html" class="btn">人員排班表</a>
+      <a href="javascript:void(0)" onclick="openRoster()" class="btn">本月輪值表</a>
     </div>
 
     <footer>
@@ -108,16 +101,41 @@
       <div>僅供內部使用，未經授權不得轉載</div>
     </footer>
   </div>
+
+  <!-- 提示視窗 -->
   <div id="popup-overlay"
     style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 9999;">
     <div
       style="background: white; padding: 20px 24px; border-radius: 12px; max-width: 80%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-align: center;">
-      <p style="font-size: 16px; color: #444; margin-bottom: 20px;">如有疑慮，請查閱紙本班表</p>
+      <p style="font-size: 16px; color: #444; margin-bottom: 20px;">更新可能延遲，以紙本班表為準</p>
       <button onclick="document.getElementById('popup-overlay').style.display='none'"
         style="padding: 8px 20px; background-color: #5d3a91; color: white; border: none; border-radius: 6px; font-size: 14px;">確認</button>
     </div>
   </div>
 
+  <!-- 輪值表圖片視窗 -->
+  <div id="rosterModal"
+    style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; justify-content: center; align-items: center;">
+    <div
+      style="background: white; padding: 10px; border-radius: 10px; max-width: 95%; max-height: 95%; overflow: auto; touch-action: manipulation;">
+      <div style="text-align: right;">
+        <button onclick="closeRoster()"
+          style="border: none; background: none; font-size: 20px; color: #888;">✖</button>
+      </div>
+      <p style="font-size: 12px; color: #777; text-align: center;">可使用手指放大縮小查看</p>
+      <img src="shift_roster.png" alt="輪值表"
+        style="width: 100%; height: auto; border-radius: 6px; touch-action: manipulation;" />
+    </div>
+  </div>
+
+  <script>
+    function openRoster() {
+      document.getElementById('rosterModal').style.display = 'flex';
+    }
+    function closeRoster() {
+      document.getElementById('rosterModal').style.display = 'none';
+    }
+  </script>
 </body>
 
 </html>
