@@ -132,6 +132,10 @@
     <div class="date-select">
       <label for="date">請選擇日期：</label>
       <input type="date" id="date" />
+      <span
+        id="weekday"
+        style="margin-left: 10px; font-weight: bold; color: #333"
+      ></span>
     </div>
 
     <div class="schedule-grid">
@@ -231,13 +235,37 @@
 
       document.addEventListener("DOMContentLoaded", function () {
         const dateInput = document.getElementById("date");
+        const weekdaySpan = document.getElementById("weekday");
+
         const today = new Date().toISOString().split("T")[0];
         dateInput.value = today;
+
+        updateWeekday(today);
         fetchSchedule(today);
 
         dateInput.addEventListener("change", function () {
-          fetchSchedule(this.value);
+          const selected = this.value;
+          updateWeekday(selected);
+          fetchSchedule(selected);
         });
+
+        function updateWeekday(dateStr) {
+          const days = [
+            "星期日",
+            "星期一",
+            "星期二",
+            "星期三",
+            "星期四",
+            "星期五",
+            "星期六",
+          ];
+          const dateObj = new Date(dateStr);
+          if (!isNaN(dateObj)) {
+            weekdaySpan.textContent = days[dateObj.getDay()];
+          } else {
+            weekdaySpan.textContent = "";
+          }
+        }
       });
     </script>
 
