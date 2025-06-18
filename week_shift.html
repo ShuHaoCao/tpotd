@@ -49,7 +49,7 @@
 
     .date-block {
       color: white;
-      flex: 2;
+      flex: 2 1 66%;
       padding: 14px;
       font-weight: bold;
       font-size: 1em;
@@ -57,7 +57,7 @@
 
     .shift-block {
       background-color: #ffffff;
-      flex: 1;
+      flex: 1 1 34%;
       padding: 14px;
       text-align: center;
       font-family: "Microsoft JhengHei", sans-serif;
@@ -68,16 +68,17 @@
 
     @media (max-width: 600px) {
       .schedule-item {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        flex-wrap: nowrap;
       }
 
       .date-block, .shift-block {
-        flex: unset;
-        width: 100%;
-        text-align: center;
+        font-size: 0.9em;
         padding: 12px;
-        font-size: 0.95em;
+      }
+
+      .form-group select {
+        font-size: 1em;
       }
     }
   </style>
@@ -159,14 +160,14 @@
         dateBlock.className = "date-block";
         dateBlock.textContent = dateText;
         dateBlock.style.backgroundColor = (weekIndex === 0 || weekIndex === 6)
-          ? "#d32f2f"
-          : "#555";
+          ? "#d32f2f"  // 紅色 for 六日
+          : "#555";    // 深灰 for 平日
 
         const shiftBlock = document.createElement("div");
         shiftBlock.className = "shift-block";
         shiftBlock.textContent = found;
         if (found === "公休") {
-          shiftBlock.style.color = "#d32f2f"; // 公休顯示紅色
+          shiftBlock.style.color = "#d32f2f"; // 紅字
         }
 
         row.appendChild(dateBlock);
