@@ -1,182 +1,189 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>一週班表查詢</title>
-  <style>
-    body {
-      font-family: "Microsoft JhengHei", sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f3f3f3;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>一週班表查詢</title>
+    <style>
+      body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f3f3f3;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 1.8em;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
 
-    .form-group {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .form-group {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    .notice {
-      text-align: center;
-      color: #666;
-      font-size: 0.95em;
-      margin-bottom: 20px;
-    }
+      .notice {
+        text-align: center;
+        color: #666;
+        font-size: 0.95em;
+        margin-bottom: 20px;
+      }
 
-    select {
-      font-size: 1em;
-      padding: 8px;
-      min-width: 200px;
-    }
+      select {
+        font-size: 1em;
+        padding: 8px;
+        min-width: 200px;
+      }
 
-    .schedule-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 10px auto;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 600px;
-    }
-
-    .date-block {
-      color: white;
-      flex: 2 1 66%;
-      padding: 14px;
-      font-weight: bold;
-      font-size: 1em;
-    }
-
-    .shift-block {
-      background-color: #ffffff;
-      flex: 1 1 34%;
-      padding: 14px;
-      text-align: center;
-      font-family: "Microsoft JhengHei", sans-serif;
-      font-weight: bold;
-      font-size: 1em;
-      color: #000000;
-    }
-
-    @media (max-width: 600px) {
       .schedule-item {
-        flex-direction: row;
-        flex-wrap: nowrap;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px auto;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
       }
 
-      .date-block, .shift-block {
-        font-size: 0.9em;
-        padding: 12px;
-      }
-
-      .form-group select {
+      .date-block {
+        color: white;
+        flex: 2 1 66%;
+        padding: 14px;
+        font-weight: bold;
         font-size: 1em;
       }
-    }
-  </style>
-</head>
-<body>
-  <h1>一週班表查詢</h1>
 
-  <div class="form-group">
-    <label for="staffSelect">選擇人員：</label>
-    <select id="staffSelect">
-      <option value="">請選擇</option>
-    </select>
-  </div>
-  <div class="notice">公休代表不上班:公休/輪休/家庭照顧假等。</div>
-
-  <div id="scheduleList"></div>
-
-  <script>
-    const weekdayMap = ["日", "一", "二", "三", "四", "五", "六"];
-
-    async function loadSchedule() {
-      const res = await fetch("schedule_data.json");
-      const data = await res.json();
-      delete data["lastUpdated"];
-
-      const nameSet = new Set();
-      for (const day of Object.values(data)) {
-        for (const person of Object.values(day)) {
-          const name = person?.trim();
-          if (name && name !== "-" && name !== "#溢出!") {
-            nameSet.add(name);
-          }
-        }
+      .shift-block {
+        background-color: #ffffff;
+        flex: 1 1 34%;
+        padding: 14px;
+        text-align: center;
+        font-family: "Microsoft JhengHei", sans-serif;
+        font-weight: bold;
+        font-size: 1em;
+        color: #000000;
       }
 
-      const sortedNames = [...nameSet].sort();
-      const select = document.getElementById("staffSelect");
-      sortedNames.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = opt.textContent = name;
-        select.appendChild(opt);
-      });
+      @media (max-width: 600px) {
+        .schedule-item {
+          flex-direction: row;
+          flex-wrap: nowrap;
+        }
 
-      select.addEventListener("change", () => {
-        if (select.value) showWeek(data, select.value);
-        else document.getElementById("scheduleList").innerHTML = "";
-      });
-    }
+        .date-block,
+        .shift-block {
+          font-size: 0.9em;
+          padding: 12px;
+        }
 
-    function showWeek(data, name) {
-      const container = document.getElementById("scheduleList");
-      container.innerHTML = "";
+        .form-group select {
+          font-size: 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>一週班表查詢</h1>
 
-      const today = new Date(); // ← 可改成 new Date()
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(today);
-        d.setDate(d.getDate() + i);
-        const key = d.toISOString().split("T")[0];
-        const displayDate = key.replace(/-/g, "/");
-        const weekIndex = d.getDay();
-        const week = weekdayMap[weekIndex];
-        const dateText = `${displayDate}【星期${week}】`;
+    <div class="form-group">
+      <label for="staffSelect">選擇人員：</label>
+      <select id="staffSelect">
+        <option value="">請選擇</option>
+      </select>
+    </div>
+    <div class="notice">公休代表不上班:公休/輪休/家庭照顧假等。</div>
 
-        let found = "公休";
-        const shiftData = data[key];
-        if (shiftData) {
-          for (const [shift, person] of Object.entries(shiftData)) {
-            if (person?.trim() === name) {
-              found = shift;
-              break;
+    <div id="scheduleList"></div>
+
+    <script>
+      const weekdayMap = ["日", "一", "二", "三", "四", "五", "六"];
+
+      async function loadSchedule() {
+        const res = await fetch("schedule_data.json");
+        const data = await res.json();
+        delete data["lastUpdated"];
+
+        const nameSet = new Set();
+        for (const day of Object.values(data)) {
+          for (const person of Object.values(day)) {
+            const name = person?.trim();
+            if (
+              name &&
+              name !== "-" &&
+              name !== "#溢出!" &&
+              name !== "賴世豪"
+            ) {
+              nameSet.add(name);
             }
           }
         }
 
-        const row = document.createElement("div");
-        row.className = "schedule-item";
+        const sortedNames = [...nameSet].sort();
+        const select = document.getElementById("staffSelect");
+        sortedNames.forEach((name) => {
+          const opt = document.createElement("option");
+          opt.value = opt.textContent = name;
+          select.appendChild(opt);
+        });
 
-        const dateBlock = document.createElement("div");
-        dateBlock.className = "date-block";
-        dateBlock.textContent = dateText;
-        dateBlock.style.backgroundColor = (weekIndex === 0 || weekIndex === 6)
-          ? "#d32f2f"  // 紅色 for 六日
-          : "#555";    // 深灰 for 平日
-
-        const shiftBlock = document.createElement("div");
-        shiftBlock.className = "shift-block";
-        shiftBlock.textContent = found;
-        if (found === "公休") {
-          shiftBlock.style.color = "#d32f2f"; // 紅字
-        }
-
-        row.appendChild(dateBlock);
-        row.appendChild(shiftBlock);
-        container.appendChild(row);
+        select.addEventListener("change", () => {
+          if (select.value) showWeek(data, select.value);
+          else document.getElementById("scheduleList").innerHTML = "";
+        });
       }
-    }
 
-    loadSchedule();
-  </script>
-</body>
+      function showWeek(data, name) {
+        const container = document.getElementById("scheduleList");
+        container.innerHTML = "";
+
+        const today = new Date(); // ← 可改成 new Date()
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() + i);
+          const key = d.toISOString().split("T")[0];
+          const displayDate = key.replace(/-/g, "/");
+          const weekIndex = d.getDay();
+          const week = weekdayMap[weekIndex];
+          const dateText = `${displayDate}【星期${week}】`;
+
+          let found = "公休";
+          const shiftData = data[key];
+          if (shiftData) {
+            for (const [shift, person] of Object.entries(shiftData)) {
+              if (person?.trim() === name) {
+                found = shift;
+                break;
+              }
+            }
+          }
+
+          const row = document.createElement("div");
+          row.className = "schedule-item";
+
+          const dateBlock = document.createElement("div");
+          dateBlock.className = "date-block";
+          dateBlock.textContent = dateText;
+          dateBlock.style.backgroundColor =
+            weekIndex === 0 || weekIndex === 6
+              ? "#d32f2f" // 紅色 for 六日
+              : "#555"; // 深灰 for 平日
+
+          const shiftBlock = document.createElement("div");
+          shiftBlock.className = "shift-block";
+          shiftBlock.textContent = found;
+          if (found === "公休") {
+            shiftBlock.style.color = "#d32f2f"; // 紅字
+          }
+
+          row.appendChild(dateBlock);
+          row.appendChild(shiftBlock);
+          container.appendChild(row);
+        }
+      }
+
+      loadSchedule();
+    </script>
+  </body>
 </html>
