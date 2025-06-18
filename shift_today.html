@@ -308,43 +308,49 @@
     </div>
 
     <script>
-      async function loadSchedule() {
-        const today = new Date();
-        const todayStr =
-          today.getFullYear() +
-          "-" +
-          String(today.getMonth() + 1).padStart(2, "0") +
-          "-" +
-          String(today.getDate()).padStart(2, "0");
-        const displayDate = todayStr.replace(/-/g, "/");
-        document.getElementById(
-          "todayTitle"
-        ).textContent = `📅 本日班表（${displayDate}）`;
+  async function loadSchedule() {
+    const today = new Date();
+    const todayStr =
+      today.getFullYear() +
+      "-" +
+      String(today.getMonth() + 1).padStart(2, "0") +
+      "-" +
+      String(today.getDate()).padStart(2, "0");
+    const displayDate = todayStr.replace(/-/g, "/");
 
-        try {
-          const response = await fetch("schedule_data.json");
-          const data = await response.json();
-          const todayData = data[todayStr];
-          if (!todayData) {
-            alert("找不到今天的班表資料。");
-            return;
-          }
+    // 新增：取得星期幾
+    const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+    const dayOfWeek = weekdays[today.getDay()];
 
-          document.querySelectorAll(".shift-row").forEach((row) => {
-            const label = row
-              .querySelector(".shift-label")
-              ?.textContent?.trim();
-            if (label && todayData[label] !== undefined) {
-              row.querySelector(".staff-name").textContent = todayData[label];
-            }
-          });
-        } catch (err) {
-          alert("載入班表資料失敗：" + err.message);
-        }
+    document.getElementById(
+      "todayTitle"
+    ).textContent = `本日班表（${displayDate} ${dayOfWeek}）`;
+
+    try {
+      const response = await fetch("schedule_data.json");
+      const data = await response.json();
+      const todayData = data[todayStr];
+      if (!todayData) {
+        alert("找不到今天的班表資料。");
+        return;
       }
 
-      window.onload = loadSchedule;
-    </script>
+      document.querySelectorAll(".shift-row").forEach((row) => {
+        const label = row
+          .querySelector(".shift-label")
+          ?.textContent?.trim();
+        if (label && todayData[label] !== undefined) {
+          row.querySelector(".staff-name").textContent = todayData[label];
+        }
+      });
+    } catch (err) {
+      alert("載入班表資料失敗：" + err.message);
+    }
+  }
+
+  window.onload = loadSchedule;
+</script>
+
     <footer>
       <div>© 2025 臺南郵局運輸股</div>
       <div>僅供內部使用，未經授權不得轉載</div>
