@@ -102,8 +102,8 @@
         background-color: #595959;
       }
 
-       .orange {
-        background-color: #C04F15;
+      .orange {
+        background-color: #c04f15;
       }
 
       @media (max-width: 480px) {
@@ -308,48 +308,48 @@
     </div>
 
     <script>
-  async function loadSchedule() {
-    const today = new Date();
-    const todayStr =
-      today.getFullYear() +
-      "-" +
-      String(today.getMonth() + 1).padStart(2, "0") +
-      "-" +
-      String(today.getDate()).padStart(2, "0");
-    const displayDate = todayStr.replace(/-/g, "/");
+      async function loadSchedule() {
+        const today = new Date();
+        const todayStr =
+          today.getFullYear() +
+          "-" +
+          String(today.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(today.getDate()).padStart(2, "0");
+        const displayDate = todayStr.replace(/-/g, "/");
 
-    // 新增：取得星期幾
-    const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
-    const dayOfWeek = weekdays[today.getDay()];
+        // 新增：取得星期幾
+        const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+        const dayOfWeek = weekdays[today.getDay()];
 
-    document.getElementById(
-      "todayTitle"
-    ).textContent = `本日班表（${displayDate} ${dayOfWeek}）`;
+        document.getElementById(
+          "todayTitle"
+        ).textContent = `【本日班表】${displayDate} (${dayOfWeek})`;
 
-    try {
-      const response = await fetch("schedule_data.json");
-      const data = await response.json();
-      const todayData = data[todayStr];
-      if (!todayData) {
-        alert("找不到今天的班表資料。");
-        return;
+        try {
+          const response = await fetch("schedule_data.json");
+          const data = await response.json();
+          const todayData = data[todayStr];
+          if (!todayData) {
+            alert("找不到今天的班表資料。");
+            return;
+          }
+
+          document.querySelectorAll(".shift-row").forEach((row) => {
+            const label = row
+              .querySelector(".shift-label")
+              ?.textContent?.trim();
+            if (label && todayData[label] !== undefined) {
+              row.querySelector(".staff-name").textContent = todayData[label];
+            }
+          });
+        } catch (err) {
+          alert("載入班表資料失敗：" + err.message);
+        }
       }
 
-      document.querySelectorAll(".shift-row").forEach((row) => {
-        const label = row
-          .querySelector(".shift-label")
-          ?.textContent?.trim();
-        if (label && todayData[label] !== undefined) {
-          row.querySelector(".staff-name").textContent = todayData[label];
-        }
-      });
-    } catch (err) {
-      alert("載入班表資料失敗：" + err.message);
-    }
-  }
-
-  window.onload = loadSchedule;
-</script>
+      window.onload = loadSchedule;
+    </script>
 
     <footer>
       <div>© 2025 臺南郵局運輸股</div>
