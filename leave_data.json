@@ -104,8 +104,8 @@
     "used": 3,
     "remain": 24,
     "prev": 2,
-    "makeup": 1,
-    "remainLeave": 1
+    "makeup": 0,
+    "remainLeave":2
   },
   "C03": {
     "name": "陳柏林",
@@ -147,7 +147,7 @@
     "name": "黃仁政",
     "past": 14,
     "now": 1,
-    "rate": "46.67%",
+    "rate": "50.00%",
     "approve": 30,
     "used": 15,
     "remain": 15,
@@ -260,8 +260,8 @@
     "used": 11,
     "remain": 19,
     "prev": 1,
-    "makeup": 1,
-    "remainLeave": 0
+    "makeup": 0,
+    "remainLeave": 1
   },
   "D08": {
     "name": "陳柏宇",
@@ -290,11 +290,11 @@
   "D10": {
     "name": "程世桓",
     "past": 4,
-    "now": 3,
-    "rate": "46.67%",
+    "now": 1,
+    "rate": "33.33%",
     "approve": 15,
-    "used": 7,
-    "remain": 8,
+    "used": 5,
+    "remain": 10,
     "prev": 0,
     "makeup": 0,
     "remainLeave": 0
