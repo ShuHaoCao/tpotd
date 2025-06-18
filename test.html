@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RWD 手機特效展示</title>
+
+  <!-- AOS 滾動動畫套件 -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f0f4f8;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .ripple-btn {
+      position: relative;
+      overflow: hidden;
+      padding: 12px 24px;
+      background-color: #4a90e2;
+      color: white;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 20px auto;
+      display: block;
+      transition: background 0.3s ease;
+    }
+
+    .ripple-btn:active {
+      background-color: #357ABD;
+    }
+
+    .ripple-btn .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.7);
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+    }
+
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    .accordion {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .accordion-item {
+      background: #fff;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .accordion-header {
+      padding: 15px 20px;
+      background: #e3f2fd;
+      cursor: pointer;
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      background: #f9f9f9;
+      padding: 0 20px;
+    }
+
+    .accordion-content.open {
+      padding: 15px 20px;
+    }
+
+    .section-box {
+      background: #fff;
+      padding: 30px;
+      margin: 40px auto;
+      max-width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>✨ 手機特效展示頁</h1>
+
+  <!-- Ripple 波紋按鈕 -->
+  <button class="ripple-btn">點我體驗波紋</button>
+
+  <!-- 滾動動畫區塊 -->
+  <div class="section-box" data-aos="fade-up">
+    <h2>區塊一</h2>
+    <p>這個區塊在滾動進視窗時會淡入顯示，非常適合介紹內容或公告。</p>
+  </div>
+
+  <div class="section-box" data-aos="fade-right">
+    <h2>區塊二</h2>
+    <p>你可以用不同方向的淡入效果讓版面更有層次。</p>
+  </div>
+
+  <!-- 手風琴選單 -->
+  <div class="accordion" data-aos="fade-up">
+    <div class="accordion-item">
+      <div class="accordion-header">什麼是 Ripple 效果？</div>
+      <div class="accordion-content">Ripple 效果是使用者點擊按鈕時，從點擊位置擴散開來的波紋動畫，常見於 Material Design。</div>
+    </div>
+    <div class="accordion-item">
+      <div class="accordion-header">AOS 是什麼？</div>
+      <div class="accordion-content">AOS (Animate On Scroll) 是一個輕量的 JS 套件，可以讓網頁元素在滾動時出現動畫效果。</div>
+    </div>
+  </div>
+
+  <!-- AOS + JS 特效 -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+
+    // Ripple 效果
+    document.querySelectorAll('.ripple-btn').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        ripple.style.left = `${e.offsetX}px`;
+        ripple.style.top = `${e.offsetY}px`;
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+      });
+    });
+
+    // 手風琴切換
+    document.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const content = header.nextElementSibling;
+        const open = content.classList.toggle('open');
+        content.style.maxHeight = open ? content.scrollHeight + "px" : null;
+      });
+    });
+  </script>
+
+</body>
+</html>
