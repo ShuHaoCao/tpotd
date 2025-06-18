@@ -132,7 +132,7 @@
       const container = document.getElementById("scheduleList");
       container.innerHTML = "";
 
-      const today = new Date("2025-06-19"); // ← 可改成 new Date()
+      const today = new Date(); // ← 可改成 new Date()
       for (let i = 0; i < 7; i++) {
         const d = new Date(today);
         d.setDate(d.getDate() + i);
