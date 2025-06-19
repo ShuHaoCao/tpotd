@@ -123,7 +123,8 @@
       });
     }
 
-    fetch("staff_shift_stats_data.json")
+    // ✅ 防快取載入 JSON
+    fetch("staff_shift_stats_data.json?t=" + new Date().getTime())
       .then(res => res.json())
       .then(data => {
         staffData = data;

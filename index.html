@@ -1,210 +1,335 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>臺南郵局運輸股班表查詢</title>
-  <style>
-    body {
-      background-color: #fdf6fd;
-      font-family: "Microsoft JhengHei", sans-serif;
-      margin: 0;
-      padding: 0;
-      background-image: url('logo.png');
-      background-repeat: no-repeat;
-      background-position: center top;
-      background-size: 100px auto;
-      background-attachment: fixed;
-      animation: fadeIn 1s ease-in;
-    }
-
-    .container {
-      width: 80%;
-      margin: 0 auto;
-      padding-top: 40px;
-      animation: slideIn 1s ease;
-    }
-
-    h1 {
-      text-align: center;
-      color: #5d3a91;
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-
-    #datetime {
-      text-align: center;
-      font-size: 16px;
-      color: #666;
-      margin-bottom: 24px;
-    }
-
-    .section-title {
-      color: #5d3a91;
-      font-weight: bold;
-      margin: 20px 0 6px;
-      font-size: 18px;
-      border-left: 4px solid #5d3a91;
-      padding-left: 10px;
-      animation: fadeIn 1.2s ease;
-    }
-
-    .button-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 40px;
-    }
-
-    .btn {
-      display: block;
-      background-color: #f7f3f8;
-      color: #5d3a91;
-      text-decoration: none;
-      border-radius: 30px;
-      padding: 14px 26px;
-      font-size: 18px;
-      font-weight: bold;
-      box-shadow: 0 2px 6px rgba(130, 106, 174, 0.2);
-      text-align: center;
-      transition: all 0.3s ease;
-      width: 100%;
-      transform: scale(0.98);
-      animation: zoomIn 0.6s ease;
-    }
-
-    .btn:hover {
-      background-color: #e9def4;
-      transform: scale(1.03);
-    }
-
-    .btn:active {
-      transform: scale(0.95);
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px 10px;
-      font-size: 0.85em;
-      color: #999;
-      animation: fadeIn 1s ease;
-    }
-
-    #popup-overlay,
-    #rosterModal {
-      animation: fadeIn 0.5s ease;
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 20px;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>臺南郵局運輸股班表查詢</title>
+    <style>
+      body {
+        background-color: #fdf6fd;
+        font-family: "Microsoft JhengHei", sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url("logo.png");
+        background-repeat: no-repeat;
+        background-position: center top;
+        background-size: 100px auto;
+        background-attachment: fixed;
+        animation: fadeIn 1s ease-in;
       }
 
-      .btn {
+      .container {
+        width: 80%;
+        margin: 0 auto;
+        padding-top: 40px;
+        animation: slideIn 1s ease;
+      }
+
+      h1 {
+        text-align: center;
+        color: #5d3a91;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      #datetime {
+        text-align: center;
         font-size: 16px;
-        padding: 12px 22px;
+        color: #666;
+        margin-bottom: 24px;
       }
 
       .section-title {
-        font-size: 16px;
+        color: #5d3a91;
+        font-weight: bold;
+        margin: 20px 0 6px;
+        font-size: 18px;
+        border-left: 4px solid #5d3a91;
+        padding-left: 10px;
+        animation: fadeIn 1.2s ease;
       }
-    }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 40px;
+      }
 
-    @keyframes slideIn {
-      from { transform: translateY(20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+      .btn {
+        display: block;
+        background-color: #f7f3f8;
+        color: #5d3a91;
+        text-decoration: none;
+        border-radius: 30px;
+        padding: 14px 26px;
+        font-size: 18px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(130, 106, 174, 0.2);
+        text-align: center;
+        transition: all 0.3s ease;
+        width: 100%;
+        transform: scale(0.98);
+        animation: zoomIn 0.6s ease;
+      }
 
-    @keyframes zoomIn {
-      from { transform: scale(0.9); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-  </style>
-</head>
+      .btn:hover {
+        background-color: #e9def4;
+        transform: scale(1.03);
+      }
 
-<body>
-  <div class="container">
-    <h1>臺南郵局運輸股班表查詢</h1>
-    <p id="datetime"></p>
+      .btn:active {
+        transform: scale(0.95);
+      }
 
-    <div class="button-container">
-      <div class="section-title">班表查詢</div>
-      <a href="shift_schedule.html" class="btn">全部班表</a>
-      <a href="shift_today.html" class="btn">本日班表</a>
-      <a href="week_shift.html" class="btn">一週班表</a>
+      footer {
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 0.85em;
+        color: #999;
+        animation: fadeIn 1s ease;
+      }
 
-      <div class="section-title">個人專區</div>
-      <a href="check_time_off.html" class="btn">個人休假</a>
-      <a href="shift_staff_stats.html" class="btn">各班人員表</a>
-      <a href="staff_shift_stats.html" class="btn">人員排班表</a>
+      #popup-overlay,
+      #rosterModal {
+        animation: fadeIn 0.5s ease;
+      }
 
-      <div class="section-title">其他功能</div>
-      <a href="javascript:void(0)" onclick="openRoster()" class="btn">本月輪值表</a>
-    </div>
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 20px;
+        }
 
-    <footer>
-      <div>© 2025 臺南郵局運輸股</div>
-      <div>僅供內部使用，未經授權不得轉載</div>
-    </footer>
-  </div>
+        .btn {
+          font-size: 16px;
+          padding: 12px 22px;
+        }
 
-  <!-- 提示視窗 -->
-  <div id="popup-overlay"
-    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; z-index: 9999;">
-    <div
-      style="background: white; padding: 20px 24px; border-radius: 12px; max-width: 80%; box-shadow: 0 4px 10px rgba(0,0,0,0.2); text-align: center;">
-      <p style="font-size: 18px; font-weight: bold; color: #5d3a91; margin-bottom: 12px;">重要提醒</p>
-      <p style="font-size: 16px; color: #444; margin-bottom: 20px;">更新可能延遲，以紙本班表為準</p>
-      <button onclick="document.getElementById('popup-overlay').style.display='none'"
-        style="padding: 8px 20px; background-color: #5d3a91; color: white; border: none; border-radius: 6px; font-size: 14px;">確認</button>
-    </div>
-  </div>
+        .section-title {
+          font-size: 16px;
+        }
+      }
 
-  <!-- 輪值表圖片視窗 -->
-  <div id="rosterModal"
-    style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 9999; justify-content: center; align-items: center;">
-    <div
-      style="background: white; padding: 10px; border-radius: 10px; max-width: 95%; max-height: 95%; overflow: auto; touch-action: manipulation;">
-      <div style="text-align: right;">
-        <button onclick="closeRoster()"
-          style="border: none; background: none; font-size: 20px; color: #888;">✖</button>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>臺南郵局運輸股班表查詢</h1>
+      <p id="datetime"></p>
+
+      <div class="button-container">
+        <div class="section-title">班表查詢</div>
+        <a href="shift_schedule.html" class="btn">全部班表</a>
+        <a href="shift_today.html" class="btn">本日班表</a>
+        <a href="week_shift.html" class="btn">一週班表</a>
+
+        <div class="section-title">個人專區</div>
+        <a href="check_time_off.html" class="btn">個人休假</a>
+        <a href="shift_staff_stats.html" class="btn">各班人員表</a>
+        <a href="staff_shift_stats.html" class="btn">人員排班表</a>
+
+        <div class="section-title">其他功能</div>
+        <a href="javascript:void(0)" onclick="openRoster()" class="btn"
+          >本月輪值表</a
+        >
+        <a href="javascript:void(0)" class="btn" onclick="checkPassword()"
+          >工具箱</a
+        >
       </div>
-      <p style="font-size: 12px; color: #777; text-align: center;">可使用手指放大縮小查看</p>
-      <img src="shift_roster.png" alt="輪值表"
-        style="width: 100%; height: auto; border-radius: 6px; touch-action: manipulation;" />
+
+      <footer>
+        <div>© 2025 臺南郵局運輸股</div>
+        <div>僅供內部使用，未經授權不得轉載</div>
+      </footer>
     </div>
-  </div>
 
-  <script>
-    function openRoster() {
-      document.getElementById('rosterModal').style.display = 'flex';
-    }
-    function closeRoster() {
-      document.getElementById('rosterModal').style.display = 'none';
-    }
+    <!-- 提示視窗 -->
+    <div
+      id="popup-overlay"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      "
+    >
+      <div
+        style="
+          background: white;
+          padding: 20px 24px;
+          border-radius: 12px;
+          max-width: 80%;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          text-align: center;
+        "
+      >
+        <p
+          style="
+            font-size: 18px;
+            font-weight: bold;
+            color: #5d3a91;
+            margin-bottom: 12px;
+          "
+        >
+          重要提醒
+        </p>
+        <p style="font-size: 16px; color: #444; margin-bottom: 20px">
+          更新可能延遲，以紙本班表為準
+        </p>
+        <button
+          onclick="document.getElementById('popup-overlay').style.display='none'"
+          style="
+            padding: 8px 20px;
+            background-color: #5d3a91;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+          "
+        >
+          確認
+        </button>
+      </div>
+    </div>
 
-    function updateDateTime() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth() + 1;
-      const date = now.getDate();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      const seconds = String(now.getSeconds()).padStart(2, '0');
+    <!-- 輪值表圖片視窗 -->
+    <div
+      id="rosterModal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background: white;
+          padding: 10px;
+          border-radius: 10px;
+          max-width: 95%;
+          max-height: 95%;
+          overflow: auto;
+          touch-action: manipulation;
+        "
+      >
+        <div style="text-align: right">
+          <button
+            onclick="closeRoster()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">
+          可使用手指放大縮小查看
+        </p>
+        <img
+          src="shift_roster.png"
+          alt="輪值表"
+          style="
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            touch-action: manipulation;
+          "
+        />
+      </div>
+    </div>
 
-      const dateStr = `${year}年${month}月${date}日`;
-      const timeStr = `${hours}:${minutes}:${seconds}`;
-      document.getElementById("datetime").textContent = `${dateStr}　${timeStr}`;
-    }
+    <script>
+      function openRoster() {
+        document.getElementById("rosterModal").style.display = "flex";
+      }
+      function closeRoster() {
+        document.getElementById("rosterModal").style.display = "none";
+      }
 
-    updateDateTime();
-    setInterval(updateDateTime, 1000);
-  </script>
-</body>
+      function updateDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+
+        const dateStr = `${year}年${month}月${date}日`;
+        const timeStr = `${hours}:${minutes}:${seconds}`;
+        document.getElementById(
+          "datetime"
+        ).textContent = `${dateStr}　${timeStr}`;
+      }
+
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+
+      function checkPassword() {//密碼區塊
+        const input = prompt("請輸入密碼才能進入工具箱：");
+        if (input === null) return; // 使用者取消
+
+        // 避免快取加上 timestamp
+        fetch("password.json?t=" + new Date().getTime())
+          .then((res) => {
+            if (!res.ok) throw new Error("無法載入密碼資料");
+            return res.json();
+          })
+          .then((data) => {
+            if (input === data.toolboxPassword) {
+              window.location.href = "tools.html";
+            } else {
+              alert("密碼錯誤，請再試一次！");
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("驗證失敗，請稍後再試！");
+          });
+      }
+    </script>
+  </body>
 </html>

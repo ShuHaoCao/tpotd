@@ -101,7 +101,8 @@
   <script>
     let shiftData = {};
 
-    fetch('shift_staff_stats_data.json')
+    // ✅ 防快取處理：加上 timestamp
+    fetch('shift_staff_stats_data.json?t=' + new Date().getTime())
       .then(response => response.json())
       .then(data => {
         shiftData = data;

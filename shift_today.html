@@ -327,7 +327,9 @@
         ).textContent = `【本日班表】${displayDate} (${dayOfWeek})`;
 
         try {
-          const response = await fetch("schedule_data.json");
+          const response = await fetch(
+            "schedule_data.json?t=" + new Date().getTime()
+          );
           const data = await response.json();
           const todayData = data[todayStr];
           if (!todayData) {

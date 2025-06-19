@@ -139,9 +139,7 @@
     </div>
 
     <div class="schedule-grid">
-      <!-- 左側 -->
       <div class="column" id="left-column"></div>
-      <!-- 右側 -->
       <div class="column" id="right-column"></div>
     </div>
 
@@ -212,12 +210,14 @@
       };
 
       const fetchSchedule = (selectedDate) => {
-        fetch("schedule_data.json")
+        const noCacheURL = "schedule_data.json?t=" + new Date().getTime(); // ← 防快取
+        fetch(noCacheURL)
           .then((res) => {
             const lastModified = res.headers.get("Last-Modified");
             if (lastModified) {
               document.getElementById("update-time").innerText =
-                "資料更新時間：" + new Date(lastModified).toLocaleString();
+                "資料更新時間：" +
+                new Date(lastModified).toLocaleString();
             }
             return res.json();
           })

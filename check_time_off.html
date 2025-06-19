@@ -209,7 +209,8 @@
       document.getElementById("remainLeave").innerText = normalize(p.remainLeave);
     }
 
-    fetch("leave_data.json")
+    // ✅ 防快取版本
+    fetch("leave_data.json?t=" + new Date().getTime())
       .then(res => res.json())
       .then(data => {
         leaveData = data;
