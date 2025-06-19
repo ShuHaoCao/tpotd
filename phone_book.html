@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>電話資料查詢</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #fff;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    label {
+      margin-top: 12px;
+      width: 100%;
+      text-align: left;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 12px;
+      background-color: #333;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      input, select, button {
+        font-size: 14px;
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="nameInput">查詢名稱</label>
+    <input list="nameList" id="nameInput" placeholder="輸入或選擇名稱" />
+    <datalist id="nameList"></datalist>
+
+    <button onclick="search()">查詢</button>
+
+    <label>手機</label>
+    <input id="mobile" readonly />
+
+    <label>網路電話</label>
+    <input id="netphone" readonly />
+
+    <label>市話</label>
+    <input id="landline" readonly />
+
+    <label>備註</label>
+    <input id="note" readonly />
+  </div>
+
+  <script>
+    let data = [];
+
+    // 防止快取：加上時間戳記
+    fetch('contacts.json?t=' + new Date().getTime())
+      .then(response => response.json())
+      .then(json => {
+        data = json;
+        const nameList = document.getElementById("nameList");
+        data.forEach(entry => {
+          const option = document.createElement("option");
+          option.value = entry.名稱;
+          nameList.appendChild(option);
+        });
+      });
+
+    function search() {
+      const name = document.getElementById("nameInput").value.trim();
+      const match = data.find(item => item.名稱 === name);
+
+      if (match) {
+        document.getElementById("mobile").value = match.手機 || '';
+        document.getElementById("netphone").value = match.網路電話 || '';
+        document.getElementById("landline").value = match.市話 || '';
+        document.getElementById("note").value = match.備註 || '';
+      } else {
+        alert("查無資料");
+        document.getElementById("mobile").value = '';
+        document.getElementById("netphone").value = '';
+        document.getElementById("landline").value = '';
+        document.getElementById("note").value = '';
+      }
+    }
+  </script>
+</body>
+</html>

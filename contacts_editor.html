@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>聯絡人編輯器</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .editor, .output {
+      flex: 1 1 500px;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .form-group label {
+      font-size: 0.9em;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 5px;
+      font-size: 0.9em;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #1976d2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .entry {
+      background: #eef;
+      padding: 10px;
+      margin-top: 10px;
+      border-left: 4px solid #2196f3;
+    }
+    .entry button {
+      margin-right: 5px;
+    }
+    .edit-btn { background-color: #ff9800; }
+    .delete-btn { background-color: #e53935; }
+    pre {
+      background: #222;
+      color: #eee;
+      padding: 10px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      font-size: 0.85em;
+    }
+    .file-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="editor">
+  <h2>聯絡人編輯器</h2>
+  <div class="form-grid">
+    <div class="form-group"><label>名稱</label><input id="nameInput" type="text"></div>
+    <div class="form-group"><label>手機</label><input id="mobileInput" type="text"></div>
+    <div class="form-group"><label>網路電話</label><input id="voipInput" type="text"></div>
+    <div class="form-group"><label>市話</label><input id="landlineInput" type="text"></div>
+    <div class="form-group" style="grid-column: span 4;"><label>備註</label><input id="noteInput" type="text"></div>
+  </div>
+
+  <button id="submitBtn" onclick="submitEntry()">新增</button>
+  <button id="cancelBtn" onclick="cancelEdit()" style="display:none;background-color:#999;">取消編輯</button>
+
+  <div class="file-actions">
+    <label>📥 載入 JSON：<input type="file" accept=".json" onchange="importJSON(event)"></label>
+    <button onclick="exportJSON()">📤 匯出 JSON</button>
+  </div>
+
+  <h3>資料列表</h3>
+  <div id="entryList"></div>
+</div>
+
+<div class="output">
+  <h2>JSON 預覽（可複製）</h2>
+  <pre id="jsonPreview">[]</pre>
+</div>
+
+<script>
+  let contacts = [];
+  let isEditing = false;
+  let editingIndex = -1;
+
+  function refreshList() {
+    const list = document.getElementById("entryList");
+    list.innerHTML = "";
+    contacts.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.innerHTML = `<b>${item.名稱}</b><br>📱 ${item.手機}｜📶 ${item.網路電話}｜☎ ${item.市話}<br>📝 ${item.備註}
+        <br><button class="edit-btn" onclick="startEdit(${index})">✏️ 編輯</button>
+        <button class="delete-btn" onclick="deleteEntry(${index})">🗑️ 刪除</button>`;
+      list.appendChild(div);
+    });
+    document.getElementById("jsonPreview").textContent = JSON.stringify(contacts, null, 2);
+  }
+
+  function getFormData() {
+    return {
+      "名稱": document.getElementById("nameInput").value.trim(),
+      "手機": document.getElementById("mobileInput").value.trim(),
+      "網路電話": document.getElementById("voipInput").value.trim(),
+      "市話": document.getElementById("landlineInput").value.trim(),
+      "備註": document.getElementById("noteInput").value.trim()
+    };
+  }
+
+  function setFormData(data) {
+    document.getElementById("nameInput").value = data.名稱;
+    document.getElementById("mobileInput").value = data.手機;
+    document.getElementById("voipInput").value = data.網路電話;
+    document.getElementById("landlineInput").value = data.市話;
+    document.getElementById("noteInput").value = data.備註;
+  }
+
+  function clearForm() {
+    document.querySelectorAll("input").forEach(input => input.value = "");
+  }
+
+  function submitEntry() {
+    const entry = getFormData();
+    if (!entry.名稱) {
+      alert("請填寫名稱");
+      return;
+    }
+    if (isEditing) {
+      contacts[editingIndex] = entry;
+      isEditing = false;
+      editingIndex = -1;
+      document.getElementById("submitBtn").textContent = "新增";
+      document.getElementById("cancelBtn").style.display = "none";
+    } else {
+      contacts.push(entry);
+    }
+    clearForm();
+    refreshList();
+  }
+
+  function startEdit(index) {
+    setFormData(contacts[index]);
+    isEditing = true;
+    editingIndex = index;
+    document.getElementById("submitBtn").textContent = "更新";
+    document.getElementById("cancelBtn").style.display = "inline-block";
+  }
+
+  function cancelEdit() {
+    isEditing = false;
+    editingIndex = -1;
+    clearForm();
+    document.getElementById("submitBtn").textContent = "新增";
+    document.getElementById("cancelBtn").style.display = "none";
+  }
+
+  function deleteEntry(index) {
+    if (confirm("確定要刪除這筆聯絡人？")) {
+      contacts.splice(index, 1);
+      refreshList();
+    }
+  }
+
+  function importJSON(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const json = JSON.parse(e.target.result);
+        if (Array.isArray(json)) {
+          contacts = json;
+          refreshList();
+        } else {
+          alert("JSON 格式錯誤，必須為陣列！");
+        }
+      } catch {
+        alert("載入失敗，請確認 JSON 格式！");
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(contacts, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "contacts.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  refreshList();
+</script>
+
+</body>
+</html>
