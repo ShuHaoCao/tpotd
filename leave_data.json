@@ -104,8 +104,8 @@
     "used": 3,
     "remain": 24,
     "prev": 2,
-    "makeup": 0,
-    "remainLeave":2
+    "makeup": 1,
+    "remainLeave":1
   },
   "C03": {
     "name": "陳柏林",
