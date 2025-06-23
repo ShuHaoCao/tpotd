@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>試排班表</title>
+  <style>
+    body {
+      font-family: "Microsoft JhengHei", sans-serif;
+      padding: 20px;
+      background-color: #f8f8f8;
+    }
+    h2 {
+      text-align: center;
+      color: #4a4a4a;
+    }
+    .date-picker {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background-color: #f0f0f0;
+      color: #b30000;
+    }
+    select {
+      width: 100%;
+    }
+    .name-column {
+      background-color: #f9f9f9;
+      font-weight: bold;
+      text-align: left;
+    }
+    .btn-row {
+      text-align: center;
+      padding: 6px;
+    }
+    .btn-clear {
+      padding: 4px 8px;
+      font-size: 0.9em;
+      background-color: #f56c6c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .btn-clear:hover {
+      background-color: #d9534f;
+    }
+  </style>
+</head>
+<body>
+  <h2>試排班表</h2>
+
+  <div class="date-picker">
+    指定開始日期：
+    <input type="date" id="startDate" onchange="updateSchedule()" />
+  </div>
+
+  <table id="scheduleTable">
+    <thead>
+      <tr>
+        <th class="btn-row">
+          <button class="btn-clear" onclick="clearAll()">全部清除</button>
+        </th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(0)">單日清除</button></th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(1)">單日清除</button></th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(2)">單日清除</button></th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(3)">單日清除</button></th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(4)">單日清除</button></th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(5)">單日清除</button></th>
+        <th class="btn-row"><button class="btn-clear" onclick="clearDay(6)">單日清除</button></th>
+      </tr>
+      <tr>
+        <th>姓名</th>
+        <th id="d0"></th>
+        <th id="d1"></th>
+        <th id="d2"></th>
+        <th id="d3"></th>
+        <th id="d4"></th>
+        <th id="d5"></th>
+        <th id="d6"></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th id="w0"></th>
+        <th id="w1"></th>
+        <th id="w2"></th>
+        <th id="w3"></th>
+        <th id="w4"></th>
+        <th id="w5"></th>
+        <th id="w6"></th>
+      </tr>
+    </thead>
+    <tbody id="scheduleBody"></tbody>
+  </table>
+
+  <script>
+    const people = [
+      "王昭文", "謝勝勳", "曹書豪", "陳新安", "楊嶸祜", "蔡綜哲", "吳家偉", "黃仁政",
+      "林養俊", "張健儀", "葉吉順", "邱俊融", "莊景宇", "陳柏宇", "張智雄", "林凱勳",
+      "陳緯謙", "程世恒", "周恆毅", "陳柏林", "周耀宗", "陳俊瑋", "沈銘展", "簡慶富",
+      "葉育宏", "李翊宏", "吳佳錚", "許瑞廷", "鄭憲鴻", "王寶生"
+    ];
+
+    const 不可重複班別 = [
+      "股長", "專員(早)", "專員(中)", "內檯", "空袋檯", "早班1", "早班2", "早班3", "早班4",
+      "新營1線", "新營2線", "自運甲線", "自運乙線", "早班1(六日)", "早班3(六日)",
+      "中班1", "中班2", "中班3", "中班4", "中班5", "中班6", "中班7", "中班8", "中班9",
+      "中班10", "中班11", "中班12", "嘉義B", "大夜班1", "大夜班3", "大夜班1(六日)",
+      "大夜進口接送", "大夜出口接送", "中班1(六日)"
+    ];
+
+    const 可重複班別 = [
+      "公休", "輪休", "補休", "公假", "喪假", "事假", "病假", "借調", "調派", "未到任",
+      "家庭假", "陪產假", "半輪休", "婚假", "支援"
+    ];
+
+    const 班別 = [""].concat(不可重複班別, 可重複班別);
+    let violationPairs = {};
+
+    fetch('violationPairs.json')
+      .then(response => response.json())
+      .then(data => {
+        violationPairs = data;
+        buildTableStructure(); // 確保資料載入後才建表
+      });
+
+    function formatDate(date) {
+      return date.toISOString().split("T")[0];
+    }
+
+    function getWeekdayText(date) {
+      return "星期" + "日一二三四五六".charAt(date.getDay());
+    }
+
+    function updateSchedule() {
+      const inputDate = document.getElementById("startDate").value;
+      if (!inputDate) return;
+      const startDate = new Date(inputDate);
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + i);
+        document.getElementById("d" + i).textContent = formatDate(date);
+        document.getElementById("w" + i).textContent = getWeekdayText(date);
+      }
+    }
+
+    function clearDay(dayIndex) {
+      const table = document.getElementById("scheduleTable");
+      const allRows = table.querySelectorAll("tbody tr");
+      allRows.forEach((tr) => {
+        const td = tr.children[dayIndex + 1];
+        const select = td.querySelector("select");
+        if (select) select.value = "";
+      });
+    }
+
+    function clearAll() {
+      const selects = document.querySelectorAll("#scheduleTable tbody select");
+      selects.forEach((s) => s.value = "");
+    }
+
+    function checkAllRowViolations() {
+      const allRows = document.querySelectorAll("#scheduleTable tbody tr");
+      allRows.forEach((row) => {
+        const selects = row.querySelectorAll("select");
+        for (let i = 0; i < selects.length - 1; i++) {
+          const current = selects[i].value;
+          const next = selects[i + 1].value;
+          const pair = current + next;
+          if (violationPairs[pair] === "違規") {
+            alert("違反11小時規定：" + pair);
+            selects[i + 1].value = "";
+          }
+        }
+      });
+    }
+
+    function buildTableStructure() {
+      const tbody = document.getElementById("scheduleBody");
+      people.forEach((name) => {
+        const row = document.createElement("tr");
+        const nameCell = document.createElement("td");
+        nameCell.className = "name-column";
+        nameCell.textContent = name;
+        row.appendChild(nameCell);
+
+        for (let i = 0; i < 7; i++) {
+          const cell = document.createElement("td");
+          const select = document.createElement("select");
+
+          班別.forEach((opt) => {
+            const option = document.createElement("option");
+            option.value = opt;
+            option.textContent = opt;
+            select.appendChild(option);
+          });
+
+          select.addEventListener("change", function () {
+            const columnIndex = i + 1;
+            const table = document.getElementById("scheduleTable");
+            const allRows = table.querySelectorAll("tbody tr");
+            const selectedValue = select.value;
+
+            if (不可重複班別.includes(selectedValue)) {
+              let count = 0;
+              allRows.forEach((tr) => {
+                const td = tr.children[columnIndex];
+                const val = td.querySelector("select").value;
+                if (val === selectedValue) count++;
+              });
+              if (count > 1) {
+                alert(`該日不可重複排「${selectedValue}」班別！`);
+                select.value = "";
+                return;
+              }
+            }
+
+            if (Object.keys(violationPairs).length > 0) {
+              checkAllRowViolations();
+            }
+          });
+
+          cell.appendChild(select);
+          row.appendChild(cell);
+        }
+
+        tbody.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
