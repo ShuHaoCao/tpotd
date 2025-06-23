@@ -38,11 +38,11 @@
   "B01": {
     "name": "吳家偉",
     "past": 0.5,
-    "now": 1,
-    "rate": "10.71%",
+    "now": 2,
+    "rate": "17.86%",
     "approve": 14,
-    "used": 1.5,
-    "remain": 12.5,
+    "used": 2.5,
+    "remain": 11.5,
     "prev": 0,
     "makeup": 0,
     "remainLeave": 0
@@ -116,8 +116,8 @@
     "used": 8,
     "remain": 7,
     "prev": 3,
-    "makeup": 1,
-    "remainLeave": 2
+    "makeup": 0,
+    "remainLeave": 3
   },
   "C04": {
     "name": "簡慶富",
@@ -134,11 +134,11 @@
   "C05": {
     "name": "陳俊瑋",
     "past": 6.5,
-    "now": 3,
-    "rate": "33.33%",
+    "now": 4,
+    "rate": "36.84%",
     "approve": 28.5,
-    "used": 9.5,
-    "remain": 19,
+    "used": 10.5,
+    "remain": 18,
     "prev": 0,
     "makeup": 0,
     "remainLeave": 0
@@ -224,17 +224,17 @@
     "used": 4,
     "remain": 13,
     "prev": 0.5,
-    "makeup": 0.5,
-    "remainLeave": 0
+    "makeup": 0,
+    "remainLeave": 0.5
   },
   "D05": {
     "name": "林凱勳",
     "past": 6,
-    "now": 5,
-    "rate": "40.74%",
+    "now": 6,
+    "rate": "44.44%",
     "approve": 27,
-    "used": 11,
-    "remain": 16,
+    "used": 12,
+    "remain": 15,
     "prev": 0,
     "makeup": 0,
     "remainLeave": 0
@@ -302,23 +302,23 @@
   "D11": {
     "name": "鄭憲鴻",
     "past": 8,
-    "now": 4,
-    "rate": "42.86%",
+    "now": 5,
+    "rate": "46.43%",
     "approve": 28,
-    "used": 12,
-    "remain": 16,
+    "used": 13,
+    "remain": 15,
     "prev": 3,
-    "makeup": 3,
-    "remainLeave": 0
+    "makeup": 2,
+    "remainLeave": 1
   },
   "D12": {
     "name": "葉育宏",
     "past": 1,
-    "now": 5,
-    "rate": "54.55%",
+    "now": 4,
+    "rate": "45.45%",
     "approve": 11,
-    "used": 6,
-    "remain": 5,
+    "used": 5,
+    "remain": 6,
     "prev": 2,
     "makeup": 2,
     "remainLeave": 0
@@ -326,11 +326,11 @@
   "E01": {
     "name": "張健儀",
     "past": 16.5,
-    "now": 3,
-    "rate": "65.00%",
+    "now": 4,
+    "rate": "68.33%",
     "approve": 30,
-    "used": 19.5,
-    "remain": 10.5,
+    "used": 20.5,
+    "remain": 9.5,
     "prev": 1,
     "makeup": 1,
     "remainLeave": 0
@@ -350,11 +350,11 @@
   "E03": {
     "name": "邱俊融",
     "past": 8,
-    "now": 0,
-    "rate": "34.04%",
+    "now": 1,
+    "rate": "38.30%",
     "approve": 23.5,
-    "used": 8,
-    "remain": 15.5,
+    "used": 9,
+    "remain": 14.5,
     "prev": 2,
     "makeup": 2,
     "remainLeave": 0
