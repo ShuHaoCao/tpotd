@@ -185,9 +185,9 @@
         { label: "中　班12", color: "light-blue" },
         { label: "大夜班 1", color: "gray" },
         { label: "夜1(六日)", color: "gray" },
+        { label: "大夜班 2", color: "gray" },
         { label: "大夜班 3", color: "gray" },
         { label: "支　援 3", color: "orange" },
-        { label: "支　援 4", color: "orange" },
       ];
 
       const createRow = (shift, name) => {
@@ -216,8 +216,7 @@
             const lastModified = res.headers.get("Last-Modified");
             if (lastModified) {
               document.getElementById("update-time").innerText =
-                "資料更新時間：" +
-                new Date(lastModified).toLocaleString();
+                "資料更新時間：" + new Date(lastModified).toLocaleString();
             }
             return res.json();
           })
