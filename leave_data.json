@@ -358,17 +358,5 @@
     "prev": 1.0,
     "makeup": 0.0,
     "remainLeave": 1.0
-  },
-  "NaN": {
-    "name": NaN,
-    "past": NaN,
-    "now": NaN,
-    "rate": "38.29%",
-    "approve": 655.5,
-    "used": 251.0,
-    "remain": NaN,
-    "prev": NaN,
-    "makeup": NaN,
-    "remainLeave": NaN
   }
 }
