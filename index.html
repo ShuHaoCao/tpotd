@@ -112,34 +112,17 @@
       }
 
       @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
+        from { opacity: 0; } to { opacity: 1; }
       }
 
       @keyframes slideIn {
-        from {
-          transform: translateY(20px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
       }
 
       @keyframes zoomIn {
-        from {
-          transform: scale(0.9);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
       }
 
       .modal-overlay {
@@ -209,29 +192,17 @@
         <a href="staff_shift_stats.html" class="btn">人員排班表</a>
 
         <div class="section-title">其他功能</div>
-        <a href="javascript:void(0)" onclick="openShift()" class="btn"
-          >班別值勤表</a
-        >
+        <a href="javascript:void(0)" onclick="openShift()" class="btn">班別值勤表</a>
         <a href="shift_time.html" class="btn">工作詳情表</a>
 
-        <a href="javascript:void(0)" onclick="openRoster()" class="btn"
-          >本月輪值表</a
-        >
-        <a href="javascript:void(0)" onclick="overtime()" class="btn"
-          >加班統計表</a
-        >
-        <a href="javascript:void(0)" onclick="openNorthbound()" class="btn"
-          >北上車次</a
-        >
-        <a href="javascript:void(0)" onclick="openSouthbound()" class="btn"
-          >南下車次</a
-        >
-        <a href="javascript:void(0)" onclick="openExpress()" class="btn"
-          >快捷車次</a
-        >
-        <a href="javascript:void(0)" onclick="checkPassword()" class="btn"
-          >工具箱</a
-        >
+        <a href="javascript:void(0)" onclick="openRoster()" class="btn">本月輪值表</a>
+        <!-- 新增：加班統計表（與本月輪值表同樣彈窗呈現） -->
+        <a href="javascript:void(0)" onclick="overtime()" class="btn">加班統計表</a>
+
+        <a href="javascript:void(0)" onclick="openNorthbound()" class="btn">北上車次</a>
+        <a href="javascript:void(0)" onclick="openSouthbound()" class="btn">南下車次</a>
+        <a href="javascript:void(0)" onclick="openExpress()" class="btn">快捷車次</a>
+        <a href="javascript:void(0)" onclick="checkPassword()" class="btn">工具箱</a>
       </div>
 
       <footer>
@@ -244,142 +215,77 @@
       <div class="modal-content">
         <p style="font-weight: bold; color: #5d3a91">重要提醒</p>
         <p>更新可能延遲，請以紙本班表為準</p>
-        <button
-          onclick="document.getElementById('popup-overlay').style.display='none'"
-          class="confirm-btn"
-        >
-          確認
-        </button>
+        <button onclick="document.getElementById('popup-overlay').style.display='none'" class="confirm-btn">確認</button>
       </div>
     </div>
 
     <div id="shiftModal" class="modal-overlay" style="display: none">
-      <div
-        class="modal-content"
-        style="max-width: 95%; max-height: 95%; overflow: auto"
-      >
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
         <div style="text-align: right">
-          <button
-            onclick="closeShift()"
-            style="border: none; background: none; font-size: 20px; color: #888"
-          >
-            ✖
-          </button>
+          <button onclick="closeShift()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">
-          可使用手指放大縮小查看
-        </p>
-        <img
-          src="shift.png"
-          alt="班別值勤表"
-          style="width: 100%; height: auto; border-radius: 6px"
-        />
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="shift.png" alt="班別值勤表" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
 
     <div id="rosterModal" class="modal-overlay" style="display: none">
-      <div
-        class="modal-content"
-        style="max-width: 95%; max-height: 95%; overflow: auto"
-      >
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
         <div style="text-align: right">
-          <button
-            onclick="closeRoster()"
-            style="border: none; background: none; font-size: 20px; color: #888"
-          >
-            ✖
-          </button>
+          <button onclick="closeRoster()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">
-          可使用手指放大縮小查看
-        </p>
-        <img
-          src="shift_roster.png"
-          alt="輪值表"
-          style="width: 100%; height: auto; border-radius: 6px"
-        />
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="shift_roster.png" alt="輪值表" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <!-- 新增：加班統計表 Modal -->
+    <div id="overtimeModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeOvertime()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="overtime.png" alt="加班統計表" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
 
     <div id="northboundModal" class="modal-overlay" style="display: none">
-      <div
-        class="modal-content"
-        style="max-width: 95%; max-height: 95%; overflow: auto"
-      >
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
         <div style="text-align: right">
-          <button
-            onclick="closeNorthbound()"
-            style="border: none; background: none; font-size: 20px; color: #888"
-          >
-            ✖
-          </button>
+          <button onclick="closeNorthbound()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">
-          可使用手指放大縮小查看
-        </p>
-        <img
-          src="northbound.png"
-          alt="北上車次"
-          style="width: 100%; height: auto; border-radius: 6px"
-        />
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="northbound.png" alt="北上車次" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
 
     <div id="southboundModal" class="modal-overlay" style="display: none">
-      <div
-        class="modal-content"
-        style="max-width: 95%; max-height: 95%; overflow: auto"
-      >
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
         <div style="text-align: right">
-          <button
-            onclick="closeSouthbound()"
-            style="border: none; background: none; font-size: 20px; color: #888"
-          >
-            ✖
-          </button>
+          <button onclick="closeSouthbound()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">
-          可使用手指放大縮小查看
-        </p>
-        <img
-          src="southbound.png"
-          alt="南下車次"
-          style="width: 100%; height: auto; border-radius: 6px"
-        />
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="southbound.png" alt="南下車次" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
 
     <div id="expressModal" class="modal-overlay" style="display: none">
-      <div
-        class="modal-content"
-        style="max-width: 95%; max-height: 95%; overflow: auto"
-      >
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
         <div style="text-align: right">
-          <button
-            onclick="closeExpress()"
-            style="border: none; background: none; font-size: 20px; color: #888"
-          >
-            ✖
-          </button>
+          <button onclick="closeExpress()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">
-          可使用手指放大縮小查看
-        </p>
-        <img
-          src="Express.png"
-          alt="快捷車次"
-          style="width: 100%; height: auto; border-radius: 6px"
-        />
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="Express.png" alt="快捷車次" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
+
     <div id="toolboxModal" class="modal-overlay" style="display: none">
       <div class="modal-content">
         <p style="font-weight: bold; color: #5d3a91">密碼正確！</p>
         <p>點擊下方按鈕前往</p>
         <button onclick="goToToolbox()" class="confirm-btn">前往電話簿</button>
-        <button onclick="goToSimulator()" class="confirm-btn">
-          排班模擬器
-        </button>
+        <button onclick="goToSimulator()" class="confirm-btn">排班模擬器</button>
         <button onclick="closeToolboxModal()" class="cancel-btn">關閉</button>
       </div>
     </div>
@@ -393,52 +299,31 @@
         const hours = String(now.getHours()).padStart(2, "0");
         const minutes = String(now.getMinutes()).padStart(2, "0");
         const seconds = String(now.getSeconds()).padStart(2, "0");
-        document.getElementById(
-          "datetime"
-        ).textContent = `${year}年${month}月${date}日　${hours}:${minutes}:${seconds}`;
+        document.getElementById("datetime").textContent =
+          `${year}年${month}月${date}日　${hours}:${minutes}:${seconds}`;
       }
 
       updateDateTime();
       setInterval(updateDateTime, 1000);
 
-      function openRoster() {
-        document.getElementById("rosterModal").style.display = "flex";
-      }
+      function openRoster(){ document.getElementById("rosterModal").style.display = "flex"; }
+      function closeRoster(){ document.getElementById("rosterModal").style.display = "none"; }
 
-      function closeRoster() {
-        document.getElementById("rosterModal").style.display = "none";
-      }
+      // 新增：加班統計表開關
+      function overtime(){ document.getElementById("overtimeModal").style.display = "flex"; }
+      function closeOvertime(){ document.getElementById("overtimeModal").style.display = "none"; }
 
-      function openNorthbound() {
-        document.getElementById("northboundModal").style.display = "flex";
-      }
+      function openNorthbound(){ document.getElementById("northboundModal").style.display = "flex"; }
+      function closeNorthbound(){ document.getElementById("northboundModal").style.display = "none"; }
 
-      function closeNorthbound() {
-        document.getElementById("northboundModal").style.display = "none";
-      }
+      function openSouthbound(){ document.getElementById("southboundModal").style.display = "flex"; }
+      function closeSouthbound(){ document.getElementById("southboundModal").style.display = "none"; }
 
-      function openSouthbound() {
-        document.getElementById("southboundModal").style.display = "flex";
-      }
+      function openExpress(){ document.getElementById("expressModal").style.display = "flex"; }
+      function closeExpress(){ document.getElementById("expressModal").style.display = "none"; }
 
-      function closeSouthbound() {
-        document.getElementById("southboundModal").style.display = "none";
-      }
-
-      function openExpress() {
-        document.getElementById("expressModal").style.display = "flex";
-      }
-
-      function closeExpress() {
-        document.getElementById("expressModal").style.display = "none";
-      }
-      function openShift() {
-        document.getElementById("shiftModal").style.display = "flex";
-      }
-
-      function closeShift() {
-        document.getElementById("shiftModal").style.display = "none";
-      }
+      function openShift(){ document.getElementById("shiftModal").style.display = "flex"; }
+      function closeShift(){ document.getElementById("shiftModal").style.display = "none"; }
 
       function checkPassword() {
         const input = prompt("請輸入密碼：");
@@ -461,17 +346,9 @@
           });
       }
 
-      function goToToolbox() {
-        window.location.href = "phone_book.html";
-      }
-
-      function closeToolboxModal() {
-        document.getElementById("toolboxModal").style.display = "none";
-      }
-
-      function goToSimulator() {
-        window.location.href = "shift_scheduler.html";
-      }
+      function goToToolbox(){ window.location.href = "phone_book.html"; }
+      function closeToolboxModal(){ document.getElementById("toolboxModal").style.display = "none"; }
+      function goToSimulator(){ window.location.href = "shift_scheduler.html"; }
     </script>
   </body>
 </html>
