@@ -1,10 +1,14 @@
 <!DOCTYPE html>
+<!--文件類型宣告-->
 <html lang="zh-Hant">
+  <!--指定文件主要語言:中文-漢字系統繁體中文-->
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport"
-      content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
-    <title>臺南郵局運輸股班表查詢 v1.1</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"
+    />
+    <title>臺南郵局運輸股班表查詢 v1.0</title>
     <style>
       body {
         background-color: #fdf6fd;
@@ -18,24 +22,28 @@
         background-attachment: fixed;
         animation: fadeIn 1s ease-in;
       }
+
       .container {
         width: 80%;
         margin: 0 auto;
         padding-top: 40px;
         animation: slideIn 1s ease;
       }
+
       h1 {
         text-align: center;
         color: #5d3a91;
         font-size: 24px;
         margin-bottom: 10px;
       }
+
       #datetime {
         text-align: center;
         font-size: 16px;
         color: #666;
         margin-bottom: 24px;
       }
+
       .section-title {
         color: #5d3a91;
         font-weight: bold;
@@ -45,6 +53,7 @@
         padding-left: 10px;
         animation: fadeIn 1.2s ease;
       }
+
       .button-container {
         display: flex;
         flex-direction: column;
@@ -52,6 +61,7 @@
         gap: 14px;
         margin-bottom: 40px;
       }
+
       .btn {
         display: block;
         background-color: #f7f3f8;
@@ -68,8 +78,16 @@
         transform: scale(0.98);
         animation: zoomIn 0.6s ease;
       }
-      .btn:hover { background-color: #e9def4; transform: scale(1.03); }
-      .btn:active { transform: scale(0.95); }
+
+      .btn:hover {
+        background-color: #e9def4;
+        transform: scale(1.03);
+      }
+
+      .btn:active {
+        transform: scale(0.95);
+      }
+
       footer {
         text-align: center;
         padding: 20px 10px;
@@ -77,26 +95,83 @@
         color: #999;
         animation: fadeIn 1s ease;
       }
+
       @media (max-width: 480px) {
-        h1 { font-size: 20px; }
-        .btn { font-size: 16px; padding: 12px 22px; }
-        .section-title { font-size: 16px; }
+        h1 {
+          font-size: 20px;
+        }
+
+        .btn {
+          font-size: 16px;
+          padding: 12px 22px;
+        }
+
+        .section-title {
+          font-size: 16px;
+        }
       }
-      @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-      @keyframes slideIn { from {transform:translateY(20px);opacity:0;} to {transform:translateY(0);opacity:1;} }
-      @keyframes zoomIn { from {transform:scale(0.9);opacity:0;} to {transform:scale(1);opacity:1;} }
+
+      @keyframes fadeIn {
+        from { opacity: 0; } to { opacity: 1; }
+      }
+
+      @keyframes slideIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      @keyframes zoomIn {
+        from { transform: scale(0.9); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
 
       .modal-overlay {
-        position: fixed; top:0; left:0; width:100%; height:100%;
-        background: rgba(0,0,0,0.4); z-index:9999;
-        display: flex; justify-content: center; align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         animation: fadeIn 0.5s ease;
       }
+
       .modal-content {
-        background:white; padding:20px 24px; border-radius:12px;
-        max-width:95%; max-height:95%; overflow:auto;
-        box-shadow:0 4px 12px rgba(0,0,0,0.25);
+        background: white;
+        padding: 20px 24px;
+        border-radius: 12px;
+        max-width: 85%;
+        text-align: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         animation: zoomIn 0.5s ease;
+      }
+
+      .modal-content p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .modal-content button {
+        padding: 10px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 0 6px;
+      }
+
+      .modal-content .confirm-btn {
+        background-color: #5d3a91;
+        color: white;
+      }
+
+      .modal-content .cancel-btn {
+        background-color: #ddd;
+        color: #444;
       }
     </style>
   </head>
@@ -119,9 +194,11 @@
         <div class="section-title">其他功能</div>
         <a href="javascript:void(0)" onclick="openShift()" class="btn">班別值勤表</a>
         <a href="shift_time.html" class="btn">工作詳情表</a>
+
         <a href="javascript:void(0)" onclick="openRoster()" class="btn">本月輪值表</a>
+        <!-- 新增：加班統計表（與本月輪值表同樣彈窗呈現） -->
         <a href="javascript:void(0)" onclick="overtime()" class="btn">加班統計表</a>
-        <a href="javascript:void(0)" onclick="holidayWork()" class="btn">假日出勤表</a>
+
         <a href="javascript:void(0)" onclick="openNorthbound()" class="btn">北上車次</a>
         <a href="javascript:void(0)" onclick="openSouthbound()" class="btn">南下車次</a>
         <a href="javascript:void(0)" onclick="openExpress()" class="btn">快捷車次</a>
@@ -134,89 +211,144 @@
       </footer>
     </div>
 
-    <!-- 加班統計表 Modal -->
-    <div id="overtimeModal" class="modal-overlay" style="display:none">
+    <div id="popup-overlay" class="modal-overlay">
       <div class="modal-content">
-        <div style="text-align:right">
-          <button onclick="closeOvertime()" style="border:none;background:none;font-size:20px;color:#888">✖</button>
-        </div>
-        <p style="font-size:12px;color:#777;text-align:center">
-          可使用手指放大縮小查看（PC 可用滑桿縮放）
-        </p>
-        <div style="text-align:center;">
-          <img id="overtimeImg" src="overtime.png" alt="加班統計表"
-               style="width:100%;height:auto;border-radius:6px;transition:transform 0.2s ease;transform-origin:center top;" />
-        </div>
-        <div style="text-align:center;margin-top:10px;">
-          <input type="range" id="overtimeZoom" min="50" max="200" value="100" style="width:60%;">
-          <span id="overtimeZoomLabel" style="font-size:13px;color:#555;">100%</span>
-        </div>
+        <p style="font-weight: bold; color: #5d3a91">重要提醒</p>
+        <p>更新可能延遲，請以紙本班表為準</p>
+        <button onclick="document.getElementById('popup-overlay').style.display='none'" class="confirm-btn">確認</button>
       </div>
     </div>
 
-    <!-- 假日出勤次數統計表 Modal -->
-    <div id="holidayWorkModal" class="modal-overlay" style="display:none">
+    <div id="shiftModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeShift()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="shift.png" alt="班別值勤表" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <div id="rosterModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeRoster()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="shift_roster.png" alt="輪值表" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <!-- 新增：加班統計表 Modal -->
+    <div id="overtimeModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeOvertime()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="overtime.png" alt="加班統計表" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <div id="northboundModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeNorthbound()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="northbound.png" alt="北上車次" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <div id="southboundModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeSouthbound()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="southbound.png" alt="南下車次" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <div id="expressModal" class="modal-overlay" style="display: none">
+      <div class="modal-content" style="max-width: 95%; max-height: 95%; overflow: auto">
+        <div style="text-align: right">
+          <button onclick="closeExpress()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <img src="Express.png" alt="快捷車次" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+    <div id="toolboxModal" class="modal-overlay" style="display: none">
       <div class="modal-content">
-        <div style="text-align:right">
-          <button onclick="closeHolidayWork()" style="border:none;background:none;font-size:20px;color:#888">✖</button>
-        </div>
-        <p style="font-size:12px;color:#777;text-align:center">
-          可使用手指放大縮小查看（PC 可用滑桿縮放）
-        </p>
-        <div style="text-align:center;">
-          <img id="holidayWorkImg" src="holiday_work.png" alt="假日出勤表"
-               style="width:100%;height:auto;border-radius:6px;transition:transform 0.2s ease;transform-origin:center top;" />
-        </div>
-        <div style="text-align:center;margin-top:10px;">
-          <input type="range" id="holidayWorkZoom" min="50" max="200" value="100" style="width:60%;">
-          <span id="holidayWorkZoomLabel" style="font-size:13px;color:#555;">100%</span>
-        </div>
+        <p style="font-weight: bold; color: #5d3a91">密碼正確！</p>
+        <p>點擊下方按鈕前往</p>
+        <button onclick="goToToolbox()" class="confirm-btn">前往電話簿</button>
+        <button onclick="goToSimulator()" class="confirm-btn">排班模擬器</button>
+        <button onclick="closeToolboxModal()" class="cancel-btn">關閉</button>
       </div>
     </div>
 
     <script>
-      function updateDateTime(){
-        const now=new Date();
-        document.getElementById("datetime").textContent=
-          `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日　${now.toLocaleTimeString('zh-TW',{hour12:false})}`;
+      function updateDateTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        document.getElementById("datetime").textContent =
+          `${year}年${month}月${date}日　${hours}:${minutes}:${seconds}`;
       }
-      setInterval(updateDateTime,1000); updateDateTime();
 
-      // 加班統計表
-      function overtime(){ 
-        document.getElementById("overtimeModal").style.display="flex"; 
-        document.getElementById("overtimeZoom").value=100;
-        document.getElementById("overtimeImg").style.transform="scale(1)";
-        document.getElementById("overtimeZoomLabel").textContent="100%";
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+
+      function openRoster(){ document.getElementById("rosterModal").style.display = "flex"; }
+      function closeRoster(){ document.getElementById("rosterModal").style.display = "none"; }
+
+      // 新增：加班統計表開關
+      function overtime(){ document.getElementById("overtimeModal").style.display = "flex"; }
+      function closeOvertime(){ document.getElementById("overtimeModal").style.display = "none"; }
+
+      function openNorthbound(){ document.getElementById("northboundModal").style.display = "flex"; }
+      function closeNorthbound(){ document.getElementById("northboundModal").style.display = "none"; }
+
+      function openSouthbound(){ document.getElementById("southboundModal").style.display = "flex"; }
+      function closeSouthbound(){ document.getElementById("southboundModal").style.display = "none"; }
+
+      function openExpress(){ document.getElementById("expressModal").style.display = "flex"; }
+      function closeExpress(){ document.getElementById("expressModal").style.display = "none"; }
+
+      function openShift(){ document.getElementById("shiftModal").style.display = "flex"; }
+      function closeShift(){ document.getElementById("shiftModal").style.display = "none"; }
+
+      function checkPassword() {
+        const input = prompt("請輸入密碼：");
+        if (input === null) return;
+        fetch("password.json?t=" + new Date().getTime())
+          .then((res) => {
+            if (!res.ok) throw new Error("無法載入密碼資料");
+            return res.json();
+          })
+          .then((data) => {
+            if (input === data.toolboxPassword) {
+              document.getElementById("toolboxModal").style.display = "flex";
+            } else {
+              alert("密碼錯誤，請再試一次！");
+            }
+          })
+          .catch((err) => {
+            console.error(err);
+            alert("驗證失敗，請稍後再試！");
+          });
       }
-      function closeOvertime(){ document.getElementById("overtimeModal").style.display="none"; }
 
-      const overtimeZoom = document.getElementById("overtimeZoom");
-      const overtimeLabel = document.getElementById("overtimeZoomLabel");
-      const overtimeImg = document.getElementById("overtimeImg");
-      overtimeZoom.addEventListener("input",()=>{
-        const scale=overtimeZoom.value/100;
-        overtimeImg.style.transform=`scale(${scale})`;
-        overtimeLabel.textContent=`${overtimeZoom.value}%`;
-      });
-
-      // 假日出勤表
-      function holidayWork(){ 
-        document.getElementById("holidayWorkModal").style.display="flex"; 
-        document.getElementById("holidayWorkZoom").value=100;
-        document.getElementById("holidayWorkImg").style.transform="scale(1)";
-        document.getElementById("holidayWorkZoomLabel").textContent="100%";
-      }
-      function closeHolidayWork(){ document.getElementById("holidayWorkModal").style.display="none"; }
-
-      const hwZoom = document.getElementById("holidayWorkZoom");
-      const hwLabel = document.getElementById("holidayWorkZoomLabel");
-      const hwImg = document.getElementById("holidayWorkImg");
-      hwZoom.addEventListener("input",()=>{
-        const scale=hwZoom.value/100;
-        hwImg.style.transform=`scale(${scale})`;
-        hwLabel.textContent=`${hwZoom.value}%`;
-      });
+      function goToToolbox(){ window.location.href = "phone_book.html"; }
+      function closeToolboxModal(){ document.getElementById("toolboxModal").style.display = "none"; }
+      function goToSimulator(){ window.location.href = "shift_scheduler.html"; }
     </script>
   </body>
 </html>
