@@ -194,11 +194,9 @@
         <div class="section-title">其他功能</div>
         <a href="javascript:void(0)" onclick="openShift()" class="btn">班別值勤表</a>
         <a href="shift_time.html" class="btn">工作詳情表</a>
-
         <a href="javascript:void(0)" onclick="openRoster()" class="btn">本月輪值表</a>
-        <!-- 新增：加班統計表（與本月輪值表同樣彈窗呈現） -->
         <a href="javascript:void(0)" onclick="overtime()" class="btn">加班統計表</a>
-
+        <a href="javascript:void(0)" onclick="holidayWork()" class="btn">假日出勤表</a>
         <a href="javascript:void(0)" onclick="openNorthbound()" class="btn">北上車次</a>
         <a href="javascript:void(0)" onclick="openSouthbound()" class="btn">南下車次</a>
         <a href="javascript:void(0)" onclick="openExpress()" class="btn">快捷車次</a>
@@ -224,7 +222,7 @@
         <div style="text-align: right">
           <button onclick="closeShift()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看或下載後觀看</p>
         <img src="shift.png" alt="班別值勤表" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
@@ -234,7 +232,7 @@
         <div style="text-align: right">
           <button onclick="closeRoster()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看或下載後觀看</p>
         <img src="shift_roster.png" alt="輪值表" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
@@ -245,8 +243,18 @@
         <div style="text-align: right">
           <button onclick="closeOvertime()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看或下載後觀看</p>
         <img src="overtime.png" alt="加班統計表" style="width: 100%; height: auto; border-radius: 6px"/>
+      </div>
+    </div>
+
+         <div id="holidayWorkModal" class="modal-overlay" style="display:none">
+      <div class="modal-content">
+        <div style="text-align:right">
+          <button onclick="closeHolidayWork()" style="border:none;background:none;font-size:20px;color:#888">✖</button>
+        </div>
+        <p style="font-size:12px;color:#777;text-align:center">可使用手指放大縮小查看或下載後觀看</p>
+        <img src="holiday_work.png" alt="假日出勤表" style="width:100%;height:auto;border-radius:6px"/>
       </div>
     </div>
 
@@ -255,7 +263,7 @@
         <div style="text-align: right">
           <button onclick="closeNorthbound()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看或下載後觀看</p>
         <img src="northbound.png" alt="北上車次" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
@@ -265,7 +273,7 @@
         <div style="text-align: right">
           <button onclick="closeSouthbound()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看或下載後觀看</p>
         <img src="southbound.png" alt="南下車次" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
@@ -275,7 +283,7 @@
         <div style="text-align: right">
           <button onclick="closeExpress()" style="border: none; background: none; font-size: 20px; color: #888">✖</button>
         </div>
-        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看</p>
+        <p style="font-size: 12px; color: #777; text-align: center">可使用手指放大縮小查看或下載後觀看</p>
         <img src="Express.png" alt="快捷車次" style="width: 100%; height: auto; border-radius: 6px"/>
       </div>
     </div>
@@ -309,9 +317,11 @@
       function openRoster(){ document.getElementById("rosterModal").style.display = "flex"; }
       function closeRoster(){ document.getElementById("rosterModal").style.display = "none"; }
 
-      // 新增：加班統計表開關
       function overtime(){ document.getElementById("overtimeModal").style.display = "flex"; }
       function closeOvertime(){ document.getElementById("overtimeModal").style.display = "none"; }
+
+       function holidayWork(){ document.getElementById("holidayWorkModal").style.display="flex"; }
+      function closeHolidayWork(){ document.getElementById("holidayWorkModal").style.display="none"; }
 
       function openNorthbound(){ document.getElementById("northboundModal").style.display = "flex"; }
       function closeNorthbound(){ document.getElementById("northboundModal").style.display = "none"; }
