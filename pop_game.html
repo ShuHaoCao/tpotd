@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>壓力大作戰 - 戰術版</title>
+    <style>
+      :root {
+        --bg: #f5f6fa;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        overflow: hidden;
+        font-family: sans-serif;
+        touch-action: manipulation;
+      }
+      #game-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+      #hud {
+        position: absolute;
+        top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        z-index: 10;
+        pointer-events: none;
+      }
+      .stat-box {
+        background: #fff;
+        padding: 10px 20px;
+        border-radius: 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+      }
+
+      .bubble {
+        position: absolute;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: transform 0.1s;
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      @keyframes popIn {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+
+      /* 畫面閃爍特效 (點到紅色或紫色時觸發) */
+      .flash-red {
+        animation: flashRed 0.3s;
+      }
+      @keyframes flashRed {
+        from {
+          background: rgba(255, 0, 0, 0.3);
+        }
+        to {
+          background: transparent;
+        }
+      }
+      .flash-purple {
+        animation: flashPurple 0.5s;
+      }
+      @keyframes flashPurple {
+        from {
+          background: rgba(162, 0, 255, 0.4);
+        }
+        to {
+          background: transparent;
+        }
+      }
+
+      #overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        text-align: center;
+      }
+      button {
+        padding: 15px 40px;
+        font-size: 20px;
+        background: #2f3640;
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="hud">
+        <div class="stat-box">⏱ <span id="time">30</span>s</div>
+        <div class="stat-box">💰 <span id="score">0</span></div>
+      </div>
+
+      <div id="overlay">
+        <h1>辦公室戰術消除</h1>
+        <p>🔴紅色扣分 | 🟣紫色清場 | 🟡金色加爆</p>
+        <button onclick="startGame()">開始戰鬥</button>
+      </div>
+    </div>
+
+    <script>
+      let score = 0;
+      let timeLeft = 30;
+      let gameActive = false;
+      let spawnTimer, clockTimer;
+
+      const container = document.getElementById("game-container");
+      const scoreEl = document.getElementById("score");
+      const timeEl = document.getElementById("time");
+      const overlay = document.getElementById("overlay");
+
+      // 泡泡配置
+      const types = [
+        { id: "g1", size: 40, color: "#44bd32", pts: 10, label: "小" },
+        { id: "g2", size: 70, color: "#44bd32", pts: 20, label: "中" },
+        { id: "g3", size: 100, color: "#44bd32", pts: 40, label: "大" },
+        { id: "bad", size: 140, color: "#c23616", pts: -50, label: "扣分!" },
+        { id: "gold", size: 25, color: "#fbc531", pts: 100, label: "VIP" },
+        { id: "bomb", size: 0, color: "#9c88ff", pts: 50, label: "BOOM" }, // 紫色炸彈
+      ];
+
+      function startGame() {
+        score = 0;
+        timeLeft = 30;
+        gameActive = true;
+        scoreEl.innerText = score;
+        overlay.style.display = "none";
+
+        spawnTimer = setInterval(spawnBubble, 450);
+        clockTimer = setInterval(() => {
+          timeLeft--;
+          timeEl.innerText = timeLeft;
+          if (timeLeft <= 0) endGame();
+        }, 1000);
+      }
+
+      function spawnBubble() {
+        if (!gameActive) return;
+
+        // 紫色泡泡檢查：畫面上是否已有紫色
+        const hasPurple = document.querySelector(".bubble-bomb");
+
+        let rand = Math.random() * 100;
+        let type;
+        if (rand < 15 && !hasPurple)
+          type = types[5]; // 紫色炸彈 (15% 且唯一)
+        else if (rand < 25)
+          type = types[4]; // 金色 (10%)
+        else if (rand < 40)
+          type = types[3]; // 紅色 (15%)
+        else if (rand < 60)
+          type = types[2]; // 大綠
+        else if (rand < 80)
+          type = types[1]; // 中綠
+        else type = types[0]; // 小綠
+
+        createBubble(type);
+      }
+
+      function createBubble(type) {
+        const b = document.createElement("div");
+        const size = type.id === "bomb" ? Math.random() * 60 + 40 : type.size;
+
+        b.className = `bubble bubble-${type.id}`;
+        b.style.width = b.style.height = size + "px";
+        b.style.backgroundColor = type.color;
+        b.innerText = type.label;
+
+        const x = Math.random() * (window.innerWidth - size - 20) + 10;
+        const y = Math.random() * (window.innerHeight - size - 150) + 80;
+        b.style.left = x + "px";
+        b.style.top = y + "px";
+
+        const clickHandler = (e) => {
+          e.preventDefault();
+          if (!gameActive) return;
+
+          if (type.id === "bomb") {
+            triggerBomb();
+          } else {
+            updateScore(type.pts);
+            if (type.pts < 0) flashScreen("red");
+          }
+          b.remove();
+        };
+
+        b.addEventListener("touchstart", clickHandler);
+        b.addEventListener("mousedown", clickHandler);
+        container.appendChild(b);
+
+        // 自動消失 (紫色存在久一點，紅色消失快一點增加難度)
+        let duration = 2000;
+        if (type.id === "bad") duration = 1200;
+        if (type.id === "bomb") duration = 4000;
+
+        setTimeout(() => {
+          if (b.parentNode) b.remove();
+        }, duration);
+      }
+
+      function triggerBomb() {
+        flashScreen("purple");
+        const allBubbles = document.querySelectorAll(".bubble");
+        let count = allBubbles.length;
+        updateScore(50 + count * 5); // 基礎50分 + 清掉一個泡泡加5分
+        allBubbles.forEach((b) => b.remove());
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+      }
+
+      function updateScore(pts) {
+        score += pts;
+        scoreEl.innerText = score;
+        if (navigator.vibrate) navigator.vibrate(pts < 0 ? 100 : 20);
+      }
+
+      function flashScreen(type) {
+        const f = document.createElement("div");
+        f.style.position = "fixed";
+        f.style.top = 0;
+        f.style.left = 0;
+        f.style.width = "100vw";
+        f.style.height = "100vh";
+        f.style.pointerEvents = "none";
+        f.style.zIndex = 5;
+        f.className = `flash-${type}`;
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 500);
+      }
+
+      function endGame() {
+        gameActive = false;
+        clearInterval(spawnTimer);
+        clearInterval(clockTimer);
+
+        // 清除畫面上剩餘的泡泡
+        document.querySelectorAll(".bubble").forEach((b) => b.remove());
+
+        // --- 10 階頭銜邏輯 ---
+        let rank = "";
+        let rankColor = "";
+
+        if (score <= 200) {
+          rank = "辦公室透明人 😶";
+          rankColor = "#94a3b8";
+        } else if (score <= 400) {
+          rank = "茶水間常客 ☕";
+          rankColor = "#8ed1fc";
+        } else if (score <= 600) {
+          rank = "急件處理員 📄";
+          rankColor = "#0693e3";
+        } else if (score <= 800) {
+          rank = "資深打字機 ⌨️";
+          rankColor = "#00d084";
+        } else if (score <= 1000) {
+          rank = "專案救火隊 👨‍🚒";
+          rankColor = "#7bdcb5";
+        } else if (score <= 1200) {
+          rank = "部門頂樑柱 🏛️";
+          rankColor = "#abb8c3";
+        } else if (score <= 1400) {
+          rank = "效率守護神 🛡️";
+          rankColor = "#f78da7";
+        } else if (score <= 1600) {
+          rank = "副總經理預備軍 📈";
+          rankColor = "#ff6900";
+        } else if (score <= 1800) {
+          rank = "傳奇總經理 👑";
+          rankColor = "#fcb900";
+        } else {
+          rank = "跨國集團執行長 💎";
+          rankColor = "#eb144c";
+        }
+
+        // 顯示結算畫面
+        overlay.style.display = "flex";
+        overlay.innerHTML = `
+        <h1 style="color:#2d3436">時間到！</h1>
+        <div style="font-size: 1.2rem; color: #636e72;">最終得分</div>
+        <div style="font-size: 4rem; font-weight: 900; color: #2d3436; margin: 10px 0;">${score}</div>
+        <div style="background: ${rankColor}; color: white; padding: 10px 25px; border-radius: 50px; font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; box-shadow: 0 4px 15px ${rankColor}66;">
+            ${rank}
+        </div>
+        <button onclick="startGame()" style="cursor:pointer; padding: 15px 50px; font-size: 1.2rem; background: #2d3436; color: white; border: none; border-radius: 50px;">
+            再戰一回
+        </button>
+    `;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股市大亨</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --up: #ff4d4d; --down: #2ecc71; --bg: #1a1a2e; --card: #16213e; }
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; }
+        .header { text-align: center; padding: 10px; background: var(--card); border-radius: 10px; margin-bottom: 15px; }
+        .main-stats { display: flex; justify-content: space-around; margin-bottom: 15px; background: #0f3460; padding: 15px; border-radius: 10px; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; color: #f1c40f; }
+        
+        #timer { color: #f1c40f; font-size: 1.8rem; font-weight: bold; font-family: monospace; }
+        .update-hint { font-size: 0.8rem; color: #8892b0; margin-top: 5px; }
+
+        .market-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; }
+        .market-table th, .market-table td { padding: 12px 8px; text-align: center; border-bottom: 1px solid #0f3460; }
+        .comp-name { font-weight: bold; text-align: left !important; color: #3498db; cursor: pointer; text-decoration: underline; }
+        
+        .btn-group button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 0 2px; }
+        .buy { background: var(--up); color: white; }
+        .sell { background: var(--down); color: white; }
+
+        /* 彈窗樣式 */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); width: 90%; max-width: 600px; padding: 20px; border-radius: 15px; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #8892b0; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>🏙️ 股市大亨 (24H 限定版)</h1>
+    <div id="timer">24:00:00</div>
+    <div class="update-hint">下次行情更新倒數：<span id="next-update">05:00</span></div>
+</div>
+
+<div class="main-stats">
+    <div class="stat"><div>總資產 (淨值)</div><div id="total-assets" class="stat-val">$100,000</div></div>
+    <div class="stat"><div>現有現金</div><div id="cash" class="stat-val">$100,000</div></div>
+</div>
+
+<table class="market-table">
+    <thead>
+        <tr><th style="text-align:left;">公司名稱 (點擊看圖)</th><th>股價</th><th>持有</th><th>操作</th></tr>
+    </thead>
+    <tbody id="stock-list"></tbody>
+</table>
+
+<div id="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h3 id="modal-title" style="color:#f1c40f"></h3>
+        <canvas id="historyChart"></canvas>
+    </div>
+</div>
+
+<script>
+    let cash = 100000;
+    let timeLeft = 86400; // 24小時
+    let marketInterval = 300; // 5分鐘更新一次 (300秒)
+    let myChart = null;
+
+    let stocks = [
+        { id: 0, name: "微軟科技 (MSFT)", price: 350, hold: 0, history: [350] },
+        { id: 1, name: "果粉實業 (AAPL)", price: 180, hold: 0, history: [180] },
+        { id: 2, name: "皮卡電動車 (TSLA)", price: 240, hold: 0, history: [240] },
+        { id: 3, name: "台灣積體 (TSMC)", price: 600, hold: 0, history: [600] },
+        { id: 4, name: "古哥搜索 (GOOG)", price: 140, hold: 0, history: [140] },
+        { id: 5, name: "亞馬倉儲 (AMZN)", price: 130, hold: 0, history: [130] },
+        { id: 6, name: "三星電子 (SSNL)", price: 55, hold: 0, history: [55] },
+        { id: 7, name: "臉書社群 (META)", price: 300, hold: 0, history: [300] },
+        { id: 8, name: "英特爾廠 (INTC)", price: 45, hold: 0, history: [45] },
+        { id: 9, name: "可樂飲品 (KO)", price: 60, hold: 0, history: [60] }
+    ];
+
+    function renderStocks() {
+        const tbody = document.getElementById('stock-list');
+        tbody.innerHTML = '';
+        stocks.forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="comp-name" onclick="showHistory(${s.id})">${s.name}</td>
+                <td style="color:${s.price >= s.history[s.history.length-2] ? '#ff4d4d':'#2ecc71'}">${s.price.toFixed(1)}</td>
+                <td>${s.hold}</td>
+                <td class="btn-group">
+                    <button class="buy" onclick="trade(${s.id}, 10)">買10</button>
+                    <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold<=0?'disabled':''}>賣10</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        updateTotalAssets();
+    }
+
+    function trade(id, amt) {
+        const s = stocks[id];
+        if (amt > 0 && cash >= s.price * amt) { cash -= s.price * amt; s.hold += amt; }
+        else if (amt < 0 && s.hold >= Math.abs(amt)) { cash += s.price * Math.abs(amt); s.hold += amt; }
+        renderStocks();
+    }
+
+    function updateTotalAssets() {
+        let total = cash + stocks.reduce((sum, s) => sum + (s.hold * s.price), 0);
+        document.getElementById('total-assets').innerText = `$${Math.floor(total).toLocaleString()}`;
+        document.getElementById('cash').innerText = `$${Math.floor(cash).toLocaleString()}`;
+    }
+
+    function updateMarket() {
+        stocks.forEach(s => {
+            let vol = (Math.random() * 0.1) - 0.05; // 提高長線波動至 5%
+            s.price = parseFloat((s.price * (1 + vol)).toFixed(2));
+            if (s.price < 1) s.price = 1;
+            s.history.push(s.price);
+        });
+        renderStocks();
+    }
+
+    // 顯示歷史圖表
+    function showHistory(id) {
+        const s = stocks[id];
+        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('modal-title').innerText = s.name + " 價格走勢";
+        
+        const ctx = document.getElementById('historyChart').getContext('2d');
+        if (myChart) myChart.destroy(); // 銷毀舊圖表
+
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: s.history.map((_, i) => `${i*5}m`),
+                datasets: [{
+                    label: '股價',
+                    data: s.history,
+                    borderColor: '#3498db',
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: false, grid: { color: '#333' } }, x: { grid: { color: '#333' } } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+    // 主計時器
+    setInterval(() => {
+        timeLeft--;
+        let h = Math.floor(timeLeft / 3600);
+        let m = Math.floor((timeLeft % 3600) / 60);
+        let s = timeLeft % 60;
+        document.getElementById('timer').innerText = 
+            `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+
+        // 下次更新倒數
+        let nextUp = timeLeft % 300;
+        let nm = Math.floor(nextUp / 60);
+        let ns = nextUp % 60;
+        document.getElementById('next-update').innerText = `${nm}:${ns.toString().padStart(2,'0')}`;
+
+        if (timeLeft % 300 === 0) updateMarket();
+    }, 1000);
+
+    renderStocks();
+</script>
+</body>
+</html>
