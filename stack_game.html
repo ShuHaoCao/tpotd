@@ -2,105 +2,51 @@
 <html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>辦公室疊疊樂</title>
     <style>
       body {
         margin: 0;
         background: #1a1a2e;
         overflow: hidden;
-        font-family: "PingFang TC", sans-serif;
-        /* 防止手機長按選取或彈出選單 */
-        -webkit-touch-callout: none;
+        font-family: sans-serif;
+        touch-action: none; /* 重要：防止瀏覽器手勢干擾 */
         -webkit-user-select: none;
         user-select: none;
-        touch-action: none;
       }
-      canvas {
-        display: block;
-      }
+      canvas { display: block; }
       #ui {
         position: absolute;
         top: 30px;
         width: 100%;
         text-align: center;
         color: #fff;
-        pointer-events: none; /* 讓點擊穿透 UI 層 */
+        pointer-events: none; /* 確保點擊能穿過文字 */
         z-index: 10;
       }
-      #score {
-        font-size: 70px;
-        font-weight: 900;
-        margin: 0;
-        line-height: 1;
-      }
-      #high-score {
-        font-size: 16px;
-        color: #ffce00;
-        margin-top: 5px;
-      }
-      #msg {
-        font-size: 18px;
-        color: #00d2ff;
-        margin-top: 10px;
-        letter-spacing: 2px;
-      }
-
+      #score { font-size: 70px; font-weight: 900; margin: 0; }
       #overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(10, 10, 30, 0.95);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        z-index: 100;
-      }
-      .rank-badge {
-        background: #ff4757;
-        padding: 5px 15px;
-        border-radius: 5px;
-        font-size: 14px;
-        margin-bottom: 10px;
-      }
-      h1 {
-        margin: 10px 0;
-        font-size: 2.5rem;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(10, 10, 30, 0.9);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: white; z-index: 100;
       }
       button {
-        padding: 15px 60px;
-        font-size: 1.2rem;
-        cursor: pointer;
-        background: #00d2ff;
-        border: none;
-        border-radius: 50px;
-        color: #fff;
-        box-shadow: 0 4px 15px rgba(0, 210, 255, 0.4);
-        font-weight: bold;
-        /* 確保按鈕可以接收點擊 */
-        pointer-events: auto; 
+        padding: 15px 60px; font-size: 1.2rem; cursor: pointer;
+        background: #00d2ff; border: none; border-radius: 50px;
+        color: #fff; font-weight: bold; pointer-events: auto;
       }
     </style>
   </head>
   <body>
     <div id="ui">
       <div id="score">0</div>
-      <div id="high-score">BEST: 0</div>
-      <div id="msg">按畫面開始堆疊</div>
+      <div id="msg">點擊畫面開始</div>
     </div>
 
     <div id="overlay">
-      <div class="rank-badge">OFFICE CHALLENGE</div>
       <h1>辦公室疊疊樂</h1>
-      <p>目標：成為人上人 (疊過 50 層)</p>
-      <button id="startBtn">進入辦公室</button>
+      <button id="mainBtn">進入辦公室</button>
     </div>
 
     <canvas id="gameCanvas"></canvas>
@@ -109,26 +55,28 @@
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
       const scoreEl = document.getElementById("score");
-      const highEl = document.getElementById("high-score");
       const msgEl = document.getElementById("msg");
       const overlay = document.getElementById("overlay");
-      const startBtn = document.getElementById("startBtn");
+      const mainBtn = document.getElementById("mainBtn");
 
-      let blocks = [],
-        debris = [];
+      let blocks = [], debris = [];
       let gameState = "START";
-      let speed = 2.5,
-        cameraY = 0,
-        screenShake = 0;
+      let speed = 2.5, cameraY = 0, screenShake = 0;
       let currentBlock = {};
       let perfectCount = 0;
+      let lastEventTime = 0; // 防震盪鎖
 
-      let highScore = localStorage.getItem("officeStackBest") || 0;
-      highEl.innerText = `BEST: ${highScore}`;
-
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      function playTone(freq, type = "sine", duration = 0.1, volume = 0.1) {
+      // 音效設定
+      let audioCtx = null;
+      function initAudio() {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
         if (audioCtx.state === "suspended") audioCtx.resume();
+      }
+
+      function playTone(freq, type = "sine", duration = 0.1, volume = 0.1) {
+        if (!audioCtx) return;
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = type;
@@ -142,77 +90,56 @@
       }
 
       function init() {
-        if (audioCtx.state === "suspended") audioCtx.resume();
+        initAudio();
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        blocks = [{
-          x: (canvas.width - 200) / 2,
-          y: canvas.height - 150,
-          width: 200,
-          color: 200,
-        }];
+        blocks = [{ x: (canvas.width - 200) / 2, y: canvas.height - 150, width: 200, color: 200 }];
         debris = [];
         scoreEl.innerText = "0";
-        speed = 2.5;
-        cameraY = 0;
-        perfectCount = 0;
+        speed = 2.5; cameraY = 0; perfectCount = 0;
         newBlock();
         gameState = "PLAYING";
         overlay.style.display = "none";
-        overlay.style.opacity = "0";
         animate();
       }
-
-      // 綁定按鈕點擊 (使用 pointerdown 確保手機靈敏度)
-      startBtn.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        init();
-      });
 
       function newBlock() {
         const last = blocks[blocks.length - 1];
         currentBlock = {
-          x: 0,
-          y: last.y - 45,
-          width: last.width,
-          direction: 1,
-          color: 200 + ((blocks.length * 15) % 360),
+          x: 0, y: last.y - 45, width: last.width,
+          direction: 1, color: 200 + ((blocks.length * 15) % 360)
         };
       }
 
       function animate() {
         if (gameState === "START") return;
 
-        let sx = (Math.random() - 0.5) * screenShake,
-          sy = (Math.random() - 0.5) * screenShake;
-        screenShake *= 0.9;
-
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const targetCam = (blocks.length - 4) * 45;
         cameraY += (targetCam - cameraY) * 0.1;
 
         ctx.save();
-        ctx.translate(sx, cameraY + sy);
+        ctx.translate(0, cameraY);
 
+        // 畫碎片
         debris.forEach((d, i) => {
-          d.y += d.vy;
-          d.vy += 0.6;
-          d.opacity -= 0.03;
+          d.y += d.vy; d.vy += 0.6; d.opacity -= 0.03;
           ctx.fillStyle = `hsla(${d.color}, 70%, 50%, ${d.opacity})`;
           ctx.fillRect(d.x, d.y, d.width, 43);
           if (d.opacity <= 0) debris.splice(i, 1);
         });
 
+        // 畫已疊磚塊
         blocks.forEach((b) => {
           ctx.fillStyle = `hsl(${b.color}, 70%, 60%)`;
           ctx.fillRect(b.x, b.y, b.width, 43);
           if (b.perfect) {
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#fff"; ctx.lineWidth = 4;
             ctx.strokeRect(b.x, b.y, b.width, 43);
           }
         });
 
+        // 畫移動磚塊
         if (gameState === "PLAYING") {
           currentBlock.x += speed * currentBlock.direction;
           if (currentBlock.x + currentBlock.width > canvas.width || currentBlock.x < 0)
@@ -225,103 +152,69 @@
         requestAnimationFrame(animate);
       }
 
-      function handleStack() {
-        if (gameState !== "PLAYING") return;
-        const last = blocks[blocks.length - 1];
-        const diff = currentBlock.x - last.x;
+      function handleAction(e) {
+        // 防止重複觸發 (300ms 內只允許一次)
+        const now = Date.now();
+        if (now - lastEventTime < 300) return;
+        lastEventTime = now;
 
-        if (Math.abs(diff) >= currentBlock.width) {
-          gameOver();
-          return;
-        }
+        // 如果點到的是按鈕，交給按鈕自己的 onclick 處理
+        if (e.target.tagName === "BUTTON") return;
 
-        if (Math.abs(diff) < 10) { // 稍微放寬 Perfect 判定到 10px
-          currentBlock.x = last.x;
-          currentBlock.perfect = true;
-          perfectCount++;
-          msgEl.innerText = "PERFECT!! +" + perfectCount;
-          playTone(400 + perfectCount * 50, "triangle", 0.2);
-          screenShake = 5;
-        } else {
-          perfectCount = 0;
-          let dWidth = Math.abs(diff);
-          let dX = diff > 0 ? currentBlock.x + (currentBlock.width - diff) : currentBlock.x;
-          debris.push({
-            x: dX, y: currentBlock.y, width: dWidth,
-            color: currentBlock.color, vy: 2, opacity: 1,
-          });
+        if (gameState === "PLAYING") {
+          const last = blocks[blocks.length - 1];
+          const diff = currentBlock.x - last.x;
 
-          if (diff > 0) currentBlock.width -= diff;
-          else {
-            currentBlock.width += diff;
-            currentBlock.x = last.x;
+          if (Math.abs(diff) >= currentBlock.width) {
+            gameOver();
+          } else {
+            if (Math.abs(diff) < 12) {
+              currentBlock.x = last.x;
+              currentBlock.perfect = true;
+              perfectCount++;
+              playTone(400 + perfectCount * 50);
+            } else {
+              perfectCount = 0;
+              let dWidth = Math.abs(diff);
+              let dX = diff > 0 ? currentBlock.x + (currentBlock.width - diff) : currentBlock.x;
+              debris.push({ x: dX, y: currentBlock.y, width: dWidth, color: currentBlock.color, vy: 2, opacity: 1 });
+              
+              if (diff > 0) currentBlock.width -= diff;
+              else { currentBlock.width += diff; currentBlock.x = last.x; }
+              playTone(200);
+            }
+            blocks.push({ ...currentBlock });
+            scoreEl.innerText = blocks.length - 1;
+            speed += 0.1;
+            newBlock();
           }
-          msgEl.innerText = "OK!";
-          playTone(200, "square", 0.1);
         }
-
-        blocks.push({ ...currentBlock });
-        scoreEl.innerText = blocks.length - 1;
-        speed = Math.min(speed + 0.12, 8);
-        newBlock();
-        if (navigator.vibrate) navigator.vibrate(20);
       }
 
       function gameOver() {
         gameState = "OVER";
-        playTone(100, "sawtooth", 0.5, 0.2);
-        const score = blocks.length - 1;
-
-        if (score > highScore) {
-          highScore = score;
-          localStorage.setItem("officeStackBest", score);
-          highEl.innerText = `BEST: ${highScore} (NEW!)`;
-        }
-
-        const ranks = [
-          { limit: 5, name: "地基板模工 🧱", color: "#94a3b8" },
-          { limit: 10, name: "鋼筋鋼骨士 🏗️", color: "#64748b" },
-          { limit: 25, name: "大樓物業管理 🔑", color: "#8b5cf6" },
-          { limit: 45, name: "地產龍頭大亨 💰", color: "#facc15" },
-          { limit: 999, name: "築夢天空之城 ☁️", color: "#ffffff" },
-        ];
-
-        const myRank = ranks.find((r) => score <= r.limit) || ranks[ranks.length - 1];
-
+        playTone(100, "sawtooth", 0.5);
         overlay.style.display = "flex";
-        setTimeout(() => (overlay.style.opacity = "1"), 10);
-        overlay.innerHTML = `
-          <div style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); pointer-events: auto;">
-              <h1 style="margin:0; color:#ff4757;">挑戰結束</h1>
-              <div style="font-size: 4rem; font-weight: 900; margin: 10px 0;">${score} <span style="font-size:1rem; font-weight:normal;">層</span></div>
-              <div style="background: ${myRank.color}; color: #000; padding: 10px 20px; border-radius: 10px; font-size: 1.4rem; font-weight: bold; margin-bottom: 25px;">
-                  ${myRank.name}
-              </div>
-              <button id="retryBtn" style="background: #00d2ff; color: white; padding: 15px 40px; border: none; border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer;">
-                  再蓋一棟！
-              </button>
-          </div>
-        `;
-        
-        // 重新綁定重新開始按鈕
-        document.getElementById("retryBtn").addEventListener('pointerdown', (e) => {
-          e.stopPropagation();
-          init();
-        });
+        overlay.innerHTML = `<h1>得分: ${blocks.length - 1}</h1><button onclick="location.reload()">再試一次</button>`;
       }
 
-      // --- 核心修正：統一監聽器 ---
-      window.addEventListener("pointerdown", (e) => {
-        // 如果是在遊戲狀態，且沒點到按鈕，才觸發疊磚
-        if (gameState === "PLAYING" && e.target.tagName !== "BUTTON") {
-          handleStack();
-        }
-      }, { passive: false });
+      // 監聽按鈕點擊
+      mainBtn.addEventListener("click", init);
+
+      // 核心修正：同時監聽觸控與滑鼠，且不阻止預設行為
+      window.addEventListener("touchstart", handleAction);
+      window.addEventListener("mousedown", (e) => {
+        if (e.button === 0) handleAction(e);
+      });
 
       window.addEventListener("resize", () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
       });
+      
+      // 初始化畫布大小
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     </script>
   </body>
 </html>
