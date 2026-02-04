@@ -2,160 +2,111 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>值班排班表系統 - 行動優化版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>值班排班表 - 字體強化版</title>
     <style>
         :root {
             --border-gray: #dadce0;
-            --text-main: #3c4043;
-            --text-light: #70757a;
-            --holiday-bg: #e2f9e1;
-            --holiday-text: #1e8e3e;
-            --work-bg: #e8f0fe;
-            --work-text: #1a73e8;
             --today-red: #d93025;
-            --staff-highlight: #fef7e0;
-            --staff-text: #b06000;
+            --staff-highlight: #e8f0fe;
+            --staff-text: #1967d2;
+            --holiday-bg: #fff0f0;
+            --holiday-text: #d93025;
         }
 
-        body { font-family: "Microsoft JhengHei", sans-serif; background: #fff; padding: 10px; color: var(--text-main); margin: 0; }
+        * { box-sizing: border-box; }
+        body { font-family: -apple-system, "Microsoft JhengHei", sans-serif; margin: 0; padding: 5px; background: #fff; }
 
-        /* 控制列佈局 - 手機版改為垂直堆疊或自動換行 */
-        .controls {
-            margin-bottom: 15px;
-            display: flex;
-            flex-wrap: wrap; /* 寬度不足時自動換行 */
-            align-items: center;
-            gap: 10px;
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-        }
-        
-        .staff-selector-container {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .controls { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px; align-items: center; }
+        .staff-area { margin-left: auto; display: flex; align-items: center; gap: 5px; }
+        select, button { padding: 8px; font-size: 14px; border: 1px solid var(--border-gray); border-radius: 4px; }
 
-        /* 下拉選單在手機上更易點擊 */
-        select {
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border-gray);
-            font-size: 14px;
-            background: white;
-        }
+        .calendar-container { width: 100%; border-top: 1px solid var(--border-gray); border-left: 1px solid var(--border-gray); display: grid; grid-template-columns: repeat(7, 1fr); }
+        .day-label, .day-cell { border-right: 1px solid var(--border-gray); border-bottom: 1px solid var(--border-gray); }
+        .day-label { background: #f1f3f4; padding: 8px 0; text-align: center; font-size: 13px; font-weight: bold; }
 
-        /* 日曆容器 - 加入橫向捲動保護 */
-        .calendar-wrapper {
-            width: 100%;
-            overflow-x: auto; /* 手機版若太窄可左右滑動 */
-            -webkit-overflow-scrolling: touch;
-        }
+        .day-cell { min-height: 90px; padding: 4px; position: relative; background: #fff; }
 
-        .calendar-container {
-            min-width: 600px; /* 確保日曆至少有 600px 寬，不會擠扁 */
-            border: 1px solid var(--border-gray);
-            border-radius: 8px;
-            overflow: hidden;
-            background: white;
-        }
-        
-        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); background: #f1f3f4; }
-        .day-label { padding: 10px 5px; text-align: center; font-size: 13px; font-weight: bold; color: var(--text-light); border-bottom: 1px solid var(--border-gray); }
+        /* 假日粉紅底 */
+        .is-holiday { background-color: var(--holiday-bg) !important; }
+        .is-holiday .date-number { color: var(--holiday-text); font-weight: bold; }
 
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-        
-        .day-cell { 
-            min-height: 100px; /* 改為最小高度，讓內容可撐開 */
-            border-right: 1px solid var(--border-gray); 
-            border-bottom: 1px solid var(--border-gray); 
-            padding: 4px; 
-        }
-        .day-cell:nth-child(7n) { border-right: none; }
+        .date-number { text-align: right; font-size: 12px; margin-bottom: 4px; }
+        .is-today .date-number span { background: var(--today-red); color: white; display: inline-block; width: 20px; height: 20px; line-height: 20px; border-radius: 50%; text-align: center; font-size: 11px; }
 
-        .date-number { text-align: right; font-size: 13px; margin-bottom: 4px; }
-        .is-today .date-number span {
-            background: var(--today-red);
-            color: white;
-            display: inline-block;
-            width: 22px; height: 22px; line-height: 22px;
-            border-radius: 50%; text-align: center;
-        }
-
-        /* 班別標籤行動化 */
-        .duty-tag {
-            font-size: 11px; /* 縮小字體 */
-            padding: 3px 4px;
-            margin-top: 3px;
+        /* --- 班別字體大調整 --- */
+        .duty-container { display: flex; flex-direction: column; gap: 3px; }
+        .duty-tag { 
+            font-size: 12px;         /* 增大字體 */
+            font-weight: 600;       /* 加粗 */
+            line-height: 1.2;
+            padding: 4px 2px;       /* 增加上下內距更好讀 */
             border-radius: 4px;
             background: var(--staff-highlight);
             color: var(--staff-text);
-            border: 1px solid #ffe1a0;
-            display: block;
-            word-break: break-all; /* 防止長文字撐破格子 */
+            border: 1px solid #c2e7ff;
             text-align: center;
+            word-break: break-all;  /* 寬度不足時自動折行 */
         }
+        /* -------------------- */
 
-        .other-month { background-color: #fafafa; }
+        .holiday-name { font-size: 10px; color: var(--holiday-text); text-align: center; margin-bottom: 3px; font-weight: bold; }
+        .other-month { background-color: #fafafa; opacity: 0.3; }
 
-        /* 手機版專用調整 */
-        @media (max-width: 600px) {
-            .staff-selector-container {
-                margin-left: 0;
-                width: 100%; /* 手機版人員選單佔滿整行 */
-            }
-            .controls {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        @media (max-width: 480px) {
+            .controls { flex-direction: column; align-items: stretch; }
+            .staff-area { margin-left: 0; width: 100%; }
             .day-cell { min-height: 80px; }
+            .duty-tag { 
+                font-size: 11px;    /* 手機版稍微降 1px 以防格子過擠 */
+                padding: 3px 1px;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="controls">
-    <div style="display: flex; gap: 8px;">
-        <select id="yearSelect"></select>
-        <select id="monthSelect"></select>
-        <button onclick="renderToday()" style="padding: 8px 12px; cursor: pointer;">今天</button>
+    <div style="display: flex; gap: 5px; width: 100%; justify-content: space-between;">
+        <div style="display: flex; gap: 5px;">
+            <select id="yearSelect"></select>
+            <select id="monthSelect"></select>
+        </div>
+        <button onclick="renderToday()">今天</button>
     </div>
-
-    <div class="staff-selector-container">
-        <label for="staffSelect" style="font-size: 14px; white-space: nowrap;">值班人員：</label>
-        <select id="staffSelect" style="flex-grow: 1;">
-            <option value="">-- 請選擇 --</option>
-        </select>
+    <div class="staff-area">
+        <label style="font-size: 14px; font-weight: bold;">值班人員:</label>
+        <select id="staffSelect"><option value="">-- 請選擇 --</option></select>
     </div>
 </div>
 
-<div class="calendar-wrapper">
-    <div class="calendar-container">
-        <div class="calendar-header" id="weekdayHeader"></div>
-        <div class="calendar-grid" id="calendarGrid"></div>
-    </div>
+<div class="calendar-container">
+    <div class="day-label" style="color:red">日</div>
+    <div class="day-label">一</div>
+    <div class="day-label">二</div>
+    <div class="day-label">三</div>
+    <div class="day-label">四</div>
+    <div class="day-label">五</div>
+    <div class="day-label" style="color:red">六</div>
+    <div id="calendarGrid" style="display: contents;"></div>
 </div>
 
 <script>
     let scheduleData = {};
+    const holidays = {
+        "2026-01-01": "元旦", "2026-02-16": "除夕", "2026-02-17": "初一", "2026-02-18": "初二", "2026-02-19": "初三", "2026-02-27": "和平補假", "2026-02-28": "和平紀念",
+        "2026-04-03": "兒童節", "2026-04-04": "清明節", "2026-06-19": "端午節", "2026-09-25": "中秋節", "2026-10-10": "國慶日"
+    };
+
     const yearSelect = document.getElementById('yearSelect');
     const monthSelect = document.getElementById('monthSelect');
     const staffSelect = document.getElementById('staffSelect');
     const gridEl = document.getElementById('calendarGrid');
-    const headerEl = document.getElementById('weekdayHeader');
-
-    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
     const now = new Date();
 
     async function init() {
-        weekdays.forEach(d => headerEl.innerHTML += `<div class="day-label">${d}</div>`);
-        
-        for (let y = 2025; y <= 2027; y++) yearSelect.options.add(new Option(`${y}年`, y));
-        for (let m = 0; m < 12; m++) monthSelect.options.add(new Option(`${m + 1}月`, m));
-        
+        for (let y = 2025; y <= 2026; y++) yearSelect.options.add(new Option(y + "年", y));
+        for (let m = 0; m < 12; m++) monthSelect.options.add(new Option((m + 1) + "月", m));
         yearSelect.value = now.getFullYear();
         monthSelect.value = now.getMonth();
 
@@ -163,28 +114,19 @@
             const response = await fetch('schedule_data.json');
             scheduleData = await response.json();
             populateStaff(scheduleData);
-        } catch (error) {
-            console.error("JSON讀取失敗", error);
-        }
+        } catch (e) { console.error("JSON Error", e); }
 
-        [yearSelect, monthSelect, staffSelect].forEach(el => {
-            el.onchange = () => renderCalendar();
-        });
-
+        [yearSelect, monthSelect, staffSelect].forEach(el => el.onchange = renderCalendar);
         renderCalendar();
     }
 
     function populateStaff(data) {
         let names = new Set();
-        Object.keys(data).forEach(dateKey => {
-            if(dateKey === "lastUpdated") return;
-            Object.values(data[dateKey]).forEach(name => {
-                if(name && name !== "-" && name !== "") names.add(name);
-            });
+        Object.keys(data).forEach(k => {
+            if(k === "lastUpdated") return;
+            Object.values(data[k]).forEach(v => { if(v && v !== "-" && v !== "") names.add(v); });
         });
-        Array.from(names).sort().forEach(name => {
-            staffSelect.options.add(new Option(name, name));
-        });
+        Array.from(names).sort().forEach(n => staffSelect.options.add(new Option(n, n)));
     }
 
     function renderToday() {
@@ -194,40 +136,37 @@
     }
 
     function renderCalendar() {
-        const y = parseInt(yearSelect.value);
-        const m = parseInt(monthSelect.value);
-        const selectedStaff = staffSelect.value;
+        const y = parseInt(yearSelect.value), m = parseInt(monthSelect.value);
+        const selStaff = staffSelect.value;
         gridEl.innerHTML = '';
-        
         const firstDay = new Date(y, m, 1).getDay();
         const daysInMonth = new Date(y, m + 1, 0).getDate();
-        
-        for (let i = 0; i < firstDay; i++) {
-            gridEl.innerHTML += `<div class="day-cell other-month"></div>`;
-        }
+        for (let i = 0; i < firstDay; i++) gridEl.innerHTML += `<div class="day-cell other-month"></div>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
-            const isToday = (y === now.getFullYear() && m === now.getMonth() && d === now.getDate());
+            const dateObj = new Date(y, m, d);
+            const weekDay = dateObj.getDay();
             const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            
-            let dutyInfo = "";
-            if (selectedStaff && scheduleData[dateStr]) {
-                const dayData = scheduleData[dateStr];
-                let shifts = Object.keys(dayData).filter(key => dayData[key] === selectedStaff);
-                if (shifts.length > 0) {
-                    dutyInfo = shifts.map(s => `<span class="duty-tag">${s}</span>`).join('');
-                }
+            const isToday = (y === now.getFullYear() && m === now.getMonth() && d === now.getDate());
+            const holidayName = holidays[dateStr] || "";
+            const isHoliday = holidayName !== "" || (weekDay === 0 || weekDay === 6);
+
+            let dutyHtml = "";
+            if (selStaff && scheduleData[dateStr]) {
+                const dayShifts = scheduleData[dateStr];
+                const myShifts = Object.keys(dayShifts).filter(s => dayShifts[s] === selStaff);
+                dutyHtml = myShifts.map(s => `<div class="duty-tag">${s}</div>`).join('');
             }
 
             gridEl.innerHTML += `
-                <div class="day-cell ${isToday ? 'is-today' : ''}">
+                <div class="day-cell ${isToday ? 'is-today' : ''} ${isHoliday ? 'is-holiday' : ''}">
                     <div class="date-number"><span>${d}</span></div>
-                    ${dutyInfo}
+                    ${holidayName ? `<div class="holiday-name">${holidayName}</div>` : ''}
+                    <div class="duty-container">${dutyHtml}</div>
                 </div>
             `;
         }
     }
-
     init();
 </script>
 
