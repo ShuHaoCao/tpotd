@@ -2,10 +2,7 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=1024" />
     <title>一月班表</title>
     <style>
       :root {
@@ -13,9 +10,9 @@
         --border-today: #000000;
         --header-bg: #555555; /* 平日標題：深灰色 */
         --header-text: #ffffff; /* 標題文字：白色 */
-        --weekend-header-bg: #a00000; /* 週末標題：深紅色 */
+        --weekend-header-bg: #ff0000; /* 週末標題：深紅色 */
         --staff-text: #000000;
-        --date-gray: #555555; /* 平日日期：深灰色 */
+        --date-gray: #a7a7a7; /* 平日日期：深灰色 */
         --holiday-bg: #fffafa; /* 假日底色：極淺粉紅 */
         --holiday-text: #ff0000; /* 假日日期：深紅色 */
         --holiday-tag-bg: #ff0000;
@@ -27,67 +24,80 @@
       body {
         font-family: "Times New Roman", "Microsoft JhengHei", serif;
         margin: 0;
-        padding: 5px;
+        padding: 10px;
         background: #fff;
+        min-width: 1024px; /* 確保 body 最小寬度 */
       }
 
+      /* 頂部控制列固定寬度 */
       .controls {
         display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        padding: 10px;
+        gap: 10px;
+        padding: 15px;
         background: #f8f9fa;
         border-radius: 8px;
         margin-bottom: 10px;
         align-items: center;
-        border-bottom: 2px solid var(--border-gray);
+        border: 2px solid var(--border-gray);
+        width: 1000px; /* 與日曆同寬 */
       }
       .staff-area {
         margin-left: auto;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 10px;
       }
       select,
       button {
-        padding: 8px;
-        font-size: 14px;
+        padding: 10px;
+        font-size: 16px;
         border: 1px solid var(--border-gray);
         border-radius: 4px;
       }
 
-      .calendar-container {
+      /* 外層滾動容器：若螢幕太小可左右滑動 */
+      .outer-wrapper {
         width: 100%;
+        overflow-x: auto;
+      }
+
+      /* 日曆容器：設定固定寬度 */
+      .calendar-container {
+        width: 1000px;
         border-top: 1px solid var(--border-gray);
         border-left: 1px solid var(--border-gray);
         display: grid;
         grid-template-columns: repeat(7, 1fr);
       }
+
       .day-label,
       .day-cell {
         border-right: 1px solid var(--border-gray);
         border-bottom: 1px solid var(--border-gray);
       }
 
-      /* 基礎標題樣式 (平日) */
+      /* 星期標題：固定高度與樣式 */
       .day-label {
         background: var(--header-bg);
         color: var(--header-text);
-        padding: 10px 0;
-        text-align: center;
-        font-size: 13px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
         font-weight: bold;
       }
 
-      /* 週末標題專屬樣式 (深紅底白字) */
+      /* 週末標題專屬：深紅底 */
       .day-label.label-weekend-header {
         background-color: var(--weekend-header-bg);
-        color: #ffffff;
       }
 
+      /* 格子：固定高度 150px */
       .day-cell {
-        min-height: 130px;
-        padding: 5px;
+        width: 142.8px; /* 1000px / 7 */
+        height: 150px;
+        padding: 8px;
         position: relative;
         background-color: #ffffff;
         display: flex;
@@ -96,23 +106,23 @@
         align-items: center;
       }
 
-      /* 今日標記：黑框加粗 */
+      /* 今日標記 */
       .is-today {
-        border: 5px solid var(--border-today) !important;
+        border: 6px solid var(--border-today) !important;
         z-index: 5;
       }
 
-      /* 假日粉紅底 */
+      /* 假日底色 */
       .is-holiday {
         background-color: var(--holiday-bg) !important;
       }
 
-      /* 日期數字 */
+      /* 日期數字：固定 48px */
       .date-number {
-        font-size: 42px;
+        font-size: 28px;
         font-weight: bold;
         color: var(--date-gray);
-        line-height: 1.1;
+        line-height: 1;
         margin-top: 5px;
         z-index: 1;
       }
@@ -120,19 +130,19 @@
         color: var(--holiday-text);
       }
 
+      /* 假日名稱 */
       .holiday-name {
         background-color: var(--holiday-tag-bg);
         color: white;
-        font-size: 11px;
-        padding: 1px 5px;
-        border-radius: 2px;
+        font-size: 14px;
+        padding: 2px 8px;
+        border-radius: 3px;
         font-weight: bold;
-        margin-top: -5px;
+        margin-top: 2px;
         z-index: 2;
-        white-space: nowrap;
       }
 
-      /* 班別區塊：黑色大字、無色塊 */
+      /* 班別文字：固定大字體、純黑 */
       .duty-container {
         width: 100%;
         margin-top: auto;
@@ -140,11 +150,9 @@
         z-index: 3;
       }
       .duty-tag {
-        font-size: 20px;
+        font-size: 24px;
         font-weight: 900;
-        background-color: transparent;
         color: var(--staff-text);
-        padding: 0;
         text-align: center;
         width: 100%;
       }
@@ -154,61 +162,41 @@
         opacity: 0.2;
       }
 
-      @media (max-width: 480px) {
-        .date-number {
-          font-size: 34px;
-        }
-        .duty-tag {
-          font-size: 17px;
-        }
-        .day-cell {
-          min-height: 110px;
-        }
-        .day-label {
-          font-size: 11px;
-        }
-      }
+      /* 徹底移除 @media 響應式區塊，確保手機不會自動縮小 */
     </style>
   </head>
   <body>
     <div class="controls">
-      <div
-        style="
-          display: flex;
-          gap: 5px;
-          width: 100%;
-          justify-content: space-between;
-        "
-      >
-        <div style="display: flex; gap: 5px">
-          <select id="yearSelect"></select>
-          <select id="monthSelect"></select>
-        </div>
-        <button onclick="renderToday()">今天</button>
+      <div style="display: flex; gap: 10px">
+        <select id="yearSelect"></select>
+        <select id="monthSelect"></select>
+        <button onclick="renderToday()">回今天</button>
       </div>
       <div class="staff-area">
-        <label style="font-size: 14px; font-weight: bold">人員:</label>
+        <label style="font-size: 18px; font-weight: bold">人員搜尋:</label>
         <select id="staffSelect">
           <option value="">-- 請選擇 --</option>
         </select>
       </div>
     </div>
 
-    <div class="calendar-container">
-      <div class="day-label label-weekend-header">星期日</div>
-      <div class="day-label">星期一</div>
-      <div class="day-label">星期二</div>
-      <div class="day-label">星期三</div>
-      <div class="day-label">星期四</div>
-      <div class="day-label">星期五</div>
-      <div class="day-label label-weekend-header">星期六</div>
-      <div id="calendarGrid" style="display: contents"></div>
+    <div class="outer-wrapper">
+      <div class="calendar-container">
+        <div class="day-label label-weekend-header">星期日</div>
+        <div class="day-label">星期一</div>
+        <div class="day-label">星期二</div>
+        <div class="day-label">星期三</div>
+        <div class="day-label">星期四</div>
+        <div class="day-label">星期五</div>
+        <div class="day-label label-weekend-header">星期六</div>
+        <div id="calendarGrid" style="display: contents"></div>
+      </div>
     </div>
 
     <script>
       let scheduleData = {};
       const holidays = {
-        "2026-01-01": "元旦",
+         "2026-01-01": "元旦",
         "2026-02-16": "除夕",
         "2026-02-17": "初一",
         "2026-02-18": "初二",
