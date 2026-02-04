@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>行動版賓果大賽</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --bg-color: #f8f9fa;
+            --cell-size: 50px;
+            --cell-font: 1.1rem;
+        }
+
+        /* 針對小螢幕縮小方格 */
+        @media (max-width: 600px) {
+            :root {
+                --cell-size: 42px;
+                --cell-font: 1rem;
+            }
+            .game-container { flex-direction: column; align-items: center; }
+            .board-wrapper { width: 90%; max-width: 300px; }
+        }
+
+        body { 
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+            background: var(--bg-color); 
+            margin: 0;
+            padding: 10px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            touch-action: manipulation; /* 最佳化行動裝置點擊 */
+        }
+
+        #message-box { 
+            width: 90%;
+            max-width: 400px;
+            margin: 15px 0; 
+            padding: 12px; 
+            background: #2c3e50; 
+            color: white; 
+            border-radius: 12px; 
+            font-size: 1.1rem; 
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-height: 1.5em;
+        }
+
+        .game-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; width: 100%; }
+
+        .board-wrapper { 
+            background: white; 
+            padding: 10px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
+            text-align: center; 
+            border-top: 6px solid #ddd;
+            transition: transform 0.2s;
+        }
+
+        .board-wrapper.active { 
+            border-top-color: var(--primary-color); 
+            background: #fff;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        h2 { margin: 5px 0; font-size: 1.1rem; color: #555; }
+
+        .board { 
+            display: grid; 
+            grid-template-columns: repeat(5, var(--cell-size)); 
+            grid-gap: 4px; 
+            margin: 10px auto; 
+            justify-content: center;
+        }
+
+        .cell { 
+            width: var(--cell-size); 
+            height: var(--cell-size); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #f1f2f6; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: var(--cell-font);
+            color: #2f3542;
+            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍框 */
+        }
+
+        .cell.marked { 
+            background: #ff4757; 
+            color: white; 
+            cursor: default; 
+            animation: pop 0.3s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .npc-board .cell { cursor: default; opacity: 0.9; }
+
+        .status { margin-top: 8px; font-weight: bold; font-size: 0.9rem; color: #747d8c; }
+
+        footer { margin-top: 20px; font-size: 0.8rem; color: #a4b0be; }
+    </style>
+</head>
+<body>
+
+    <div id="message-box">🎮 請點擊數字開始</div>
+
+    <div class="game-container">
+        <div id="wrapper-player" class="board-wrapper active">
+            <h2>玩家</h2>
+            <div id="player-board" class="board"></div>
+            <div id="player-status" class="status">連線: 0</div>
+        </div>
+
+        <div id="wrapper-npc1" class="board-wrapper">
+            <h2>NPC 1</h2>
+            <div id="npc1-board" class="board npc-board"></div>
+            <div id="npc1-status" class="status">連線: 0</div>
+        </div>
+
+        <div id="wrapper-npc2" class="board-wrapper">
+            <h2>NPC 2</h2>
+            <div id="npc2-board" class="board npc-board"></div>
+            <div id="npc2-status" class="status">連線: 0</div>
+        </div>
+    </div>
+
+    <footer>Responsive Bingo v1.0</footer>
+
+    <script>
+        // 邏輯部分與之前相同，但加入了 UI 優化
+        const WIN_LINES = 5;
+        let gameOver = false;
+        let calledNumbers = new Set();
+        let turn = 0; 
+
+        function createNumbers() {
+            return Array.from({length: 25}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+        }
+
+        class BingoGame {
+            constructor(elementId, statusId, wrapperId, isPlayer = false) {
+                this.nums = createNumbers();
+                this.element = document.getElementById(elementId);
+                this.statusElement = document.getElementById(statusId);
+                this.wrapper = document.getElementById(wrapperId);
+                this.marked = Array(25).fill(false);
+                this.isPlayer = isPlayer;
+                this.init();
+            }
+
+            init() {
+                this.nums.forEach((num, index) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.innerText = num;
+                    if (this.isPlayer) {
+                        cell.addEventListener('click', () => handleTurn(num));
+                    }
+                    this.element.appendChild(cell);
+                });
+            }
+
+            mark(num) {
+                const index = this.nums.indexOf(num);
+                if (index !== -1) {
+                    this.marked[index] = true;
+                    this.element.children[index].classList.add('marked');
+                }
+                return this.checkBingo();
+            }
+
+            checkBingo() {
+                let lines = 0;
+                const m = this.marked;
+                for (let i = 0; i < 5; i++) {
+                    if ([0,1,2,3,4].every(j => m[i*5 + j])) lines++;
+                    if ([0,1,2,3,4].every(j => m[j*5 + i])) lines++;
+                }
+                if ([0,6,12,18,24].every(i => m[i])) lines++;
+                if ([4,8,12,16,20].every(i => m[i])) lines++;
+                this.statusElement.innerText = `連線: ${lines}`;
+                return lines;
+            }
+
+            pickRandom() {
+                const available = this.nums.filter(n => !calledNumbers.has(n));
+                return available[Math.floor(Math.random() * available.length)];
+            }
+        }
+
+        const player = new BingoGame('player-board', 'player-status', 'wrapper-player', true);
+        const npc1 = new BingoGame('npc1-board', 'npc1-status', 'wrapper-npc1');
+        const npc2 = new BingoGame('npc2-board', 'npc2-status', 'wrapper-npc2');
+        const participants = [player, npc1, npc2];
+        const names = ["你", "NPC 1", "NPC 2"];
+
+        async function handleTurn(num) {
+            if (gameOver || calledNumbers.has(num) || turn !== 0) return;
+
+            await processNumber(num);
+            if (gameOver) return;
+
+            // NPC 回合
+            for (let i = 1; i <= 2; i++) {
+                updateTurn(i);
+                await sleep(1000);
+                await processNumber(participants[i].pickRandom());
+                if (gameOver) return;
+            }
+
+            updateTurn(0);
+        }
+
+        async function processNumber(num) {
+            calledNumbers.add(num);
+            const msg = document.getElementById('message-box');
+            msg.innerText = `${names[turn]} 喊了：${num}`;
+
+            let winners = [];
+            participants.forEach((p, i) => {
+                if (p.mark(num) >= WIN_LINES) winners.push(names[i]);
+            });
+
+            if (winners.length > 0) {
+                gameOver = true;
+                msg.innerText = `🏆 贏家：${winners.join(", ")}`;
+                msg.style.background = "#27ae60";
+            }
+        }
+
+        function updateTurn(nextTurn) {
+            turn = nextTurn;
+            participants.forEach((p, i) => {
+                p.wrapper.classList.toggle('active', i === turn);
+            });
+            if (turn === 0 && !gameOver) {
+                document.getElementById('message-box').innerText = "🎮 輪到你了！";
+            }
+        }
+
+        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+    </script>
+</body>
+</html>
