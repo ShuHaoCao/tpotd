@@ -3,56 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>股市大亨</title>
+    <title>股市大亨：24H 全球巔峰挑戰</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --up: #ff4d4d; --down: #2ecc71; --bg: #1a1a2e; --card: #16213e; }
-        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: #fff; margin: 0; padding: 10px; }
-        .header { text-align: center; padding: 10px; background: var(--card); border-radius: 10px; margin-bottom: 15px; }
-        .main-stats { display: flex; justify-content: space-around; margin-bottom: 15px; background: #0f3460; padding: 15px; border-radius: 10px; }
-        .stat-val { font-size: 1.2rem; font-weight: bold; color: #f1c40f; }
+        :root { --up: #ff4d4d; --down: #2ecc71; --bg: #0b0e11; --card: #1e2329; --text: #eaecef; }
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
         
-        #timer { color: #f1c40f; font-size: 1.8rem; font-weight: bold; font-family: monospace; }
-        .update-hint { font-size: 0.8rem; color: #8892b0; margin-top: 5px; }
+        .header { text-align: center; padding: 15px; background: var(--card); border-radius: 10px; margin-bottom: 10px; border-bottom: 3px solid #f0b90b; }
+        #timer { color: #f0b90b; font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace; }
+        .next-refresh { font-size: 0.9rem; color: #848e9c; }
 
-        .market-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 10px; }
-        .market-table th, .market-table td { padding: 12px 8px; text-align: center; border-bottom: 1px solid #0f3460; }
+        .dashboard { display: flex; justify-content: space-around; margin-bottom: 15px; background: var(--card); padding: 15px; border-radius: 10px; }
+        .stat { text-align: center; }
+        .stat-label { font-size: 0.8rem; color: #848e9c; margin-bottom: 5px; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; color: #f0b90b; }
+
+        .table-container { background: var(--card); border-radius: 10px; overflow-x: auto; max-height: 60vh; overflow-y: auto; }
+        .market-table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        .market-table th { position: sticky; top: 0; background: #2b3139; z-index: 10; padding: 12px; font-size: 0.85rem; color: #848e9c; }
+        .market-table td { padding: 12px 8px; text-align: center; border-bottom: 1px solid #2b3139; }
+        
         .comp-name { font-weight: bold; text-align: left !important; color: #3498db; cursor: pointer; text-decoration: underline; }
-        
-        .btn-group button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 0 2px; }
-        .buy { background: var(--up); color: white; }
-        .sell { background: var(--down); color: white; }
+        .price-up { color: var(--up); }
+        .price-down { color: var(--down); }
 
-        /* 彈窗樣式 */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card); width: 90%; max-width: 600px; padding: 20px; border-radius: 15px; position: relative; }
-        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #8892b0; }
+        button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .buy { background: rgba(255, 77, 77, 0.15); color: var(--up); border: 1px solid var(--up); margin-right: 5px; }
+        .buy:hover { background: var(--up); color: white; }
+        .sell { background: rgba(46, 204, 113, 0.15); color: var(--down); border: 1px solid var(--down); }
+        .sell:hover { background: var(--down); color: white; }
+        button:disabled { opacity: 0.2; cursor: not-allowed; }
+
+        /* 彈窗 */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); width: 95%; max-width: 700px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #474d57; }
+        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #848e9c; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>🏙️ 股市大亨 (24H 限定版)</h1>
     <div id="timer">24:00:00</div>
-    <div class="update-hint">下次行情更新倒數：<span id="next-update">05:00</span></div>
+    <div class="next-refresh">距離行情更新預計：<span id="next-update">05:00</span></div>
 </div>
 
-<div class="main-stats">
-    <div class="stat"><div>總資產 (淨值)</div><div id="total-assets" class="stat-val">$100,000</div></div>
-    <div class="stat"><div>現有現金</div><div id="cash" class="stat-val">$100,000</div></div>
+<div class="dashboard">
+    <div class="stat"><div class="stat-label">總資產 (USD)</div><div id="total-assets" class="stat-val">$100,000</div></div>
+    <div class="stat"><div class="stat-label">可用現金</div><div id="cash" class="stat-val">$100,000</div></div>
 </div>
 
-<table class="market-table">
-    <thead>
-        <tr><th style="text-align:left;">公司名稱 (點擊看圖)</th><th>股價</th><th>持有</th><th>操作</th></tr>
-    </thead>
-    <tbody id="stock-list"></tbody>
-</table>
+<div class="table-container">
+    <table class="market-table">
+        <thead>
+            <tr>
+                <th style="text-align:left; padding-left:20px;">公司名稱 (點擊看趨勢)</th>
+                <th>當前股價</th>
+                <th>持有數量</th>
+                <th>交易操作</th>
+            </tr>
+        </thead>
+        <tbody id="stock-list"></tbody>
+    </table>
+</div>
 
 <div id="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h3 id="modal-title" style="color:#f1c40f"></h3>
+        <h3 id="modal-title" style="color:#f0b90b; margin-top:0;"></h3>
         <canvas id="historyChart"></canvas>
     </div>
 </div>
@@ -60,34 +77,47 @@
 <script>
     let cash = 100000;
     let timeLeft = 86400; // 24小時
-    let marketInterval = 300; // 5分鐘更新一次 (300秒)
     let myChart = null;
 
+    // 20 種股票資料與差異化波動率 (vol 為最大波動係數)
     let stocks = [
-        { id: 0, name: "微軟科技 (MSFT)", price: 350, hold: 0, history: [350] },
-        { id: 1, name: "果粉實業 (AAPL)", price: 180, hold: 0, history: [180] },
-        { id: 2, name: "皮卡電動車 (TSLA)", price: 240, hold: 0, history: [240] },
-        { id: 3, name: "台灣積體 (TSMC)", price: 600, hold: 0, history: [600] },
-        { id: 4, name: "古哥搜索 (GOOG)", price: 140, hold: 0, history: [140] },
-        { id: 5, name: "亞馬倉儲 (AMZN)", price: 130, hold: 0, history: [130] },
-        { id: 6, name: "三星電子 (SSNL)", price: 55, hold: 0, history: [55] },
-        { id: 7, name: "臉書社群 (META)", price: 300, hold: 0, history: [300] },
-        { id: 8, name: "英特爾廠 (INTC)", price: 45, hold: 0, history: [45] },
-        { id: 9, name: "可樂飲品 (KO)", price: 60, hold: 0, history: [60] }
+        { id: 0, name: "微軟科技 (MSFT)", price: 350, hold: 0, history: [350], vol: 0.03 },
+        { id: 1, name: "果粉實業 (AAPL)", price: 180, hold: 0, history: [180], vol: 0.03 },
+        { id: 2, name: "台灣積體 (TSMC)", price: 600, hold: 0, history: [600], vol: 0.04 },
+        { id: 3, name: "輝達算力 (NVDA)", price: 450, hold: 0, history: [450], vol: 0.06 },
+        { id: 4, name: "古哥搜索 (GOOG)", price: 140, hold: 0, history: [140], vol: 0.03 },
+        { id: 5, name: "臉書社群 (META)", price: 300, hold: 0, history: [300], vol: 0.05 },
+        { id: 6, name: "皮卡電動車 (TSLA)", price: 240, hold: 0, history: [240], vol: 0.07 },
+        { id: 7, name: "殼牌能源 (SHEL)", price: 65, hold: 0, history: [65], vol: 0.02 },
+        { id: 8, name: "波音航太 (BA)", price: 210, hold: 0, history: [210], vol: 0.04 },
+        { id: 9, name: "長榮海運 (EMC)", price: 155, hold: 0, history: [155], vol: 0.05 },
+        { id: 10, name: "可樂飲品 (KO)", price: 60, hold: 0, history: [60], vol: 0.015 },
+        { id: 11, name: "星星咖啡 (SBUX)", price: 95, hold: 0, history: [95], vol: 0.02 },
+        { id: 12, name: "麥當漢堡 (MCD)", price: 280, hold: 0, history: [280], vol: 0.015 },
+        { id: 13, name: "迪士尼影業 (DIS)", price: 90, hold: 0, history: [90], vol: 0.03 },
+        { id: 14, name: "摩根銀行 (JPM)", price: 160, hold: 0, history: [160], vol: 0.02 },
+        { id: 15, name: "好市倉庫 (COST)", price: 550, hold: 0, history: [550], vol: 0.02 },
+        { id: 16, name: "再生元生技 (REGN)", price: 820, hold: 0, history: [820], vol: 0.08 },
+        { id: 17, name: "比特礦業 (BTCM)", price: 12, hold: 0, history: [12], vol: 0.15 },
+        { id: 18, name: "太空探索 (SPCE)", price: 4, hold: 0, history: [4], vol: 0.20 },
+        { id: 19, name: "量子計算 (QBT)", price: 25, hold: 0, history: [25], vol: 0.12 }
     ];
 
     function renderStocks() {
         const tbody = document.getElementById('stock-list');
         tbody.innerHTML = '';
         stocks.forEach(s => {
+            const lastPrice = s.history.length > 1 ? s.history[s.history.length - 2] : s.price;
+            const priceClass = s.price >= lastPrice ? 'price-up' : 'price-down';
+            
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td class="comp-name" onclick="showHistory(${s.id})">${s.name}</td>
-                <td style="color:${s.price >= s.history[s.history.length-2] ? '#ff4d4d':'#2ecc71'}">${s.price.toFixed(1)}</td>
+                <td class="${priceClass}">${s.price.toFixed(2)}</td>
                 <td>${s.hold}</td>
-                <td class="btn-group">
-                    <button class="buy" onclick="trade(${s.id}, 10)">買10</button>
-                    <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold<=0?'disabled':''}>賣10</button>
+                <td>
+                    <button class="buy" onclick="trade(${s.id}, 10)">買入</button>
+                    <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold <= 0 ? 'disabled' : ''}>賣出</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -97,76 +127,86 @@
 
     function trade(id, amt) {
         const s = stocks[id];
-        if (amt > 0 && cash >= s.price * amt) { cash -= s.price * amt; s.hold += amt; }
-        else if (amt < 0 && s.hold >= Math.abs(amt)) { cash += s.price * Math.abs(amt); s.hold += amt; }
+        if (amt > 0 && cash >= s.price * amt) {
+            cash -= s.price * amt;
+            s.hold += amt;
+        } else if (amt < 0 && s.hold >= Math.abs(amt)) {
+            cash += s.price * Math.abs(amt);
+            s.hold += amt;
+        }
         renderStocks();
     }
 
     function updateTotalAssets() {
-        let total = cash + stocks.reduce((sum, s) => sum + (s.hold * s.price), 0);
+        const stockVal = stocks.reduce((sum, s) => sum + (s.hold * s.price), 0);
+        const total = cash + stockVal;
         document.getElementById('total-assets').innerText = `$${Math.floor(total).toLocaleString()}`;
         document.getElementById('cash').innerText = `$${Math.floor(cash).toLocaleString()}`;
     }
 
     function updateMarket() {
         stocks.forEach(s => {
-            let vol = (Math.random() * 0.1) - 0.05; // 提高長線波動至 5%
-            s.price = parseFloat((s.price * (1 + vol)).toFixed(2));
-            if (s.price < 1) s.price = 1;
+            const change = (Math.random() * 2 - 1) * s.vol;
+            s.price = parseFloat((s.price * (1 + change)).toFixed(2));
+            if (s.price < 0.5) s.price = 0.5;
             s.history.push(s.price);
         });
         renderStocks();
     }
 
-    // 顯示歷史圖表
     function showHistory(id) {
         const s = stocks[id];
         document.getElementById('modal').style.display = 'flex';
-        document.getElementById('modal-title').innerText = s.name + " 價格走勢";
+        document.getElementById('modal-title').innerText = s.name;
         
         const ctx = document.getElementById('historyChart').getContext('2d');
-        if (myChart) myChart.destroy(); // 銷毀舊圖表
-
+        if (myChart) myChart.destroy();
+        
         myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: s.history.map((_, i) => `${i*5}m`),
+                labels: s.history.map((_, i) => `${i * 5}m`),
                 datasets: [{
-                    label: '股價',
+                    label: '股價 (USD)',
                     data: s.history,
-                    borderColor: '#3498db',
-                    tension: 0.3,
-                    fill: false
+                    borderColor: '#f0b90b',
+                    backgroundColor: 'rgba(240, 185, 11, 0.1)',
+                    fill: true,
+                    tension: 0.4
                 }]
             },
             options: {
-                scales: { y: { beginAtZero: false, grid: { color: '#333' } }, x: { grid: { color: '#333' } } },
-                plugins: { legend: { display: false } }
+                responsive: true,
+                scales: { 
+                    y: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } },
+                    x: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } }
+                }
             }
         });
     }
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // 主計時器
+    // 每秒執行一次計時器
     setInterval(() => {
         timeLeft--;
-        let h = Math.floor(timeLeft / 3600);
-        let m = Math.floor((timeLeft % 3600) / 60);
-        let s = timeLeft % 60;
+        const h = Math.floor(timeLeft / 3600);
+        const m = Math.floor((timeLeft % 3600) / 60);
+        const s = timeLeft % 60;
         document.getElementById('timer').innerText = 
             `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
-        // 下次更新倒數
-        let nextUp = timeLeft % 300;
-        let nm = Math.floor(nextUp / 60);
-        let ns = nextUp % 60;
+        const nextUp = timeLeft % 300;
+        const nm = Math.floor(nextUp / 60);
+        const ns = nextUp % 60;
         document.getElementById('next-update').innerText = `${nm}:${ns.toString().padStart(2,'0')}`;
 
         if (timeLeft % 300 === 0) updateMarket();
+        if (timeLeft <= 0) location.reload();
     }, 1000);
 
     renderStocks();
 </script>
+
 </body>
 </html>
