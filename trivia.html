@@ -85,10 +85,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 修改後的圖示/圖片容器樣式 */
         .icon-container {
-            width: 120px; /* 固定寬度 */
-            height: 120px; /* 固定高度 */
+            width: 120px;
+            height: 120px;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -99,12 +98,12 @@
         .icon-container img {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* 確保圖片不變形且完整顯示 */
+            object-fit: contain;
             border-radius: 12px;
         }
 
         .icon-text {
-            font-size: 80px; /* 如果是 Emoji 的話 */
+            font-size: 80px;
         }
 
         .question-text {
@@ -159,8 +158,9 @@
     <button class="btn-next" onclick="nextTrivia()">換一個試試</button>
 
     <script>
-        let triviaData = [];
-        let currentIndex = -1;
+        let triviaData = [];      // 原始資料
+        let shuffledData = [];    // 洗牌後的資料
+        let currentIndex = -1;    // 當前播放到的位置
 
         const card = document.getElementById('trivia-card');
         const frontFace = document.getElementById('front-face');
@@ -170,33 +170,51 @@
             try {
                 const response = await fetch('trivia_data.json');
                 triviaData = await response.json();
-                nextTrivia();
+                
+                if (triviaData.length > 0) {
+                    resetAndShuffle(); // 初始載入時進行洗牌
+                    nextTrivia();      // 顯示第一個
+                }
             } catch (err) {
                 frontFace.innerHTML = `<div class="icon-text">❌</div><h2>載入失敗</h2><p>請檢查 JSON 檔案</p>`;
             }
         }
 
+        /**
+         * 洗牌函式：將原始資料隨機打亂並存入 shuffledData
+         */
+        function resetAndShuffle() {
+            shuffledData = [...triviaData];
+            for (let i = shuffledData.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledData[i], shuffledData[j]] = [shuffledData[j], shuffledData[i]];
+            }
+            currentIndex = -1; // 重置索引，以便 nextTrivia 從 0 開始
+        }
+
         function nextTrivia() {
             if (triviaData.length === 0) return;
-            let nextIndex;
-            if (triviaData.length > 1) {
-                do {
-                    nextIndex = Math.floor(Math.random() * triviaData.length);
-                } while (nextIndex === currentIndex);
-            } else {
-                nextIndex = 0;
+
+            currentIndex++;
+
+            // 如果索引超過總數，代表看完了
+            if (currentIndex >= shuffledData.length) {
+                alert("所有的生活小知識都看過一遍囉！即將重新隨機排序內容。");
+                resetAndShuffle();
+                currentIndex = 0;
             }
-            currentIndex = nextIndex;
-            renderCard(triviaData[currentIndex]);
+
+            renderCard(shuffledData[currentIndex]);
         }
 
         function renderCard(item) {
+            // 先翻回正面並移除動畫類
             card.classList.remove('flipped');
             frontFace.classList.remove('fade-in');
+            
+            // 強制瀏覽器重繪 (reflow)，確保動畫能重複觸發
             void frontFace.offsetWidth;
 
-            // 判斷 icon 是圖片路徑還是 Emoji
-            // 如果字串包含 "." (如 .jpg, .png) 或以 http 開頭，就當作圖片
             const isImage = item.icon.includes('.') || item.icon.startsWith('http');
             const iconHTML = isImage 
                 ? `<img src="${item.icon}" alt="icon">` 
