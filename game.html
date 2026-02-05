@@ -20,11 +20,12 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        height: 100%;
+        /* 修正：允許垂直滑動，隱藏水平滑動 */
+        overflow-x: hidden;
+        overflow-y: auto;
         font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
         background: var(--dark);
         color: white;
-        overflow: hidden;
       }
 
       /* 大廳佈局 */
@@ -32,8 +33,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 100vh;
-        padding: 40px 20px;
+        /* 修正：使用最小高度，確保內容多時可向下延伸 */
+        min-height: 100vh;
+        padding: 40px 20px 80px 20px; /* 增加底部間距 */
         box-sizing: border-box;
         background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
       }
@@ -114,7 +116,7 @@
         height: 100%;
         background: black;
         z-index: 1000;
-        transform: translateY(100%); /* 預設在下方隱藏 */
+        transform: translateY(100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         flex-direction: column;
@@ -149,14 +151,10 @@
         height: 100%;
       }
 
-      /* 載入中動畫 */
-      .loader {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: var(--primary);
-        display: none;
+      #loading-text {
+        margin-left: 15px;
+        font-size: 12px;
+        color: #666;
       }
     </style>
   </head>
@@ -199,9 +197,33 @@
             <p>和NPC對戰，看誰先賓果</p>
           </div>
         </div>
+
+        <div class="game-card" onclick="loadGame('99_game.html')">
+          <div class="icon">📱</div>
+          <div class="info">
+            <h3>九九撲克牌</h3>
+            <p>數值超過99時，則該玩家淘汰</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="loadGame('bigtwo_game.html')">
+          <div class="icon">📱</div>
+          <div class="info">
+            <h3>大老二撲克牌</h3>
+            <p>最先出完手上的牌便勝出比賽</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="alert('更多遊戲敬請期待')">
+          <div class="icon">🎁</div>
+          <div class="info">
+            <h3>更多遊戲</h3>
+            <p>即將推出...</p>
+          </div>
+        </div>
       </div>
 
-      <div style="margin-top: auto; color: #475569; font-size: 12px">
+      <div style="margin-top: 40px; color: #475569; font-size: 12px">
         可用手機掃描 QR Code 玩耍
       </div>
     </div>
@@ -209,12 +231,7 @@
     <div id="game-overlay">
       <div class="top-bar">
         <button class="close-btn" onclick="closeGame()">✕ 離開遊戲</button>
-        <div
-          id="loading-text"
-          style="margin-left: 15px; font-size: 12px; color: #666"
-        >
-          載入中...
-        </div>
+        <div id="loading-text">載入中...</div>
       </div>
       <iframe id="game-iframe" src="about:blank"></iframe>
     </div>
@@ -225,16 +242,15 @@
       const loadingText = document.getElementById("loading-text");
 
       function loadGame(url) {
-        // 顯示載入層
         overlay.classList.add("active");
         loadingText.style.display = "block";
+        // 鎖定背景捲動，防止開遊戲時背景還能滑
+        document.body.style.overflow = "hidden";
 
-        // 延遲載入 iframe 內容，確保動畫順暢
         setTimeout(() => {
           iframe.src = url;
         }, 300);
 
-        // 當 iframe 載入完成後隱藏載入文字
         iframe.onload = () => {
           loadingText.style.display = "none";
         };
@@ -242,7 +258,10 @@
 
       function closeGame() {
         overlay.classList.remove("active");
-        // 離開時清空 src，釋放記憶體並停止音效
+        // 恢復背景捲動
+        document.body.style.overflow = "auto";
+        document.body.style.overflowX = "hidden";
+        
         setTimeout(() => {
           iframe.src = "about:blank";
         }, 400);
