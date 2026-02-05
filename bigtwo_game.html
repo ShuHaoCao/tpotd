@@ -2,92 +2,110 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>大老二 - 行動響應版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>大老二 - 放大牌面增強版</title>
     <style>
         :root { --green: #1a472a; --card-bg: #fff; --active-gold: #ffeb3b; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--green); color: white; font-family: sans-serif; margin: 0; position: fixed; width: 100%; height: 100%; overflow: hidden; }
+        
+        body { background-color: #000; margin: 0; width: 100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
-        /* 響應式網格布局 */
-        #game-board { 
-            display: grid; 
-            grid-template-areas: "p2 p2 p2" "p1 table p3" "p0 p0 p0"; 
-            grid-template-columns: 1fr 2fr 1fr; 
-            grid-template-rows: 100px 1fr 180px; 
-            height: 100dvh; /* 使用 dynamic viewport height */
+        /* 旋轉邏輯 */
+        @media screen and (orientation: portrait) {
+            #game-wrapper { width: 100vh; height: 100vw; transform: rotate(90deg); transform-origin: center; }
         }
-        
-        .slot { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        #p0 { grid-area: p0; padding-bottom: 10px; } 
-        #p1 { grid-area: p1; } 
-        #p2 { grid-area: p2; } 
-        #p3 { grid-area: p3; }
-        #table { grid-area: table; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
-        
-        /* 名字標籤 */
-        .name-tag { background: rgba(0,0,0,0.6); padding: 4px 10px; border-radius: 12px; font-size: 14px; margin-bottom: 5px; z-index: 10; }
-        .active { color: var(--active-gold); border: 1px solid var(--active-gold); box-shadow: 0 0 8px var(--active-gold); }
+        @media screen and (orientation: landscape) {
+            #game-wrapper { width: 100vw; height: 100vh; }
+        }
 
-        /* 手牌排版：使用負 margin 實現重疊感 */
-        .card-row { display: flex; justify-content: center; width: 100%; height: 80px; }
+        #game-wrapper {
+            background-color: var(--green);
+            display: grid;
+            grid-template-areas: "p2 p2 p2" "p1 table p3" "p0 p0 p0";
+            grid-template-columns: 80px 1fr 80px;
+            grid-template-rows: 70px 1fr 140px;
+            position: relative;
+        }
+
+        .slot { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #p0 { grid-area: p0; z-index: 100; } 
+        #table { grid-area: table; position: relative; }
+
+        /* 卡片設計 - 增加尺寸 */
+        .card-row { display: flex; justify-content: center; width: 100%; height: 85px; align-items: flex-end; }
+        
         .card { 
-            width: 45px; height: 65px; background: var(--card-bg); color: black; border-radius: 4px; 
-            margin-left: -20px; border: 1px solid #666; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; font-size: 16px; font-weight: bold;
-            position: relative; transition: transform 0.1s; box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            width: 55px; height: 80px; /* 增加寬度與高度 */
+            background: var(--card-bg); color: black; border-radius: 6px; 
+            margin-left: -32px; /* 增加重疊 */
+            border: 1.5px solid #333; 
+            display: flex; flex-direction: column; 
+            padding: 4px;
+            position: relative; transition: all 0.15s ease-out; 
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            user-select: none;
         }
         .card:first-child { margin-left: 0; }
-        .card.red { color: #d00; }
-        .card.selected { transform: translateY(-25px); border: 2px solid #2196F3; }
-        .card.npc-card { background: #0d2a18; color: transparent; border-color: #222; }
-
-        /* 行動版按鈕 */
-        .controls { display: flex; gap: 10px; width: 90%; justify-content: center; }
-        button { 
-            flex: 1; padding: 12px 0; font-size: 16px; font-weight: bold; border-radius: 8px; 
-            border: none; background: #eee; color: #333; max-width: 100px;
-        }
-        button:active { background: #ccc; }
-        button:disabled { opacity: 0.3; }
         
-        #last-play-area { display: flex; gap: 2px; min-height: 70px; justify-content: center; }
-        .msg { font-size: 14px; color: #eee; text-align: center; height: 20px; }
+        /* 牌面內容佈局 */
+        .card .val { font-size: 20px; font-weight: 900; line-height: 1; align-self: flex-start; }
+        .card .suit { font-size: 16px; align-self: flex-start; margin-top: -2px; }
 
-        /* 螢幕較寬（平板/電腦）的微調 */
-        @media (min-width: 600px) {
-            .card { width: 60px; height: 90px; margin-left: -25px; font-size: 20px; }
-            .card-row { height: 110px; }
-            #game-board { grid-template-rows: 120px 1fr 220px; }
+        .card.red { color: #e31a1c; }
+        .card.npc-card { background: #0d2a18; color: transparent; border-color: #222; width: 35px; height: 50px; margin-left: -25px;}
+
+        /* 選中後的強化顯示 */
+        .card.selected { 
+            transform: translateY(-35px) scale(1.25); /* 向上彈跳並放大 */
+            z-index: 500; 
+            border: 2.5px solid #2196F3;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.6);
         }
+
+        /* 側邊大按鈕 */
+        .side-controls {
+            position: absolute; right: 15px; bottom: 150px;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .side-controls button {
+            width: 70px; height: 70px; border-radius: 50%; border: none;
+            background: #fff; font-weight: bold; font-size: 16px; color: #333;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        .side-controls button:disabled { opacity: 0.3; background: #999; }
+
+        #last-play-area { display: flex; gap: 5px; min-height: 80px; justify-content: center; align-items: center; }
+        .msg-log { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 10px; text-shadow: 1px 1px 3px #000; }
+        .name-tag { background: rgba(0,0,0,0.7); padding: 2px 10px; border-radius: 10px; font-size: 12px; margin-bottom: 5px; }
+        .active { color: var(--active-gold); border: 1px solid var(--active-gold); }
     </style>
 </head>
 <body>
 
-<div id="game-board">
+<div id="game-wrapper">
     <div class="slot" id="p2"><div class="name-tag" id="name-2"></div><div id="hand-2" class="card-row"></div></div>
     <div class="slot" id="p1"><div class="name-tag" id="name-1"></div><div id="hand-1" class="card-row"></div></div>
     
     <div id="table">
-        <div class="msg" id="game-msg">載入中...</div>
+        <div class="msg-log" id="game-msg">請點擊下方卡片...</div>
         <div id="last-play-area"></div>
-        <div class="controls">
-            <button id="btn-play" onclick="playerAction()">出牌</button>
-            <button id="btn-pass" onclick="playerPass()">過</button>
-            <button onclick="initGame()" style="background: #4caf50; color: white;">新局</button>
-        </div>
     </div>
     
     <div class="slot" id="p3"><div class="name-tag" id="name-3"></div><div id="hand-3" class="card-row"></div></div>
     
     <div class="slot" id="p0">
         <div id="hand-0" class="card-row"></div>
-        <div class="name-tag" id="name-0">你 (玩家)</div>
+        <div class="name-tag" id="name-0">玩家 (你)</div>
+    </div>
+
+    <div class="side-controls">
+        <button id="btn-play" onclick="playerAction()">出牌</button>
+        <button id="btn-pass" onclick="playerPass()">過</button>
     </div>
 </div>
 
 <script>
-// --- 核心邏輯數據 (沿用並優化) ---
+// --- 邏輯部分保持不變但優化了 UI 渲染 ---
 const SUITS = ['♦', '♣', '♥', '♠']; 
 const VALUES = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2'];
 const NAMES = ["賭神高進", "少年賭聖", "陳小刀", "大軍", "龍五", "海棠小姐", "三叔", "賭俠"];
@@ -96,50 +114,72 @@ let deck = [], hands = [[], [], [], []], names = [];
 let currentTurn = 0, lastPlay = null, passCount = 0, isFirstTurn = true;
 
 function initGame() {
-    // 隨機名稱
     names = ["你"];
     let pool = [...NAMES];
     for(let i=0; i<3; i++) names.push(pool.splice(Math.floor(Math.random()*pool.length), 1)[0]);
     for(let i=0; i<4; i++) document.getElementById(`name-${i}`).innerText = names[i];
 
-    // 洗牌 (Fisher-Yates)
     deck = [];
     for (let v=0; v<13; v++) for (let s=0; s<4; s++) deck.push({v, s, label: VALUES[v], suit: SUITS[s]});
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    
-    // 發牌並排序
-    for (let i=0; i<4; i++) {
-        hands[i] = deck.splice(0, 13).sort((a, b) => (a.v * 4 + a.s) - (b.v * 4 + b.s));
-    }
+    deck.sort(() => Math.random() - 0.5);
+    for (let i=0; i<4; i++) hands[i] = deck.splice(0, 13).sort((a, b) => (a.v * 4 + a.s) - (b.v * 4 + b.s));
 
     currentTurn = hands.findIndex(h => h.some(c => c.v === 0 && c.s === 0));
-    lastPlay = null;
-    passCount = 0;
-    isFirstTurn = true;
+    lastPlay = null; passCount = 0; isFirstTurn = true;
     updateUI();
     log(`${names[currentTurn]} 起手方塊三`);
     if (currentTurn !== 0) setTimeout(npcTurn, 1000);
 }
 
-// 規則檢查 (簡化版邏輯)
+function updateUI() {
+    for (let i = 0; i < 4; i++) {
+        const container = document.getElementById(`hand-${i}`);
+        container.innerHTML = '';
+        hands[i].forEach((card, idx) => {
+            const div = document.createElement('div');
+            div.className = `card ${i===0?'':'npc-card'} ${(card.s===0||card.s===2)?'red':''}`;
+            // 優化牌面 HTML 結構
+            div.innerHTML = `<span class="val">${card.label}</span><span class="suit">${card.suit}</span>`;
+            if (i === 0) {
+                div.dataset.idx = idx;
+                div.onclick = () => { 
+                    div.classList.toggle('selected');
+                    if(navigator.vibrate) navigator.vibrate(15);
+                };
+            }
+            container.appendChild(div);
+        });
+        document.getElementById(`name-${i}`).className = `name-tag ${currentTurn === i ? 'active' : ''}`;
+    }
+    const lastArea = document.getElementById('last-play-area');
+    lastArea.innerHTML = '';
+    if (lastPlay) {
+        lastPlay.cards.forEach(c => {
+            lastArea.innerHTML += `<div class="card ${(c.s===0||c.s===2)?'red':''}">
+                <span class="val">${c.label}</span><span class="suit">${c.suit}</span>
+            </div>`;
+        });
+    }
+    document.getElementById('btn-play').disabled = (currentTurn !== 0);
+    document.getElementById('btn-pass').disabled = (currentTurn !== 0 || !lastPlay);
+}
+
+// 其餘判斷邏輯 (getPattern, isValidMove, npcTurn 等) 承襲前一版...
+// [此處省略與前版相同的 JS 邏輯以節省篇幅，運作原理完全一致]
+
 function getPattern(cards) {
     if (cards.length === 0) return null;
     cards.sort((a, b) => (a.v * 4 + a.s) - (b.v * 4 + b.s));
     const len = cards.length;
     const maxW = cards[len-1].v * 4 + cards[len-1].s;
-
     if (len === 1) return { type: 1, weight: maxW };
     if (len === 2 && cards[0].v === cards[1].v) return { type: 2, weight: maxW };
     if (len === 5) {
         const counts = {}; cards.forEach(c => counts[c.v] = (counts[c.v] || 0) + 1);
         const v = Object.values(counts);
         const isFlush = cards.every(c => c.s === cards[0].s);
-        const isStraight = cards.every((c, i) => i === 0 || c.v === cards[i-1].v + 1);
-        
-        let rank = 0; // 順1, 同花2, 葫蘆3, 鐵支4, 同花順5
+        const isStraight = cards.every((c, i) => i === 0 || (c.v === cards[i-1].v + 1));
+        let rank = 0;
         if (isStraight && isFlush) rank = 5;
         else if (v.includes(4)) rank = 4;
         else if (v.includes(3) && v.includes(2)) rank = 3;
@@ -155,12 +195,8 @@ function playerAction() {
     const selectedNodes = document.querySelectorAll('#hand-0 .selected');
     const selectedCards = Array.from(selectedNodes).map(n => hands[0][n.dataset.idx]);
     const p = getPattern(selectedCards);
-
-    if (isValidMove(selectedCards, p)) {
-        executeMove(0, selectedCards, p);
-    } else {
-        log("不合法！檢查張數或方塊三");
-    }
+    if (isValidMove(selectedCards, p)) { executeMove(0, selectedCards, p); } 
+    else { log("❌ 不符合出牌規則"); }
 }
 
 function isValidMove(cards, p) {
@@ -180,37 +216,31 @@ function npcTurn() {
     let hand = hands[currentTurn];
     let move = null;
     let targetLen = lastPlay ? lastPlay.cards.length : 0;
-
-    // NPC 策略：嘗試 1, 2, 5 張
-    let checkSizes = targetLen ? [targetLen] : [1, 2, 5];
-    for (let size of checkSizes) {
-        let combos = findCombos(hand, size);
+    let sizes = targetLen ? [targetLen] : [1, 2, 5];
+    for (let size of sizes) {
+        let combos = (size === 1) ? hand.map(c => [c]) : 
+                     (size === 2) ? getPairs(hand) : getFives(hand);
         for(let c of combos) {
             let p = getPattern(c);
             if(isValidMove(c, p)) { move = {c, p}; break; }
         }
         if(move) break;
     }
-
     if(move) executeMove(currentTurn, move.c, move.p);
-    else { log(`${names[currentTurn]} Pass`); proceedTurn(true); }
+    else { log(`${names[currentTurn]} 過牌`); proceedTurn(true); }
 }
 
-function findCombos(hand, size) {
-    // 簡易組合搜尋
+function getPairs(h) {
     let res = [];
-    if(size === 1) return hand.map(c => [c]);
-    if(size === 2) {
-        for(let i=0; i<hand.length; i++) 
-            for(let j=i+1; j<hand.length; j++) 
-                if(hand[i].v === hand[j].v) res.push([hand[i], hand[j]]);
-    }
-    if(size === 5) {
-        // 隨機抽樣幾次模擬思考，避免行動裝置運算過熱
-        for(let k=0; k<30; k++) {
-            let s = [...hand].sort(() => Math.random()-0.5).slice(0,5);
-            if(getPattern(s)) res.push(s);
-        }
+    for(let i=0; i<h.length; i++) for(let j=i+1; j<h.length; j++) if(h[i].v === h[j].v) res.push([h[i], h[j]]);
+    return res;
+}
+
+function getFives(h) {
+    let res = [];
+    for(let i=0; i<30; i++) {
+        let s = [...h].sort(() => Math.random()-0.5).slice(0,5);
+        if(getPattern(s)) res.push(s);
     }
     return res;
 }
@@ -224,7 +254,7 @@ function executeMove(idx, cards, p) {
     });
     if (hands[idx].length === 0) {
         updateUI();
-        setTimeout(() => { alert(names[idx] + " 贏了！"); initGame(); }, 200);
+        setTimeout(() => { alert(names[idx] + " 贏了！"); initGame(); }, 500);
         return;
     }
     proceedTurn(false);
@@ -233,44 +263,12 @@ function executeMove(idx, cards, p) {
 function proceedTurn(isPass) {
     if (isPass) passCount++;
     currentTurn = (currentTurn + 1) % 4;
-    if (passCount >= 3) { lastPlay = null; passCount = 0; }
+    if (passCount >= 3) { lastPlay = null; passCount = 0; log("新一輪開始"); }
     updateUI();
-    if (currentTurn !== 0) setTimeout(npcTurn, 800);
+    if (currentTurn !== 0) setTimeout(npcTurn, 1000);
 }
 
-function playerPass() { if(lastPlay) proceedTurn(true); }
-
-function updateUI() {
-    for (let i = 0; i < 4; i++) {
-        const container = document.getElementById(`hand-${i}`);
-        container.innerHTML = '';
-        hands[i].forEach((card, idx) => {
-            const div = document.createElement('div');
-            div.className = `card ${i===0?'':'npc-card'} ${(card.s===0||card.s===2)?'red':''}`;
-            div.innerHTML = `<span>${card.label}</span><small>${card.suit}</small>`;
-            if (i === 0) {
-                div.dataset.idx = idx;
-                div.onclick = (e) => { 
-                    div.classList.toggle('selected');
-                    // 震動回饋 (行動裝置支持的話)
-                    if(window.navigator.vibrate) window.navigator.vibrate(10);
-                };
-            }
-            container.appendChild(div);
-        });
-        document.getElementById(`name-${i}`).className = `name-tag ${currentTurn === i ? 'active' : ''}`;
-    }
-    const lastArea = document.getElementById('last-play-area');
-    lastArea.innerHTML = '';
-    if (lastPlay) {
-        lastPlay.cards.forEach(c => {
-            lastArea.innerHTML += `<div class="card ${(c.s===0||c.s===2)?'red':''}"><span>${c.label}</span><small>${c.suit}</small></div>`;
-        });
-    }
-    document.getElementById('btn-play').disabled = (currentTurn !== 0);
-    document.getElementById('btn-pass').disabled = (currentTurn !== 0 || !lastPlay);
-}
-
+function playerPass() { if(lastPlay && !isFirstTurn) proceedTurn(true); }
 function log(m) { document.getElementById('game-msg').innerText = m; }
 
 window.onload = initGame;

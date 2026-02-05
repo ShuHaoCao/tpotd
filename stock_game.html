@@ -2,49 +2,185 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>股市大亨：24H 全球巔峰挑戰</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --up: #ff4d4d; --down: #2ecc71; --bg: #0b0e11; --card: #1e2329; --text: #eaecef; }
-        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        
-        .header { text-align: center; padding: 15px; background: var(--card); border-radius: 10px; margin-bottom: 10px; border-bottom: 3px solid #f0b90b; }
-        #timer { color: #f0b90b; font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace; }
-        .next-refresh { font-size: 0.9rem; color: #848e9c; }
+        :root { 
+            --up: #ff4d4d; 
+            --down: #2ecc71; 
+            --bg: #0b0e11; 
+            --card: #1e2329; 
+            --text: #eaecef; 
+            --accent: #f0b90b;
+            --border: #2b3139;
+        }
 
-        .dashboard { display: flex; justify-content: space-around; margin-bottom: 15px; background: var(--card); padding: 15px; border-radius: 10px; }
-        .stat { text-align: center; }
+        * { box-sizing: border-box; }
+
+        body { 
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 10px; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        /* 頂部狀態欄 */
+        .header { 
+            text-align: center; 
+            padding: 15px; 
+            background: var(--card); 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            border-bottom: 4px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        #timer { color: var(--accent); font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 2px; }
+        .next-refresh { font-size: 0.9rem; color: #848e9c; margin-top: 5px; }
+
+        /* 資產儀表板 */
+        .dashboard { 
+            display: flex; 
+            justify-content: space-around; 
+            margin-bottom: 15px; 
+            background: var(--card); 
+            padding: 18px; 
+            border-radius: 12px;
+            gap: 15px;
+        }
+        .stat { text-align: center; flex: 1; }
         .stat-label { font-size: 0.8rem; color: #848e9c; margin-bottom: 5px; }
-        .stat-val { font-size: 1.2rem; font-weight: bold; color: #f0b90b; }
+        .stat-val { font-size: 1.3rem; font-weight: bold; color: var(--accent); white-space: nowrap; }
 
-        .table-container { background: var(--card); border-radius: 10px; overflow-x: auto; max-height: 60vh; overflow-y: auto; }
-        .market-table { width: 100%; border-collapse: collapse; min-width: 500px; }
-        .market-table th { position: sticky; top: 0; background: #2b3139; z-index: 10; padding: 12px; font-size: 0.85rem; color: #848e9c; }
-        .market-table td { padding: 12px 8px; text-align: center; border-bottom: 1px solid #2b3139; }
+        /* 股市列表容器 */
+        .table-container { 
+            background: var(--card); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            margin-bottom: 20px;
+        }
+
+        .market-table { width: 100%; border-collapse: collapse; }
         
-        .comp-name { font-weight: bold; text-align: left !important; color: #3498db; cursor: pointer; text-decoration: underline; }
-        .price-up { color: var(--up); }
-        .price-down { color: var(--down); }
+        /* 桌面版標題樣式 */
+        .market-table th { 
+            background: #2b3139; 
+            padding: 15px; 
+            font-size: 0.85rem; 
+            color: #848e9c; 
+            text-align: center;
+        }
 
-        button { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .buy { background: rgba(255, 77, 77, 0.15); color: var(--up); border: 1px solid var(--up); margin-right: 5px; }
-        .buy:hover { background: var(--up); color: white; }
+        .market-table td { 
+            padding: 15px 10px; 
+            text-align: center; 
+            border-bottom: 1px solid var(--border); 
+        }
+
+        /* 點擊公司名稱效果 */
+        .comp-name { 
+            font-weight: bold; 
+            text-align: left !important; 
+            color: #3498db; 
+            cursor: pointer; 
+            text-decoration: underline;
+            transition: opacity 0.2s;
+        }
+        .comp-name:hover { opacity: 0.8; }
+
+        .price-up { color: var(--up); font-weight: bold; }
+        .price-down { color: var(--down); font-weight: bold; }
+
+        /* 按鈕優化 */
+        .btn-group { display: flex; gap: 8px; justify-content: center; }
+        button { 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.1s; 
+            font-size: 0.9rem;
+        }
+        .buy { background: rgba(255, 77, 77, 0.15); color: var(--up); border: 1px solid var(--up); }
+        .buy:active { background: var(--up); color: white; transform: scale(0.95); }
         .sell { background: rgba(46, 204, 113, 0.15); color: var(--down); border: 1px solid var(--down); }
-        .sell:hover { background: var(--down); color: white; }
+        .sell:active { background: var(--down); color: white; transform: scale(0.95); }
         button:disabled { opacity: 0.2; cursor: not-allowed; }
 
-        /* 彈窗 */
-        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card); width: 95%; max-width: 700px; padding: 20px; border-radius: 15px; position: relative; border: 1px solid #474d57; }
-        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; color: #848e9c; }
+        /* 手機版響應式設計 (Media Query) */
+        @media (max-width: 650px) {
+            .market-table thead { display: none; } /* 隱藏傳統表頭 */
+            
+            .market-table tr { 
+                display: block; 
+                padding: 15px; 
+                border-bottom: 8px solid var(--bg); /* 區分不同股票 */
+            }
+
+            .market-table td { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                border: none; 
+                padding: 8px 0; 
+                text-align: right;
+            }
+
+            /* 利用偽元素生成手機版標籤 */
+            .market-table td::before { 
+                content: attr(data-label); 
+                font-weight: normal;
+                color: #848e9c;
+                font-size: 0.85rem;
+                text-align: left;
+            }
+
+            .comp-name { font-size: 1.1rem; text-decoration: none; border-bottom: 2px solid #3498db; }
+            .btn-group { width: 100%; margin-top: 5px; }
+            .btn-group button { flex: 1; padding: 12px; } /* 手機版按鈕更大 */
+            
+            .stat-val { font-size: 1.1rem; }
+            #timer { font-size: 1.6rem; }
+        }
+
+        /* 圖表彈窗優化 */
+        #modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 10px;
+        }
+        .modal-content { 
+            background: var(--card); 
+            width: 100%; 
+            max-width: 600px; 
+            padding: 20px; 
+            border-radius: 15px; 
+            position: relative; 
+            border: 1px solid #474d57;
+        }
+        .close-btn { 
+            position: absolute; 
+            top: 5px; right: 15px; 
+            font-size: 2.5rem; 
+            cursor: pointer; 
+            color: #848e9c; 
+        }
+        #historyChart { width: 100% !important; height: auto !important; max-height: 350px; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div id="timer">24:00:00</div>
-    <div class="next-refresh">距離行情更新預計：<span id="next-update">05:00</span></div>
+    <div class="next-refresh">距離行情更新：<span id="next-update">05:00</span></div>
 </div>
 
 <div class="dashboard">
@@ -69,17 +205,16 @@
 <div id="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h3 id="modal-title" style="color:#f0b90b; margin-top:0;"></h3>
+        <h3 id="modal-title" style="color:var(--accent); margin-top:0; padding-right: 30px;"></h3>
         <canvas id="historyChart"></canvas>
     </div>
 </div>
 
 <script>
     let cash = 100000;
-    let timeLeft = 86400; // 24小時
+    let timeLeft = 86400; 
     let myChart = null;
 
-    // 20 種股票資料與差異化波動率 (vol 為最大波動係數)
     let stocks = [
         { id: 0, name: "微軟科技 (MSFT)", price: 350, hold: 0, history: [350], vol: 0.03 },
         { id: 1, name: "果粉實業 (AAPL)", price: 180, hold: 0, history: [180], vol: 0.03 },
@@ -109,15 +244,18 @@
         stocks.forEach(s => {
             const lastPrice = s.history.length > 1 ? s.history[s.history.length - 2] : s.price;
             const priceClass = s.price >= lastPrice ? 'price-up' : 'price-down';
+            const sign = s.price >= lastPrice ? '▲' : '▼';
             
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td class="comp-name" onclick="showHistory(${s.id})">${s.name}</td>
-                <td class="${priceClass}">${s.price.toFixed(2)}</td>
-                <td>${s.hold}</td>
-                <td>
-                    <button class="buy" onclick="trade(${s.id}, 10)">買入</button>
-                    <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold <= 0 ? 'disabled' : ''}>賣出</button>
+                <td data-label="公司" class="comp-name" onclick="showHistory(${s.id})">${s.name}</td>
+                <td data-label="當前股價" class="${priceClass}">${sign} ${s.price.toFixed(2)}</td>
+                <td data-label="持有數量">${s.hold}</td>
+                <td data-label="快速交易">
+                    <div class="btn-group">
+                        <button class="buy" onclick="trade(${s.id}, 10)">買入</button>
+                        <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold <= 0 ? 'disabled' : ''}>賣出</button>
+                    </div>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -150,13 +288,15 @@
             s.price = parseFloat((s.price * (1 + change)).toFixed(2));
             if (s.price < 0.5) s.price = 0.5;
             s.history.push(s.price);
+            if(s.history.length > 50) s.history.shift(); // 限制歷史數據長度
         });
         renderStocks();
     }
 
     function showHistory(id) {
         const s = stocks[id];
-        document.getElementById('modal').style.display = 'flex';
+        const modal = document.getElementById('modal');
+        modal.style.display = 'flex';
         document.getElementById('modal-title').innerText = s.name;
         
         const ctx = document.getElementById('historyChart').getContext('2d');
@@ -172,22 +312,30 @@
                     borderColor: '#f0b90b',
                     backgroundColor: 'rgba(240, 185, 11, 0.1)',
                     fill: true,
-                    tension: 0.4
+                    tension: 0.3,
+                    pointRadius: 2
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: { 
                     y: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } },
                     x: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } }
-                }
+                },
+                plugins: { legend: { display: false } }
             }
         });
     }
 
     function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
-    // 每秒執行一次計時器
+    // 點擊 Modal 外部關閉
+    window.onclick = function(event) {
+        const modal = document.getElementById('modal');
+        if (event.target == modal) closeModal();
+    }
+
     setInterval(() => {
         timeLeft--;
         const h = Math.floor(timeLeft / 3600);
