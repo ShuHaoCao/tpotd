@@ -6,25 +6,17 @@
     <title>辦公室疊疊樂</title>
     <style>
       body {
-        margin: 0;
-        background: #1a1a2e;
-        overflow: hidden;
-        font-family: sans-serif;
-        touch-action: none; /* 重要：防止瀏覽器手勢干擾 */
-        -webkit-user-select: none;
-        user-select: none;
+        margin: 0; background: #1a1a2e; overflow: hidden;
+        font-family: -apple-system, "PingFang TC", sans-serif;
+        /* 徹底停用手勢，交給 JS 處理 */
+        touch-action: none; -webkit-user-select: none; user-select: none;
       }
-      canvas { display: block; }
+      canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
       #ui {
-        position: absolute;
-        top: 30px;
-        width: 100%;
-        text-align: center;
-        color: #fff;
-        pointer-events: none; /* 確保點擊能穿過文字 */
-        z-index: 10;
+        position: absolute; top: 30px; width: 100%; text-align: center;
+        color: #fff; z-index: 10; pointer-events: none;
       }
-      #score { font-size: 70px; font-weight: 900; margin: 0; }
+      #score { font-size: 70px; font-weight: 900; }
       #overlay {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(10, 10, 30, 0.9);
@@ -34,18 +26,19 @@
       button {
         padding: 15px 60px; font-size: 1.2rem; cursor: pointer;
         background: #00d2ff; border: none; border-radius: 50px;
-        color: #fff; font-weight: bold; pointer-events: auto;
+        color: #fff; font-weight: bold; position: relative; z-index: 101;
       }
     </style>
   </head>
   <body>
     <div id="ui">
       <div id="score">0</div>
-      <div id="msg">點擊畫面開始</div>
+      <div id="msg">點擊畫面放磚塊</div>
     </div>
 
     <div id="overlay">
-      <h1>辦公室疊疊樂</h1>
+      <h1 id="title">辦公室疊疊樂</h1>
+      <p id="rank-text"></p>
       <button id="mainBtn">進入辦公室</button>
     </div>
 
@@ -55,52 +48,36 @@
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
       const scoreEl = document.getElementById("score");
-      const msgEl = document.getElementById("msg");
       const overlay = document.getElementById("overlay");
       const mainBtn = document.getElementById("mainBtn");
 
       let blocks = [], debris = [];
       let gameState = "START";
-      let speed = 2.5, cameraY = 0, screenShake = 0;
+      let speed = 2.5, cameraY = 0;
       let currentBlock = {};
-      let perfectCount = 0;
-      let lastEventTime = 0; // 防震盪鎖
-
-      // 音效設定
       let audioCtx = null;
-      function initAudio() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === "suspended") audioCtx.resume();
-      }
 
-      function playTone(freq, type = "sine", duration = 0.1, volume = 0.1) {
-        if (!audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-      }
-
-      function init() {
-        initAudio();
+      // 1. 初始化畫布（手機必須先執行）
+      function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      // 2. 啟動遊戲
+      function start() {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
         blocks = [{ x: (canvas.width - 200) / 2, y: canvas.height - 150, width: 200, color: 200 }];
         debris = [];
         scoreEl.innerText = "0";
-        speed = 2.5; cameraY = 0; perfectCount = 0;
+        speed = 2.5; cameraY = 0;
         newBlock();
         gameState = "PLAYING";
         overlay.style.display = "none";
-        animate();
+        requestAnimationFrame(animate);
       }
 
       function newBlock() {
@@ -112,7 +89,7 @@
       }
 
       function animate() {
-        if (gameState === "START") return;
+        if (gameState !== "PLAYING" && gameState !== "OVER") return;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const targetCam = (blocks.length - 4) * 45;
@@ -121,7 +98,7 @@
         ctx.save();
         ctx.translate(0, cameraY);
 
-        // 畫碎片
+        // 碎片更新
         debris.forEach((d, i) => {
           d.y += d.vy; d.vy += 0.6; d.opacity -= 0.03;
           ctx.fillStyle = `hsla(${d.color}, 70%, 50%, ${d.opacity})`;
@@ -129,20 +106,16 @@
           if (d.opacity <= 0) debris.splice(i, 1);
         });
 
-        // 畫已疊磚塊
-        blocks.forEach((b) => {
+        // 已疊塊更新
+        blocks.forEach(b => {
           ctx.fillStyle = `hsl(${b.color}, 70%, 60%)`;
           ctx.fillRect(b.x, b.y, b.width, 43);
-          if (b.perfect) {
-            ctx.strokeStyle = "#fff"; ctx.lineWidth = 4;
-            ctx.strokeRect(b.x, b.y, b.width, 43);
-          }
         });
 
-        // 畫移動磚塊
+        // 移動塊更新
         if (gameState === "PLAYING") {
           currentBlock.x += speed * currentBlock.direction;
-          if (currentBlock.x + currentBlock.width > canvas.width || currentBlock.x < 0)
+          if (currentBlock.x + currentBlock.width > canvas.width || currentBlock.x <= 0)
             currentBlock.direction *= -1;
           ctx.fillStyle = `hsl(${currentBlock.color}, 70%, 60%)`;
           ctx.fillRect(currentBlock.x, currentBlock.y, currentBlock.width, 43);
@@ -152,36 +125,38 @@
         requestAnimationFrame(animate);
       }
 
-      function handleAction(e) {
-        // 防止重複觸發 (300ms 內只允許一次)
-        const now = Date.now();
-        if (now - lastEventTime < 300) return;
-        lastEventTime = now;
+      // 3. 核心修正：使用全域監聽並過濾按鈕
+      window.addEventListener("mousedown", (e) => {
+          if (e.target.tagName === 'BUTTON') return;
+          handleInput();
+      });
 
-        // 如果點到的是按鈕，交給按鈕自己的 onclick 處理
-        if (e.target.tagName === "BUTTON") return;
+      // 針對手機的特別處理：使用 click 配合 pointer-events
+      window.addEventListener("touchstart", (e) => {
+          if (e.target.tagName === 'BUTTON') return;
+          // 防止某些手機瀏覽器雙擊縮放
+          e.preventDefault(); 
+          handleInput();
+      }, { passive: false });
 
+      function handleInput() {
         if (gameState === "PLAYING") {
           const last = blocks[blocks.length - 1];
           const diff = currentBlock.x - last.x;
 
           if (Math.abs(diff) >= currentBlock.width) {
-            gameOver();
+            gameState = "OVER";
+            showGameOver();
           } else {
-            if (Math.abs(diff) < 12) {
-              currentBlock.x = last.x;
-              currentBlock.perfect = true;
-              perfectCount++;
-              playTone(400 + perfectCount * 50);
-            } else {
-              perfectCount = 0;
+            // 切除邏輯 (略微簡化確保性能)
+            if (Math.abs(diff) > 10) {
               let dWidth = Math.abs(diff);
               let dX = diff > 0 ? currentBlock.x + (currentBlock.width - diff) : currentBlock.x;
               debris.push({ x: dX, y: currentBlock.y, width: dWidth, color: currentBlock.color, vy: 2, opacity: 1 });
-              
-              if (diff > 0) currentBlock.width -= diff;
-              else { currentBlock.width += diff; currentBlock.x = last.x; }
-              playTone(200);
+              currentBlock.width -= dWidth;
+              if (diff < 0) currentBlock.x = last.x;
+            } else {
+              currentBlock.x = last.x; // Perfect
             }
             blocks.push({ ...currentBlock });
             scoreEl.innerText = blocks.length - 1;
@@ -191,30 +166,23 @@
         }
       }
 
-      function gameOver() {
-        gameState = "OVER";
-        playTone(100, "sawtooth", 0.5);
+      function showGameOver() {
+        const score = blocks.length - 1;
+        document.getElementById("title").innerText = "遊戲結束: " + score + " 層";
+        mainBtn.innerText = "再蓋一棟";
         overlay.style.display = "flex";
-        overlay.innerHTML = `<h1>得分: ${blocks.length - 1}</h1><button onclick="location.reload()">再試一次</button>`;
       }
 
-      // 監聽按鈕點擊
-      mainBtn.addEventListener("click", init);
-
-      // 核心修正：同時監聽觸控與滑鼠，且不阻止預設行為
-      window.addEventListener("touchstart", handleAction);
-      window.addEventListener("mousedown", (e) => {
-        if (e.button === 0) handleAction(e);
+      // 按鈕專用事件
+      mainBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (gameState === "OVER") {
+            // 遊戲結束時點擊按鈕，重新整理網頁是最保險的做法
+            location.reload();
+        } else {
+            start();
+        }
       });
-
-      window.addEventListener("resize", () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      });
-      
-      // 初始化畫布大小
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
     </script>
   </body>
 </html>
