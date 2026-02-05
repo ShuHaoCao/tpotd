@@ -20,7 +20,7 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden; /* 防止手機瀏覽時意外捲動 */
+            overflow: hidden;
         }
 
         h1 {
@@ -29,7 +29,6 @@
             margin-bottom: 20px;
         }
 
-        /* 卡片容器 */
         .card-container {
             width: 85vw;
             max-width: 340px;
@@ -37,7 +36,6 @@
             perspective: 1000px;
         }
 
-        /* 卡片主體 */
         .card {
             width: 100%;
             height: 100%;
@@ -47,12 +45,10 @@
             cursor: pointer;
         }
 
-        /* 翻轉狀態 */
         .card.flipped {
             transform: rotateY(180deg);
         }
 
-        /* 卡片面樣式 */
         .card-face {
             position: absolute;
             width: 100%;
@@ -69,20 +65,17 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
-        /* 正面 - 白色質感 */
         .card-front {
             background: white;
             color: var(--text-dark);
         }
 
-        /* 背面 - 動態顏色 */
         .card-back {
             background: var(--primary-color);
             color: white;
             transform: rotateY(180deg);
         }
 
-        /* 內容載入動畫 */
         .fade-in {
             animation: fadeIn 0.5s ease-out forwards;
         }
@@ -92,9 +85,26 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .icon {
-            font-size: 80px;
+        /* 修改後的圖示/圖片容器樣式 */
+        .icon-container {
+            width: 120px; /* 固定寬度 */
+            height: 120px; /* 固定高度 */
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .icon-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 確保圖片不變形且完整顯示 */
+            border-radius: 12px;
+        }
+
+        .icon-text {
+            font-size: 80px; /* 如果是 Emoji 的話 */
         }
 
         .question-text {
@@ -109,7 +119,6 @@
             color: #95a5a6;
         }
 
-        /* 下一個按鈕 */
         .btn-next {
             margin-top: 35px;
             padding: 15px 40px;
@@ -138,8 +147,8 @@
     <div class="card-container">
         <div id="trivia-card" class="card">
             <div class="card-face card-front" id="front-face">
-                <div class="icon">🔍</div>
-                <h2 class="question-text">正在發動引擎...</h2>
+                <div class="icon-container">🔍</div>
+                <h2 class="question-text">正在準備內容...</h2>
             </div>
             <div class="card-face card-back" id="back-face">
                 <h2>解答載入中</h2>
@@ -157,69 +166,62 @@
         const frontFace = document.getElementById('front-face');
         const backFace = document.getElementById('back-face');
 
-        // 1. 初始化載入 JSON
         async function init() {
             try {
-                // 注意：本地測試需透過 Live Server 或伺服器環境
                 const response = await fetch('trivia_data.json');
                 triviaData = await response.json();
-                nextTrivia(); // 顯示第一張
+                nextTrivia();
             } catch (err) {
-                frontFace.innerHTML = `<div class="icon">❌</div><h2>載入失敗</h2><p>請檢查 JSON 檔案</p>`;
+                frontFace.innerHTML = `<div class="icon-text">❌</div><h2>載入失敗</h2><p>請檢查 JSON 檔案</p>`;
             }
         }
 
-        // 2. 隨機切換邏輯
         function nextTrivia() {
             if (triviaData.length === 0) return;
-
             let nextIndex;
             if (triviaData.length > 1) {
-                // 確保不與上一次重複
                 do {
                     nextIndex = Math.floor(Math.random() * triviaData.length);
                 } while (nextIndex === currentIndex);
             } else {
                 nextIndex = 0;
             }
-
             currentIndex = nextIndex;
             renderCard(triviaData[currentIndex]);
         }
 
-        // 3. 渲染內容到卡片
         function renderCard(item) {
-            // 先翻回正面並移除動畫類別以重置
             card.classList.remove('flipped');
             frontFace.classList.remove('fade-in');
-            
-            // 強制瀏覽器重繪 (Reflow) 讓動畫能再次觸發
             void frontFace.offsetWidth;
 
-            // 填充正面內容
+            // 判斷 icon 是圖片路徑還是 Emoji
+            // 如果字串包含 "." (如 .jpg, .png) 或以 http 開頭，就當作圖片
+            const isImage = item.icon.includes('.') || item.icon.startsWith('http');
+            const iconHTML = isImage 
+                ? `<img src="${item.icon}" alt="icon">` 
+                : `<span class="icon-text">${item.icon}</span>`;
+
             frontFace.innerHTML = `
-                <div class="icon">${item.icon}</div>
+                <div class="icon-container">${iconHTML}</div>
                 <h2 class="question-text">${item.question}</h2>
                 <div class="hint">點擊卡片揭曉答案</div>
             `;
             frontFace.classList.add('fade-in');
 
-            // 填充背面內容
             backFace.innerHTML = `
-                <h3>${item.answer}</h3>
-                <p style="line-height: 1.6;">${item.description}</p>
+                <h3 style="font-size:1.5rem; margin-bottom:15px;">${item.answer}</h3>
+                <p style="line-height: 1.6; font-size:1.1rem;">${item.description}</p>
                 <hr style="width: 40%; border: 0.5px solid rgba(255,255,255,0.3); margin: 20px 0;">
-                <p style="font-size: 0.9rem; font-style: italic;">${item.tip}</p>
+                <p style="font-size: 0.9rem; font-style: italic; opacity: 0.9;">${item.tip}</p>
             `;
             backFace.style.backgroundColor = item.theme_color || '#3498db';
         }
 
-        // 4. 事件監聽：點擊翻轉
         card.addEventListener('click', () => {
             card.classList.toggle('flipped');
         });
 
-        // 啟動程式
         init();
     </script>
 </body>
