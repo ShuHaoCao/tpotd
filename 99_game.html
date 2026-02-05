@@ -29,59 +29,29 @@
             flex-direction: column;
         }
 
-        /* UI 按鈕層 */
-        #ui-layer {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 100;
-        }
+        #ui-layer { position: absolute; top: 10px; left: 10px; z-index: 100; }
 
         .btn-ui {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            backdrop-filter: blur(5px);
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer;
+            font-size: 0.8rem; backdrop-filter: blur(5px);
         }
 
-        /* 遊戲主棋盤 */
         #game-board {
-            flex: 1;
-            display: grid;
-            grid-template-areas: 
-                ". top ."
-                "left center right"
-                ". bottom .";
-            grid-template-rows: 1fr 1.8fr 1.2fr;
-            grid-template-columns: 1fr 1.6fr 1fr;
-            padding: 10px;
-            gap: 10px;
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+            flex: 1; display: grid;
+            grid-template-areas: ". top ." "left center right" ". bottom .";
+            grid-template-rows: 1fr 1.8fr 1.2fr; grid-template-columns: 1fr 1.6fr 1fr;
+            padding: 10px; gap: 10px; width: 100%; max-width: 900px; margin: 0 auto;
         }
 
         .player-zone {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 5px;
-            position: relative;
-            transition: all 0.4s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(255,255,255,0.05); border-radius: 15px; padding: 5px;
+            position: relative; transition: all 0.3s ease; border: 3px solid transparent;
         }
 
         .hand { display: flex; align-items: center; justify-content: center; }
 
-        /* --- 響應式排版核心 --- */
-        
-        /* 手機直式 (Portrait) */
         @media (orientation: portrait) {
             #game-board { grid-template-columns: 0.7fr 1.6fr 0.7fr; }
             #zone-1 .hand, #zone-3 .hand { flex-direction: column; }
@@ -89,125 +59,86 @@
             #zone-1 .card:first-child, #zone-3 .card:first-child { margin-top: 0; }
         }
 
-        /* 電腦或手機橫式 (Landscape) */
-        @media (orientation: landscape) {
-            .hand { flex-direction: row; }
-            .card { margin-left: -15px; }
-            .card:first-child { margin-left: 0; }
-        }
+        @media (orientation: landscape) { .hand { flex-direction: row; } .card { margin-left: -15px; } .card:first-child { margin-left: 0; } }
 
         .card {
-            width: clamp(28px, 8vw, 45px);
-            aspect-ratio: 2 / 3;
-            background: var(--card-front);
-            color: #333;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: clamp(0.7rem, 2.5vw, 1.1rem);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            position: relative;
-            transition: transform 0.2s;
+            width: clamp(28px, 8vw, 45px); aspect-ratio: 2 / 3; background: var(--card-front);
+            color: #333; border-radius: 5px; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: clamp(0.7rem, 2.5vw, 1.1rem); box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            position: relative; transition: transform 0.2s;
         }
 
-        /* 底部玩家專屬 */
         #hand-0 { flex-direction: row !important; gap: 0; }
-        #hand-0 .card { 
-            width: clamp(45px, 12vw, 65px); 
-            margin-left: -12px; 
-            margin-top: 0 !important; 
-            cursor: pointer;
-        }
+        #hand-0 .card { width: clamp(45px, 12vw, 65px); margin-left: -12px; cursor: pointer; }
         #hand-0 .card:first-child { margin-left: 0; }
         #hand-0 .card.selected { transform: translateY(-15px) scale(1.1); z-index: 10; border: 3px solid var(--accent); }
 
         .card.npc-card { background: var(--card-back); color: transparent; border: 1.5px solid white; }
         .card.red { color: var(--danger); }
 
-        /* 中央點數顯示 */
         #center-zone {
-            grid-area: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 50%;
-            background: rgba(0,0,0,0.2);
-            aspect-ratio: 1 / 1;
-            align-self: center;
+            grid-area: center; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; background: rgba(0,0,0,0.2);
+            aspect-ratio: 1 / 1; align-self: center; position: relative;
         }
 
-        #total-display { font-size: clamp(2.5rem, 12vw, 4.5rem); font-weight: 900; color: var(--accent); }
+        #total-display { font-size: clamp(2.5rem, 12vw, 4.5rem); font-weight: 900; color: var(--accent); transition: 0.2s; }
+        
+        /* 緊張特效 */
+        .danger-mode #total-display { color: var(--danger); animation: shake 0.2s infinite; text-shadow: 0 0 15px rgba(231, 76, 60, 0.8); }
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-1px, -2px) rotate(-1deg); }
+            40% { transform: translate(-3px, 0px) rotate(1deg); }
+            60% { transform: translate(3px, 2px) rotate(0deg); }
+            80% { transform: translate(1px, -1px) rotate(1deg); }
+            100% { transform: translate(-1px, 2px) rotate(-1deg); }
+        }
 
-        /* 遊戲狀態與訊息 */
         #msg-log {
-            height: 100px;
-            background: rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 5px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            height: 100px; background: rgba(0,0,0,0.6); display: flex; flex-direction: column;
+            align-items: center; justify-content: center; padding: 5px; border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        #log-text { font-size: 0.9rem; margin-bottom: 5px; }
+        #log-text { font-size: 0.9rem; margin-bottom: 5px; color: #ccc; }
+        #sub-log { font-size: 0.75rem; color: var(--accent); }
 
         #restart-btn {
-            display: none;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 8px 25px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: none; background: var(--accent); color: #000; border: none;
+            padding: 8px 25px; border-radius: 20px; font-weight: bold; cursor: pointer;
         }
 
         .eliminated { opacity: 0.2; filter: grayscale(1); border: 2px solid var(--danger) !important; }
-        .active-turn { box-shadow: 0 0 20px var(--accent); background: rgba(241, 196, 15, 0.15); }
-        .name-tag { font-size: 0.75rem; margin-bottom: 4px; font-weight: bold; color: #bdc3c7; }
+        
+        .active-turn { 
+            box-shadow: 0 0 25px var(--accent); 
+            background: rgba(241, 196, 15, 0.2); 
+            border: 3px solid var(--accent) !important;
+            animation: pulse-border 1.5s infinite;
+        }
 
-        /* 提示氣泡 */
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 10px var(--accent); }
+            50% { box-shadow: 0 0 25px var(--accent); }
+            100% { box-shadow: 0 0 10px var(--accent); }
+        }
+
+        .name-tag { font-size: 0.75rem; margin-bottom: 4px; font-weight: bold; color: #bdc3c7; }
         #tip-overlay {
-            position: absolute;
-            bottom: 15%;
-            background: var(--tip-bg);
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: 0.3s;
-            z-index: 20;
-            font-weight: bold;
+            position: absolute; bottom: 15%; background: var(--tip-bg); padding: 6px 15px;
+            border-radius: 20px; font-size: 0.8rem; opacity: 0; transform: translateY(10px);
+            transition: 0.3s; z-index: 20; font-weight: bold;
         }
         .show-tip #tip-overlay { opacity: 1; transform: translateY(0); }
 
-        /* 說明視窗 */
         #modal-rules {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--modal-bg);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            backdrop-filter: blur(8px);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--modal-bg); display: flex; justify-content: center; align-items: center;
+            z-index: 1000; backdrop-filter: blur(8px);
         }
         .modal-content {
-            background: #2c3e50;
-            width: 90%;
-            max-width: 500px;
-            max-height: 85vh;
-            border-radius: 20px;
-            padding: 25px;
-            border: 2px solid var(--accent);
-            overflow-y: auto;
+            background: #2c3e50; width: 90%; max-width: 500px; max-height: 85vh;
+            border-radius: 20px; padding: 25px; border: 2px solid var(--accent); overflow-y: auto;
         }
         .modal-content h2 { color: var(--accent); text-align: center; margin-top: 0; }
         .modal-content table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 15px 0; }
@@ -217,11 +148,11 @@
             border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer;
         }
 
+        .playing { animation: play-card-anim 0.4s ease-out forwards; pointer-events: none; }
         @keyframes play-card-anim {
             0% { transform: translateY(0) scale(1); opacity: 1; }
             100% { transform: translateY(-100px) scale(1.3); opacity: 0; }
         }
-        .playing { animation: play-card-anim 0.4s ease-out forwards; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -250,28 +181,23 @@
 
 <div id="msg-log">
     <div id="log-text">點擊「我知道了」開始遊戲</div>
+    <div id="sub-log"></div>
     <button id="restart-btn" onclick="resetGame()">再來一局</button>
 </div>
 
 <div id="modal-rules">
     <div class="modal-content">
-        <h2>🃏 遊戲玩法說明</h2>
-        <p>1. <b>遊戲目標：</b>維持點數不超過 <b>99點</b>。若使總分超過 99，該玩家立即出局。</p>
-        <p>2. <b>大逃殺模式：</b>玩家必須擊敗所有 NPC 成為最後生存者。若玩家先出局，遊戲結束。</p>
-        <p>3. <b>特殊卡牌功能：</b></p>
-        
+        <h2>🃏 終極大逃殺 99</h2>
+        <p>1. <b>目標：</b>生存到最後！總分不可超過 <b>99</b>。</p>
+        <p>2. <b>進化 AI：</b>NPC 現在會保留保命牌並針對玩家。</p>
+        <p>3. <b>特殊功能：</b></p>
         <table>
-            <tr><th>卡牌</th><th>功能說明</th></tr>
-            <tr><td><b>4</b></td><td>反轉出牌順序。</td></tr>
-            <tr><td><b>5</b></td><td>指定下一位玩家（目前等同跳過）。</td></tr>
-            <tr><td><b>10</b></td><td>總分 +10 或 -10。</td></tr>
-            <tr><td><b>J</b></td><td>跳過回合。</td></tr>
-            <tr><td><b>Q</b></td><td>總分 +20 或 -20。</td></tr>
-            <tr><td><b>K</b></td><td>總分直接設為 <b>99</b>。</td></tr>
-            <tr><td><b>♠A</b></td><td>將總分<b>歸零</b>。</td></tr>
-            <tr><td><b>其餘</b></td><td>按牌面數字增加總分 (A=1)。</td></tr>
+            <tr><th>卡牌</th><th>功能</th></tr>
+            <tr><td><b>4 / J</b></td><td>反轉順序 / 跳過</td></tr>
+            <tr><td><b>5</b></td><td>隨機指定下一位存活對手</td></tr>
+            <tr><td><b>10 / Q</b></td><td>±10 或 ±20 (自動選擇最優解)</td></tr>
+            <tr><td><b>K / ♠A</b></td><td>變 99 / 歸零</td></tr>
         </table>
-        <p>4. <b>無限補牌：</b>每出一張牌即補一張。牌庫抽完後會自動洗牌重置，確保手上永遠有 5 張牌。</p>
         <button class="close-btn" onclick="toggleRules(false)">我知道了</button>
     </div>
 </div>
@@ -284,14 +210,11 @@
         if(!audioCtx) audioCtx = new AudioCtx();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
         gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + duration);
     }
 
     const sounds = {
@@ -319,8 +242,8 @@
             selectedIndex: -1, aliveStatus: [true, true, true, true]
         };
         document.getElementById('restart-btn').style.display = 'none';
-        document.getElementById('total-display').style.color = 'var(--accent)';
-        document.querySelectorAll('.player-zone').forEach(z => z.classList.remove('eliminated'));
+        document.getElementById('center-zone').classList.remove('danger-mode');
+        document.querySelectorAll('.player-zone').forEach(z => z.classList.remove('eliminated', 'active-turn'));
         init();
     }
 
@@ -340,30 +263,34 @@
         for(let i=0; i<4; i++) gameState.players[i] = gameState.deck.splice(0, 5);
         
         updateUI();
+        gameState.currentPlayer = 0;
         highlightTurn();
-        document.getElementById('log-text').innerText = "遊戲開始！祝你好運。";
+        document.getElementById('log-text').innerText = "大逃殺開始！祝你好運。";
     }
 
     function drawCard() {
         if (gameState.deck.length === 0) {
-            if (gameState.discardPile.length === 0) return null;
             gameState.deck = [...gameState.discardPile].sort(() => Math.random() - 0.5);
             gameState.discardPile = [];
             sounds.shuffle();
-            document.getElementById('log-text').innerText = "🔄 牌庫用盡，重新洗牌中...";
         }
         return gameState.deck.pop();
     }
 
     function updateUI() {
-        document.getElementById('total-display').innerText = gameState.total;
+        const totalDisp = document.getElementById('total-display');
+        totalDisp.innerText = gameState.total;
+        
+        // 緊張特效觸發
+        if(gameState.total >= 90) document.getElementById('center-zone').classList.add('danger-mode');
+        else document.getElementById('center-zone').classList.remove('danger-mode');
+
         for(let i=0; i<4; i++) {
             const handEl = document.getElementById(`hand-${i}`);
+            const zoneEl = document.getElementById(`zone-${i}`);
             handEl.innerHTML = '';
-            if(!gameState.aliveStatus[i]) {
-                document.getElementById(`zone-${i}`).classList.add('eliminated');
-                continue;
-            }
+            if(!gameState.aliveStatus[i]) { zoneEl.classList.add('eliminated'); continue; }
+            
             gameState.players[i].forEach((card, idx) => {
                 const div = document.createElement('div');
                 div.className = `card ${i===0 ? card.color : 'npc-card'}`;
@@ -377,24 +304,28 @@
 
     async function handlePlay(pIdx, cIdx) {
         if(gameState.isOver) return;
-        const card = gameState.players[pIdx][cIdx];
-        gameState.discardPile.push(card);
 
+        document.querySelectorAll('.player-zone').forEach(z => z.classList.remove('active-turn'));
+
+        const card = gameState.players[pIdx][cIdx];
+        const cardDesc = `${card.s}${card.r}`;
+        gameState.discardPile.push(card);
+        
         const cardEls = document.getElementById(`hand-${pIdx}`).children;
         if(cardEls[cIdx]) cardEls[cIdx].classList.add('playing');
         
         ['A','10','J','Q','K','4','5'].includes(card.r) ? sounds.special() : sounds.play();
-        applyRule(card);
+        
+        let effectMsg = applyRule(card, pIdx);
+        document.getElementById('sub-log').innerText = `${gameState.names[pIdx]} 出牌: ${cardDesc} (${effectMsg})`;
 
         if(gameState.total > 99) {
             gameState.aliveStatus[pIdx] = false;
             sounds.danger();
-            document.getElementById('log-text').innerText = `💥 ${gameState.names[pIdx]} 出局了！`;
+            document.getElementById('log-text').innerText = `💀 ${gameState.names[pIdx]} 爆了！`;
             if(pIdx === 0) { 
-                gameState.isOver = true;
-                document.getElementById('log-text').innerText = "💀 你爆掉了！遊戲結束。";
+                gameState.isOver = true; updateUI();
                 document.getElementById('restart-btn').style.display = 'block';
-                updateUI();
                 return;
             }
         }
@@ -404,61 +335,97 @@
         const newCard = drawCard();
         if(newCard) gameState.players[pIdx].push(newCard);
 
-        const aliveCount = gameState.aliveStatus.filter(s => s).length;
-        if(aliveCount === 1 && gameState.aliveStatus[0]) {
-            gameState.isOver = true;
-            sounds.win();
-            document.getElementById('log-text').innerText = "🏆 勝利！你擊敗了所有對手！";
+        if(gameState.aliveStatus.filter(s => s).length === 1 && gameState.aliveStatus[0]) {
+            gameState.isOver = true; sounds.win();
+            document.getElementById('log-text').innerText = "🏆 勝利！你成為了最後的生存者！";
             document.getElementById('restart-btn').style.display = 'block';
-            updateUI();
-            return;
+            updateUI(); return;
         }
 
-        do {
-            gameState.currentPlayer = (gameState.currentPlayer + gameState.direction + 4) % 4;
-        } while (!gameState.aliveStatus[gameState.currentPlayer]);
+        // 指定 (5) 的特殊切換邏輯
+        if(card.r !== '5') {
+            do {
+                gameState.currentPlayer = (gameState.currentPlayer + gameState.direction + 4) % 4;
+            } while (!gameState.aliveStatus[gameState.currentPlayer]);
+        }
 
         updateUI();
         highlightTurn();
-        if(gameState.currentPlayer !== 0) setTimeout(npcMove, 1000);
+        if(gameState.currentPlayer !== 0) setTimeout(npcMove, 800);
     }
 
-    function applyRule(card) {
-        const r = card.r;
-        if(r === 'A') { if(card.s === '♠') gameState.total = 0; else gameState.total += 1; }
-        else if(r === '4') { gameState.direction *= -1; }
-        else if(r === '10') { if(gameState.total + 10 > 99) gameState.total -= 10; else gameState.total += 10; }
-        else if(r === 'J') {} 
-        else if(r === 'Q') { if(gameState.total + 20 > 99) gameState.total -= 20; else gameState.total += 20; }
-        else if(r === 'K') { gameState.total = 99; }
-        else if(r === '5') {} 
-        else { gameState.total += parseInt(r); }
+    function applyRule(card, pIdx) {
+        const r = card.r; const s = card.s;
+        let msg = "";
+        if(r === 'A') { 
+            if(s === '♠') { gameState.total = 0; msg = "歸零"; }
+            else { gameState.total += 1; msg = "+1"; }
+        }
+        else if(r === '4') { gameState.direction *= -1; msg = "反轉"; }
+        else if(r === '5') { 
+            // 實作指定：找一個除了自己以外還活著的人
+            const others = [];
+            gameState.aliveStatus.forEach((s, i) => { if(s && i !== pIdx) others.push(i); });
+            gameState.currentPlayer = others[Math.floor(Math.random() * others.length)];
+            msg = `指定 ${gameState.names[gameState.currentPlayer]}`;
+        }
+        else if(r === '10') { 
+            if(gameState.total + 10 > 99) { gameState.total -= 10; msg = "-10"; }
+            else { gameState.total += 10; msg = "+10"; }
+        }
+        else if(r === 'Q') { 
+            if(gameState.total + 20 > 99) { gameState.total -= 20; msg = "-20"; }
+            else { gameState.total += 20; msg = "+20"; }
+        }
+        else if(r === 'K') { gameState.total = 99; msg = "變 99"; }
+        else if(r === 'J') { msg = "跳過"; }
+        else { gameState.total += parseInt(r); msg = `+${r}`; }
+        return msg;
     }
 
+    // 進化 NPC AI
     function npcMove() {
         if(gameState.isOver) return;
         const hand = gameState.players[gameState.currentPlayer];
         const total = gameState.total;
+        
         let chosenIdx = -1;
+        const safeIndices = [];
+        const functionIndices = [];
+        const highValueIndices = []; // 8, 9 這種大數字
 
-        const safeNums = []; 
-        const funcs = []; 
         hand.forEach((c, i) => {
-            if (!isNaN(c.r)) { if (total + parseInt(c.r) <= 99) safeNums.push(i); } 
-            else { funcs.push(i); }
+            if (!isNaN(c.r)) {
+                let val = parseInt(c.r);
+                if (total + val <= 99) {
+                    safeIndices.push(i);
+                    if (val >= 7) highValueIndices.push(i);
+                }
+            } else {
+                functionIndices.push(i);
+            }
         });
 
-        if (total >= 90) {
-            const pri = ['A', 'J', '4', '5', '10', 'Q', 'K'];
-            funcs.sort((a, b) => pri.indexOf(hand[a].r) - pri.indexOf(hand[b].r));
-            if (funcs.length > 0) chosenIdx = funcs[0];
-            else if (safeNums.length > 0) chosenIdx = safeNums.sort((a, b) => parseInt(hand[a].r) - parseInt(hand[b].r))[0];
-            else chosenIdx = 0;
+        // 策略邏輯
+        if (total < 70) {
+            // 分數還低時，優先出大數字牌，把保命的功能牌留著
+            if (highValueIndices.length > 0) chosenIdx = highValueIndices[0];
+            else if (safeIndices.length > 0) chosenIdx = safeIndices[0];
+            else chosenIdx = functionIndices[0];
+        } else if (total >= 70 && total < 90) {
+            // 中等分數，隨機出牌
+            if (safeIndices.length > 0) chosenIdx = safeIndices[Math.floor(Math.random() * safeIndices.length)];
+            else chosenIdx = functionIndices[0];
         } else {
-            if (safeNums.length > 0) chosenIdx = safeNums.sort((a, b) => parseInt(hand[b].r) - parseInt(hand[a].r))[0];
-            else chosenIdx = funcs[0] || 0;
+            // 高分緊張期：絕對優先出功能牌保命
+            const priority = ['A', 'J', '4', '5', '10', 'Q', 'K'];
+            functionIndices.sort((a, b) => priority.indexOf(hand[a].r) - priority.indexOf(hand[b].r));
+            if (functionIndices.length > 0) chosenIdx = functionIndices[0];
+            else if (safeIndices.length > 0) chosenIdx = safeIndices[0]; // 出最小的數字
+            else chosenIdx = 0; // 沒救了
         }
-        handlePlay(gameState.currentPlayer, chosenIdx);
+
+        handlePlay(gameState.currentPlayer, chosenIdx || 0);
     }
 
     function handlePlayerClick(idx) {
@@ -469,27 +436,30 @@
             gameState.selectedIndex = -1;
         } else {
             gameState.selectedIndex = idx;
-            const r = gameState.players[0][idx].r;
-            const s = gameState.players[0][idx].s;
-            let tip = `+${r}`;
-            if(r === 'A') tip = s === '♠' ? '歸零' : '+1';
-            else if(r === '4') tip = '反轉';
-            else if(r === '5') tip = '跳過';
-            else if(r === '10') tip = '±10';
-            else if(r === 'J') tip = '跳過';
-            else if(r === 'Q') tip = '±20';
-            else if(r === 'K') tip = '變為 99';
+            const card = gameState.players[0][idx];
+            let tip = `+${card.r}`;
+            if(card.r === 'A') tip = card.s === '♠' ? '歸零' : '+1';
+            else if(card.r === '4') tip = '反轉';
+            else if(card.r === '5') tip = '隨機指定';
+            else if(card.r === 'J') tip = '跳過回合';
+            else if(card.r === '10') tip = '最優 ±10';
+            else if(card.r === 'Q') tip = '最優 ±20';
+            else if(card.r === 'K') tip = '總分變 99';
             
             document.getElementById('tip-overlay').innerText = `效果：${tip}`;
             document.getElementById('center-zone').classList.add('show-tip');
             updateUI();
-            playTone(440, 'sine', 0.05);
         }
     }
 
     function highlightTurn() {
-        document.querySelectorAll('.player-zone').forEach((z, i) => {
-            z.classList.toggle('active-turn', i === gameState.currentPlayer);
+        const zones = document.querySelectorAll('.player-zone');
+        zones.forEach((z, i) => {
+            if (i === gameState.currentPlayer && !gameState.isOver) {
+                z.classList.add('active-turn');
+            } else {
+                z.classList.remove('active-turn');
+            }
         });
         document.getElementById('status-sub').innerText = `輪到：${gameState.names[gameState.currentPlayer]}`;
     }
