@@ -1,255 +1,427 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>賓果大賽</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>群星大亂鬥賓果</title>
     <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #e67e22;
+        --bg-color: #f4f7f6;
+        --cell-size: 50px;
+      }
+
+      @media (max-width: 600px) {
         :root {
-            --primary-color: #3498db;
-            --bg-color: #f8f9fa;
-            --cell-size: 50px;
-            --cell-font: 1.1rem;
+          --cell-size: 44px;
         }
-
-        /* 針對小螢幕縮小方格 */
-        @media (max-width: 600px) {
-            :root {
-                --cell-size: 42px;
-                --cell-font: 1rem;
-            }
-            .game-container { flex-direction: column; align-items: center; }
-            .board-wrapper { width: 90%; max-width: 300px; }
+        .game-container {
+          flex-direction: column;
+          align-items: center;
         }
-
-        body { 
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
-            background: var(--bg-color); 
-            margin: 0;
-            padding: 10px;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            touch-action: manipulation; /* 最佳化行動裝置點擊 */
+        .board-wrapper {
+          width: 95%;
+          max-width: 320px;
         }
+      }
 
-        #message-box { 
-            width: 90%;
-            max-width: 400px;
-            margin: 15px 0; 
-            padding: 12px; 
-            background: #2c3e50; 
-            color: white; 
-            border-radius: 12px; 
-            font-size: 1.1rem; 
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            min-height: 1.5em;
+      body {
+        font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+        background: var(--bg-color);
+        margin: 0;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #message-box {
+        width: 90%;
+        max-width: 450px;
+        margin: 10px 0;
+        padding: 15px;
+        background: #2c3e50;
+        color: white;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        min-height: 1.5em;
+      }
+
+      .controls {
+        margin-bottom: 15px;
+      }
+      .btn-reset {
+        padding: 10px 25px;
+        font-size: 1rem;
+        font-weight: bold;
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        box-shadow: 0 4px 0 #d35400;
+        transition: 0.1s;
+      }
+      .btn-reset:active {
+        transform: translateY(3px);
+        box-shadow: none;
+      }
+
+      .game-container {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .board-wrapper {
+        background: white;
+        padding: 12px;
+        border-radius: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        text-align: center;
+        border-top: 6px solid #ccc;
+        transition: 0.3s;
+      }
+      .board-wrapper.active {
+        border-top-color: var(--primary-color);
+        transform: translateY(-5px);
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+
+      h2 {
+        margin: 5px 0;
+        font-size: 0.95rem;
+        color: #34495e;
+        white-space: nowrap;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(5, var(--cell-size));
+        grid-gap: 5px;
+        margin: 10px auto;
+      }
+
+      .cell {
+        width: var(--cell-size);
+        height: var(--cell-size);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #ecf0f1;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #2c3e50;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .cell.marked {
+        background: #ff4757;
+        color: white;
+        animation: pop 0.3s;
+      }
+
+      @keyframes pop {
+        0% {
+          transform: scale(1);
         }
-
-        .game-container { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; width: 100%; }
-
-        .board-wrapper { 
-            background: white; 
-            padding: 10px; 
-            border-radius: 12px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05); 
-            text-align: center; 
-            border-top: 6px solid #ddd;
-            transition: transform 0.2s;
+        50% {
+          transform: scale(1.2);
         }
-
-        .board-wrapper.active { 
-            border-top-color: var(--primary-color); 
-            background: #fff;
-            transform: scale(1.02);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.2);
+        100% {
+          transform: scale(1);
         }
-
-        h2 { margin: 5px 0; font-size: 1.1rem; color: #555; }
-
-        .board { 
-            display: grid; 
-            grid-template-columns: repeat(5, var(--cell-size)); 
-            grid-gap: 4px; 
-            margin: 10px auto; 
-            justify-content: center;
-        }
-
-        .cell { 
-            width: var(--cell-size); 
-            height: var(--cell-size); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            background: #f1f2f6; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: var(--cell-font);
-            color: #2f3542;
-            -webkit-tap-highlight-color: transparent; /* 移除手機點擊藍框 */
-        }
-
-        .cell.marked { 
-            background: #ff4757; 
-            color: white; 
-            cursor: default; 
-            animation: pop 0.3s ease-out;
-        }
-
-        @keyframes pop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .npc-board .cell { cursor: default; opacity: 0.9; }
-
-        .status { margin-top: 8px; font-weight: bold; font-size: 0.9rem; color: #747d8c; }
-
-        footer { margin-top: 20px; font-size: 0.8rem; color: #a4b0be; }
+      }
+      .npc-board .cell {
+        cursor: default;
+      }
+      .status {
+        margin-top: 8px;
+        font-weight: bold;
+        color: #7f8c8d;
+        font-size: 0.85rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="message-box">👋 歡迎來到賓果大賽</div>
 
-    <div id="message-box">🎮 請點擊數字開始</div>
-
-    <div class="game-container">
-        <div id="wrapper-player" class="board-wrapper active">
-            <h2>玩家</h2>
-            <div id="player-board" class="board"></div>
-            <div id="player-status" class="status">連線: 0</div>
-        </div>
-
-        <div id="wrapper-npc1" class="board-wrapper">
-            <h2>NPC 1</h2>
-            <div id="npc1-board" class="board npc-board"></div>
-            <div id="npc1-status" class="status">連線: 0</div>
-        </div>
-
-        <div id="wrapper-npc2" class="board-wrapper">
-            <h2>NPC 2</h2>
-            <div id="npc2-board" class="board npc-board"></div>
-            <div id="npc2-status" class="status">連線: 0</div>
-        </div>
+    <div class="controls">
+      <button class="btn-reset" onclick="resetGame()">♻️ 重新配對對手</button>
     </div>
 
-    <footer>Responsive Bingo v1.0</footer>
+    <div class="game-container">
+      <div id="wrapper-0" class="board-wrapper active">
+        <h2 id="title-0">玩家:你(使用者)</h2>
+        <div id="board-0" class="board"></div>
+        <div id="status-0" class="status">連線數: 0</div>
+      </div>
+      <div id="wrapper-1" class="board-wrapper">
+        <h2 id="title-1">玩家:載入中(NPC)</h2>
+        <div id="board-1" class="board npc-board"></div>
+        <div id="status-1" class="status">連線數: 0</div>
+      </div>
+      <div id="wrapper-2" class="board-wrapper">
+        <h2 id="title-2">玩家:載入中(NPC)</h2>
+        <div id="board-2" class="board npc-board"></div>
+        <div id="status-2" class="status">連線數: 0</div>
+      </div>
+    </div>
 
     <script>
-        // 邏輯部分與之前相同，但加入了 UI 優化
-        const WIN_LINES = 5;
-        let gameOver = false;
-        let calledNumbers = new Set();
-        let turn = 0; 
+      const WIN_LINES = 5;
+      const funnyNames = [
+        "馬斯克拉",
+        "黃仁勳到家",
+        "賈伯斯斯",
+        "蔡依林時抱佛腳",
+        "周杰倫流轉",
+        "無法顯示人物名稱",
+        "銅鑼灣扛報紙",
+        "汗味戰警",
+        "左青龍右胖虎",
+        "靈車甩尾棺材飛",
+        "媽你看爸在飛",
+        "頭蚊子叮",
+        "紅衣小男孩",
+        "九頭龍閃到腰",
+        "善解人衣",
+        "剛好五個字",
+        "打死我也不",
+        "我很會射",
+        "媽媽來了快關電腦",
+        "怪很強我先走",
+        "差一元買多多",
+        "說好不打臉",
+        "不要問你會怕",
+        "拉鍊裡的猛獸",
+        "你看不見我",
+        "轉角遇到怪",
+        "你點到我了",
+        "網路連線中斷",
+        "拿佛珠砸耶穌",
+        "你已經死了",
+        "綠油精點眼睛",
+        "屎亡筆記本",
+        "關完大哥關二哥",
+        "放屁給你聞",
+        "你在大聲什麼啦",
+        "蒙奇D能兒",
+        "名子剛好七個子",
+        "苗栗小五郎",
+        "AI人工智障",
+        "放屁給你聞",
+        "蒙其D罩杯",
+        "老公我要硬漢",
+        "老爺不可以",
+        "夫人會生氣",
+        "叔叔不可以",
+        "爺爺不可以",
+        "悲傷滷肉飯",
+        "憂鬱肉燥飯",
+        "抒情控肉飯",
+        "被冰塊燙傷",
+        "麻辣白開水",
+        "涼麵趁熱吃",
+        "梁山伯住陰宅",
+        "梁山伯揍英台",
+        "搖滾觀世音",
+        "尾田賀一航",
+        "林正英大法師",
+        "動感阿匹婆",
+        "尼古清十郎",
+        "囧把刀",
+        "龍五快撿槍",
+        "耶穌激凸",
+        "山下智囧",
+        "軟今天",
+        "鐵拳無敵孫中山",
+        "再世霸王袁世凱",
+        "天魔傳人毛澤東",
+        "穿林北腿蔣中正",
+        "木村倒頭哉",
+        "魚祥拳",
+        "湯姆嗑吐司",
+        "唐伯虎電蚊香",
+        "醉拳甘乃迪",
+        "宇智波多野結衣",
+        "鄧不麗君",
+        "魔導少年林默娘",
+        "大俠愛吃漢堡堡",
+        "常威打來福",
+        "吃屎吃得好開心",
+        "我要打十個",
+        "魔鬼筋肉人",
+        "閃電五騎士",
+        "乞丐中的霸主",
+        "三重劉德華",
+        "打我啊笨蛋",
+        "看見來福咬常威",
+        "要你命三千",
+        "油炸包龍星",
+        "誠實豆沙包",
+        "奶油血滴子",
+        "遙控電流香蕉",
+        "慚愧棒棒糖",
+        "紅燒雞翅膀",
+        "我愛一條柴",
+        "含笑半步癲",
+        "一日喪命散",
+        "太陽能手電筒",
+        "奪命香雞腿",
+        "百發百中抓奶龍爪手",
+        "還我漂漂拳",
+        "靈刀武西郎",
+        "鈴刀灰休楚",
+        "希因娜",
+        "胎哥",
+        "咖哩涼",
+        "夏夕夏景",
+        "擠霸昏",
+        "額阿尖",
+        "桃棒賽",
+        "秋山曉",
+      ];
 
-        function createNumbers() {
-            return Array.from({length: 25}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+      let gameOver = false,
+        calledNumbers = new Set(),
+        turn = 0,
+        participants = [];
+
+      class BingoGame {
+        constructor(id, displayName, isPlayer = false) {
+          this.id = id;
+          this.displayName = displayName; // 這裡存的是完整格式，如「玩家:你(使用者)」
+          this.isPlayer = isPlayer;
+          this.nums = Array.from({ length: 25 }, (_, i) => i + 1).sort(
+            () => Math.random() - 0.5,
+          );
+          this.marked = Array(25).fill(false);
+          this.render();
         }
-
-        class BingoGame {
-            constructor(elementId, statusId, wrapperId, isPlayer = false) {
-                this.nums = createNumbers();
-                this.element = document.getElementById(elementId);
-                this.statusElement = document.getElementById(statusId);
-                this.wrapper = document.getElementById(wrapperId);
-                this.marked = Array(25).fill(false);
-                this.isPlayer = isPlayer;
-                this.init();
-            }
-
-            init() {
-                this.nums.forEach((num, index) => {
-                    const cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.innerText = num;
-                    if (this.isPlayer) {
-                        cell.addEventListener('click', () => handleTurn(num));
-                    }
-                    this.element.appendChild(cell);
-                });
-            }
-
-            mark(num) {
-                const index = this.nums.indexOf(num);
-                if (index !== -1) {
-                    this.marked[index] = true;
-                    this.element.children[index].classList.add('marked');
-                }
-                return this.checkBingo();
-            }
-
-            checkBingo() {
-                let lines = 0;
-                const m = this.marked;
-                for (let i = 0; i < 5; i++) {
-                    if ([0,1,2,3,4].every(j => m[i*5 + j])) lines++;
-                    if ([0,1,2,3,4].every(j => m[j*5 + i])) lines++;
-                }
-                if ([0,6,12,18,24].every(i => m[i])) lines++;
-                if ([4,8,12,16,20].every(i => m[i])) lines++;
-                this.statusElement.innerText = `連線: ${lines}`;
-                return lines;
-            }
-
-            pickRandom() {
-                const available = this.nums.filter(n => !calledNumbers.has(n));
-                return available[Math.floor(Math.random() * available.length)];
-            }
+        render() {
+          document.getElementById(`title-${this.id}`).innerText =
+            this.displayName;
+          const boardEl = document.getElementById(`board-${this.id}`);
+          boardEl.innerHTML = "";
+          this.nums.forEach((num) => {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.innerText = num;
+            if (this.isPlayer) cell.onclick = () => handleTurn(num);
+            boardEl.appendChild(cell);
+          });
         }
-
-        const player = new BingoGame('player-board', 'player-status', 'wrapper-player', true);
-        const npc1 = new BingoGame('npc1-board', 'npc1-status', 'wrapper-npc1');
-        const npc2 = new BingoGame('npc2-board', 'npc2-status', 'wrapper-npc2');
-        const participants = [player, npc1, npc2];
-        const names = ["你", "NPC 1", "NPC 2"];
-
-        async function handleTurn(num) {
-            if (gameOver || calledNumbers.has(num) || turn !== 0) return;
-
-            await processNumber(num);
-            if (gameOver) return;
-
-            // NPC 回合
-            for (let i = 1; i <= 2; i++) {
-                updateTurn(i);
-                await sleep(1000);
-                await processNumber(participants[i].pickRandom());
-                if (gameOver) return;
-            }
-
-            updateTurn(0);
+        mark(num) {
+          const idx = this.nums.indexOf(num);
+          if (idx !== -1) {
+            this.marked[idx] = true;
+            document
+              .getElementById(`board-${this.id}`)
+              .children[idx].classList.add("marked");
+          }
+          return this.calcLines();
         }
-
-        async function processNumber(num) {
-            calledNumbers.add(num);
-            const msg = document.getElementById('message-box');
-            msg.innerText = `${names[turn]} 喊了：${num}`;
-
-            let winners = [];
-            participants.forEach((p, i) => {
-                if (p.mark(num) >= WIN_LINES) winners.push(names[i]);
-            });
-
-            if (winners.length > 0) {
-                gameOver = true;
-                msg.innerText = `🏆 贏家：${winners.join(", ")}`;
-                msg.style.background = "#27ae60";
-            }
+        calcLines() {
+          let lines = 0,
+            m = this.marked;
+          for (let i = 0; i < 5; i++) {
+            if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
+            if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
+          }
+          if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
+          if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
+          document.getElementById(`status-${this.id}`).innerText =
+            `連線數: ${lines}`;
+          return lines;
         }
+      }
 
-        function updateTurn(nextTurn) {
-            turn = nextTurn;
-            participants.forEach((p, i) => {
-                p.wrapper.classList.toggle('active', i === turn);
-            });
-            if (turn === 0 && !gameOver) {
-                document.getElementById('message-box').innerText = "🎮 輪到你了！";
-            }
+      function resetGame() {
+        gameOver = false;
+        calledNumbers.clear();
+        turn = 0;
+        const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
+
+        // 設定您指定的名稱格式
+        participants = [
+          new BingoGame(0, "玩家:你(使用者)", true),
+          new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`),
+          new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`),
+        ];
+
+        setTurn(0);
+        document.getElementById("message-box").innerText =
+          "🎮 點擊你的數字開始比賽！";
+        document.getElementById("message-box").style.background = "#2c3e50";
+      }
+
+      async function handleTurn(num) {
+        if (gameOver || calledNumbers.has(num) || turn !== 0) return;
+        await play(num);
+        if (gameOver) return;
+
+        // NPC 回合
+        for (let i = 1; i <= 2; i++) {
+          setTurn(i);
+          await sleep(1000); // 稍微加長一點延遲，更有比賽感
+          const available = participants[i].nums.filter(
+            (n) => !calledNumbers.has(n),
+          );
+          const npcChoice =
+            available[Math.floor(Math.random() * available.length)];
+          await play(npcChoice);
+          if (gameOver) return;
         }
+        setTurn(0);
+      }
 
-        function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+      async function play(num) {
+        calledNumbers.add(num);
+        document.getElementById("message-box").innerText =
+          `${participants[turn].displayName.split("(")[0]} 喊了：${num}`;
+
+        let winners = [];
+        participants.forEach((p) => {
+          if (p.mark(num) >= WIN_LINES) winners.push(p.displayName);
+        });
+
+        if (winners.length > 0) {
+          gameOver = true;
+          document.getElementById("message-box").innerText =
+            `🏆 贏家：${winners.join(", ")}`;
+          document.getElementById("message-box").style.background = "#27ae60";
+        }
+      }
+
+      function setTurn(t) {
+        turn = t;
+        participants.forEach((_, i) => {
+          document
+            .getElementById(`wrapper-${i}`)
+            .classList.toggle("active", i === turn);
+        });
+        if (turn === 0 && !gameOver) {
+          document.getElementById("message-box").innerText =
+            "🎮 輪到你了，請選一個號碼！";
+        }
+      }
+
+      function sleep(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      // 初次執行
+      resetGame();
     </script>
-</body>
+  </body>
 </html>
