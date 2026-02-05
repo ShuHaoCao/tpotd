@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汽車診療室</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-white: #ffffff;
+            --text-main: #2c3e50;
+            --text-sub: #7f8c8d;
+            /* 分類顏色 */
+            --color-maintenance: #27ae60;
+            --color-diesel: #2980b9;
+            --color-safety: #e74c3c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .feed-container {
+            padding: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* 骨架屏動畫 (載入中效果) */
+        .loading-text { text-align: center; padding: 20px; color: #999; }
+
+        /* 卡片樣式 */
+        .info-card {
+            background: var(--card-white);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon-box {
+            font-size: 2.2rem;
+            min-width: 60px;
+            height: 60px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+        }
+
+        .content-box h2 {
+            margin: 0 0 6px 0;
+            font-size: 1.15rem;
+        }
+
+        .content-box p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-sub);
+        }
+
+        /* 動態標籤顏色 */
+        .tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            background: #eee; /* 預設 */
+        }
+
+        .tag-maintenance { background: #e8f5e9; color: var(--color-maintenance); }
+        .tag-diesel { background: #e3f2fd; color: var(--color-diesel); }
+        .tag-safety { background: #fdeded; color: var(--color-safety); }
+
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1 style="font-size: 1.2rem; margin: 0;">汽車診療室</h1>
+    </div>
+
+    <div class="feed-container" id="feed-container">
+        <div class="loading-text">正在連接資料庫...</div>
+    </div>
+
+    <script>
+        async function loadFeed() {
+    const container = document.getElementById('feed-container');
+    
+    try {
+        const response = await fetch('car_data.json');
+        let data = await response.json();
+        
+        // --- 核心：洗牌演算法 (Shuffle) ---
+        // 從最後一個元素開始，隨機選一個前面的元素交換位置
+        for (let i = data.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [data[i], data[j]] = [data[j], data[i]]; 
+        }
+        // ------------------------------
+
+        container.innerHTML = ''; 
+
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'info-card';
+            const tagClass = `tag-${item.type}`;
+
+            card.innerHTML = `
+                <div class="icon-box">${item.icon}</div>
+                <div class="content-box">
+                    <span class="tag ${tagClass}">${item.tag_text}</span>
+                    <h2>${item.title}</h2>
+                    <p>${item.description}</p>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+    } catch (error) {
+        container.innerHTML = `<div class="loading-text">載入失敗，請確認資料格式。</div>`;
+    }
+}
+
+        // 初始化
+        loadFeed();
+    </script>
+</body>
+</html>

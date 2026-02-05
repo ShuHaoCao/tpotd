@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "type": "maintenance",
+    "tag_text": "夏季保養",
+    "icon": "🌡️",
+    "title": "熄火後別立刻洗車",
+    "description": "剛開完車時，煞車碟盤溫度極高。若此時直接噴灑冷水，碟盤可能因劇烈冷熱收縮而變形，導致煞車抖動。"
+  },
+  {
+    "id": 2,
+    "type": "diesel",
+    "tag_text": "柴油車專屬",
+    "icon": "💧",
+    "title": "AdBlue 尿素燈亮別忽視",
+    "description": "這是尿素系統淨化廢氣的關鍵。若尿素耗盡，車輛可能會限制馬力甚至無法啟動，亮燈後應儘速補足。"
+  },
+  {
+    "id": 3,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "🌧️",
+    "title": "國道遇水漂現象怎麼辦？",
+    "description": "切記不要亂打方向盤或急踩煞車。應握緊方向盤並鬆開油門，讓車輛自然減速恢復抓地力。"
+  },
+  {
+    "id": 4,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "💥",
+    "title": "高速駕駛爆胎怎麼辦？",
+    "description": "切勿急踩煞車，應握穩方向盤控方向，待車速自然下降後再緩慢靠邊。"
+  },
+  {
+    "id": 5,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "😵‍💫",
+    "title": "遠光燈禮儀",
+    "description": "市區或對向有來車時應切換為近光燈，避免造成對方「眩目」引發事故。"
+  },
+  {
+    "id": 6,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "👟",
+    "title": "煞車失靈該怎麼辦",
+    "description": "嘗試連踩煞車踏板，並利用引擎煞車（切換低速檔）減速。"
+  },
+  {
+    "id": 7,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "🔆",
+    "title": "進入隧道駕駛要小心",
+    "description": "進入前務必開啟大燈，並保持比平常更長的車距。"
+  },
+  {
+    "id": 8,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "⛰️",
+    "title": "長下坡煞車要注意",
+    "description": "應使用低速檔配合引擎煞車，避免長時間踩煞車導致過熱失效。"
+  },
+  {
+    "id": 9,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "👤",
+    "title": "視線盲區要檢查",
+    "description": "變換車道除了看後照鏡，應快速轉頭（Over the Shoulder）確認死角。"
+  },
+   {
+    "id": 10,
+    "type": "safety",
+    "tag_text": "駕駛安全",
+    "icon": "🅿️",
+    "title": "路邊起步不要急",
+    "description": "務必打方向燈並確認後方無來車再切入車道。"
+  }
+]
