@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生活小知識</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --bg-color: #f4f7f6;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* 防止手機瀏覽時意外捲動 */
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        /* 卡片容器 */
+        .card-container {
+            width: 85vw;
+            max-width: 340px;
+            height: 480px;
+            perspective: 1000px;
+        }
+
+        /* 卡片主體 */
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        /* 翻轉狀態 */
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* 卡片面樣式 */
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            box-sizing: border-box;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        /* 正面 - 白色質感 */
+        .card-front {
+            background: white;
+            color: var(--text-dark);
+        }
+
+        /* 背面 - 動態顏色 */
+        .card-back {
+            background: var(--primary-color);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* 內容載入動畫 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .hint {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #95a5a6;
+        }
+
+        /* 下一個按鈕 */
+        .btn-next {
+            margin-top: 35px;
+            padding: 15px 40px;
+            background-color: var(--text-dark);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-next:active {
+            transform: scale(0.95);
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>生活小知識-隨機抽</h1>
+
+    <div class="card-container">
+        <div id="trivia-card" class="card">
+            <div class="card-face card-front" id="front-face">
+                <div class="icon">🔍</div>
+                <h2 class="question-text">正在發動引擎...</h2>
+            </div>
+            <div class="card-face card-back" id="back-face">
+                <h2>解答載入中</h2>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-next" onclick="nextTrivia()">換一個試試</button>
+
+    <script>
+        let triviaData = [];
+        let currentIndex = -1;
+
+        const card = document.getElementById('trivia-card');
+        const frontFace = document.getElementById('front-face');
+        const backFace = document.getElementById('back-face');
+
+        // 1. 初始化載入 JSON
+        async function init() {
+            try {
+                // 注意：本地測試需透過 Live Server 或伺服器環境
+                const response = await fetch('trivia_data.json');
+                triviaData = await response.json();
+                nextTrivia(); // 顯示第一張
+            } catch (err) {
+                frontFace.innerHTML = `<div class="icon">❌</div><h2>載入失敗</h2><p>請檢查 JSON 檔案</p>`;
+            }
+        }
+
+        // 2. 隨機切換邏輯
+        function nextTrivia() {
+            if (triviaData.length === 0) return;
+
+            let nextIndex;
+            if (triviaData.length > 1) {
+                // 確保不與上一次重複
+                do {
+                    nextIndex = Math.floor(Math.random() * triviaData.length);
+                } while (nextIndex === currentIndex);
+            } else {
+                nextIndex = 0;
+            }
+
+            currentIndex = nextIndex;
+            renderCard(triviaData[currentIndex]);
+        }
+
+        // 3. 渲染內容到卡片
+        function renderCard(item) {
+            // 先翻回正面並移除動畫類別以重置
+            card.classList.remove('flipped');
+            frontFace.classList.remove('fade-in');
+            
+            // 強制瀏覽器重繪 (Reflow) 讓動畫能再次觸發
+            void frontFace.offsetWidth;
+
+            // 填充正面內容
+            frontFace.innerHTML = `
+                <div class="icon">${item.icon}</div>
+                <h2 class="question-text">${item.question}</h2>
+                <div class="hint">點擊卡片揭曉答案</div>
+            `;
+            frontFace.classList.add('fade-in');
+
+            // 填充背面內容
+            backFace.innerHTML = `
+                <h3>${item.answer}</h3>
+                <p style="line-height: 1.6;">${item.description}</p>
+                <hr style="width: 40%; border: 0.5px solid rgba(255,255,255,0.3); margin: 20px 0;">
+                <p style="font-size: 0.9rem; font-style: italic;">${item.tip}</p>
+            `;
+            backFace.style.backgroundColor = item.theme_color || '#3498db';
+        }
+
+        // 4. 事件監聽：點擊翻轉
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+
+        // 啟動程式
+        init();
+    </script>
+</body>
+</html>
