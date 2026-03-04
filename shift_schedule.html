@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
@@ -17,7 +17,30 @@
 
       .date-select {
         text-align: center;
+        margin-bottom: 10px;
+      }
+
+      /* 新增按鈕樣式 */
+      .filter-buttons {
+        text-align: center;
         margin-bottom: 20px;
+      }
+
+      button {
+        padding: 8px 16px;
+        margin: 0 5px;
+        font-size: 0.9em;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 4px;
+        transition: 0.2s;
+      }
+
+      button.active {
+        background-color: #163e64;
+        color: white;
+        border-color: #163e64;
       }
 
       input[type="date"] {
@@ -48,6 +71,11 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       }
 
+      /* 隱藏未排班行的 CSS 類 */
+      .hidden {
+        display: none;
+      }
+
       .shift-label {
         flex: 1;
         padding: 8px;
@@ -69,47 +97,36 @@
       .red {
         background-color: #c00000;
       }
-
       .green {
         background-color: #275317;
       }
-
       .blue {
         background-color: #163e64;
       }
-
       .middle-blue {
         background-color: #215f9a;
       }
-
       .light-blue {
         background-color: #4e95d9;
       }
-
       .purple {
         background-color: #78206e;
       }
-
       .middle-green {
         background-color: #3b7d23;
       }
-
       .blue-green {
         background-color: #0e9292;
       }
-
       .gray {
         background-color: #595959;
       }
-
       .light-gray {
         background-color: #8a8989;
       }
-
       .orange {
         background-color: #c04f15;
       }
-
       .coffee {
         background-color: #4f443f;
       }
@@ -142,6 +159,11 @@
       ></span>
     </div>
 
+    <div class="filter-buttons">
+      <button id="show-all" class="active">顯示全部</button>
+      <button id="show-assigned">顯示排班</button>
+    </div>
+
     <div class="schedule-grid">
       <div class="column" id="left-column"></div>
       <div class="column" id="right-column"></div>
@@ -150,6 +172,9 @@
     <div id="update-time"></div>
 
     <script>
+      let currentScheduleData = {}; // 儲存目前日期的班表資料
+      let showOnlyAssigned = false; // 篩選狀態旗標
+
       const shiftListLeft = [
         { label: "股　長", color: "red" },
         { label: "早班專員", color: "green" },
@@ -168,8 +193,6 @@
         { label: "嘉　義 B", color: "blue" },
         { label: "嘉　義 2", color: "blue" },
         { label: "嘉　義 4", color: "blue" },
-        { label: "進口接送", color: "gray" },
-        { label: "出口接送", color: "gray" },
         { label: "支　援 1", color: "orange" },
         { label: "支　援 2", color: "orange" },
         { label: "支　援 3", color: "orange" },
@@ -203,29 +226,47 @@
         { label: "大夜班 4", color: "gray" },
         { label: "大夜班 5", color: "gray" },
         { label: "127/128車次", color: "gray" },
+        { label: "進口接送", color: "gray" },
+        { label: "出口接送", color: "gray" },
       ];
 
       const createRow = (shift, name) => {
+        // 檢查是否有排人 (排除 null, undefined, 空字串, 半形減號, 全形減號)
+        const hasStaff =
+          name &&
+          name.trim() !== "" &&
+          name.trim() !== "-" &&
+          name.trim() !== "－";
+
+        // 如果設定為「顯示排班」且該班別沒有排人，則回傳空字串 (隱藏)
+        if (showOnlyAssigned && !hasStaff) {
+          return "";
+        }
+
+        // 渲染時，如果沒人則顯示 "－"
+        const displayName = hasStaff ? name : "－";
+
         return `
-        <div class="shift-row">
-          <div class="shift-label ${shift.color}">${shift.label}</div>
-          <div class="staff-name">${name || "－"}</div>
-        </div>`;
+  <div class="shift-row">
+    <div class="shift-label ${shift.color}">${shift.label}</div>
+    <div class="staff-name">${displayName}</div>
+  </div>`;
       };
 
-      const renderSchedule = (data = {}) => {
+      const renderSchedule = () => {
         const left = document.getElementById("left-column");
         const right = document.getElementById("right-column");
+
         left.innerHTML = shiftListLeft
-          .map((s) => createRow(s, data[s.label]))
+          .map((s) => createRow(s, currentScheduleData[s.label]))
           .join("");
         right.innerHTML = shiftListRight
-          .map((s) => createRow(s, data[s.label]))
+          .map((s) => createRow(s, currentScheduleData[s.label]))
           .join("");
       };
 
       const fetchSchedule = (selectedDate) => {
-        const noCacheURL = "schedule_data.json?t=" + new Date().getTime(); // ← 防快取
+        const noCacheURL = "schedule_data.json?t=" + new Date().getTime();
         fetch(noCacheURL)
           .then((res) => {
             const lastModified = res.headers.get("Last-Modified");
@@ -236,20 +277,24 @@
             return res.json();
           })
           .then((allData) => {
-            const schedule = allData[selectedDate];
-            if (schedule) {
-              renderSchedule(schedule);
-            } else {
-              renderSchedule();
+            currentScheduleData = allData[selectedDate] || {};
+            if (Object.keys(currentScheduleData).length === 0) {
               alert("該日期無排班資料");
             }
+            renderSchedule();
           })
-          .catch((err) => console.error("讀取失敗", err));
+          .catch((err) => {
+            console.error("讀取失敗", err);
+            currentScheduleData = {};
+            renderSchedule();
+          });
       };
 
       document.addEventListener("DOMContentLoaded", function () {
         const dateInput = document.getElementById("date");
         const weekdaySpan = document.getElementById("weekday");
+        const btnAll = document.getElementById("show-all");
+        const btnAssigned = document.getElementById("show-assigned");
 
         const today = new Date().toISOString().split("T")[0];
         dateInput.value = today;
@@ -257,10 +302,27 @@
         updateWeekday(today);
         fetchSchedule(today);
 
+        // 監聽日期變更
         dateInput.addEventListener("change", function () {
           const selected = this.value;
           updateWeekday(selected);
           fetchSchedule(selected);
+        });
+
+        // 監聽按鈕：顯示全部
+        btnAll.addEventListener("click", function () {
+          showOnlyAssigned = false;
+          btnAll.classList.add("active");
+          btnAssigned.classList.remove("active");
+          renderSchedule();
+        });
+
+        // 監聽按鈕：僅顯示排班
+        btnAssigned.addEventListener("click", function () {
+          showOnlyAssigned = true;
+          btnAssigned.classList.add("active");
+          btnAll.classList.remove("active");
+          renderSchedule();
         });
 
         function updateWeekday(dateStr) {
@@ -274,11 +336,9 @@
             "星期六",
           ];
           const dateObj = new Date(dateStr);
-          if (!isNaN(dateObj)) {
-            weekdaySpan.textContent = days[dateObj.getDay()];
-          } else {
-            weekdaySpan.textContent = "";
-          }
+          weekdaySpan.textContent = !isNaN(dateObj)
+            ? days[dateObj.getDay()]
+            : "";
         }
       });
     </script>
