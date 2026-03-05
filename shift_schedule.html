@@ -20,15 +20,19 @@
         margin-bottom: 10px;
       }
 
-      /* 新增按鈕樣式 */
       .filter-buttons {
-        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
         margin-bottom: 20px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
       }
 
       button {
-        padding: 8px 16px;
-        margin: 0 5px;
+        padding: 8px 12px;
         font-size: 0.9em;
         cursor: pointer;
         border: 1px solid #ccc;
@@ -48,16 +52,18 @@
         padding: 6px;
       }
 
+      /* 修改：將容器改為垂直排列並置中 */
       .schedule-grid {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
+        flex-direction: column; /* 改為垂直排列 */
+        align-items: center; /* 置中 */
+        gap: 10px;
       }
 
+      /* 修改：讓每一欄寬度占滿，並設定最大寬度避免在電腦螢幕過寬 */
       .column {
-        flex: 1 1 300px;
-        max-width: 100%;
+        width: 100%;
+        max-width: 600px; /* 設定單欄的最大寬度，方便閱讀 */
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -69,11 +75,6 @@
         overflow: hidden;
         background-color: white;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      }
-
-      /* 隱藏未排班行的 CSS 類 */
-      .hidden {
-        display: none;
       }
 
       .shift-label {
@@ -94,6 +95,7 @@
         white-space: nowrap;
       }
 
+      /* 顏色定義 */
       .red {
         background-color: #c00000;
       }
@@ -112,17 +114,11 @@
       .purple {
         background-color: #78206e;
       }
-      .middle-green {
-        background-color: #3b7d23;
-      }
       .blue-green {
         background-color: #0e9292;
       }
       .gray {
         background-color: #595959;
-      }
-      .light-gray {
-        background-color: #8a8989;
       }
       .orange {
         background-color: #c04f15;
@@ -137,7 +133,6 @@
         font-size: 0.85em;
         color: #999;
       }
-
       #update-time {
         text-align: center;
         margin-top: 10px;
@@ -162,6 +157,10 @@
     <div class="filter-buttons">
       <button id="show-all" class="active">顯示全部</button>
       <button id="show-assigned">顯示排班</button>
+      <button class="group-btn" data-group="morning">早班</button>
+      <button class="group-btn" data-group="afternoon">中班</button>
+      <button class="group-btn" data-group="night">大夜班</button>
+      <button class="group-btn" data-group="other">其他</button>
     </div>
 
     <div class="schedule-grid">
@@ -172,8 +171,62 @@
     <div id="update-time"></div>
 
     <script>
-      let currentScheduleData = {}; // 儲存目前日期的班表資料
-      let showOnlyAssigned = false; // 篩選狀態旗標
+      let currentScheduleData = {};
+      let showOnlyAssigned = false;
+      let currentFilterGroup = "all";
+
+      const filterGroups = {
+        morning: [
+          "股　長",
+          "內檯經辦",
+          "空袋櫃",
+          "早　班 1",
+          "早　班 2",
+          "早　班 3",
+          "早　班 4",
+          "新　營 1",
+          "新　營 2",
+          "早1(六日)",
+          "早3(六)",
+        ],
+        afternoon: [
+          "中班專員",
+          "771/772車次",
+          "中　班 1",
+          "中　班 2",
+          "中　班 3",
+          "中　班 4",
+          "中　班 5",
+          "中　班 6",
+          "中　班 7",
+          "中　班 8",
+          "中　班 9",
+          "中　班10",
+          "中　班11",
+          "中　班12",
+          "嘉　義 2",
+          "自運甲線",
+          "自運乙線",
+        ],
+        night: [
+          "夜班專員",
+          "大夜班 1",
+          "大夜班 2",
+          "大夜班 3",
+          "127/128車次",
+          "夜1(六日)",
+          "進口接送",
+          "出口接送",
+        ],
+        other: [
+          "支　援 1",
+          "支　援 2",
+          "支　援 3",
+          "支　援 4",
+          "見 習 1",
+          "見 習 2",
+        ],
+      };
 
       const shiftListLeft = [
         { label: "股　長", color: "red" },
@@ -181,27 +234,13 @@
         { label: "內檯經辦", color: "blue" },
         { label: "空袋櫃", color: "green" },
         { label: "早　班 1", color: "green" },
-        { label: "早1(六日)", color: "green" },
         { label: "早　班 2", color: "green" },
         { label: "早　班 3", color: "green" },
-        { label: "早3(六)", color: "green" },
         { label: "早　班 4", color: "blue-green" },
         { label: "新　營 1", color: "blue-green" },
         { label: "新　營 2", color: "blue-green" },
-        { label: "自運甲線", color: "purple" },
-        { label: "自運乙線", color: "purple" },
-        { label: "嘉　義 B", color: "blue" },
-        { label: "嘉　義 2", color: "blue" },
-        { label: "嘉　義 4", color: "blue" },
-        { label: "支　援 1", color: "orange" },
-        { label: "支　援 2", color: "orange" },
-        { label: "支　援 3", color: "orange" },
-        { label: "支　援 4", color: "orange" },
-        { label: "見 習 1", color: "coffee" },
-        { label: "見 習 2", color: "coffee" },
-      ];
-
-      const shiftListRight = [
+        { label: "早1(六日)", color: "green" },
+        { label: "早3(六)", color: "green" },
         { label: "中班專員", color: "blue" },
         { label: "771/772車次", color: "light-blue" },
         { label: "中　班 1", color: "light-blue" },
@@ -218,6 +257,11 @@
         { label: "中　班11", color: "light-blue" },
         { label: "中　班12", color: "light-blue" },
         { label: "中　班13", color: "light-blue" },
+        { label: "自運甲線", color: "purple" },
+        { label: "自運乙線", color: "purple" },
+        { label: "嘉　義 B", color: "blue" },
+        { label: "嘉　義 2", color: "blue" },
+        { label: "嘉　義 4", color: "blue" },
         { label: "夜班專員", color: "gray" },
         { label: "大夜班 1", color: "gray" },
         { label: "夜1(六日)", color: "gray" },
@@ -230,102 +274,88 @@
         { label: "出口接送", color: "gray" },
       ];
 
-      const createRow = (shift, name) => {
-        // 檢查是否有排人 (排除 null, undefined, 空字串, 半形減號, 全形減號)
+      const shiftListRight = [
+        { label: "支　援 1", color: "orange" },
+        { label: "支　援 2", color: "orange" },
+        { label: "支　援 3", color: "orange" },
+        { label: "支　援 4", color: "orange" },
+        { label: "見 習 1", color: "coffee" },
+        { label: "見 習 2", color: "coffee" },
+      ];
+
+      function createRow(shift, name) {
         const hasStaff =
           name &&
           name.trim() !== "" &&
           name.trim() !== "-" &&
           name.trim() !== "－";
-
-        // 如果設定為「顯示排班」且該班別沒有排人，則回傳空字串 (隱藏)
-        if (showOnlyAssigned && !hasStaff) {
+        if (currentFilterGroup !== "all") {
+          if (!filterGroups[currentFilterGroup].includes(shift.label))
+            return "";
+          if (!hasStaff) return "";
+        } else if (showOnlyAssigned && !hasStaff) {
           return "";
         }
-
-        // 渲染時，如果沒人則顯示 "－"
         const displayName = hasStaff ? name : "－";
+        return `<div class="shift-row"><div class="shift-label ${shift.color}">${shift.label}</div><div class="staff-name">${displayName}</div></div>`;
+      }
 
-        return `
-  <div class="shift-row">
-    <div class="shift-label ${shift.color}">${shift.label}</div>
-    <div class="staff-name">${displayName}</div>
-  </div>`;
-      };
-
-      const renderSchedule = () => {
-        const left = document.getElementById("left-column");
-        const right = document.getElementById("right-column");
-
-        left.innerHTML = shiftListLeft
+      function renderSchedule() {
+        document.getElementById("left-column").innerHTML = shiftListLeft
           .map((s) => createRow(s, currentScheduleData[s.label]))
           .join("");
-        right.innerHTML = shiftListRight
+        document.getElementById("right-column").innerHTML = shiftListRight
           .map((s) => createRow(s, currentScheduleData[s.label]))
           .join("");
-      };
+      }
 
-      const fetchSchedule = (selectedDate) => {
-        const noCacheURL = "schedule_data.json?t=" + new Date().getTime();
-        fetch(noCacheURL)
-          .then((res) => {
-            const lastModified = res.headers.get("Last-Modified");
-            if (lastModified) {
-              document.getElementById("update-time").innerText =
-                "資料更新時間：" + new Date(lastModified).toLocaleString();
-            }
-            return res.json();
-          })
+      function fetchSchedule(date) {
+        fetch("schedule_data.json?t=" + new Date().getTime())
+          .then((res) => res.json())
           .then((allData) => {
-            currentScheduleData = allData[selectedDate] || {};
-            if (Object.keys(currentScheduleData).length === 0) {
-              alert("該日期無排班資料");
-            }
-            renderSchedule();
-          })
-          .catch((err) => {
-            console.error("讀取失敗", err);
-            currentScheduleData = {};
+            currentScheduleData = allData[date] || {};
             renderSchedule();
           });
-      };
+      }
 
       document.addEventListener("DOMContentLoaded", function () {
         const dateInput = document.getElementById("date");
-        const weekdaySpan = document.getElementById("weekday");
         const btnAll = document.getElementById("show-all");
         const btnAssigned = document.getElementById("show-assigned");
+        const groupBtns = document.querySelectorAll(".group-btn");
 
-        const today = new Date().toISOString().split("T")[0];
-        dateInput.value = today;
+        dateInput.value = new Date().toISOString().split("T")[0];
+        fetchSchedule(dateInput.value);
 
-        updateWeekday(today);
-        fetchSchedule(today);
+        const clearActive = () =>
+          [btnAll, btnAssigned, ...groupBtns].forEach((b) =>
+            b.classList.remove("active"),
+          );
 
-        // 監聽日期變更
-        dateInput.addEventListener("change", function () {
-          const selected = this.value;
-          updateWeekday(selected);
-          fetchSchedule(selected);
-        });
-
-        // 監聽按鈕：顯示全部
         btnAll.addEventListener("click", function () {
+          clearActive();
+          this.classList.add("active");
           showOnlyAssigned = false;
-          btnAll.classList.add("active");
-          btnAssigned.classList.remove("active");
+          currentFilterGroup = "all";
           renderSchedule();
         });
-
-        // 監聽按鈕：僅顯示排班
         btnAssigned.addEventListener("click", function () {
+          clearActive();
+          this.classList.add("active");
           showOnlyAssigned = true;
-          btnAssigned.classList.add("active");
-          btnAll.classList.remove("active");
+          currentFilterGroup = "all";
           renderSchedule();
         });
+        groupBtns.forEach((btn) =>
+          btn.addEventListener("click", function () {
+            clearActive();
+            this.classList.add("active");
+            currentFilterGroup = this.dataset.group;
+            renderSchedule();
+          }),
+        );
 
-        function updateWeekday(dateStr) {
+        dateInput.addEventListener("change", function () {
           const days = [
             "星期日",
             "星期一",
@@ -335,17 +365,11 @@
             "星期五",
             "星期六",
           ];
-          const dateObj = new Date(dateStr);
-          weekdaySpan.textContent = !isNaN(dateObj)
-            ? days[dateObj.getDay()]
-            : "";
-        }
+          document.getElementById("weekday").textContent =
+            days[new Date(this.value).getDay()];
+          fetchSchedule(this.value);
+        });
       });
     </script>
-
-    <footer>
-      <div>© 2025 臺南郵局運輸股</div>
-      <div>僅供內部使用，未經授權不得轉載</div>
-    </footer>
   </body>
 </html>
