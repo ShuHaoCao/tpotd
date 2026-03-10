@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>股市大亨：24H 全球巔峰挑戰</title>
+    <title>股市大亨：24H 全球巔峰挑戰 (3分鐘版)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { 
@@ -27,160 +27,102 @@
             -webkit-tap-highlight-color: transparent; 
         }
 
+        /* 初始進入畫面 */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 2000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .login-box {
+            background: var(--card); padding: 30px; border-radius: 12px; border: 1px solid var(--accent);
+            text-align: center; width: 90%; max-width: 400px;
+        }
+        input[type="text"] {
+            width: 100%; padding: 12px; margin: 20px 0; border-radius: 6px; border: 1px solid var(--border);
+            background: #12161c; color: white; font-size: 1rem;
+        }
+
         /* 頂部狀態欄 */
         .header { 
-            text-align: center; 
-            padding: 15px; 
-            background: var(--card); 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            border-bottom: 4px solid var(--accent);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-align: center; padding: 15px; background: var(--card); 
+            border-radius: 12px; margin-bottom: 12px; border-bottom: 4px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative;
         }
         #timer { color: var(--accent); font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 2px; }
         .next-refresh { font-size: 0.9rem; color: #848e9c; margin-top: 5px; }
+        .player-info { position: absolute; top: 10px; left: 15px; font-size: 0.8rem; color: var(--accent); }
+        .rank-trigger { position: absolute; top: 10px; right: 15px; background: none; border: 1px solid var(--accent); color: var(--accent); padding: 2px 8px; font-size: 0.7rem; border-radius: 4px; cursor: pointer; }
 
         /* 資產儀表板 */
         .dashboard { 
-            display: flex; 
-            justify-content: space-around; 
-            margin-bottom: 15px; 
-            background: var(--card); 
-            padding: 18px; 
-            border-radius: 12px;
-            gap: 15px;
+            display: flex; justify-content: space-around; margin-bottom: 15px; 
+            background: var(--card); padding: 18px; border-radius: 12px; gap: 15px;
         }
         .stat { text-align: center; flex: 1; }
         .stat-label { font-size: 0.8rem; color: #848e9c; margin-bottom: 5px; }
         .stat-val { font-size: 1.3rem; font-weight: bold; color: var(--accent); white-space: nowrap; }
 
-        /* 股市列表容器 */
-        .table-container { 
-            background: var(--card); 
-            border-radius: 12px; 
-            overflow: hidden; 
-            margin-bottom: 20px;
-        }
-
+        /* 股市列表 */
+        .table-container { background: var(--card); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
         .market-table { width: 100%; border-collapse: collapse; }
-        
-        /* 桌面版標題樣式 */
-        .market-table th { 
-            background: #2b3139; 
-            padding: 15px; 
-            font-size: 0.85rem; 
-            color: #848e9c; 
-            text-align: center;
-        }
+        .market-table th { background: #2b3139; padding: 15px; font-size: 0.85rem; color: #848e9c; }
+        .market-table td { padding: 15px 10px; text-align: center; border-bottom: 1px solid var(--border); }
 
-        .market-table td { 
-            padding: 15px 10px; 
-            text-align: center; 
-            border-bottom: 1px solid var(--border); 
-        }
-
-        /* 點擊公司名稱效果 */
-        .comp-name { 
-            font-weight: bold; 
-            text-align: left !important; 
-            color: #3498db; 
-            cursor: pointer; 
-            text-decoration: underline;
-            transition: opacity 0.2s;
-        }
-        .comp-name:hover { opacity: 0.8; }
-
+        .comp-name { font-weight: bold; text-align: left !important; color: #3498db; cursor: pointer; text-decoration: underline; }
         .price-up { color: var(--up); font-weight: bold; }
         .price-down { color: var(--down); font-weight: bold; }
 
-        /* 按鈕優化 */
+        /* 按鈕 */
         .btn-group { display: flex; gap: 8px; justify-content: center; }
-        button { 
-            padding: 10px 16px; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.1s; 
-            font-size: 0.9rem;
-        }
+        button { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.1s; }
         .buy { background: rgba(255, 77, 77, 0.15); color: var(--up); border: 1px solid var(--up); }
-        .buy:active { background: var(--up); color: white; transform: scale(0.95); }
         .sell { background: rgba(46, 204, 113, 0.15); color: var(--down); border: 1px solid var(--down); }
-        .sell:active { background: var(--down); color: white; transform: scale(0.95); }
+        .btn-start { background: var(--accent); color: black; width: 100%; margin-top: 10px; font-size: 1.1rem; }
         button:disabled { opacity: 0.2; cursor: not-allowed; }
 
-        /* 手機版響應式設計 (Media Query) */
+        /* 排行榜表格樣式 */
+        .rank-table { width: 100%; color: white; border-collapse: collapse; margin-top: 10px; }
+        .rank-table th { border-bottom: 1px solid #444; padding: 10px; color: var(--accent); }
+        .rank-table td { padding: 10px; text-align: center; border-bottom: 1px solid #333; }
+
+        /* 手機版響應式 */
         @media (max-width: 650px) {
-            .market-table thead { display: none; } /* 隱藏傳統表頭 */
-            
-            .market-table tr { 
-                display: block; 
-                padding: 15px; 
-                border-bottom: 8px solid var(--bg); /* 區分不同股票 */
-            }
-
-            .market-table td { 
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                border: none; 
-                padding: 8px 0; 
-                text-align: right;
-            }
-
-            /* 利用偽元素生成手機版標籤 */
-            .market-table td::before { 
-                content: attr(data-label); 
-                font-weight: normal;
-                color: #848e9c;
-                font-size: 0.85rem;
-                text-align: left;
-            }
-
-            .comp-name { font-size: 1.1rem; text-decoration: none; border-bottom: 2px solid #3498db; }
-            .btn-group { width: 100%; margin-top: 5px; }
-            .btn-group button { flex: 1; padding: 12px; } /* 手機版按鈕更大 */
-            
-            .stat-val { font-size: 1.1rem; }
-            #timer { font-size: 1.6rem; }
+            .market-table thead { display: none; }
+            .market-table tr { display: block; padding: 15px; border-bottom: 8px solid var(--bg); }
+            .market-table td { display: flex; justify-content: space-between; align-items: center; border: none; padding: 8px 0; }
+            .market-table td::before { content: attr(data-label); font-weight: normal; color: #848e9c; font-size: 0.85rem; }
+            .btn-group { width: 100%; }
+            .btn-group button { flex: 1; }
         }
 
-        /* 圖表彈窗優化 */
-        #modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); 
-            z-index: 1000; 
-            justify-content: center; 
-            align-items: center; 
-            padding: 10px;
+        /* 彈窗 */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 10px;
         }
         .modal-content { 
-            background: var(--card); 
-            width: 100%; 
-            max-width: 600px; 
-            padding: 20px; 
-            border-radius: 15px; 
-            position: relative; 
-            border: 1px solid #474d57;
+            background: var(--card); width: 100%; max-width: 600px; padding: 20px; 
+            border-radius: 15px; position: relative; border: 1px solid #474d57;
         }
-        .close-btn { 
-            position: absolute; 
-            top: 5px; right: 15px; 
-            font-size: 2.5rem; 
-            cursor: pointer; 
-            color: #848e9c; 
-        }
-        #historyChart { width: 100% !important; height: auto !important; max-height: 350px; }
+        .close-btn { position: absolute; top: 5px; right: 15px; font-size: 2.5rem; cursor: pointer; color: #848e9c; }
     </style>
 </head>
 <body>
 
+<div id="login-overlay">
+    <div class="login-box">
+        <h2 style="color:var(--accent)">股市大亨：全球挑戰</h2>
+        <p>請輸入您的交易員代號：</p>
+        <input type="text" id="player-name-input" placeholder="例如：巴菲特" maxlength="10">
+        <button class="btn-start" onclick="startGame()">開始挑戰</button>
+    </div>
+</div>
+
 <div class="header">
+    <div class="player-info">交易員：<span id="display-player-name">---</span></div>
+    <button class="rank-trigger" onclick="showLeaderboard()">🏆 排行榜</button>
     <div id="timer">24:00:00</div>
-    <div class="next-refresh">距離行情更新：<span id="next-update">05:00</span></div>
+    <div class="next-refresh">距離行情更新：<span id="next-update">03:00</span></div>
 </div>
 
 <div class="dashboard">
@@ -202,11 +144,28 @@
     </table>
 </div>
 
-<div id="modal">
+<div id="modal" class="modal">
     <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h3 id="modal-title" style="color:var(--accent); margin-top:0; padding-right: 30px;"></h3>
+        <span class="close-btn" onclick="closeModal('modal')">&times;</span>
+        <h3 id="modal-title" style="color:var(--accent); margin-top:0;"></h3>
         <canvas id="historyChart"></canvas>
+    </div>
+</div>
+
+<div id="rank-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('rank-modal')">&times;</span>
+        <h3 style="color:var(--accent); text-align: center;">🏆 全球巔峰排行榜 (Top 10)</h3>
+        <table class="rank-table">
+            <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>玩家</th>
+                    <th>最終資產</th>
+                </tr>
+            </thead>
+            <tbody id="rank-list"></tbody>
+        </table>
     </div>
 </div>
 
@@ -214,6 +173,8 @@
     let cash = 100000;
     let timeLeft = 86400; 
     let myChart = null;
+    let playerName = "";
+    const REFRESH_INTERVAL = 180; // 修改為 180 秒 (3 分鐘)
 
     let stocks = [
         { id: 0, name: "微軟科技 (MSFT)", price: 350, hold: 0, history: [350], vol: 0.03 },
@@ -237,6 +198,26 @@
         { id: 18, name: "太空探索 (SPCE)", price: 4, hold: 0, history: [4], vol: 0.20 },
         { id: 19, name: "量子計算 (QBT)", price: 25, hold: 0, history: [25], vol: 0.12 }
     ];
+
+    window.onload = () => {
+        const savedName = localStorage.getItem('stockGame_playerName');
+        if (savedName) {
+            document.getElementById('player-name-input').value = savedName;
+        }
+    };
+
+    function startGame() {
+        const input = document.getElementById('player-name-input').value.trim();
+        if (!input) {
+            alert("請輸入名稱！");
+            return;
+        }
+        playerName = input;
+        localStorage.setItem('stockGame_playerName', playerName);
+        document.getElementById('display-player-name').innerText = playerName;
+        document.getElementById('login-overlay').style.display = 'none';
+        renderStocks();
+    }
 
     function renderStocks() {
         const tbody = document.getElementById('stock-list');
@@ -275,9 +256,13 @@
         renderStocks();
     }
 
-    function updateTotalAssets() {
+    function getTotalAssets() {
         const stockVal = stocks.reduce((sum, s) => sum + (s.hold * s.price), 0);
-        const total = cash + stockVal;
+        return cash + stockVal;
+    }
+
+    function updateTotalAssets() {
+        const total = getTotalAssets();
         document.getElementById('total-assets').innerText = `$${Math.floor(total).toLocaleString()}`;
         document.getElementById('cash').innerText = `$${Math.floor(cash).toLocaleString()}`;
     }
@@ -288,9 +273,34 @@
             s.price = parseFloat((s.price * (1 + change)).toFixed(2));
             if (s.price < 0.5) s.price = 0.5;
             s.history.push(s.price);
-            if(s.history.length > 50) s.history.shift(); // 限制歷史數據長度
+            if(s.history.length > 50) s.history.shift();
         });
         renderStocks();
+    }
+
+    function saveToLeaderboard() {
+        const finalScore = Math.floor(getTotalAssets());
+        let leaderboard = JSON.parse(localStorage.getItem('stockGame_leaderboard')) || [];
+        leaderboard.push({ name: playerName, score: finalScore, date: new Date().toLocaleDateString() });
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard = leaderboard.slice(0, 10);
+        localStorage.setItem('stockGame_leaderboard', JSON.stringify(leaderboard));
+    }
+
+    function showLeaderboard() {
+        const leaderboard = JSON.parse(localStorage.getItem('stockGame_leaderboard')) || [];
+        const rankList = document.getElementById('rank-list');
+        rankList.innerHTML = '';
+        if (leaderboard.length === 0) {
+            rankList.innerHTML = '<tr><td colspan="3">尚無紀錄</td></tr>';
+        } else {
+            leaderboard.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${index + 1}</td><td>${item.name}</td><td style="color:var(--accent)">$${item.score.toLocaleString()}</td>`;
+                rankList.appendChild(tr);
+            });
+        }
+        document.getElementById('rank-modal').style.display = 'flex';
     }
 
     function showHistory(id) {
@@ -298,14 +308,12 @@
         const modal = document.getElementById('modal');
         modal.style.display = 'flex';
         document.getElementById('modal-title').innerText = s.name;
-        
         const ctx = document.getElementById('historyChart').getContext('2d');
         if (myChart) myChart.destroy();
-        
         myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: s.history.map((_, i) => `${i * 5}m`),
+                labels: s.history.map((_, i) => `${i * 3}m`), // 標籤同步修改為 3m
                 datasets: [{
                     label: '股價 (USD)',
                     data: s.history,
@@ -328,15 +336,18 @@
         });
     }
 
-    function closeModal() { document.getElementById('modal').style.display = 'none'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // 點擊 Modal 外部關閉
     window.onclick = function(event) {
-        const modal = document.getElementById('modal');
-        if (event.target == modal) closeModal();
+        if (event.target.className.includes('modal')) {
+            event.target.style.display = 'none';
+        }
     }
 
+    // 計時器邏輯
     setInterval(() => {
+        if (playerName === "") return;
+
         timeLeft--;
         const h = Math.floor(timeLeft / 3600);
         const m = Math.floor((timeLeft % 3600) / 60);
@@ -344,16 +355,21 @@
         document.getElementById('timer').innerText = 
             `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
 
-        const nextUp = timeLeft % 300;
+        // 修改更新倒數顯示：從 3:00 開始
+        const nextUp = timeLeft % REFRESH_INTERVAL;
         const nm = Math.floor(nextUp / 60);
         const ns = nextUp % 60;
         document.getElementById('next-update').innerText = `${nm}:${ns.toString().padStart(2,'0')}`;
 
-        if (timeLeft % 300 === 0) updateMarket();
-        if (timeLeft <= 0) location.reload();
+        if (timeLeft % REFRESH_INTERVAL === 0) updateMarket();
+        
+        if (timeLeft <= 0) {
+            saveToLeaderboard();
+            alert(`時間到！您的最終資產為: $${Math.floor(getTotalAssets()).toLocaleString()}`);
+            location.reload();
+        }
     }, 1000);
 
-    renderStocks();
 </script>
 
 </body>
