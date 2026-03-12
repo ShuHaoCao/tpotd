@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>臺南運輸股小瑪莉</title>
+    <style>
+      :root {
+        --post-green: #007d32;
+        --post-yellow: #ffde00;
+        --retro-red: #cc0000;
+        --panel-bg: #2b1d16;
+      }
+
+      body {
+        background-color: #111;
+        color: white;
+        font-family: "微軟正黑體", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 10px;
+      }
+
+      /* 載入遮罩 */
+      #loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .game-container {
+        width: 100%;
+        max-width: 680px;
+        background: var(--panel-bg);
+        padding: 15px;
+        border: 6px solid #1a110d;
+        border-radius: 12px;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+      }
+
+      .display-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        align-items: center;
+      }
+      .lcd-screen {
+        background: #1a0000;
+        color: #ff3131;
+        padding: 5px 15px;
+        border: 2px solid #444;
+        font-family: "Courier New", monospace;
+        font-size: 24px;
+        font-weight: bold;
+        min-width: 80px;
+        text-align: center;
+        box-shadow: inset 0 0 10px black;
+      }
+
+      .slot-machine {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(6, 1fr);
+        gap: 4px;
+        aspect-ratio: 8 / 6;
+        background: #000;
+        padding: 5px;
+        border: 4px solid #333;
+        margin-bottom: 15px;
+        position: relative;
+      }
+
+      .cell {
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        border-radius: 2px;
+        transition: transform 0.1s;
+      }
+      .cell img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .cell span {
+        color: #333;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .cell.has-image span {
+        display: none;
+      }
+
+      .cell.active {
+        background: var(--post-yellow);
+        border: 4px solid #fff;
+        box-shadow:
+          inset 0 0 15px #fff,
+          0 0 30px var(--post-yellow);
+        z-index: 10;
+        transform: translateY(-5px) scale(1.1);
+      }
+      .cell.active img {
+        transform: scale(1.2);
+      }
+
+      @keyframes rainbow-flash {
+        0% {
+          background: #fff;
+          box-shadow: 0 0 20px #fff;
+        }
+        50% {
+          background: var(--post-yellow);
+          box-shadow: 0 0 40px var(--post-yellow);
+        }
+        100% {
+          background: #ff3131;
+          box-shadow: 0 0 20px #ff3131;
+        }
+      }
+      .full-flash {
+        animation: rainbow-flash 0.1s infinite !important;
+        z-index: 20;
+      }
+
+      .cell.special {
+        background: #ff5722;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+        font-size: 12px;
+      }
+
+      .center-area {
+        grid-column: 2 / 8;
+        grid-row: 2 / 5;
+        background: var(--post-green);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid var(--post-yellow);
+      }
+      .center-bg-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        opacity: 0.8;
+        animation: pulse-border 0.5s infinite alternate;
+      }
+      @keyframes pulse-border {
+        from {
+          box-shadow: 0 0 5px var(--post-yellow);
+        }
+        to {
+          box-shadow: 0 0 25px var(--post-yellow);
+        }
+      }
+
+      .jp-text {
+        position: relative;
+        z-index: 2;
+        font-size: 14px;
+        color: var(--post-yellow);
+        margin: 0;
+        text-shadow: 2px 2px 5px #000;
+      }
+      .msg-box {
+        position: relative;
+        z-index: 2;
+        color: #fff;
+        font-size: 24px;
+        margin-top: 5px;
+        text-shadow: 2px 2px 5px #000;
+      }
+
+      .leaderboard-link {
+        position: relative;
+        z-index: 2;
+        font-size: 14px;
+        color: #fff;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .center-controls {
+        grid-column: 2 / 8;
+        grid-row: 5 / 6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 10px;
+        gap: 15px;
+      }
+      .btn-main {
+        flex: 1;
+        height: 100%;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 18px;
+        box-shadow: 0 4px rgba(0, 0, 0, 0.3);
+        transition: transform 0.1s;
+      }
+      .btn-main:active {
+        transform: translateY(2px);
+      }
+      .btn-reset {
+        background: #666;
+        color: white;
+        border: 2px solid #999;
+      }
+      .btn-start {
+        background: linear-gradient(#00a844, #005e26);
+        color: white;
+        border: 2px solid var(--post-yellow);
+        font-size: 20px;
+      }
+      .btn-start:disabled {
+        filter: grayscale(1);
+        cursor: not-allowed;
+      }
+
+      .bet-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .bet-button {
+        display: flex;
+        background: white;
+        border: 2px solid #555;
+        border-radius: 4px;
+        overflow: hidden;
+        cursor: pointer;
+        height: 70px;
+        transition: 0.1s;
+      }
+      .bet-img-area {
+        flex: 1.2;
+        background: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+        border-right: 2px solid #000;
+      }
+      .bet-img-area img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .bet-info-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .rate-display {
+        flex: 1;
+        background: #444;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 14px;
+      }
+      .count-display {
+        flex: 1.5;
+        background: var(--post-yellow);
+        color: var(--retro-red);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 30px;
+        font-weight: 900;
+        border-top: 1px solid #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loader">
+      <h2 style="color: var(--post-yellow)">運輸股資源配送中...</h2>
+      <p id="load-status">正在載入圖形與音效資源</p>
+    </div>
+
+    <div class="game-container">
+      <div class="display-header">
+        <div>
+          本次獲得籌碼
+          <div class="lcd-screen" id="win-display">0000</div>
+        </div>
+        <div
+          style="
+            color: var(--post-yellow);
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+          "
+        >
+          設計者:曹書豪<br />
+          <span
+            id="player-name-display"
+            style="color: #fff; font-size: 14px"
+          ></span>
+        </div>
+        <div>
+          籌碼
+          <div class="lcd-screen" id="credit-display">0100</div>
+        </div>
+      </div>
+
+      <div class="slot-machine" id="machine-grid">
+        <div class="center-area">
+          <img
+            src="titlename.png"
+            id="center-img"
+            class="center-bg-img"
+            onerror="this.style.display = 'none'"
+          />
+          <h1 class="jp-text">臺南運輸股小瑪莉</h1>
+          <div class="msg-box" id="game-msg">載入完畢</div>
+          <div class="leaderboard-link" onclick="showLeaderboard()">
+            查看排行榜
+          </div>
+        </div>
+        <div class="center-controls">
+          <button class="btn-main btn-reset" onclick="resetBets()">
+            全部收回
+          </button>
+          <button
+            class="btn-main btn-start"
+            id="start-btn"
+            onclick="startGame()"
+          >
+            拼一把！
+          </button>
+        </div>
+      </div>
+
+      <div class="bet-grid" id="bet-panel"></div>
+    </div>
+
+    <script>
+      // --- 配置與變數 ---
+      let playerName = "";
+      const sounds = {
+        bet: new Audio("bet.mp3"),
+        reset: new Audio("reset.mp3"),
+        start: new Audio("start.mp3"),
+        tick: new Audio("tick.mp3"),
+        winSmall: new Audio("win.mp3"),
+        winBig: new Audio("big_win.mp3"),
+        onceMore: new Audio("bonus.mp3"),
+      };
+
+      const items = [
+        {
+          icon: "💰",
+          img: "bonus.png",
+          label: "年終獎金",
+          type: "bonus",
+          rate: 100,
+        },
+        {
+          icon: "🌙",
+          img: "overtimepay.png",
+          label: "加班費",
+          type: "ot",
+          rate: 50,
+        },
+        {
+          icon: "🏖️",
+          img: "vacation.png",
+          label: "公特休假",
+          type: "leave",
+          rate: 40,
+        },
+        {
+          icon: "🍐",
+          img: "wendan.png",
+          label: "麻豆文旦",
+          type: "pomelo",
+          rate: 30,
+        },
+        {
+          icon: "📦",
+          img: "momo.png",
+          label: "MOMO包裹",
+          type: "momo",
+          rate: 20,
+        },
+        {
+          icon: "🧳",
+          img: "wanguo.png",
+          label: "萬國行李箱",
+          type: "box",
+          rate: 15,
+        },
+        {
+          icon: "🚛",
+          img: "17toncar.png",
+          label: "17噸郵車",
+          type: "truck",
+          rate: 10,
+        },
+        {
+          icon: "🛒",
+          img: "parcelcart.png",
+          label: "包裹籃車",
+          type: "cart_f",
+          rate: 5,
+        },
+        {
+          icon: "🗑️",
+          img: "blankcart.png",
+          label: "空籃車",
+          type: "cart_e",
+          rate: 2,
+        },
+      ];
+
+      const pathData = [
+        { type: "item", id: 0 },
+        { type: "item", id: 8 },
+        { type: "item", id: 7 },
+        { type: "item", id: 6 },
+        { type: "special", label: "ONCE MORE" },
+        { type: "item", id: 5 },
+        { type: "item", id: 4 },
+        { type: "item", id: 3 },
+        { type: "item", id: 1 },
+        { type: "item", id: 8 },
+        { type: "item", id: 7 },
+        { type: "item", id: 2 },
+        { type: "item", id: 6 },
+        { type: "special", label: "ONCE MORE" },
+        { type: "item", id: 5 },
+        { type: "item", id: 4 },
+        { type: "item", id: 3 },
+        { type: "item", id: 0 },
+        { type: "item", id: 8 },
+        { type: "item", id: 7 },
+        { type: "item", id: 6 },
+        { type: "item", id: 5 },
+        { type: "item", id: 4 },
+        { type: "item", id: 2 },
+      ];
+
+      const coords = [
+        [1, 1],
+        [1, 2],
+        [1, 3],
+        [1, 4],
+        [1, 5],
+        [1, 6],
+        [1, 7],
+        [1, 8],
+        [2, 8],
+        [3, 8],
+        [4, 8],
+        [5, 8],
+        [6, 8],
+        [6, 7],
+        [6, 6],
+        [6, 5],
+        [6, 4],
+        [6, 3],
+        [6, 2],
+        [6, 1],
+        [5, 1],
+        [4, 1],
+        [3, 1],
+        [2, 1],
+      ];
+
+      let credit = 100,
+        win = 0,
+        isPlaying = false,
+        currentIndex = 0;
+      let currentBets = {};
+      items.forEach((i) => (currentBets[i.type] = 0));
+
+      // --- 1. 資源預載功能 ---
+      async function preloadResources() {
+        const imgSources = [
+          ...new Set(items.map((i) => i.img)),
+          "titlename.png",
+          "bonus.png",
+        ];
+        const soundKeys = Object.keys(sounds);
+
+        const loadImg = (src) =>
+          new Promise((res) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = res;
+            img.onerror = res; // 失敗也繼續，避免卡死
+          });
+
+        const loadAudio = (audio) =>
+          new Promise((res) => {
+            audio.addEventListener("canplaythrough", res, { once: true });
+            setTimeout(res, 2000); // 強制超時避免網路問題
+          });
+
+        try {
+          await Promise.all([
+            ...imgSources.map(loadImg),
+            ...soundKeys.map((k) => loadAudio(sounds[k])),
+          ]);
+        } finally {
+          document.getElementById("loader").style.display = "none";
+          initPlayer();
+        }
+      }
+
+      // --- 2. 玩家與排行榜功能 ---
+      function initPlayer() {
+        // 從 LocalStorage 獲取名稱
+        let savedName = localStorage.getItem("post_player_name");
+        if (!savedName) {
+          savedName = prompt("歡迎來到小瑪莉！請輸入您的暱稱：", "小老爺");
+          if (!savedName) savedName = "無名小卒";
+          localStorage.setItem("post_player_name", savedName);
+        }
+        playerName = savedName;
+        document.getElementById("player-name-display").innerText =
+          `玩家：${playerName}`;
+      }
+
+      function updateLeaderboard(finalWin) {
+        let board = JSON.parse(
+          localStorage.getItem("post_leaderboard") || "[]",
+        );
+        board.push({
+          name: playerName,
+          score: finalWin,
+          date: new Date().toLocaleDateString(),
+        });
+        // 排序並取前10
+        board.sort((a, b) => b.score - a.score);
+        board = board.slice(0, 10);
+        localStorage.setItem("post_leaderboard", JSON.stringify(board));
+      }
+
+      function showLeaderboard() {
+        const board = JSON.parse(
+          localStorage.getItem("post_leaderboard") || "[]",
+        );
+        let msg = "🏆 排行榜TOP 10 🏆\n\n";
+        if (board.length === 0) msg += "尚無紀錄";
+        else {
+          board.forEach((record, idx) => {
+            msg += `${idx + 1}. ${record.name} - ${record.score} 分 (${record.date})\n`;
+          });
+        }
+        alert(msg);
+      }
+
+      // --- 遊戲核心邏輯 (保留原結構) ---
+      function playSound(name) {
+        if (sounds[name]) {
+          sounds[name].currentTime = 0;
+          sounds[name].play().catch(() => {});
+        }
+      }
+
+      const machine = document.getElementById("machine-grid");
+      pathData.forEach((data, idx) => {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.id = `cell-${idx}`;
+        cell.style.gridRow = coords[idx][0];
+        cell.style.gridColumn = coords[idx][1];
+        if (data.type === "special") {
+          cell.classList.add("special");
+          cell.innerHTML = `<span>ONCE<br>MORE</span>`;
+        } else {
+          const item = items[data.id];
+          const img = document.createElement("img");
+          img.src = item.img;
+          const span = document.createElement("span");
+          span.innerText = item.label;
+          img.onload = () => cell.classList.add("has-image");
+          img.onerror = () => (img.style.display = "none");
+          cell.appendChild(img);
+          cell.appendChild(span);
+        }
+        machine.appendChild(cell);
+      });
+
+      const betPanel = document.getElementById("bet-panel");
+      items.forEach((item) => {
+        const btn = document.createElement("div");
+        btn.className = "bet-button";
+        btn.innerHTML = `
+            <div class="bet-img-area"><img src="${item.img}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span style="display:none">${item.label}</span></div>
+            <div class="bet-info-area"><div class="rate-display">x${item.rate}</div><div class="count-display" id="bet-${item.type}">0</div></div>
+        `;
+        btn.onclick = () => {
+          playSound("bet");
+          placeBet(item.type);
+        };
+        betPanel.appendChild(btn);
+      });
+
+      function placeBet(type) {
+        if (isPlaying || credit <= 0 || currentBets[type] >= 99) return;
+        currentBets[type]++;
+        credit--;
+        updateDisplay();
+      }
+
+      function resetBets() {
+        if (isPlaying) return;
+        playSound("reset");
+        items.forEach((i) => {
+          credit += currentBets[i.type];
+          currentBets[i.type] = 0;
+        });
+        updateDisplay();
+      }
+
+      function updateDisplay() {
+        document.getElementById("credit-display").innerText = credit
+          .toString()
+          .padStart(4, "0");
+        document.getElementById("win-display").innerText = win
+          .toString()
+          .padStart(4, "0");
+        items.forEach(
+          (i) =>
+            (document.getElementById(`bet-${i.type}`).innerText =
+              currentBets[i.type]),
+        );
+      }
+
+      function fullHouseEffect() {
+        const allCells = document.querySelectorAll(".cell");
+        allCells.forEach((c) => c.classList.add("full-flash"));
+        setTimeout(() => {
+          allCells.forEach((c) => c.classList.remove("full-flash"));
+        }, 3000);
+      }
+
+      function startGame(isFree = false) {
+        const totalBet = Object.values(currentBets).reduce((a, b) => a + b, 0);
+        if (isPlaying || (!isFree && totalBet === 0)) return;
+
+        isPlaying = true;
+        playSound("start");
+        document
+          .querySelectorAll(".btn-main")
+          .forEach((b) => (b.disabled = true));
+        document.getElementById("game-msg").innerText = isFree
+          ? "FREE SPIN!"
+          : "正在處理運送中...";
+
+        const targetIndex = Math.floor(Math.random() * pathData.length);
+        const totalSteps = pathData.length * 3 + targetIndex;
+        let currentStep = 0,
+          speed = 150;
+
+        function run() {
+          document
+            .getElementById(`cell-${currentIndex}`)
+            .classList.remove("active");
+          currentIndex = (currentIndex + 1) % pathData.length;
+          document
+            .getElementById(`cell-${currentIndex}`)
+            .classList.add("active");
+          playSound("tick");
+          currentStep++;
+          if (currentStep < totalSteps - 12) speed = Math.max(30, speed - 20);
+          else speed += 40;
+          if (currentStep < totalSteps) setTimeout(run, speed);
+          else handleResult(targetIndex);
+        }
+        run();
+      }
+
+      function handleResult(index) {
+        const res = pathData[index];
+        if (res.type === "special") {
+          playSound("onceMore");
+          document.getElementById("game-msg").innerText = "加碼再一圈！";
+          setTimeout(() => {
+            isPlaying = false;
+            startGame(true);
+          }, 1000);
+          return;
+        }
+
+        const landed = items[res.id];
+        const prize = currentBets[landed.type] * landed.rate;
+
+        if (prize > 0) {
+          win += prize;
+          credit += prize;
+          document.getElementById("game-msg").innerText = `獲得 ${prize} 分！`;
+          if (landed.rate >= 100) {
+            playSound("winBig");
+            fullHouseEffect();
+          } else {
+            playSound("winSmall");
+          }
+        } else {
+          document.getElementById("game-msg").innerText = "再接再厲！";
+        }
+
+        items.forEach((i) => (currentBets[i.type] = 0));
+        isPlaying = false;
+        document
+          .querySelectorAll(".btn-main")
+          .forEach((b) => (b.disabled = false));
+        updateDisplay();
+
+        // --- 3. 破產結算與排行榜更新 ---
+        checkGameOver();
+      }
+
+      function checkGameOver() {
+        if (credit < 1) {
+          // 先儲存當前成績到排行榜
+          if (win > 0) updateLeaderboard(win);
+
+          setTimeout(() => {
+            if (
+              confirm(
+                `點數已用光！本次結算得分：${win}\n是否重新開始新的一局（恢復100點）？`,
+              )
+            ) {
+              credit = 100;
+              win = 0;
+              updateDisplay();
+              document.getElementById("game-msg").innerText = "重新開始！";
+            } else {
+              document.getElementById("game-msg").innerText = "遊戲結束";
+              window.close(); // 嘗試關閉視窗 (部分瀏覽器可能無效)
+              document.body.innerHTML =
+                "<h1 style='color:white;text-align:center;margin-top:20%'>遊戲已結束，請關閉分頁。</h1>";
+            }
+          }, 500);
+        }
+      }
+
+      // 啟動預載
+      window.onload = preloadResources;
+      updateDisplay();
+    </script>
+  </body>
+</html>
