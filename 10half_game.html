@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>十點半 10回合挑戰賽 - 搞笑對決版</title>
+    <style>
+        :root {
+            --bg-color: #1a472a;
+            --card-white: #ffffff;
+            --accent-color: #ffd700;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-color);
+            color: white;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 登入介面 */
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            border: none;
+            margin: 10px;
+        }
+
+        /* 遊戲佈局 */
+        .game-container {
+            width: 95%;
+            max-width: 1000px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        .table {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .player-area {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .active-turn {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .cards-display {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-height: 85px;
+            margin: 10px 0;
+        }
+
+        /* 卡牌樣式 */
+        .card {
+            width: 45px;
+            height: 70px;
+            background: white;
+            color: black;
+            border-radius: 5px;
+            margin: 2px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            animation: deal 0.3s ease-out;
+        }
+        @keyframes deal { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .card.red { color: red; }
+
+        /* 控制區 */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        button:disabled { background: #7f8c8d; cursor: not-allowed; }
+        button:hover:not(:disabled) { background: #d35400; }
+
+        /* 排行榜 */
+        .leaderboard {
+            margin-top: 15px;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #444; }
+
+        .status-msg {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            height: 35px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .name-label { font-weight: bold; margin-bottom: 5px; display: block; height: 40px; }
+
+        @media (max-width: 600px) {
+            .table { grid-template-columns: 1fr 1fr; }
+            .card { width: 40px; height: 60px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <h1>🃏 十點半：搞笑 10 回合挑戰</h1>
+    <p>請輸入您的名稱以開始對戰</p>
+    <input type="text" id="player-name-input" placeholder="您的名字...">
+    <button onclick="startGame()">進入遊戲</button>
+</div>
+
+<div class="game-container">
+    <div class="info-bar">
+        <div><strong id="display-name">玩家：-</strong></div>
+        <div id="round-counter" style="color: var(--accent-color);">回合: 1 / 10</div>
+        <div id="player-chips">目前積分: 100</div>
+    </div>
+
+    <div class="status-msg" id="status-msg">準備好被電腦嘲諷了嗎？</div>
+
+    <div class="table">
+        <div class="player-area" id="area-dealer">
+            <span class="name-label">🤖 鐵面莊家</span>
+            <div class="cards-display" id="cards-dealer"></div>
+            <div id="score-dealer">點數: 0</div>
+        </div>
+        <div class="player-area" id="area-p1">
+            <span class="name-label" id="name-p1">載入中...</span>
+            <div class="cards-display" id="cards-p1"></div>
+            <div id="score-p1">點數: 0</div>
+        </div>
+        <div class="player-area" id="area-p2">
+            <span class="name-label" id="name-p2">載入中...</span>
+            <div class="cards-display" id="cards-p2"></div>
+            <div id="score-p2">點數: 0</div>
+        </div>
+        <div class="player-area" id="area-player">
+            <span class="name-label" style="color:var(--accent-color)">⭐ 你本人</span>
+            <div class="cards-display" id="cards-user"></div>
+            <div id="score-user">點數: 0</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button id="btn-next" onclick="initRound()">開始回合</button>
+        <button id="btn-hit" onclick="playerHit()" disabled>要牌</button>
+        <button id="btn-stand" onclick="playerStand()" disabled>停牌</button>
+    </div>
+
+    <div class="leaderboard">
+        <h3>🏆 10回合最高積分排行榜</h3>
+        <table id="leaderboard-table">
+            <thead>
+                <tr><th>名次</th><th>名稱</th><th>最終積分</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // --- 搞笑電腦名稱池 ---
+    const AI_NAMES = [
+        "剛看完教學的隔壁老王", "輸到脫褲子的賭神", "只想下班的阿明", 
+        "自以為會算牌的小明", "連輸 10 把的邊緣人", "數學老師在哭泣",
+        "拿 A 以為是 10 的路人", "不想努力的阿姨", "亂出牌的隔壁大嬸",
+        "賭場派來送分的", "不抽牌會死的強迫症", "永遠在爆煲的衰鬼",
+        "隔壁村的老司機", "靠直覺在玩的小朋友", "以為自己在玩 21 點"
+    ];
+
+    let playerName = "";
+    let playerChips = 100;
+    let currentRound = 0;
+    let aiNamesInGame = [];
+    const MAX_ROUNDS = 10;
+    let deck = [];
+    let players = []; 
+    const SUITS = ['♠','♥','♦','♣'];
+    const VALUES = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+
+    window.onload = () => {
+        const savedName = localStorage.getItem('poker_105_name');
+        if (savedName) document.getElementById('player-name-input').value = savedName;
+        updateLeaderboard();
+    };
+
+    function startGame() {
+        const input = document.getElementById('player-name-input').value.trim();
+        if (!input) return alert("請輸入名稱，不然莊家會生氣");
+        playerName = input;
+        localStorage.setItem('poker_105_name', playerName);
+        document.getElementById('display-name').innerText = `玩家：${playerName}`;
+        document.getElementById('login-screen').style.display = 'none';
+        
+        pickRandomAIs();
+        resetGameSeries();
+    }
+
+    function pickRandomAIs() {
+        // 隨機抽選 2 個不重複的 AI 名稱
+        const shuffled = [...AI_NAMES].sort(() => 0.5 - Math.random());
+        aiNamesInGame = [shuffled[0], shuffled[1]];
+        document.getElementById('name-p1').innerText = "👤 " + aiNamesInGame[0];
+        document.getElementById('name-p2').innerText = "👤 " + aiNamesInGame[1];
+    }
+
+    function resetGameSeries() {
+        playerChips = 100;
+        currentRound = 0;
+        document.getElementById('btn-next').innerText = "挑戰第 1 回合";
+        document.getElementById('btn-next').disabled = false;
+        updateUI();
+    }
+
+    function createDeck() {
+        deck = [];
+        for (let s of SUITS) {
+            for (let v of VALUES) {
+                let pts = (['J','Q','K'].includes(v)) ? 0.5 : (v === 'A' ? 1 : parseInt(v));
+                deck.push({ suit: s, val: v, points: pts, color: (s==='♥'||s==='♦')?'red':'' });
+            }
+        }
+        deck.sort(() => Math.random() - 0.5);
+    }
+
+    function initRound() {
+        currentRound++;
+        if (currentRound > MAX_ROUNDS) {
+            pickRandomAIs(); // 每輪更換對手
+            resetGameSeries();
+            currentRound = 1;
+        }
+
+        createDeck();
+        document.getElementById('btn-next').disabled = true;
+        document.getElementById('round-counter').innerText = `回合: ${currentRound} / ${MAX_ROUNDS}`;
+        document.getElementById('status-msg').innerText = "洗牌中，別想偷看...";
+        
+        players = [
+            { id: 'dealer', name: '莊家', cards: [], score: 0, isDone: false, isBust: false },
+            { id: 'p1', name: aiNamesInGame[0], cards: [], score: 0, isDone: false, isBust: false },
+            { id: 'p2', name: aiNamesInGame[1], cards: [], score: 0, isDone: false, isBust: false },
+            { id: 'user', name: playerName, cards: [], score: 0, isDone: false, isBust: false }
+        ];
+
+        players.forEach(p => hit(p));
+        updateUI();
+        processAI(1);
+    }
+
+    function hit(player) {
+        const card = deck.pop();
+        player.cards.push(card);
+        player.score = player.cards.reduce((sum, c) => sum + c.points, 0);
+        if (player.score > 10.5) player.isBust = true;
+        if (player.cards.length >= 5 && player.score <= 10.5) player.isDone = true;
+    }
+
+    async function processAI(idx) {
+        if (idx > 2) {
+            document.getElementById('status-msg').innerText = "換你了，別在那邊發呆";
+            document.getElementById('area-player').classList.add('active-turn');
+            document.getElementById('btn-hit').disabled = false;
+            document.getElementById('btn-stand').disabled = false;
+            return;
+        }
+        const p = players[idx];
+        document.getElementById(`area-${p.id}`).classList.add('active-turn');
+        // AI 思考邏輯（隨機一點的智商）
+        let target = 7 + (Math.random() * 2); 
+        while (!p.isBust && !p.isDone && p.score < target) {
+            await new Promise(r => setTimeout(r, 600));
+            hit(p);
+            updateUI();
+        }
+        p.isDone = true;
+        document.getElementById(`area-${p.id}`).classList.remove('active-turn');
+        processAI(idx + 1);
+    }
+
+    function playerHit() {
+        const p = players[3];
+        hit(p);
+        updateUI();
+        if (p.isBust || p.isDone) playerStand();
+    }
+
+    function playerStand() {
+        players[3].isDone = true;
+        document.getElementById('btn-hit').disabled = true;
+        document.getElementById('btn-stand').disabled = true;
+        document.getElementById('area-player').classList.remove('active-turn');
+        processDealer();
+    }
+
+    async function processDealer() {
+        const d = players[0];
+        document.getElementById('area-dealer').classList.add('active-turn');
+        document.getElementById('status-msg').innerText = "莊家冷笑中...";
+        
+        let maxEnemyScore = 0;
+        players.slice(1).forEach(p => {
+            if(!p.isBust && p.score > maxEnemyScore) maxEnemyScore = p.score;
+        });
+
+        while (!d.isBust && !d.isDone) {
+            if (d.score > maxEnemyScore || d.score >= 9) break;
+            await new Promise(r => setTimeout(r, 600));
+            hit(d);
+            updateUI();
+        }
+        d.isDone = true;
+        document.getElementById('area-dealer').classList.remove('active-turn');
+        endRound();
+    }
+
+    function endRound() {
+        const d = players[0];
+        const p = players[3];
+        let roundWin = 0;
+        let msg = "";
+
+        if (p.isBust) { msg = "你爆了，真是個好預兆"; roundWin = -10; }
+        else if (d.isBust) { msg = "莊家也爆了，算你走運"; roundWin = 10; }
+        else if (p.cards.length >= 5) { msg = "過五關！竟然讓你矇到"; roundWin = 20; }
+        else if (p.score > d.score) { msg = "贏了莊家，看來你有前途"; roundWin = 10; }
+        else { msg = "莊家食夾棍，感謝你的捐獻"; roundWin = -10; }
+
+        playerChips += roundWin;
+        updateUI();
+
+        if (currentRound < MAX_ROUNDS) {
+            document.getElementById('status-msg').innerText = msg;
+            document.getElementById('btn-next').disabled = false;
+            document.getElementById('btn-next').innerText = `第 ${currentRound + 1} 回合`;
+        } else {
+            document.getElementById('status-msg').innerText = `10 回合終結！最終分數：${playerChips}`;
+            document.getElementById('btn-next').disabled = false;
+            document.getElementById('btn-next').innerText = "重新開始（對手會換人）";
+            saveFinalScore();
+            updateLeaderboard();
+        }
+    }
+
+    function updateUI() {
+        players.forEach(p => {
+            const container = document.getElementById(`cards-${p.id === 'user' ? 'user' : p.id}`);
+            if(!container) return;
+            container.innerHTML = "";
+            p.cards.forEach(c => {
+                const div = document.createElement('div');
+                div.className = `card ${c.color}`;
+                div.innerHTML = `<span>${c.suit}</span><span>${c.val}</span>`;
+                container.appendChild(div);
+            });
+            let scoreText = p.isBust ? "😂 爆煲" : p.score + " 點";
+            if (p.cards.length >= 5 && !p.isBust) scoreText = "🐉 過五關";
+            document.getElementById(`score-${p.id === 'user' ? 'user' : p.id}`).innerText = scoreText;
+        });
+        document.getElementById('player-chips').innerText = `目前積分: ${playerChips}`;
+    }
+
+    function saveFinalScore() {
+        let board = JSON.parse(localStorage.getItem('poker_105_fun_board') || "[]");
+        board.push({ name: playerName, score: playerChips });
+        board.sort((a, b) => b.score - a.score);
+        board = board.slice(0, 10);
+        localStorage.setItem('poker_105_fun_board', JSON.stringify(board));
+    }
+
+    function updateLeaderboard() {
+        const board = JSON.parse(localStorage.getItem('poker_105_fun_board') || "[]");
+        const tbody = document.querySelector('#leaderboard-table tbody');
+        tbody.innerHTML = "";
+        board.forEach((item, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${idx + 1}</td><td>${item.name}</td><td>${item.score}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+</script>
+
+</body>
+</html>

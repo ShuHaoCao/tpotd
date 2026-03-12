@@ -20,7 +20,6 @@
         margin: 0;
         padding: 0;
         width: 100%;
-        /* 修正：允許垂直滑動，隱藏水平滑動 */
         overflow-x: hidden;
         overflow-y: auto;
         font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
@@ -28,14 +27,12 @@
         color: white;
       }
 
-      /* 大廳佈局 */
       #hub-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* 修正：使用最小高度，確保內容多時可向下延伸 */
         min-height: 100vh;
-        padding: 40px 20px 80px 20px; /* 增加底部間距 */
+        padding: 40px 20px 80px 20px;
         box-sizing: border-box;
         background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
       }
@@ -64,7 +61,6 @@
         gap: 20px;
       }
 
-      /* 遊戲卡片樣式 */
       .game-card {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -107,7 +103,6 @@
         color: #94a3b8;
       }
 
-      /* 全螢幕遊戲容器 */
       #game-overlay {
         position: fixed;
         top: 0;
@@ -214,6 +209,56 @@
           </div>
         </div>
 
+        <div class="game-card" onclick="loadGame('10half_game.html')">
+          <div class="icon">🃏</div>
+          <div class="info">
+            <h3>10點半撲克牌</h3>
+            <p>考驗勇氣與運氣的經典對決</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="loadGame('showhand_game.html')">
+          <div class="info">
+            <div class="icon">💰</div>
+          </div>
+          <div class="info">
+            <h3>梭哈撲克牌</h3>
+            <p>底牌在手，勝負由我</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="loadGame('chess_game.html')">
+          <div class="icon">☖</div>
+          <div class="info">
+            <h3>象棋</h3>
+            <p>運籌帷幄之中，決勝千里之外</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="loadGame('5s_game.html')">
+          <div class="icon">⚫</div>
+          <div class="info">
+            <h3>五子棋</h3>
+            <p>黑白交鋒，五子連珠</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="loadGame('othello_game.html')">
+          <div class="icon">⚪</div>
+          <div class="info">
+            <h3>黑白棋</h3>
+            <p>一棋翻盤，逆轉局勢</p>
+          </div>
+        </div>
+
+        <div class="game-card" onclick="loadGame('go_game.html')">
+          <div class="icon">🌑</div>
+          <div class="info">
+            <h3>圍棋</h3>
+            <p>運籌帷幄，一戰成名</p>
+          </div>
+        </div>
+
         <div class="game-card" onclick="alert('更多遊戲敬請期待')">
           <div class="icon">🎁</div>
           <div class="info">
@@ -244,7 +289,6 @@
       function loadGame(url) {
         overlay.classList.add("active");
         loadingText.style.display = "block";
-        // 鎖定背景捲動，防止開遊戲時背景還能滑
         document.body.style.overflow = "hidden";
 
         setTimeout(() => {
@@ -258,10 +302,9 @@
 
       function closeGame() {
         overlay.classList.remove("active");
-        // 恢復背景捲動
         document.body.style.overflow = "auto";
         document.body.style.overflowX = "hidden";
-        
+
         setTimeout(() => {
           iframe.src = "about:blank";
         }, 400);
