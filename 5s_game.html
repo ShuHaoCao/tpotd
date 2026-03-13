@@ -1,354 +1,460 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>五子棋 AI 對戰版</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>五子棋</title>
     <style>
-        :root {
-            --board-bg: #e3c16f;
-            --line-color: #333;
-        }
+      :root {
+        --board-bg: #e3c16f;
+        --line-color: #333;
+      }
 
-        body {
-            font-family: "Microsoft JhengHei", sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            touch-action: manipulation;
-        }
+      body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        touch-action: manipulation;
+      }
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            padding: 10px;
-            box-sizing: border-box;
-            text-align: center;
-        }
+      .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+        box-sizing: border-box;
+        text-align: center;
+      }
 
-        #status {
-            font-size: 1.1rem;
-            margin: 10px 0;
-            font-weight: bold;
-            color: #d32f2f;
-            height: 1.5em;
-        }
+      #status {
+        font-size: 1.1rem;
+        margin: 10px 0;
+        font-weight: bold;
+        color: #d32f2f;
+        height: 1.5em;
+      }
 
-        /* 棋盤設計 */
-        #board-wrapper {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            background-color: var(--board-bg);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border: 2px solid #8b4513;
-        }
+      /* 棋盤設計 */
+      #board-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background-color: var(--board-bg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 2px solid #8b4513;
+      }
 
-        #board {
-            display: grid;
-            grid-template-columns: repeat(15, 1fr);
-            grid-template-rows: repeat(15, 1fr);
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            z-index: 2;
-        }
+      #board {
+        display: grid;
+        grid-template-columns: repeat(15, 1fr);
+        grid-template-rows: repeat(15, 1fr);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 2;
+      }
 
-        .cell {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+      .cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
 
-        /* 網格線 */
-        .grid-lines {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .line-h, .line-v {
-            position: absolute;
-            background-color: var(--line-color);
-            opacity: 0.6;
-        }
+      /* 網格線 */
+      .grid-lines {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .line-h,
+      .line-v {
+        position: absolute;
+        background-color: var(--line-color);
+        opacity: 0.6;
+      }
 
-        /* 棋子 */
-        .piece {
-            width: 80%;
-            height: 80%;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-            z-index: 3;
-        }
-        .black { background: radial-gradient(circle at 30% 30%, #444, #000); }
-        .white { background: radial-gradient(circle at 30% 30%, #fff, #ccc); border: 1px solid #999; }
+      /* 棋子 */
+      .piece {
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        z-index: 3;
+      }
+      .black {
+        background: radial-gradient(circle at 30% 30%, #444, #000);
+      }
+      .white {
+        background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+        border: 1px solid #999;
+      }
 
-        .controls { margin: 15px 0; display: flex; gap: 10px; justify-content: center; }
-        button {
-            padding: 10px 20px;
-            background: #5d4037;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+      .controls {
+        margin: 15px 0;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      button {
+        padding: 10px 20px;
+        background: #5d4037;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
-        /* 排行榜 */
-        .leaderboard {
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border-bottom: 1px solid #eee; padding: 6px; }
+      /* 排行榜 */
+      .leaderboard {
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border-bottom: 1px solid #eee;
+        padding: 6px;
+      }
 
-        /* 遮罩 */
-        #overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.85); z-index: 100;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .modal { background: white; padding: 25px; border-radius: 10px; width: 80%; max-width: 300px; }
-        input { width: 90%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; }
+      /* 遮罩 */
+      #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 300px;
+      }
+      input {
+        width: 90%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+      }
 
-        .hidden { display: none !important; }
+      .hidden {
+        display: none !important;
+      }
     </style>
-</head>
-<body>
-
-<div id="overlay">
-    <div class="modal">
+  </head>
+  <body>
+    <div id="overlay">
+      <div class="modal">
         <h3>挑戰 AI 五子棋</h3>
-        <input type="text" id="nameInput" placeholder="請輸入您的名稱">
-        <button onclick="saveNameAndStart()" style="width:100%">開始對擊</button>
+        <input type="text" id="nameInput" placeholder="請輸入您的名稱" />
+        <button onclick="saveNameAndStart()" style="width: 100%">
+          開始對擊
+        </button>
+      </div>
     </div>
-</div>
 
-<div class="container">
-    <h2 id="title">玩家 (黑) vs 電腦 (白)</h2>
-    <div id="status">準備中...</div>
+    <div class="container">
+      <h2 id="title">玩家 (黑) vs 電腦 (白)</h2>
+      <div id="status">準備中...</div>
 
-    <div id="board-wrapper">
+      <div id="board-wrapper">
         <div class="grid-lines" id="gridLines"></div>
         <div id="board"></div>
-    </div>
+      </div>
 
-    <div class="controls">
+      <div class="controls">
         <button onclick="resetGame()">重新一局</button>
-        <button onclick="clearRecord()" style="background:#999">清除紀錄</button>
-    </div>
+        <button onclick="clearRecord()" style="background: #999">
+          清除紀錄
+        </button>
+      </div>
 
-    <div class="leaderboard">
+      <div class="leaderboard">
         <strong>🏆 玩家勝場排行榜 (最速前10名)</strong>
         <table>
-            <thead><tr><th>名次</th><th>玩家</th><th>步數</th><th>日期</th></tr></thead>
-            <tbody id="rankBody"></tbody>
+          <thead>
+            <tr>
+              <th>名次</th>
+              <th>玩家</th>
+              <th>步數</th>
+              <th>日期</th>
+            </tr>
+          </thead>
+          <tbody id="rankBody"></tbody>
         </table>
+      </div>
     </div>
-</div>
 
-<script>
-    const SIZE = 15;
-    let board = [];
-    let isGameOver = false;
-    let playerName = "";
-    let playerSteps = 0;
+    <script>
+      const SIZE = 15;
+      let board = [];
+      let isGameOver = false;
+      let playerName = "";
+      let playerSteps = 0;
 
-    // 1. 初始化與儲存名稱
-    window.onload = () => {
-        const savedName = localStorage.getItem('gomoku_user');
+      // 1. 初始化與儲存名稱
+      window.onload = () => {
+        const savedName = localStorage.getItem("gomoku_user");
         if (savedName) {
-            playerName = savedName;
-            document.getElementById('overlay').classList.add('hidden');
-            initGame();
+          playerName = savedName;
+          document.getElementById("overlay").classList.add("hidden");
+          initGame();
         }
         updateLeaderboard();
-    };
+      };
 
-    function saveNameAndStart() {
-        const val = document.getElementById('nameInput').value.trim();
+      function saveNameAndStart() {
+        const val = document.getElementById("nameInput").value.trim();
         playerName = val || "無名大師";
-        localStorage.setItem('gomoku_user', playerName);
-        document.getElementById('overlay').classList.add('hidden');
+        localStorage.setItem("gomoku_user", playerName);
+        document.getElementById("overlay").classList.add("hidden");
         initGame();
-    }
+      }
 
-    // 2. 遊戲邏輯
-    function initGame() {
-        board = Array(SIZE).fill(0).map(() => Array(SIZE).fill(0));
+      // 2. 遊戲邏輯
+      function initGame() {
+        board = Array(SIZE)
+          .fill(0)
+          .map(() => Array(SIZE).fill(0));
         isGameOver = false;
         playerSteps = 0;
-        document.getElementById('status').innerText = "您的回合 (黑子)";
+        document.getElementById("status").innerText = "您的回合 (黑子)";
         renderBoard();
-    }
+      }
 
-    function renderBoard() {
-        const boardEl = document.getElementById('board');
-        const linesEl = document.getElementById('gridLines');
-        boardEl.innerHTML = '';
-        linesEl.innerHTML = '';
+      function renderBoard() {
+        const boardEl = document.getElementById("board");
+        const linesEl = document.getElementById("gridLines");
+        boardEl.innerHTML = "";
+        linesEl.innerHTML = "";
 
         // 畫線
         for (let i = 0; i < SIZE; i++) {
-            const hLine = document.createElement('div');
-            hLine.className = 'line-h';
-            hLine.style.top = `${(i + 0.5) * (100/SIZE)}%`;
-            hLine.style.left = `${(0.5) * (100/SIZE)}%`;
-            hLine.style.width = `${100 - (100/SIZE)}%`;
-            hLine.style.height = '1px';
-            linesEl.appendChild(hLine);
+          const hLine = document.createElement("div");
+          hLine.className = "line-h";
+          hLine.style.top = `${(i + 0.5) * (100 / SIZE)}%`;
+          hLine.style.left = `${0.5 * (100 / SIZE)}%`;
+          hLine.style.width = `${100 - 100 / SIZE}%`;
+          hLine.style.height = "1px";
+          linesEl.appendChild(hLine);
 
-            const vLine = document.createElement('div');
-            vLine.className = 'line-v';
-            vLine.style.left = `${(i + 0.5) * (100/SIZE)}%`;
-            vLine.style.top = `${(0.5) * (100/SIZE)}%`;
-            vLine.style.height = `${100 - (100/SIZE)}%`;
-            vLine.style.width = '1px';
-            linesEl.appendChild(vLine);
+          const vLine = document.createElement("div");
+          vLine.className = "line-v";
+          vLine.style.left = `${(i + 0.5) * (100 / SIZE)}%`;
+          vLine.style.top = `${0.5 * (100 / SIZE)}%`;
+          vLine.style.height = `${100 - 100 / SIZE}%`;
+          vLine.style.width = "1px";
+          linesEl.appendChild(vLine);
         }
 
         // 畫格子
         for (let r = 0; r < SIZE; r++) {
-            for (let c = 0; c < SIZE; c++) {
-                const cell = document.createElement('div');
-                cell.className = 'cell';
-                cell.onclick = () => playerMove(r, c);
-                boardEl.appendChild(cell);
-            }
+          for (let c = 0; c < SIZE; c++) {
+            const cell = document.createElement("div");
+            cell.className = "cell";
+            cell.onclick = () => playerMove(r, c);
+            boardEl.appendChild(cell);
+          }
         }
-    }
+      }
 
-    function playerMove(r, c) {
+      function playerMove(r, c) {
         if (isGameOver || board[r][c] !== 0) return;
 
         placePiece(r, c, 1); // 1 = 黑子 (玩家)
         playerSteps++;
 
         if (checkWin(r, c, 1)) {
-            endGame(`${playerName} 獲勝！`);
-            saveResult(playerName, playerSteps);
-            return;
+          endGame(`${playerName} 獲勝！`);
+          saveResult(playerName, playerSteps);
+          return;
         }
 
-        document.getElementById('status').innerText = "電腦思考中...";
+        document.getElementById("status").innerText = "電腦思考中...";
         setTimeout(aiMove, 300);
-    }
+      }
 
-    function placePiece(r, c, type) {
+      function placePiece(r, c, type) {
         board[r][c] = type;
         const index = r * SIZE + c;
-        const cell = document.getElementsByClassName('cell')[index];
-        const p = document.createElement('div');
-        p.className = `piece ${type === 1 ? 'black' : 'white'}`;
+        const cell = document.getElementsByClassName("cell")[index];
+        const p = document.createElement("div");
+        p.className = `piece ${type === 1 ? "black" : "white"}`;
         cell.appendChild(p);
-    }
+      }
 
-    // 3. AI 邏輯 (評分權重)
-    function aiMove() {
+      // 3. AI 邏輯 (評分權重)
+      function aiMove() {
         if (isGameOver) return;
         let bestScore = -1;
         let move = { r: 7, c: 7 };
 
         for (let r = 0; r < SIZE; r++) {
-            for (let c = 0; c < SIZE; c++) {
-                if (board[r][c] === 0) {
-                    // AI 進攻分數 + 防禦分數
-                    let score = evaluate(r, c, 2) + evaluate(r, c, 1) * 0.8; 
-                    if (score > bestScore) {
-                        bestScore = score;
-                        move = { r, c };
-                    }
-                }
+          for (let c = 0; c < SIZE; c++) {
+            if (board[r][c] === 0) {
+              // AI 進攻分數 + 防禦分數
+              let score = evaluate(r, c, 2) + evaluate(r, c, 1) * 0.8;
+              if (score > bestScore) {
+                bestScore = score;
+                move = { r, c };
+              }
             }
+          }
         }
 
         placePiece(move.r, move.c, 2);
         if (checkWin(move.r, move.c, 2)) {
-            endGame("電腦獲勝！");
+          endGame("電腦獲勝！");
         } else {
-            document.getElementById('status').innerText = "您的回合 (黑子)";
+          document.getElementById("status").innerText = "您的回合 (黑子)";
         }
-    }
+      }
 
-    function evaluate(r, c, type) {
+      function evaluate(r, c, type) {
         let total = 0;
-        const dirs = [[1,0],[0,1],[1,1],[1,-1]];
+        const dirs = [
+          [1, 0],
+          [0, 1],
+          [1, 1],
+          [1, -1],
+        ];
         for (let [dr, dc] of dirs) {
-            let count = 1;
-            let block = 0;
-            // 正向
-            for (let i = 1; i < 5; i++) {
-                let nr = r + dr*i, nc = c + dc*i;
-                if (nr<0||nr>=SIZE||nc<0||nc>=SIZE) { block++; break; }
-                if (board[nr][nc] === type) count++;
-                else if (board[nr][nc] === 0) break;
-                else { block++; break; }
+          let count = 1;
+          let block = 0;
+          // 正向
+          for (let i = 1; i < 5; i++) {
+            let nr = r + dr * i,
+              nc = c + dc * i;
+            if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) {
+              block++;
+              break;
             }
-            // 反向
-            for (let i = 1; i < 5; i++) {
-                let nr = r - dr*i, nc = c - dc*i;
-                if (nr<0||nr>=SIZE||nc<0||nc>=SIZE) { block++; break; }
-                if (board[nr][nc] === type) count++;
-                else if (board[nr][nc] === 0) break;
-                else { block++; break; }
+            if (board[nr][nc] === type) count++;
+            else if (board[nr][nc] === 0) break;
+            else {
+              block++;
+              break;
             }
-            // 簡單權重計算
-            if (count >= 5) total += 100000;
-            else if (count === 4) total += (block === 0 ? 10000 : 1000);
-            else if (count === 3) total += (block === 0 ? 1000 : 100);
-            else if (count === 2) total += (block === 0 ? 100 : 10);
+          }
+          // 反向
+          for (let i = 1; i < 5; i++) {
+            let nr = r - dr * i,
+              nc = c - dc * i;
+            if (nr < 0 || nr >= SIZE || nc < 0 || nc >= SIZE) {
+              block++;
+              break;
+            }
+            if (board[nr][nc] === type) count++;
+            else if (board[nr][nc] === 0) break;
+            else {
+              block++;
+              break;
+            }
+          }
+          // 簡單權重計算
+          if (count >= 5) total += 100000;
+          else if (count === 4) total += block === 0 ? 10000 : 1000;
+          else if (count === 3) total += block === 0 ? 1000 : 100;
+          else if (count === 2) total += block === 0 ? 100 : 10;
         }
         return total;
-    }
+      }
 
-    // 4. 勝負與排行
-    function checkWin(r, c, type) {
-        const dirs = [[1,0],[0,1],[1,1],[1,-1]];
+      // 4. 勝負與排行
+      function checkWin(r, c, type) {
+        const dirs = [
+          [1, 0],
+          [0, 1],
+          [1, 1],
+          [1, -1],
+        ];
         for (let [dr, dc] of dirs) {
-            let cnt = 1;
-            for (let i=1; i<5; i++) {
-                let nr=r+dr*i, nc=c+dc*i;
-                if(nr>=0 && nr<SIZE && nc>=0 && nc<SIZE && board[nr][nc]===type) cnt++; else break;
-            }
-            for (let i=1; i<5; i++) {
-                let nr=r-dr*i, nc=c-dc*i;
-                if(nr>=0 && nr<SIZE && nc>=0 && nc<SIZE && board[nr][nc]===type) cnt++; else break;
-            }
-            if (cnt >= 5) return true;
+          let cnt = 1;
+          for (let i = 1; i < 5; i++) {
+            let nr = r + dr * i,
+              nc = c + dc * i;
+            if (
+              nr >= 0 &&
+              nr < SIZE &&
+              nc >= 0 &&
+              nc < SIZE &&
+              board[nr][nc] === type
+            )
+              cnt++;
+            else break;
+          }
+          for (let i = 1; i < 5; i++) {
+            let nr = r - dr * i,
+              nc = c - dc * i;
+            if (
+              nr >= 0 &&
+              nr < SIZE &&
+              nc >= 0 &&
+              nc < SIZE &&
+              board[nr][nc] === type
+            )
+              cnt++;
+            else break;
+          }
+          if (cnt >= 5) return true;
         }
         return false;
-    }
+      }
 
-    function endGame(msg) {
+      function endGame(msg) {
         isGameOver = true;
-        document.getElementById('status').innerText = msg;
-    }
+        document.getElementById("status").innerText = msg;
+      }
 
-    function saveResult(name, steps) {
-        let list = JSON.parse(localStorage.getItem('gomoku_ranks') || "[]");
+      function saveResult(name, steps) {
+        let list = JSON.parse(localStorage.getItem("gomoku_ranks") || "[]");
         list.push({ name, steps, date: new Date().toLocaleDateString() });
         list.sort((a, b) => a.steps - b.steps);
-        localStorage.setItem('gomoku_ranks', JSON.stringify(list.slice(0, 10)));
+        localStorage.setItem("gomoku_ranks", JSON.stringify(list.slice(0, 10)));
         updateLeaderboard();
-    }
+      }
 
-    function updateLeaderboard() {
-        const list = JSON.parse(localStorage.getItem('gomoku_ranks') || "[]");
-        document.getElementById('rankBody').innerHTML = list.map((item, i) => 
-            `<tr><td>${i+1}</td><td>${item.name}</td><td>${item.steps}</td><td>${item.date}</td></tr>`
-        ).join('');
-    }
+      function updateLeaderboard() {
+        const list = JSON.parse(localStorage.getItem("gomoku_ranks") || "[]");
+        document.getElementById("rankBody").innerHTML = list
+          .map(
+            (item, i) =>
+              `<tr><td>${i + 1}</td><td>${item.name}</td><td>${item.steps}</td><td>${item.date}</td></tr>`,
+          )
+          .join("");
+      }
 
-    function resetGame() { initGame(); }
-    function clearRecord() { localStorage.removeItem('gomoku_ranks'); updateLeaderboard(); }
-</script>
-
-</body>
+      function resetGame() {
+        initGame();
+      }
+      function clearRecord() {
+        localStorage.removeItem("gomoku_ranks");
+        updateLeaderboard();
+      }
+    </script>
+    <footer>
+      <div>© 2025 CaoShuHao</div>
+      <div>版權所有，請勿抄襲</div>
+    </footer>
+  </body>
 </html>
