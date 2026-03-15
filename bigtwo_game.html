@@ -6,369 +6,634 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>群星大亂鬥賓果 - 競技版</title>
+    <title>大老二 - 經典競技版</title>
     <style>
       :root {
-        --primary-color: #3498db;
-        --secondary-color: #e67e22;
-        --bg-color: #f4f7f6;
-        --cell-size: 50px;
-        --winner-color: #27ae60;
+        --green: #1a472a;
+        --card-bg: #fff;
+        --active-gold: #ffeb3b;
+        --modal-bg: rgba(0, 0, 0, 0.85);
       }
-
-      @media (max-width: 600px) {
-        :root {
-          --cell-size: 44px;
-        }
-        .game-container {
-          flex-direction: column;
-          align-items: center;
-        }
-        .board-wrapper {
-          width: 95%;
-          max-width: 320px;
-        }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
       }
-
       body {
-        font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-        background: var(--bg-color);
+        background-color: var(--green);
+        color: white;
+        font-family: sans-serif;
         margin: 0;
-        padding: 10px;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* 遊戲版面佈局 */
+      #game-board {
+        display: grid;
+        grid-template-areas:
+          "p2 p2 p2"
+          "p1 table p3"
+          "p0 p0 p0";
+        grid-template-columns: 80px 1fr 80px;
+        grid-template-rows: 80px 1fr 140px;
+        height: 100dvh;
+        width: 100vw;
+      }
+
+      .slot {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        position: relative;
       }
-
-      #message-box {
-        width: 90%;
-        max-width: 450px;
-        margin: 10px 0;
-        padding: 15px;
-        background: #2c3e50;
-        color: white;
-        border-radius: 15px;
-        font-size: 1.1rem;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        min-height: 1.5em;
+      #p0 {
+        grid-area: p0;
+        padding-bottom: 10px;
       }
-
-      .controls {
-        margin-bottom: 15px;
+      #p1 {
+        grid-area: p1;
+      }
+      #p2 {
+        grid-area: p2;
+      }
+      #p3 {
+        grid-area: p3;
+      }
+      #table {
+        grid-area: table;
         display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         gap: 10px;
       }
 
-      .btn {
-        padding: 10px 20px;
-        font-size: 1rem;
-        font-weight: bold;
-        color: white;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: 0.1s;
+      .name-tag {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 14px;
+        margin-bottom: 5px;
+        z-index: 10;
+        border: 1px solid transparent;
+      }
+      .active {
+        color: var(--active-gold);
+        border-color: var(--active-gold);
+        box-shadow: 0 0 8px var(--active-gold);
       }
 
-      .btn-reset { background: var(--secondary-color); box-shadow: 0 4px 0 #d35400; }
-      .btn-name { background: #95a5a6; box-shadow: 0 4px 0 #7f8c8d; }
-
-      .btn:active {
-        transform: translateY(3px);
-        box-shadow: none;
-      }
-
-      .game-container {
+      .card-row {
         display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
         justify-content: center;
         width: 100%;
+        height: 80px;
+      }
+      .card {
+        width: 45px;
+        height: 65px;
+        background: var(--card-bg);
+        color: black;
+        border-radius: 4px;
+        margin-left: -20px;
+        border: 1px solid #666;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: bold;
+        position: relative;
+        transition: transform 0.1s;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      }
+      .card:first-child {
+        margin-left: 0;
+      }
+      .card.red {
+        color: #d00;
+      }
+      .card.selected {
+        transform: translateY(-25px);
+        border: 2px solid #2196f3;
+      }
+      .card.npc-card {
+        background: #0d2a18;
+        color: transparent;
+        border-color: #222;
       }
 
-      .board-wrapper {
-        background: white;
-        padding: 12px;
-        border-radius: 15px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        text-align: center;
-        border-top: 6px solid #ccc;
-        transition: 0.3s;
+      .controls {
+        display: flex;
+        gap: 8px;
+        width: 95%;
+        justify-content: center;
       }
-      .board-wrapper.active {
-        border-top-color: var(--primary-color);
-        transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      button {
+        flex: 1;
+        padding: 10px 0;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 8px;
+        border: none;
+        background: #eee;
+        color: #333;
+        max-width: 80px;
+      }
+      button:active {
+        background: #ccc;
+      }
+      button:disabled {
+        opacity: 0.3;
       }
 
-      h2 { margin: 5px 0; font-size: 0.95rem; color: #34495e; }
-
-      .board {
-        display: grid;
-        grid-template-columns: repeat(5, var(--cell-size));
-        grid-gap: 5px;
-        margin: 10px auto;
+      #last-play-area {
+        display: flex;
+        gap: 5px;
+        min-height: 80px;
+        justify-content: center;
+        align-items: center;
+      }
+      #last-play-area .card {
+        width: 55px;
+        height: 80px;
+        font-size: 18px;
+        margin-left: 0;
       }
 
-      .cell {
-        width: var(--cell-size);
-        height: var(--cell-size);
+      .msg {
+        font-size: 14px;
+        color: #fff;
+        text-shadow: 1px 1px 2px #000;
+        height: 20px;
+      }
+
+      /* 彈窗樣式 (排行榜與登入) */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--modal-bg);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #ecf0f1;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #2c3e50;
-        -webkit-tap-highlight-color: transparent;
+        z-index: 1000;
+        visibility: hidden;
       }
-      .cell.marked {
-        background: #ff4757;
-        color: white;
-        animation: pop 0.3s;
+      .modal.show {
+        visibility: visible;
       }
-
-      @keyframes pop {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.2); }
-        100% { transform: scale(1); }
-      }
-
-      .npc-board .cell { cursor: default; }
-      .status { margin-top: 8px; font-weight: bold; color: #7f8c8d; font-size: 0.85rem; }
-
-      /* 排行榜樣式 */
-      .leaderboard {
-        width: 90%;
-        max-width: 450px;
-        margin-top: 30px;
-        background: white;
-        border-radius: 15px;
+      .modal-content {
+        background: #fff;
+        color: #333;
         padding: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-radius: 15px;
+        width: 85%;
+        max-width: 300px;
+        text-align: center;
       }
-      .leaderboard h3 { margin-top: 0; text-align: center; color: #2c3e50; }
-      .leaderboard table { width: 100%; border-collapse: collapse; }
-      .leaderboard th { border-bottom: 2px solid #eee; padding: 10px; color: #7f8c8d; }
-      .leaderboard td { padding: 8px; text-align: center; border-bottom: 1px solid #f9f9f9; }
-      .rank-1 { color: #f1c40f; font-weight: bold; }
+      .modal-content input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .rank-list {
+        text-align: left;
+        margin: 15px 0;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .rank-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      @media screen and (max-width: 480px) {
+        .card {
+          width: 35px;
+          height: 50px;
+          margin-left: -18px;
+          font-size: 12px;
+        }
+        #last-play-area .card {
+          width: 45px;
+          height: 65px;
+        }
+      }
+
+      footer div {
+        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+        color: #888888; /* 中灰色，不會太刺眼 */
+        text-align: center; /* 居中對齊 */
+        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
-    <div id="message-box">👋 歡迎來到賓果大賽</div>
-
-    <div class="controls">
-      <button class="btn btn-reset" onclick="resetGame()">♻️ 重新配對</button>
-      <button class="btn btn-name" onclick="askPlayerName(true)">👤 修改名稱</button>
-    </div>
-
-    <div class="game-container">
-      <div id="wrapper-0" class="board-wrapper active">
-        <h2 id="title-0">載入中...</h2>
-        <div id="board-0" class="board"></div>
-        <div id="status-0" class="status">連線數: 0</div>
-      </div>
-      <div id="wrapper-1" class="board-wrapper">
-        <h2 id="title-1">載入中...</h2>
-        <div id="board-1" class="board npc-board"></div>
-        <div id="status-1" class="status">連線數: 0</div>
-      </div>
-      <div id="wrapper-2" class="board-wrapper">
-        <h2 id="title-2">載入中...</h2>
-        <div id="board-2" class="board npc-board"></div>
-        <div id="status-2" class="status">連線數: 0</div>
+    <div id="login-modal" class="modal show">
+      <div class="modal-content">
+        <h3>歡迎來到大老二</h3>
+        <p>請輸入您的暱稱：</p>
+        <input
+          type="text"
+          id="player-name-input"
+          placeholder="名稱..."
+          maxlength="10"
+        />
+        <button
+          onclick="savePlayerName()"
+          style="background: #4caf50; color: white; max-width: 100%"
+        >
+          開始遊戲
+        </button>
       </div>
     </div>
 
-    <div class="leaderboard">
-      <h3>🏆 世界前 10 強 (最速獲勝)</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>名次</th>
-            <th>玩家</th>
-            <th>耗時(球數)</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body">
-          </tbody>
-      </table>
+    <div id="rank-modal" class="modal">
+      <div class="modal-content">
+        <h3>🏆 榮譽排行榜</h3>
+        <p style="font-size: 12px; color: #666">(記錄獲勝場數)</p>
+        <div id="rank-display" class="rank-list"></div>
+        <button
+          onclick="toggleRank(false)"
+          style="background: #666; color: white; max-width: 100%"
+        >
+          關閉
+        </button>
+      </div>
+    </div>
+
+    <div id="game-board">
+      <div class="slot" id="p2">
+        <div class="name-tag" id="name-2"></div>
+        <div id="hand-2" class="card-row"></div>
+      </div>
+      <div class="slot" id="p1">
+        <div class="name-tag" id="name-1"></div>
+        <div id="hand-1" class="card-row"></div>
+      </div>
+
+      <div id="table">
+        <div class="msg" id="game-msg">請先登入...</div>
+        <div id="last-play-area"></div>
+        <div class="controls">
+          <button id="btn-play" onclick="playerAction()">出牌</button>
+          <button id="btn-pass" onclick="playerPass()">過</button>
+          <button
+            onclick="toggleRank(true)"
+            style="background: #ff9800; color: white"
+          >
+            榜單
+          </button>
+          <button
+            onclick="initGame()"
+            style="background: #4caf50; color: white"
+          >
+            新局
+          </button>
+        </div>
+      </div>
+
+      <div class="slot" id="p3">
+        <div class="name-tag" id="name-3"></div>
+        <div id="hand-3" class="card-row"></div>
+      </div>
+
+      <div class="slot" id="p0">
+        <div id="hand-0" class="card-row"></div>
+        <div class="name-tag" id="name-0">載入中...</div>
+      </div>
     </div>
 
     <script>
-      const WIN_LINES = 5;
-      const funnyNames = ["馬斯克拉", "黃仁勳到家", "賈伯斯斯", "蔡依林時抱佛腳", "周杰倫流轉", "銅鑼灣扛報紙", "汗味戰警", "左青龍右胖虎", "靈車甩尾棺材飛", "九頭龍閃到腰", "善解人衣", "剛好五個字", "打死我也不", "我很會射", "怪很強我先走", "差一元買多多", "不要問你會怕", "你看不見我", "轉角遇到怪", "你點到我了", "網路連線中斷", "你已經死了", "屎亡筆記本", "你在大聲什麼啦", "蒙奇D能兒", "AI人工智障", "悲傷滷肉飯", "憂鬱肉燥飯", "被冰塊燙傷", "麻辣白開水", "鐵拳無敵孫中山", "宇智波多野結衣", "我要打十個"];
+      const SUITS = ["♦", "♣", "♥", "♠"];
+      const VALUES = [
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "J",
+        "Q",
+        "K",
+        "A",
+        "2",
+      ];
+      const NPC_NAMES = [
+        "賭神高進",
+        "少年賭聖",
+        "陳小刀",
+        "大軍",
+        "龍五",
+        "海棠",
+        "三叔",
+        "賭俠",
+      ];
 
-      let gameOver = false,
-        calledNumbers = new Set(),
-        turn = 0,
-        participants = [],
-        playerName = "";
+      let deck = [],
+        hands = [[], [], [], []],
+        names = [];
+      let currentTurn = 0,
+        lastPlay = null,
+        passCount = 0,
+        isFirstTurn = true;
+      let currentPlayerName = "";
 
-      class BingoGame {
-        constructor(id, displayName, isPlayer = false) {
-          this.id = id;
-          this.displayName = displayName;
-          this.isPlayer = isPlayer;
-          this.nums = Array.from({ length: 25 }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
-          this.marked = Array(25).fill(false);
-          this.render();
+      // --- 排行榜與名稱邏輯 ---
+      window.onload = () => {
+        const savedName = localStorage.getItem("bigTwo_playerName");
+        if (savedName) {
+          currentPlayerName = savedName;
+          document.getElementById("login-modal").classList.remove("show");
+          initGame();
         }
-        render() {
-          document.getElementById(`title-${this.id}`).innerText = this.displayName;
-          const boardEl = document.getElementById(`board-${this.id}`);
-          boardEl.innerHTML = "";
-          this.nums.forEach((num) => {
-            const cell = document.createElement("div");
-            cell.className = "cell";
-            cell.innerText = num;
-            if (this.isPlayer) cell.onclick = () => handleTurn(num);
-            boardEl.appendChild(cell);
+      };
+
+      function savePlayerName() {
+        const input = document.getElementById("player-name-input").value.trim();
+        if (!input) return alert("請輸入名稱！");
+        currentPlayerName = input;
+        localStorage.setItem("bigTwo_playerName", input);
+        document.getElementById("login-modal").classList.remove("show");
+        initGame();
+      }
+
+      function updateScore() {
+        let ranks = JSON.parse(localStorage.getItem("bigTwo_ranks") || "[]");
+        let playerRecord = ranks.find((r) => r.name === currentPlayerName);
+
+        if (playerRecord) {
+          playerRecord.wins += 1;
+        } else {
+          ranks.push({ name: currentPlayerName, wins: 1 });
+        }
+
+        // 排序：勝場由多到少
+        ranks.sort((a, b) => b.wins - a.wins);
+        // 只取前 10
+        ranks = ranks.slice(0, 10);
+        localStorage.setItem("bigTwo_ranks", JSON.stringify(ranks));
+      }
+
+      function toggleRank(show) {
+        const modal = document.getElementById("rank-modal");
+        if (show) {
+          const ranks = JSON.parse(
+            localStorage.getItem("bigTwo_ranks") || "[]",
+          );
+          const display = document.getElementById("rank-display");
+          display.innerHTML = ranks.length
+            ? ""
+            : '<p style="text-align:center">暫無紀錄</p>';
+          ranks.forEach((r, i) => {
+            display.innerHTML += `
+              <div class="rank-item">
+                <span>${i + 1}. ${r.name}</span>
+                <b>${r.wins} 勝</b>
+              </div>`;
+          });
+          modal.classList.add("show");
+        } else {
+          modal.classList.remove("show");
+        }
+      }
+
+      // --- 核心遊戲邏輯 ---
+      function initGame() {
+        names = [currentPlayerName];
+        let pool = [...NPC_NAMES];
+        for (let i = 0; i < 3; i++)
+          names.push(
+            pool.splice(Math.floor(Math.random() * pool.length), 1)[0],
+          );
+        for (let i = 0; i < 4; i++)
+          document.getElementById(`name-${i}`).innerText = names[i];
+
+        deck = [];
+        for (let v = 0; v < 13; v++)
+          for (let s = 0; s < 4; s++)
+            deck.push({ v, s, label: VALUES[v], suit: SUITS[s] });
+
+        for (let i = deck.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+
+        for (let i = 0; i < 4; i++) {
+          hands[i] = deck
+            .splice(0, 13)
+            .sort((a, b) => a.v * 4 + a.s - (b.v * 4 + b.s));
+        }
+
+        currentTurn = hands.findIndex((h) =>
+          h.some((c) => c.v === 0 && c.s === 0),
+        );
+        lastPlay = null;
+        passCount = 0;
+        isFirstTurn = true;
+        updateUI();
+        log(`${names[currentTurn]} 起手方塊三`);
+        if (currentTurn !== 0) setTimeout(npcTurn, 1000);
+      }
+
+      function getPattern(cards) {
+        if (cards.length === 0) return null;
+        cards.sort((a, b) => a.v * 4 + a.s - (b.v * 4 + b.s));
+        const len = cards.length;
+        const maxW = cards[len - 1].v * 4 + cards[len - 1].s;
+
+        if (len === 1) return { type: 1, weight: maxW };
+        if (len === 2 && cards[0].v === cards[1].v)
+          return { type: 2, weight: maxW };
+        if (len === 5) {
+          const counts = {};
+          cards.forEach((c) => (counts[c.v] = (counts[c.v] || 0) + 1));
+          const v = Object.values(counts);
+          const isFlush = cards.every((c) => c.s === cards[0].s);
+          const isStraight = cards.every(
+            (c, i) => i === 0 || c.v === cards[i - 1].v + 1,
+          );
+
+          let rank = 0;
+          if (isStraight && isFlush) rank = 5;
+          else if (v.includes(4)) rank = 4;
+          else if (v.includes(3) && v.includes(2)) rank = 3;
+          else if (isFlush) rank = 2;
+          else if (isStraight) rank = 1;
+          if (rank > 0) return { type: 5, rank, weight: maxW };
+        }
+        return null;
+      }
+
+      function playerAction() {
+        if (currentTurn !== 0) return;
+        const selectedNodes = document.querySelectorAll("#hand-0 .selected");
+        const selectedCards = Array.from(selectedNodes).map(
+          (n) => hands[0][n.dataset.idx],
+        );
+        const p = getPattern(selectedCards);
+
+        if (isValidMove(selectedCards, p)) {
+          executeMove(0, selectedCards, p);
+        } else {
+          log("不合法！檢查張數或方塊三");
+        }
+      }
+
+      function isValidMove(cards, p) {
+        if (!p) return false;
+        if (isFirstTurn && !cards.some((c) => c.v === 0 && c.s === 0))
+          return false;
+        if (!lastPlay) return true;
+        if (cards.length !== lastPlay.cards.length) return false;
+        if (p.type === 5) {
+          if (p.rank > lastPlay.pattern.rank) return true;
+          if (
+            p.rank === lastPlay.pattern.rank &&
+            p.weight > lastPlay.pattern.weight
+          )
+            return true;
+          return false;
+        }
+        return p.weight > lastPlay.pattern.weight;
+      }
+
+      function npcTurn() {
+        let hand = hands[currentTurn];
+        let move = null;
+        let targetLen = lastPlay ? lastPlay.cards.length : 0;
+
+        let checkSizes = targetLen ? [targetLen] : [1, 2, 5];
+        for (let size of checkSizes) {
+          let combos = findCombos(hand, size);
+          for (let c of combos) {
+            let p = getPattern(c);
+            if (isValidMove(c, p)) {
+              move = { c, p };
+              break;
+            }
+          }
+          if (move) break;
+        }
+
+        if (move) executeMove(currentTurn, move.c, move.p);
+        else {
+          log(`${names[currentTurn]} Pass`);
+          proceedTurn(true);
+        }
+      }
+
+      function findCombos(hand, size) {
+        let res = [];
+        if (size === 1) return hand.map((c) => [c]);
+        if (size === 2) {
+          for (let i = 0; i < hand.length; i++)
+            for (let j = i + 1; j < hand.length; j++)
+              if (hand[i].v === hand[j].v) res.push([hand[i], hand[j]]);
+        }
+        if (size === 5) {
+          for (let k = 0; k < 30; k++) {
+            let s = [...hand].sort(() => Math.random() - 0.5).slice(0, 5);
+            if (getPattern(s)) res.push(s);
+          }
+        }
+        return res;
+      }
+
+      function executeMove(idx, cards, p) {
+        lastPlay = { cards, pattern: p };
+        passCount = 0;
+        isFirstTurn = false;
+        cards.forEach((c) => {
+          let i = hands[idx].findIndex((hc) => hc.v === c.v && hc.s === c.s);
+          hands[idx].splice(i, 1);
+        });
+
+        if (hands[idx].length === 0) {
+          updateUI();
+          if (idx === 0) {
+            updateScore(); // 玩家贏了，更新排行榜
+            setTimeout(() => {
+              alert("太強了！你贏了！紀錄已更新到排行榜。");
+              initGame();
+            }, 200);
+          } else {
+            setTimeout(() => {
+              alert(names[idx] + " 贏了！再接再厲。");
+              initGame();
+            }, 200);
+          }
+          return;
+        }
+        proceedTurn(false);
+      }
+
+      function proceedTurn(isPass) {
+        if (isPass) passCount++;
+        currentTurn = (currentTurn + 1) % 4;
+        if (passCount >= 3) {
+          lastPlay = null;
+          passCount = 0;
+        }
+        updateUI();
+        if (currentTurn !== 0) setTimeout(npcTurn, 800);
+      }
+
+      function playerPass() {
+        if (lastPlay && currentTurn === 0) proceedTurn(true);
+      }
+
+      function updateUI() {
+        for (let i = 0; i < 4; i++) {
+          const container = document.getElementById(`hand-${i}`);
+          container.innerHTML = "";
+          hands[i].forEach((card, idx) => {
+            const div = document.createElement("div");
+            div.className = `card ${i === 0 ? "" : "npc-card"} ${card.s === 0 || card.s === 2 ? "red" : ""}`;
+            div.innerHTML = `<span>${card.label}</span><small>${card.suit}</small>`;
+            if (i === 0) {
+              div.dataset.idx = idx;
+              div.onclick = () => {
+                div.classList.toggle("selected");
+                if (window.navigator.vibrate) window.navigator.vibrate(10);
+              };
+            }
+            container.appendChild(div);
+          });
+          document.getElementById(`name-${i}`).className =
+            `name-tag ${currentTurn === i ? "active" : ""}`;
+        }
+        const lastArea = document.getElementById("last-play-area");
+        lastArea.innerHTML = "";
+        if (lastPlay) {
+          lastPlay.cards.forEach((c) => {
+            lastArea.innerHTML += `<div class="card ${c.s === 0 || c.s === 2 ? "red" : ""}"><span>${c.label}</span><small>${c.suit}</small></div>`;
           });
         }
-        mark(num) {
-          const idx = this.nums.indexOf(num);
-          if (idx !== -1) {
-            this.marked[idx] = true;
-            const cell = document.getElementById(`board-${this.id}`).children[idx];
-            if(cell) cell.classList.add("marked");
-          }
-          return this.calcLines();
-        }
-        calcLines() {
-          let lines = 0, m = this.marked;
-          for (let i = 0; i < 5; i++) {
-            if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
-            if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
-          }
-          if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
-          if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
-          document.getElementById(`status-${this.id}`).innerText = `連線數: ${lines}`;
-          return lines;
-        }
+        document.getElementById("btn-play").disabled = currentTurn !== 0;
+        document.getElementById("btn-pass").disabled =
+          currentTurn !== 0 || !lastPlay;
       }
 
-      function askPlayerName(force = false) {
-        let savedName = sessionStorage.getItem("bingo_player_name");
-        if (!savedName || force) {
-          let input = prompt("請輸入您的勇者名稱：", savedName || "無名英雄");
-          if (input) {
-            savedName = input;
-            sessionStorage.setItem("bingo_player_name", savedName);
-          } else if (!savedName) {
-            savedName = "神秘玩家";
-          }
-        }
-        playerName = savedName;
-        if(participants[0]) {
-            participants[0].displayName = `玩家:${playerName}(使用者)`;
-            document.getElementById("title-0").innerText = participants[0].displayName;
-        }
+      function log(m) {
+        document.getElementById("game-msg").innerText = m;
       }
-
-      function updateLeaderboardUI() {
-        const scores = JSON.parse(localStorage.getItem("bingo_scores") || "[]");
-        const tbody = document.getElementById("leaderboard-body");
-        tbody.innerHTML = scores.length ? "" : '<tr><td colspan="3">尚無資料</td></tr>';
-        scores.forEach((item, index) => {
-          const row = `<tr>
-            <td class="rank-${index+1}">${index+1}</td>
-            <td>${item.name}</td>
-            <td>${item.balls} 球</td>
-          </tr>`;
-          tbody.innerHTML += row;
-        });
-      }
-
-      function saveScore(name, balls) {
-        let scores = JSON.parse(localStorage.getItem("bingo_scores") || "[]");
-        scores.push({ name, balls, date: new Date().getTime() });
-        // 排序：球數越少越前面
-        scores.sort((a, b) => a.balls - b.balls);
-        // 只取前10名
-        scores = scores.slice(0, 10);
-        localStorage.setItem("bingo_scores", JSON.stringify(scores));
-        updateLeaderboardUI();
-      }
-
-      function resetGame() {
-        if (!playerName) askPlayerName();
-        gameOver = false;
-        calledNumbers.clear();
-        turn = 0;
-        const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
-
-        participants = [
-          new BingoGame(0, `玩家:${playerName}(使用者)`, true),
-          new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`),
-          new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`),
-        ];
-
-        setTurn(0);
-        document.getElementById("message-box").innerText = "🎮 比賽開始，請選號！";
-        document.getElementById("message-box").style.background = "#2c3e50";
-        updateLeaderboardUI();
-      }
-
-      async function handleTurn(num) {
-        if (gameOver || calledNumbers.has(num) || turn !== 0) return;
-        await play(num);
-        if (gameOver) return;
-
-        for (let i = 1; i <= 2; i++) {
-          setTurn(i);
-          await sleep(600);
-          const available = participants[i].nums.filter((n) => !calledNumbers.has(n));
-          const npcChoice = available[Math.floor(Math.random() * available.length)];
-          await play(npcChoice);
-          if (gameOver) return;
-        }
-        setTurn(0);
-      }
-
-      async function play(num) {
-        calledNumbers.add(num);
-        const currentPlayer = participants[turn];
-        document.getElementById("message-box").innerText = `${currentPlayer.displayName.split("(")[0]} 喊了：${num}`;
-
-        let winners = [];
-        participants.forEach((p) => {
-          if (p.mark(num) >= WIN_LINES) {
-            winners.push(p);
-          }
-        });
-
-        if (winners.length > 0) {
-          gameOver = true;
-          const winnerNames = winners.map(w => w.displayName.split("(")[0]);
-          document.getElementById("message-box").innerText = `🏆 贏家：${winnerNames.join(", ")}`;
-          document.getElementById("message-box").style.background = "#27ae60";
-
-          // 如果玩家在贏家名單內，紀錄成績
-          const playerWin = winners.find(w => w.isPlayer);
-          if (playerWin) {
-            saveScore(playerName, calledNumbers.size);
-          }
-        }
-      }
-
-      function setTurn(t) {
-        turn = t;
-        participants.forEach((_, i) => {
-          document.getElementById(`wrapper-${i}`).classList.toggle("active", i === turn);
-        });
-      }
-
-      function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
-
-      // 啟動遊戲
-      resetGame();
     </script>
     <footer>
-      <div>© 2025 CaoShuHao</div>
-      <div>版權所有，請勿抄襲</div>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
     </footer>
   </body>
 </html>
