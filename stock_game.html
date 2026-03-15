@@ -1,379 +1,750 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>股市大亨：24H 全球巔峰挑戰 (3分鐘版)</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>華爾街之狼：財富自由</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { 
-            --up: #ff4d4d; 
-            --down: #2ecc71; 
-            --bg: #0b0e11; 
-            --card: #1e2329; 
-            --text: #eaecef; 
-            --accent: #f0b90b;
-            --border: #2b3139;
+      :root {
+        --up: #ff4d4d;
+        --down: #2ecc71;
+        --bg: #0b0e11;
+        --card: #1e2329;
+        --text: #eaecef;
+        --accent: #f0b90b;
+        --border: #2b3139;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 10px;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* 初始進入畫面 */
+      #login-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .login-box {
+        background: var(--card);
+        padding: 30px;
+        border-radius: 12px;
+        border: 1px solid var(--accent);
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        margin: 20px 0;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #12161c;
+        color: white;
+        font-size: 1rem;
+      }
+
+      /* 頂部狀態欄 */
+      .header {
+        text-align: center;
+        padding: 15px;
+        background: var(--card);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border-bottom: 4px solid var(--accent);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        position: relative;
+      }
+      #timer {
+        color: var(--accent);
+        font-size: 2rem;
+        font-weight: bold;
+        font-family: "Courier New", monospace;
+        letter-spacing: 2px;
+      }
+      .next-refresh {
+        font-size: 0.9rem;
+        color: #848e9c;
+        margin-top: 5px;
+      }
+      .player-info {
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        font-size: 0.8rem;
+        color: var(--accent);
+      }
+      .rank-trigger {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 2px 8px;
+        font-size: 0.7rem;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      /* 資產儀表板 */
+      .dashboard {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 15px;
+        background: var(--card);
+        padding: 18px;
+        border-radius: 12px;
+        gap: 15px;
+      }
+      .stat {
+        text-align: center;
+        flex: 1;
+      }
+      .stat-label {
+        font-size: 0.8rem;
+        color: #848e9c;
+        margin-bottom: 5px;
+      }
+      .stat-val {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: var(--accent);
+        white-space: nowrap;
+      }
+
+      /* 股市列表 */
+      .table-container {
+        background: var(--card);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+      .market-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .market-table th {
+        background: #2b3139;
+        padding: 15px;
+        font-size: 0.85rem;
+        color: #848e9c;
+      }
+      .market-table td {
+        padding: 15px 10px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .comp-name {
+        font-weight: bold;
+        text-align: left !important;
+        color: #3498db;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .price-up {
+        color: var(--up);
+        font-weight: bold;
+      }
+      .price-down {
+        color: var(--down);
+        font-weight: bold;
+      }
+
+      /* 按鈕 */
+      .btn-group {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+      }
+      button {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.1s;
+      }
+      .buy {
+        background: rgba(255, 77, 77, 0.15);
+        color: var(--up);
+        border: 1px solid var(--up);
+      }
+      .sell {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--down);
+        border: 1px solid var(--down);
+      }
+      .btn-start {
+        background: var(--accent);
+        color: black;
+        width: 100%;
+        margin-top: 10px;
+        font-size: 1.1rem;
+      }
+      button:disabled {
+        opacity: 0.2;
+        cursor: not-allowed;
+      }
+
+      /* 排行榜表格樣式 */
+      .rank-table {
+        width: 100%;
+        color: white;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      .rank-table th {
+        border-bottom: 1px solid #444;
+        padding: 10px;
+        color: var(--accent);
+      }
+      .rank-table td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #333;
+      }
+
+      /* 手機版響應式 */
+      @media (max-width: 650px) {
+        .market-table thead {
+          display: none;
         }
-
-        * { box-sizing: border-box; }
-
-        body { 
-            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 10px; 
-            -webkit-tap-highlight-color: transparent; 
+        .market-table tr {
+          display: block;
+          padding: 15px;
+          border-bottom: 8px solid var(--bg);
         }
-
-        /* 初始進入畫面 */
-        #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 2000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        .market-table td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border: none;
+          padding: 8px 0;
         }
-        .login-box {
-            background: var(--card); padding: 30px; border-radius: 12px; border: 1px solid var(--accent);
-            text-align: center; width: 90%; max-width: 400px;
+        .market-table td::before {
+          content: attr(data-label);
+          font-weight: normal;
+          color: #848e9c;
+          font-size: 0.85rem;
         }
-        input[type="text"] {
-            width: 100%; padding: 12px; margin: 20px 0; border-radius: 6px; border: 1px solid var(--border);
-            background: #12161c; color: white; font-size: 1rem;
+        .btn-group {
+          width: 100%;
         }
-
-        /* 頂部狀態欄 */
-        .header { 
-            text-align: center; padding: 15px; background: var(--card); 
-            border-radius: 12px; margin-bottom: 12px; border-bottom: 4px solid var(--accent);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative;
+        .btn-group button {
+          flex: 1;
         }
-        #timer { color: var(--accent); font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace; letter-spacing: 2px; }
-        .next-refresh { font-size: 0.9rem; color: #848e9c; margin-top: 5px; }
-        .player-info { position: absolute; top: 10px; left: 15px; font-size: 0.8rem; color: var(--accent); }
-        .rank-trigger { position: absolute; top: 10px; right: 15px; background: none; border: 1px solid var(--accent); color: var(--accent); padding: 2px 8px; font-size: 0.7rem; border-radius: 4px; cursor: pointer; }
+      }
 
-        /* 資產儀表板 */
-        .dashboard { 
-            display: flex; justify-content: space-around; margin-bottom: 15px; 
-            background: var(--card); padding: 18px; border-radius: 12px; gap: 15px;
-        }
-        .stat { text-align: center; flex: 1; }
-        .stat-label { font-size: 0.8rem; color: #848e9c; margin-bottom: 5px; }
-        .stat-val { font-size: 1.3rem; font-weight: bold; color: var(--accent); white-space: nowrap; }
-
-        /* 股市列表 */
-        .table-container { background: var(--card); border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
-        .market-table { width: 100%; border-collapse: collapse; }
-        .market-table th { background: #2b3139; padding: 15px; font-size: 0.85rem; color: #848e9c; }
-        .market-table td { padding: 15px 10px; text-align: center; border-bottom: 1px solid var(--border); }
-
-        .comp-name { font-weight: bold; text-align: left !important; color: #3498db; cursor: pointer; text-decoration: underline; }
-        .price-up { color: var(--up); font-weight: bold; }
-        .price-down { color: var(--down); font-weight: bold; }
-
-        /* 按鈕 */
-        .btn-group { display: flex; gap: 8px; justify-content: center; }
-        button { padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.1s; }
-        .buy { background: rgba(255, 77, 77, 0.15); color: var(--up); border: 1px solid var(--up); }
-        .sell { background: rgba(46, 204, 113, 0.15); color: var(--down); border: 1px solid var(--down); }
-        .btn-start { background: var(--accent); color: black; width: 100%; margin-top: 10px; font-size: 1.1rem; }
-        button:disabled { opacity: 0.2; cursor: not-allowed; }
-
-        /* 排行榜表格樣式 */
-        .rank-table { width: 100%; color: white; border-collapse: collapse; margin-top: 10px; }
-        .rank-table th { border-bottom: 1px solid #444; padding: 10px; color: var(--accent); }
-        .rank-table td { padding: 10px; text-align: center; border-bottom: 1px solid #333; }
-
-        /* 手機版響應式 */
-        @media (max-width: 650px) {
-            .market-table thead { display: none; }
-            .market-table tr { display: block; padding: 15px; border-bottom: 8px solid var(--bg); }
-            .market-table td { display: flex; justify-content: space-between; align-items: center; border: none; padding: 8px 0; }
-            .market-table td::before { content: attr(data-label); font-weight: normal; color: #848e9c; font-size: 0.85rem; }
-            .btn-group { width: 100%; }
-            .btn-group button { flex: 1; }
-        }
-
-        /* 彈窗 */
-        .modal { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 10px;
-        }
-        .modal-content { 
-            background: var(--card); width: 100%; max-width: 600px; padding: 20px; 
-            border-radius: 15px; position: relative; border: 1px solid #474d57;
-        }
-        .close-btn { position: absolute; top: 5px; right: 15px; font-size: 2.5rem; cursor: pointer; color: #848e9c; }
+      /* 彈窗 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+      }
+      .modal-content {
+        background: var(--card);
+        width: 100%;
+        max-width: 600px;
+        padding: 20px;
+        border-radius: 15px;
+        position: relative;
+        border: 1px solid #474d57;
+      }
+      .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: #848e9c;
+      }
+      footer div {
+        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+        color: #888888; /* 中灰色，不會太刺眼 */
+        text-align: center; /* 居中對齊 */
+        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+        margin-top: 20px;
+      }
     </style>
-</head>
-<body>
-
-<div id="login-overlay">
-    <div class="login-box">
-        <h2 style="color:var(--accent)">股市大亨：全球挑戰</h2>
+  </head>
+  <body>
+    <div id="login-overlay">
+      <div class="login-box">
+        <h2 style="color: var(--accent)">華爾街之狼：財富自由</h2>
         <p>請輸入您的交易員代號：</p>
-        <input type="text" id="player-name-input" placeholder="例如：巴菲特" maxlength="10">
+        <input
+          type="text"
+          id="player-name-input"
+          placeholder="例如：巴菲特"
+          maxlength="10"
+        />
         <button class="btn-start" onclick="startGame()">開始挑戰</button>
+      </div>
     </div>
-</div>
 
-<div class="header">
-    <div class="player-info">交易員：<span id="display-player-name">---</span></div>
-    <button class="rank-trigger" onclick="showLeaderboard()">🏆 排行榜</button>
-    <div id="timer">24:00:00</div>
-    <div class="next-refresh">距離行情更新：<span id="next-update">03:00</span></div>
-</div>
+    <div class="header">
+      <div class="player-info">
+        交易員：<span id="display-player-name">---</span>
+      </div>
+      <button class="rank-trigger" onclick="showLeaderboard()">
+        🏆 排行榜
+      </button>
+      <div id="timer">24:00:00</div>
+      <div class="next-refresh">
+        距離行情更新：<span id="next-update">03:00</span>
+      </div>
+    </div>
 
-<div class="dashboard">
-    <div class="stat"><div class="stat-label">總資產 (USD)</div><div id="total-assets" class="stat-val">$100,000</div></div>
-    <div class="stat"><div class="stat-label">可用現金</div><div id="cash" class="stat-val">$100,000</div></div>
-</div>
+    <div class="dashboard">
+      <div class="stat">
+        <div class="stat-label">總資產 (USD)</div>
+        <div id="total-assets" class="stat-val">$100,000</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">可用現金</div>
+        <div id="cash" class="stat-val">$100,000</div>
+      </div>
+    </div>
 
-<div class="table-container">
-    <table class="market-table">
+    <div class="table-container">
+      <table class="market-table">
         <thead>
-            <tr>
-                <th style="text-align:left; padding-left:20px;">公司名稱 (點擊看趨勢)</th>
-                <th>當前股價</th>
-                <th>持有數量</th>
-                <th>交易操作</th>
-            </tr>
+          <tr>
+            <th style="text-align: left; padding-left: 20px">
+              公司名稱 (點擊看趨勢)
+            </th>
+            <th>當前股價</th>
+            <th>持有數量</th>
+            <th>交易操作</th>
+          </tr>
         </thead>
         <tbody id="stock-list"></tbody>
-    </table>
-</div>
+      </table>
+    </div>
 
-<div id="modal" class="modal">
-    <div class="modal-content">
+    <div id="modal" class="modal">
+      <div class="modal-content">
         <span class="close-btn" onclick="closeModal('modal')">&times;</span>
-        <h3 id="modal-title" style="color:var(--accent); margin-top:0;"></h3>
+        <h3 id="modal-title" style="color: var(--accent); margin-top: 0"></h3>
         <canvas id="historyChart"></canvas>
+      </div>
     </div>
-</div>
 
-<div id="rank-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('rank-modal')">&times;</span>
-        <h3 style="color:var(--accent); text-align: center;">🏆 全球巔峰排行榜 (Top 10)</h3>
+    <div id="rank-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('rank-modal')"
+          >&times;</span
+        >
+        <h3 style="color: var(--accent); text-align: center">
+          🏆 全球巔峰排行榜 (Top 10)
+        </h3>
         <table class="rank-table">
-            <thead>
-                <tr>
-                    <th>排名</th>
-                    <th>玩家</th>
-                    <th>最終資產</th>
-                </tr>
-            </thead>
-            <tbody id="rank-list"></tbody>
+          <thead>
+            <tr>
+              <th>排名</th>
+              <th>玩家</th>
+              <th>最終資產</th>
+            </tr>
+          </thead>
+          <tbody id="rank-list"></tbody>
         </table>
+      </div>
     </div>
-</div>
 
-<script>
-    let cash = 100000;
-    let timeLeft = 86400; 
-    let myChart = null;
-    let playerName = "";
-    const REFRESH_INTERVAL = 180; // 修改為 180 秒 (3 分鐘)
+    <script>
+      let cash = 100000;
+      let timeLeft = 86400;
+      let myChart = null;
+      let playerName = "";
+      const REFRESH_INTERVAL = 180; // 修改為 180 秒 (3 分鐘)
 
-    let stocks = [
-        { id: 0, name: "微軟科技 (MSFT)", price: 350, hold: 0, history: [350], vol: 0.03 },
-        { id: 1, name: "果粉實業 (AAPL)", price: 180, hold: 0, history: [180], vol: 0.03 },
-        { id: 2, name: "台灣積體 (TSMC)", price: 600, hold: 0, history: [600], vol: 0.04 },
-        { id: 3, name: "輝達算力 (NVDA)", price: 450, hold: 0, history: [450], vol: 0.06 },
-        { id: 4, name: "古哥搜索 (GOOG)", price: 140, hold: 0, history: [140], vol: 0.03 },
-        { id: 5, name: "臉書社群 (META)", price: 300, hold: 0, history: [300], vol: 0.05 },
-        { id: 6, name: "皮卡電動車 (TSLA)", price: 240, hold: 0, history: [240], vol: 0.07 },
-        { id: 7, name: "殼牌能源 (SHEL)", price: 65, hold: 0, history: [65], vol: 0.02 },
-        { id: 8, name: "波音航太 (BA)", price: 210, hold: 0, history: [210], vol: 0.04 },
-        { id: 9, name: "長榮海運 (EMC)", price: 155, hold: 0, history: [155], vol: 0.05 },
-        { id: 10, name: "可樂飲品 (KO)", price: 60, hold: 0, history: [60], vol: 0.015 },
-        { id: 11, name: "星星咖啡 (SBUX)", price: 95, hold: 0, history: [95], vol: 0.02 },
-        { id: 12, name: "麥當漢堡 (MCD)", price: 280, hold: 0, history: [280], vol: 0.015 },
-        { id: 13, name: "迪士尼影業 (DIS)", price: 90, hold: 0, history: [90], vol: 0.03 },
-        { id: 14, name: "摩根銀行 (JPM)", price: 160, hold: 0, history: [160], vol: 0.02 },
-        { id: 15, name: "好市倉庫 (COST)", price: 550, hold: 0, history: [550], vol: 0.02 },
-        { id: 16, name: "再生元生技 (REGN)", price: 820, hold: 0, history: [820], vol: 0.08 },
-        { id: 17, name: "比特礦業 (BTCM)", price: 12, hold: 0, history: [12], vol: 0.15 },
-        { id: 18, name: "太空探索 (SPCE)", price: 4, hold: 0, history: [4], vol: 0.20 },
-        { id: 19, name: "量子計算 (QBT)", price: 25, hold: 0, history: [25], vol: 0.12 }
-    ];
+      let stocks = [
+        {
+          id: 0,
+          name: "微軟科技 (MSFT)",
+          price: 350,
+          hold: 0,
+          history: [350],
+          vol: 0.03,
+        },
+        {
+          id: 1,
+          name: "果粉實業 (AAPL)",
+          price: 180,
+          hold: 0,
+          history: [180],
+          vol: 0.03,
+        },
+        {
+          id: 2,
+          name: "台灣積體 (TSMC)",
+          price: 600,
+          hold: 0,
+          history: [600],
+          vol: 0.04,
+        },
+        {
+          id: 3,
+          name: "輝達算力 (NVDA)",
+          price: 450,
+          hold: 0,
+          history: [450],
+          vol: 0.06,
+        },
+        {
+          id: 4,
+          name: "古哥搜索 (GOOG)",
+          price: 140,
+          hold: 0,
+          history: [140],
+          vol: 0.03,
+        },
+        {
+          id: 5,
+          name: "臉書社群 (META)",
+          price: 300,
+          hold: 0,
+          history: [300],
+          vol: 0.05,
+        },
+        {
+          id: 6,
+          name: "皮卡電動車 (TSLA)",
+          price: 240,
+          hold: 0,
+          history: [240],
+          vol: 0.07,
+        },
+        {
+          id: 7,
+          name: "殼牌能源 (SHEL)",
+          price: 65,
+          hold: 0,
+          history: [65],
+          vol: 0.02,
+        },
+        {
+          id: 8,
+          name: "波音航太 (BA)",
+          price: 210,
+          hold: 0,
+          history: [210],
+          vol: 0.04,
+        },
+        {
+          id: 9,
+          name: "長榮海運 (EMC)",
+          price: 155,
+          hold: 0,
+          history: [155],
+          vol: 0.05,
+        },
+        {
+          id: 10,
+          name: "可樂飲品 (KO)",
+          price: 60,
+          hold: 0,
+          history: [60],
+          vol: 0.015,
+        },
+        {
+          id: 11,
+          name: "星星咖啡 (SBUX)",
+          price: 95,
+          hold: 0,
+          history: [95],
+          vol: 0.02,
+        },
+        {
+          id: 12,
+          name: "麥當漢堡 (MCD)",
+          price: 280,
+          hold: 0,
+          history: [280],
+          vol: 0.015,
+        },
+        {
+          id: 13,
+          name: "迪士尼影業 (DIS)",
+          price: 90,
+          hold: 0,
+          history: [90],
+          vol: 0.03,
+        },
+        {
+          id: 14,
+          name: "摩根銀行 (JPM)",
+          price: 160,
+          hold: 0,
+          history: [160],
+          vol: 0.02,
+        },
+        {
+          id: 15,
+          name: "好市倉庫 (COST)",
+          price: 550,
+          hold: 0,
+          history: [550],
+          vol: 0.02,
+        },
+        {
+          id: 16,
+          name: "再生元生技 (REGN)",
+          price: 820,
+          hold: 0,
+          history: [820],
+          vol: 0.08,
+        },
+        {
+          id: 17,
+          name: "比特礦業 (BTCM)",
+          price: 12,
+          hold: 0,
+          history: [12],
+          vol: 0.15,
+        },
+        {
+          id: 18,
+          name: "太空探索 (SPCE)",
+          price: 4,
+          hold: 0,
+          history: [4],
+          vol: 0.2,
+        },
+        {
+          id: 19,
+          name: "量子計算 (QBT)",
+          price: 25,
+          hold: 0,
+          history: [25],
+          vol: 0.12,
+        },
+      ];
 
-    window.onload = () => {
-        const savedName = localStorage.getItem('stockGame_playerName');
+      window.onload = () => {
+        const savedName = localStorage.getItem("stockGame_playerName");
         if (savedName) {
-            document.getElementById('player-name-input').value = savedName;
+          document.getElementById("player-name-input").value = savedName;
         }
-    };
+      };
 
-    function startGame() {
-        const input = document.getElementById('player-name-input').value.trim();
+      function startGame() {
+        const input = document.getElementById("player-name-input").value.trim();
         if (!input) {
-            alert("請輸入名稱！");
-            return;
+          alert("請輸入名稱！");
+          return;
         }
         playerName = input;
-        localStorage.setItem('stockGame_playerName', playerName);
-        document.getElementById('display-player-name').innerText = playerName;
-        document.getElementById('login-overlay').style.display = 'none';
+        localStorage.setItem("stockGame_playerName", playerName);
+        document.getElementById("display-player-name").innerText = playerName;
+        document.getElementById("login-overlay").style.display = "none";
         renderStocks();
-    }
+      }
 
-    function renderStocks() {
-        const tbody = document.getElementById('stock-list');
-        tbody.innerHTML = '';
-        stocks.forEach(s => {
-            const lastPrice = s.history.length > 1 ? s.history[s.history.length - 2] : s.price;
-            const priceClass = s.price >= lastPrice ? 'price-up' : 'price-down';
-            const sign = s.price >= lastPrice ? '▲' : '▼';
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
+      function renderStocks() {
+        const tbody = document.getElementById("stock-list");
+        tbody.innerHTML = "";
+        stocks.forEach((s) => {
+          const lastPrice =
+            s.history.length > 1 ? s.history[s.history.length - 2] : s.price;
+          const priceClass = s.price >= lastPrice ? "price-up" : "price-down";
+          const sign = s.price >= lastPrice ? "▲" : "▼";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
                 <td data-label="公司" class="comp-name" onclick="showHistory(${s.id})">${s.name}</td>
                 <td data-label="當前股價" class="${priceClass}">${sign} ${s.price.toFixed(2)}</td>
                 <td data-label="持有數量">${s.hold}</td>
                 <td data-label="快速交易">
                     <div class="btn-group">
                         <button class="buy" onclick="trade(${s.id}, 10)">買入</button>
-                        <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold <= 0 ? 'disabled' : ''}>賣出</button>
+                        <button class="sell" onclick="trade(${s.id}, -10)" ${s.hold <= 0 ? "disabled" : ""}>賣出</button>
                     </div>
                 </td>
             `;
-            tbody.appendChild(tr);
+          tbody.appendChild(tr);
         });
         updateTotalAssets();
-    }
+      }
 
-    function trade(id, amt) {
+      function trade(id, amt) {
         const s = stocks[id];
         if (amt > 0 && cash >= s.price * amt) {
-            cash -= s.price * amt;
-            s.hold += amt;
+          cash -= s.price * amt;
+          s.hold += amt;
         } else if (amt < 0 && s.hold >= Math.abs(amt)) {
-            cash += s.price * Math.abs(amt);
-            s.hold += amt;
+          cash += s.price * Math.abs(amt);
+          s.hold += amt;
         }
         renderStocks();
-    }
+      }
 
-    function getTotalAssets() {
-        const stockVal = stocks.reduce((sum, s) => sum + (s.hold * s.price), 0);
+      function getTotalAssets() {
+        const stockVal = stocks.reduce((sum, s) => sum + s.hold * s.price, 0);
         return cash + stockVal;
-    }
+      }
 
-    function updateTotalAssets() {
+      function updateTotalAssets() {
         const total = getTotalAssets();
-        document.getElementById('total-assets').innerText = `$${Math.floor(total).toLocaleString()}`;
-        document.getElementById('cash').innerText = `$${Math.floor(cash).toLocaleString()}`;
-    }
+        document.getElementById("total-assets").innerText =
+          `$${Math.floor(total).toLocaleString()}`;
+        document.getElementById("cash").innerText =
+          `$${Math.floor(cash).toLocaleString()}`;
+      }
 
-    function updateMarket() {
-        stocks.forEach(s => {
-            const change = (Math.random() * 2 - 1) * s.vol;
-            s.price = parseFloat((s.price * (1 + change)).toFixed(2));
-            if (s.price < 0.5) s.price = 0.5;
-            s.history.push(s.price);
-            if(s.history.length > 50) s.history.shift();
+      function updateMarket() {
+        stocks.forEach((s) => {
+          const change = (Math.random() * 2 - 1) * s.vol;
+          s.price = parseFloat((s.price * (1 + change)).toFixed(2));
+          if (s.price < 0.5) s.price = 0.5;
+          s.history.push(s.price);
+          if (s.history.length > 50) s.history.shift();
         });
         renderStocks();
-    }
+      }
 
-    function saveToLeaderboard() {
+      function saveToLeaderboard() {
         const finalScore = Math.floor(getTotalAssets());
-        let leaderboard = JSON.parse(localStorage.getItem('stockGame_leaderboard')) || [];
-        leaderboard.push({ name: playerName, score: finalScore, date: new Date().toLocaleDateString() });
+        let leaderboard =
+          JSON.parse(localStorage.getItem("stockGame_leaderboard")) || [];
+        leaderboard.push({
+          name: playerName,
+          score: finalScore,
+          date: new Date().toLocaleDateString(),
+        });
         leaderboard.sort((a, b) => b.score - a.score);
         leaderboard = leaderboard.slice(0, 10);
-        localStorage.setItem('stockGame_leaderboard', JSON.stringify(leaderboard));
-    }
+        localStorage.setItem(
+          "stockGame_leaderboard",
+          JSON.stringify(leaderboard),
+        );
+      }
 
-    function showLeaderboard() {
-        const leaderboard = JSON.parse(localStorage.getItem('stockGame_leaderboard')) || [];
-        const rankList = document.getElementById('rank-list');
-        rankList.innerHTML = '';
+      function showLeaderboard() {
+        const leaderboard =
+          JSON.parse(localStorage.getItem("stockGame_leaderboard")) || [];
+        const rankList = document.getElementById("rank-list");
+        rankList.innerHTML = "";
         if (leaderboard.length === 0) {
-            rankList.innerHTML = '<tr><td colspan="3">尚無紀錄</td></tr>';
+          rankList.innerHTML = '<tr><td colspan="3">尚無紀錄</td></tr>';
         } else {
-            leaderboard.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${index + 1}</td><td>${item.name}</td><td style="color:var(--accent)">$${item.score.toLocaleString()}</td>`;
-                rankList.appendChild(tr);
-            });
+          leaderboard.forEach((item, index) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${index + 1}</td><td>${item.name}</td><td style="color:var(--accent)">$${item.score.toLocaleString()}</td>`;
+            rankList.appendChild(tr);
+          });
         }
-        document.getElementById('rank-modal').style.display = 'flex';
-    }
+        document.getElementById("rank-modal").style.display = "flex";
+      }
 
-    function showHistory(id) {
+      function showHistory(id) {
         const s = stocks[id];
-        const modal = document.getElementById('modal');
-        modal.style.display = 'flex';
-        document.getElementById('modal-title').innerText = s.name;
-        const ctx = document.getElementById('historyChart').getContext('2d');
+        const modal = document.getElementById("modal");
+        modal.style.display = "flex";
+        document.getElementById("modal-title").innerText = s.name;
+        const ctx = document.getElementById("historyChart").getContext("2d");
         if (myChart) myChart.destroy();
         myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: s.history.map((_, i) => `${i * 3}m`), // 標籤同步修改為 3m
-                datasets: [{
-                    label: '股價 (USD)',
-                    data: s.history,
-                    borderColor: '#f0b90b',
-                    backgroundColor: 'rgba(240, 185, 11, 0.1)',
-                    fill: true,
-                    tension: 0.3,
-                    pointRadius: 2
-                }]
+          type: "line",
+          data: {
+            labels: s.history.map((_, i) => `${i * 3}m`), // 標籤同步修改為 3m
+            datasets: [
+              {
+                label: "股價 (USD)",
+                data: s.history,
+                borderColor: "#f0b90b",
+                backgroundColor: "rgba(240, 185, 11, 0.1)",
+                fill: true,
+                tension: 0.3,
+                pointRadius: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { grid: { color: "#2b3139" }, ticks: { color: "#848e9c" } },
+              x: { grid: { color: "#2b3139" }, ticks: { color: "#848e9c" } },
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { 
-                    y: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } },
-                    x: { grid: { color: '#2b3139' }, ticks: { color: '#848e9c' } }
-                },
-                plugins: { legend: { display: false } }
-            }
+            plugins: { legend: { display: false } },
+          },
         });
-    }
+      }
 
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+      function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+      }
 
-    window.onclick = function(event) {
-        if (event.target.className.includes('modal')) {
-            event.target.style.display = 'none';
+      window.onclick = function (event) {
+        if (event.target.className.includes("modal")) {
+          event.target.style.display = "none";
         }
-    }
+      };
 
-    // 計時器邏輯
-    setInterval(() => {
+      // 計時器邏輯
+      setInterval(() => {
         if (playerName === "") return;
 
         timeLeft--;
         const h = Math.floor(timeLeft / 3600);
         const m = Math.floor((timeLeft % 3600) / 60);
         const s = timeLeft % 60;
-        document.getElementById('timer').innerText = 
-            `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        document.getElementById("timer").innerText =
+          `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
 
         // 修改更新倒數顯示：從 3:00 開始
         const nextUp = timeLeft % REFRESH_INTERVAL;
         const nm = Math.floor(nextUp / 60);
         const ns = nextUp % 60;
-        document.getElementById('next-update').innerText = `${nm}:${ns.toString().padStart(2,'0')}`;
+        document.getElementById("next-update").innerText =
+          `${nm}:${ns.toString().padStart(2, "0")}`;
 
         if (timeLeft % REFRESH_INTERVAL === 0) updateMarket();
-        
-        if (timeLeft <= 0) {
-            saveToLeaderboard();
-            alert(`時間到！您的最終資產為: $${Math.floor(getTotalAssets()).toLocaleString()}`);
-            location.reload();
-        }
-    }, 1000);
 
-</script>
-<footer>
-      <div>© 2025 CaoShuHao</div>
-      <div>版權所有，請勿抄襲</div>
+        if (timeLeft <= 0) {
+          saveToLeaderboard();
+          alert(
+            `時間到！您的最終資產為: $${Math.floor(getTotalAssets()).toLocaleString()}`,
+          );
+          location.reload();
+        }
+      }, 1000);
+    </script>
+    <footer>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
     </footer>
-</body>
+  </body>
 </html>

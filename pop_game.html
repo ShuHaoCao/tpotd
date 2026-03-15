@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>壓力大作戰 - 排行榜強化版</title>
+    <title>泡泡平安：情緒回收桶</title>
     <style>
       :root {
         --bg: #f5f6fa;
@@ -57,19 +57,35 @@
         user-select: none;
       }
       @keyframes popIn {
-        from { transform: scale(0); }
-        to { transform: scale(1); }
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
       }
 
-      .flash-red { animation: flashRed 0.3s; }
-      @keyframes flashRed {
-        from { background: rgba(255, 0, 0, 0.3); }
-        to { background: transparent; }
+      .flash-red {
+        animation: flashRed 0.3s;
       }
-      .flash-purple { animation: flashPurple 0.5s; }
+      @keyframes flashRed {
+        from {
+          background: rgba(255, 0, 0, 0.3);
+        }
+        to {
+          background: transparent;
+        }
+      }
+      .flash-purple {
+        animation: flashPurple 0.5s;
+      }
       @keyframes flashPurple {
-        from { background: rgba(162, 0, 255, 0.4); }
-        to { background: transparent; }
+        from {
+          background: rgba(162, 0, 255, 0.4);
+        }
+        to {
+          background: transparent;
+        }
       }
 
       #overlay {
@@ -93,7 +109,7 @@
         background: white;
         padding: 30px;
         border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         width: 85%;
         max-width: 400px;
       }
@@ -108,7 +124,9 @@
         outline: none;
         text-align: center;
       }
-      input[type="text"]:focus { border-color: #2f3640; }
+      input[type="text"]:focus {
+        border-color: #2f3640;
+      }
 
       button {
         padding: 15px 40px;
@@ -120,7 +138,9 @@
         cursor: pointer;
         transition: 0.2s;
       }
-      button:active { transform: scale(0.95); }
+      button:active {
+        transform: scale(0.95);
+      }
 
       /* 排行榜樣式 */
       #leaderboard {
@@ -129,9 +149,26 @@
         font-size: 14px;
         border-collapse: collapse;
       }
-      #leaderboard th { border-bottom: 2px solid #eee; padding-bottom: 5px; }
-      #leaderboard td { padding: 5px 0; color: #555; }
-      .top1 { color: #f1c40f !important; font-weight: bold; }
+      #leaderboard th {
+        border-bottom: 2px solid #eee;
+        padding-bottom: 5px;
+      }
+      #leaderboard td {
+        padding: 5px 0;
+        color: #555;
+      }
+      .top1 {
+        color: #f1c40f !important;
+        font-weight: bold;
+      }
+
+      footer div {
+        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+        color: #888888; /* 中灰色，不會太刺眼 */
+        text-align: center; /* 居中對齊 */
+        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
@@ -143,15 +180,20 @@
 
       <div id="overlay">
         <div class="menu-card" id="menu-content">
-          <h1 style="margin-top:0">辦公室戰術消除</h1>
+          <h1 style="margin-top: 0">泡泡平安：情緒回收桶</h1>
           <p>🔴扣分 | 🟣清場 | 🟡加爆</p>
-          
-          <input type="text" id="playerName" placeholder="輸入你的大名..." maxlength="10">
-          <br>
+
+          <input
+            type="text"
+            id="playerName"
+            placeholder="輸入你的大名..."
+            maxlength="10"
+          />
+          <br />
           <button onclick="startGame()">開始戰鬥</button>
 
-          <div style="margin-top: 25px;">
-            <strong style="color:#2f3640">🏆 本日英雄榜 (前10名)</strong>
+          <div style="margin-top: 25px">
+            <strong style="color: #2f3640">🏆 本日英雄榜 (前10名)</strong>
             <table id="leaderboard">
               <thead>
                 <tr>
@@ -160,8 +202,7 @@
                   <th width="30%">得分</th>
                 </tr>
               </thead>
-              <tbody id="leaderboard-body">
-                </tbody>
+              <tbody id="leaderboard-body"></tbody>
             </table>
           </div>
         </div>
@@ -201,7 +242,7 @@
           alert("請先輸入名稱唷！");
           return;
         }
-        
+
         // 記憶名稱
         currentPlayerName = name;
         localStorage.setItem("popGame_name", name);
@@ -269,7 +310,9 @@
         if (type.id === "bad") duration = 1200;
         if (type.id === "bomb") duration = 4000;
 
-        setTimeout(() => { if (b.parentNode) b.remove(); }, duration);
+        setTimeout(() => {
+          if (b.parentNode) b.remove();
+        }, duration);
       }
 
       function triggerBomb() {
@@ -289,17 +332,27 @@
 
       function flashScreen(type) {
         const f = document.createElement("div");
-        f.style.position = "fixed"; f.style.top = 0; f.style.left = 0;
-        f.style.width = "100vw"; f.style.height = "100vh";
-        f.style.pointerEvents = "none"; f.style.zIndex = 5;
+        f.style.position = "fixed";
+        f.style.top = 0;
+        f.style.left = 0;
+        f.style.width = "100vw";
+        f.style.height = "100vh";
+        f.style.pointerEvents = "none";
+        f.style.zIndex = 5;
         f.className = `flash-${type}`;
         document.body.appendChild(f);
         setTimeout(() => f.remove(), 500);
       }
 
       function saveHighScore(name, finalScore) {
-        let list = JSON.parse(localStorage.getItem("popGame_leaderboard") || "[]");
-        list.push({ name: name, score: finalScore, date: new Date().getTime() });
+        let list = JSON.parse(
+          localStorage.getItem("popGame_leaderboard") || "[]",
+        );
+        list.push({
+          name: name,
+          score: finalScore,
+          date: new Date().getTime(),
+        });
         // 排序：分數高優先，分數相同則日期新優先
         list.sort((a, b) => b.score - a.score || b.date - a.date);
         // 只留前10名
@@ -308,15 +361,21 @@
       }
 
       function updateLeaderboardUI() {
-        const list = JSON.parse(localStorage.getItem("popGame_leaderboard") || "[]");
-        leaderBody.innerHTML = list.length 
-          ? list.map((item, index) => `
-              <tr class="${index === 0 ? 'top1' : ''}">
+        const list = JSON.parse(
+          localStorage.getItem("popGame_leaderboard") || "[]",
+        );
+        leaderBody.innerHTML = list.length
+          ? list
+              .map(
+                (item, index) => `
+              <tr class="${index === 0 ? "top1" : ""}">
                 <td>${index + 1}</td>
                 <td>${item.name}</td>
                 <td>${item.score}</td>
               </tr>
-            `).join('')
+            `,
+              )
+              .join("")
           : '<tr><td colspan="3" style="padding:20px; color:#999">尚無紀錄，等你來挑戰！</td></tr>';
       }
 
@@ -329,17 +388,39 @@
         // 儲存成績
         saveHighScore(currentPlayerName, score);
 
-        let rank = ""; let rankColor = "";
-        if (score <= 200) { rank = "辦公室透明人 😶"; rankColor = "#94a3b8"; }
-        else if (score <= 400) { rank = "茶水間常客 ☕"; rankColor = "#8ed1fc"; }
-        else if (score <= 600) { rank = "急件處理員 📄"; rankColor = "#0693e3"; }
-        else if (score <= 800) { rank = "資深打字機 ⌨️"; rankColor = "#00d084"; }
-        else if (score <= 1000) { rank = "專案救火隊 👨‍🚒"; rankColor = "#7bdcb5"; }
-        else if (score <= 1200) { rank = "部門頂樑柱 🏛️"; rankColor = "#abb8c3"; }
-        else if (score <= 1400) { rank = "效率守護神 🛡️"; rankColor = "#f78da7"; }
-        else if (score <= 1600) { rank = "副總經理預備軍 📈"; rankColor = "#ff6900"; }
-        else if (score <= 1800) { rank = "傳奇總經理 👑"; rankColor = "#fcb900"; }
-        else { rank = "跨國集團執行長 💎"; rankColor = "#eb144c"; }
+        let rank = "";
+        let rankColor = "";
+        if (score <= 200) {
+          rank = "辦公室透明人 😶";
+          rankColor = "#94a3b8";
+        } else if (score <= 400) {
+          rank = "茶水間常客 ☕";
+          rankColor = "#8ed1fc";
+        } else if (score <= 600) {
+          rank = "急件處理員 📄";
+          rankColor = "#0693e3";
+        } else if (score <= 800) {
+          rank = "資深打字機 ⌨️";
+          rankColor = "#00d084";
+        } else if (score <= 1000) {
+          rank = "專案救火隊 👨‍🚒";
+          rankColor = "#7bdcb5";
+        } else if (score <= 1200) {
+          rank = "部門頂樑柱 🏛️";
+          rankColor = "#abb8c3";
+        } else if (score <= 1400) {
+          rank = "效率守護神 🛡️";
+          rankColor = "#f78da7";
+        } else if (score <= 1600) {
+          rank = "副總經理預備軍 📈";
+          rankColor = "#ff6900";
+        } else if (score <= 1800) {
+          rank = "傳奇總經理 👑";
+          rankColor = "#fcb900";
+        } else {
+          rank = "跨國集團執行長 💎";
+          rankColor = "#eb144c";
+        }
 
         // 顯示結算畫面 (重寫內容以包含新排行榜)
         overlay.style.display = "flex";
@@ -361,18 +442,27 @@
             </div>
           </div>
         `;
-        
+
         // 更新結算頁面的排行榜
         const endBody = document.getElementById("leaderboard-body-end");
-        const list = JSON.parse(localStorage.getItem("popGame_leaderboard") || "[]");
-        endBody.innerHTML = list.map((item, index) => `
-          <tr class="${index === 0 ? 'top1' : ''}">
+        const list = JSON.parse(
+          localStorage.getItem("popGame_leaderboard") || "[]",
+        );
+        endBody.innerHTML = list
+          .map(
+            (item, index) => `
+          <tr class="${index === 0 ? "top1" : ""}">
             <td>${index + 1}</td>
             <td>${item.name}</td>
             <td>${item.score}</td>
           </tr>
-        `).join('');
+        `,
+          )
+          .join("");
       }
     </script>
+    <footer>
+      <div class="copyright">© 2026 CaoShuHao 版權所有，請勿抄襲</div>
+    </footer>
   </body>
 </html>

@@ -2,48 +2,117 @@
 <html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>辦公室疊疊樂 - 隨機挑戰版</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>巔峰建築師：摩天挑戰</title>
     <style>
       body {
-        margin: 0; background: #1a1a2e; overflow: hidden;
-        font-family: -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
-        touch-action: none; -webkit-user-select: none; user-select: none;
+        margin: 0;
+        background: #1a1a2e;
+        overflow: hidden;
+        font-family:
+          -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
       }
-      canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
+      canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+      }
       #ui {
-        position: absolute; top: 30px; width: 100%; text-align: center;
-        color: #fff; z-index: 10; pointer-events: none;
+        position: absolute;
+        top: 30px;
+        width: 100%;
+        text-align: center;
+        color: #fff;
+        z-index: 10;
+        pointer-events: none;
       }
-      #score { font-size: 70px; font-weight: 900; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
-      #msg { font-size: 1rem; opacity: 0.8; }
+      #score {
+        font-size: 70px;
+        font-weight: 900;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+      #msg {
+        font-size: 1rem;
+        opacity: 0.8;
+      }
       #overlay {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         background: rgba(10, 10, 30, 0.9);
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        color: white; z-index: 100; padding: 20px; box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        z-index: 100;
+        padding: 20px;
+        box-sizing: border-box;
       }
-      
+
       #leaderboard {
         background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px; padding: 15px; margin: 15px 0;
-        width: 100%; max-width: 300px; font-size: 0.9rem;
+        border-radius: 15px;
+        padding: 15px;
+        margin: 15px 0;
+        width: 100%;
+        max-width: 300px;
+        font-size: 0.9rem;
       }
-      .rank-item { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-      .rank-name { color: #00d2ff; }
-      
+      .rank-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .rank-name {
+        color: #00d2ff;
+      }
+
       input#playerName {
-        padding: 10px; border-radius: 25px; border: none; margin-bottom: 15px;
-        width: 200px; text-align: center; font-size: 1rem; outline: none;
+        padding: 10px;
+        border-radius: 25px;
+        border: none;
+        margin-bottom: 15px;
+        width: 200px;
+        text-align: center;
+        font-size: 1rem;
+        outline: none;
       }
 
       button {
-        padding: 15px 60px; font-size: 1.2rem; cursor: pointer;
-        background: #00d2ff; border: none; border-radius: 50px;
-        color: #fff; font-weight: bold; position: relative; z-index: 101;
+        padding: 15px 60px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        background: #00d2ff;
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        font-weight: bold;
+        position: relative;
+        z-index: 101;
         transition: transform 0.1s;
       }
-      button:active { transform: scale(0.95); }
+      button:active {
+        transform: scale(0.95);
+      }
+      footer div {
+        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+        color: #888888; /* 中灰色，不會太刺眼 */
+        text-align: center; /* 居中對齊 */
+        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
@@ -53,14 +122,21 @@
     </div>
 
     <div id="overlay">
-      <h1 id="title">辦公室疊疊樂</h1>
-      
+      <h1 id="title">巔峰建築師：摩天挑戰</h1>
+
       <div id="leaderboard">
-        <div style="text-align: center; font-weight: bold; margin-bottom: 10px;">🏆 頂尖建築師榜</div>
+        <div style="text-align: center; font-weight: bold; margin-bottom: 10px">
+          🏆頂尖建築師排行榜
+        </div>
         <div id="rank-list"></div>
       </div>
 
-      <input type="text" id="playerName" placeholder="輸入你的大名" maxlength="10">
+      <input
+        type="text"
+        id="playerName"
+        placeholder="輸入你的大名"
+        maxlength="10"
+      />
       <button id="mainBtn">進入辦公室</button>
     </div>
 
@@ -75,7 +151,8 @@
       const nameInput = document.getElementById("playerName");
       const rankListEl = document.getElementById("rank-list");
 
-      let blocks = [], debris = [];
+      let blocks = [],
+        debris = [];
       let gameState = "START";
       let currentSpeed = 2.5; // 當前移動速度
       let cameraY = 0;
@@ -84,7 +161,8 @@
 
       // 排行榜資料
       let playerName = localStorage.getItem("stack_game_name") || "";
-      let highScores = JSON.parse(localStorage.getItem("stack_game_ranks")) || [];
+      let highScores =
+        JSON.parse(localStorage.getItem("stack_game_ranks")) || [];
 
       nameInput.value = playerName;
       updateRankDisplay();
@@ -100,13 +178,21 @@
         playerName = nameInput.value.trim() || "匿名同事";
         localStorage.setItem("stack_game_name", playerName);
 
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (!audioCtx)
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === "suspended") audioCtx.resume();
 
-        blocks = [{ x: (canvas.width - 200) / 2, y: canvas.height - 150, width: 200, color: 200 }];
+        blocks = [
+          {
+            x: (canvas.width - 200) / 2,
+            y: canvas.height - 150,
+            width: 200,
+            color: 200,
+          },
+        ];
         debris = [];
         scoreEl.innerText = "0";
-        currentSpeed = 2.5; 
+        currentSpeed = 2.5;
         cameraY = 0;
         newBlock();
         gameState = "PLAYING";
@@ -120,11 +206,11 @@
 
         // --- 隨機速度邏輯 ---
         // 1. 基礎速度隨層數提升
-        let baseSpeed = 2.5 + (level * 0.05);
-        
+        let baseSpeed = 2.5 + level * 0.05;
+
         // 2. 隨機性判定
         const rand = Math.random();
-        if (rand > 0.8) { 
+        if (rand > 0.8) {
           // 20% 機率：突然加速 (1.5 ~ 2.0 倍基礎速度)
           currentSpeed = baseSpeed * (1.5 + Math.random() * 0.5);
         } else if (rand < 0.15) {
@@ -140,8 +226,11 @@
         if (currentSpeed > maxLimit) currentSpeed = maxLimit;
 
         currentBlock = {
-          x: 0, y: last.y - 45, width: last.width,
-          direction: 1, color: 200 + ((level * 15) % 360)
+          x: 0,
+          y: last.y - 45,
+          width: last.width,
+          direction: 1,
+          color: 200 + ((level * 15) % 360),
         };
       }
 
@@ -156,13 +245,15 @@
         ctx.translate(0, cameraY);
 
         debris.forEach((d, i) => {
-          d.y += d.vy; d.vy += 0.6; d.opacity -= 0.03;
+          d.y += d.vy;
+          d.vy += 0.6;
+          d.opacity -= 0.03;
           ctx.fillStyle = `hsla(${d.color}, 70%, 50%, ${d.opacity})`;
           ctx.fillRect(d.x, d.y, d.width, 43);
           if (d.opacity <= 0) debris.splice(i, 1);
         });
 
-        blocks.forEach(b => {
+        blocks.forEach((b) => {
           ctx.fillStyle = `hsl(${b.color}, 70%, 60%)`;
           ctx.fillRect(b.x, b.y, b.width, 43);
         });
@@ -170,7 +261,10 @@
         if (gameState === "PLAYING") {
           // 使用隨機計算出的 currentSpeed
           currentBlock.x += currentSpeed * currentBlock.direction;
-          if (currentBlock.x + currentBlock.width > canvas.width || currentBlock.x <= 0)
+          if (
+            currentBlock.x + currentBlock.width > canvas.width ||
+            currentBlock.x <= 0
+          )
             currentBlock.direction *= -1;
           ctx.fillStyle = `hsl(${currentBlock.color}, 70%, 60%)`;
           ctx.fillRect(currentBlock.x, currentBlock.y, currentBlock.width, 43);
@@ -181,17 +275,21 @@
       }
 
       // 輸入監聽
-      const filterTags = ['BUTTON', 'INPUT'];
+      const filterTags = ["BUTTON", "INPUT"];
       window.addEventListener("mousedown", (e) => {
-          if (filterTags.includes(e.target.tagName)) return;
-          handleInput();
+        if (filterTags.includes(e.target.tagName)) return;
+        handleInput();
       });
 
-      window.addEventListener("touchstart", (e) => {
+      window.addEventListener(
+        "touchstart",
+        (e) => {
           if (filterTags.includes(e.target.tagName)) return;
-          e.preventDefault(); 
+          e.preventDefault();
           handleInput();
-      }, { passive: false });
+        },
+        { passive: false },
+      );
 
       function handleInput() {
         if (gameState === "PLAYING") {
@@ -205,8 +303,18 @@
           } else {
             if (Math.abs(diff) > 8) {
               let dWidth = Math.abs(diff);
-              let dX = diff > 0 ? currentBlock.x + (currentBlock.width - diff) : currentBlock.x;
-              debris.push({ x: dX, y: currentBlock.y, width: dWidth, color: currentBlock.color, vy: 2, opacity: 1 });
+              let dX =
+                diff > 0
+                  ? currentBlock.x + (currentBlock.width - diff)
+                  : currentBlock.x;
+              debris.push({
+                x: dX,
+                y: currentBlock.y,
+                width: dWidth,
+                color: currentBlock.color,
+                vy: 2,
+                opacity: 1,
+              });
               currentBlock.width -= dWidth;
               if (diff < 0) currentBlock.x = last.x;
             } else {
@@ -220,7 +328,11 @@
       }
 
       function saveScore(score) {
-        highScores.push({ name: playerName, score: score, date: new Date().getTime() });
+        highScores.push({
+          name: playerName,
+          score: score,
+          date: new Date().getTime(),
+        });
         highScores.sort((a, b) => b.score - a.score || b.date - a.date);
         highScores = highScores.slice(0, 10);
         localStorage.setItem("stack_game_ranks", JSON.stringify(highScores));
@@ -232,17 +344,22 @@
           rankListEl.innerHTML = `<div style="text-align:center; opacity:0.5;">尚無紀錄</div>`;
           return;
         }
-        rankListEl.innerHTML = highScores.map((item, index) => `
+        rankListEl.innerHTML = highScores
+          .map(
+            (item, index) => `
           <div class="rank-item">
             <span>${index + 1}. <span class="rank-name">${item.name}</span></span>
             <span><b>${item.score}</b> 層</span>
           </div>
-        `).join("");
+        `,
+          )
+          .join("");
       }
 
       function showGameOver() {
         const score = blocks.length - 1;
-        document.getElementById("title").innerText = "遊戲結束: " + score + " 層";
+        document.getElementById("title").innerText =
+          "遊戲結束: " + score + " 層";
         mainBtn.innerText = "再蓋一棟";
         overlay.style.display = "flex";
       }
@@ -253,8 +370,7 @@
       });
     </script>
     <footer>
-      <div>© 2025 CaoShuHao</div>
-      <div>版權所有，請勿抄襲</div>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
     </footer>
   </body>
 </html>

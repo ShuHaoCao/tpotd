@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>群星大亂鬥賓果</title>
+    <title>幸運連鎖：賓果之星</title>
     <style>
       :root {
         --primary-color: #3498db;
@@ -150,10 +150,18 @@
         color: #7f8c8d;
         font-size: 0.85rem;
       }
+
+      footer div {
+        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+        color: #888888; /* 中灰色，不會太刺眼 */
+        text-align: center; /* 居中對齊 */
+        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+        margin-top: 20px;
+      }
     </style>
   </head>
   <body>
-    <div id="message-box">👋 歡迎來到賓果大賽</div>
+    <div id="message-box">幸運連鎖：賓果之星</div>
 
     <div class="controls">
       <button class="btn-reset" onclick="resetGame()">♻️ 重新配對對手</button>
@@ -424,8 +432,7 @@
       resetGame();
     </script>
     <footer>
-      <div>© 2025 CaoShuHao</div>
-      <div>版權所有，請勿抄襲</div>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
     </footer>
   </body>
 </html>
