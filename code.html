@@ -2,20 +2,24 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>台南郵局運輸股-條碼產生器</title>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-      /* 基礎樣式 - 維持原設計 */
+      /* 基礎樣式優化 */
       body {
         font-family: "Microsoft JhengHei", sans-serif;
         background-color: #f4f7f6;
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 20px;
+        padding: 10px; /* 手機端邊距縮小 */
         margin: 0;
+        min-height: 100vh;
       }
       .container {
         background: white;
@@ -27,7 +31,14 @@
         box-sizing: border-box;
       }
 
-      /* 頁籤設計 */
+      h2 {
+        text-align: center;
+        font-size: 1.4rem;
+        margin-top: 0;
+        color: #333;
+      }
+
+      /* 響應式頁籤 */
       .tabs {
         display: flex;
         margin-bottom: 20px;
@@ -35,67 +46,87 @@
         width: 100%;
       }
       .tab {
-        padding: 12px 24px;
+        flex: 1; /* 頁籤平分寬度 */
+        text-align: center;
+        padding: 12px 10px;
         cursor: pointer;
         background: #eee;
         border-radius: 8px 8px 0 0;
-        margin-right: 5px;
+        margin-right: 2px;
         font-weight: bold;
         transition: 0.3s;
+        font-size: 0.95rem;
       }
       .tab.active {
         background: #007bff;
         color: white;
       }
 
-      .row {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 12px;
-        flex-wrap: wrap;
-      }
-      .row > div {
-        flex: 1;
-        min-width: 120px;
+      .input-group {
+        margin-bottom: 15px;
+        text-align: left;
       }
       label {
         display: block;
         margin-bottom: 5px;
         font-weight: bold;
         color: #333;
+        font-size: 0.9rem;
       }
       textarea,
       input,
       select {
-        padding: 10px;
+        padding: 12px; /* 增加點擊感 */
         border: 1px solid #ddd;
-        border-radius: 4px;
+        border-radius: 6px;
         width: 100%;
         box-sizing: border-box;
-        font-size: 16px;
+        font-size: 16px; /* 防止行動端縮放 */
       }
 
-      /* 按鈕樣式 */
+      /* 響應式欄位排列 */
+      .row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap; /* 手機端自動換行 */
+      }
+      .row > div {
+        flex: 1;
+        min-width: calc(50% - 10px); /* 在小螢幕時兩兩排列 */
+      }
+      @media (max-width: 480px) {
+        .row > div {
+          min-width: 100%; /* 極窄螢幕時單排顯示 */
+        }
+      }
+
+      /* 按鈕群組響應式 */
       .button-group {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-top: 10px;
+        margin-top: 15px;
       }
       button {
-        padding: 12px 15px;
+        padding: 14px 10px;
         cursor: pointer;
         border: none;
-        border-radius: 4px;
-        font-size: 14px;
+        border-radius: 6px;
+        font-size: 1rem;
         flex: 1;
-        min-width: 100px;
+        min-width: 120px;
+        font-weight: bold;
+        transition: opacity 0.2s;
+      }
+      button:active {
+        opacity: 0.8;
       }
       .btn-primary {
         background-color: #007bff;
         color: white;
         width: 100%;
-        font-size: 16px;
+        margin-bottom: 5px;
       }
       .btn-success {
         background-color: #28a745;
@@ -106,21 +137,25 @@
         color: white;
       }
 
-      /* 預覽區域 */
+      /* 預覽區域與滾動保護 */
       .preview-area {
-        margin-top: 10px;
-        padding: 20px;
+        margin-top: 20px;
+        padding: 15px;
         background: #eee;
         border-radius: 8px;
         width: 100%;
         box-sizing: border-box;
-        min-height: 200px;
+        min-height: 150px;
+        overflow-x: auto; /* 條碼太寬時可左右滑動而不撐破畫面 */
+        display: flex;
+        justify-content: center;
       }
+
       #printSection {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        justify-content: flex-start;
+        justify-content: center;
       }
 
       /* 一般模式標籤樣式 */
@@ -140,7 +175,7 @@
         flex-grow: 1;
       }
 
-      /* --- 籃車條碼修正版樣式 --- */
+      /* 籃車條碼樣式 */
       .cart-wrapper {
         background: white;
         width: 9cm;
@@ -201,6 +236,7 @@
         .preview-area {
           padding: 0 !important;
           background: white !important;
+          overflow: visible;
         }
         #printSection {
           display: block !important;
@@ -215,12 +251,15 @@
         }
       }
 
-      footer div {
+      footer {
+        margin-top: 30px;
+        padding-bottom: 20px;
+      }
+      .copyright {
         font-size: 12px;
-        color: #888888;
+        color: #888;
         text-align: center;
-        opacity: 0.7;
-        margin-top: 20px;
+        opacity: 0.8;
       }
     </style>
   </head>
@@ -245,7 +284,7 @@
         <label>請輸入條碼內容 (多個請換行)</label>
         <textarea
           id="userInput"
-          rows="5"
+          rows="4"
           placeholder="例如：10600M00004512345678"
         ></textarea>
       </div>
@@ -261,15 +300,15 @@
             ><input type="number" id="heightCm" value="4" step="0.1" />
           </div>
           <div>
-            <label>裁切邊框</label
-            ><select id="borderSelect">
+            <label>裁切邊框</label>
+            <select id="borderSelect">
               <option value="none">否</option>
               <option value="dashed">是 (虛線)</option>
             </select>
           </div>
         </div>
         <div class="input-group">
-          <label>條碼上方備註內容(可自行增加)</label>
+          <label>條碼上方備註內容</label>
           <textarea
             id="memoInput"
             rows="3"
@@ -279,7 +318,14 @@
       </div>
 
       <div id="config-cart" style="display: none">
-        <p style="color: #d9534f; font-weight: bold">
+        <p
+          style="
+            color: #d9534f;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin: 10px 0;
+          "
+        >
           ※ 籃車模式：固定 9x2.5cm，支援長號碼自動縮放字體。
         </p>
       </div>
@@ -290,7 +336,7 @@
 
       <div class="button-group">
         <button class="btn-success" onclick="downloadAllAsImage()">
-          下載圖片 (PNG)
+          下載圖片
         </button>
         <button class="btn-print" onclick="window.print()">開始列印</button>
       </div>
@@ -332,7 +378,6 @@
           }
         });
 
-        // 核心：如果是籃車模式，生成後立即執行字體自動縮放計算
         if (currentMode === "cart") {
           document
             .querySelectorAll(".cart-left")
@@ -387,12 +432,10 @@
         const wrapper = document.createElement("div");
         wrapper.className = "cart-wrapper";
         wrapper.innerHTML = `
-            <div class="cart-left"><span>${code}</span></div>
-            <div class="cart-right"><svg id="cart-svg-${index}"></svg></div>
-        `;
+                <div class="cart-left"><span>${code}</span></div>
+                <div class="cart-right"><svg id="cart-svg-${index}"></svg></div>
+            `;
         printSection.appendChild(wrapper);
-
-        // 針對長代碼，條碼寬度自動變細以防溢出
         const barWidth = code.length > 15 ? 1 : 2;
         JsBarcode(`#cart-svg-${index}`, code, {
           format: "CODE128",
@@ -404,14 +447,11 @@
         });
       }
 
-      // --- 自動字體縮放函數 ---
       function adjustFontSize(container) {
         const span = container.querySelector("span");
         const maxWidth = container.offsetWidth - 10;
-        let fontSize = 28; // 初始大字體
-
+        let fontSize = 28;
         span.style.fontSize = fontSize + "px";
-        // 循環檢測文字寬度，直到文字能完全塞進左側空間
         while (span.offsetWidth > maxWidth && fontSize > 8) {
           fontSize -= 1;
           span.style.fontSize = fontSize + "px";
