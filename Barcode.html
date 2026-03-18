@@ -195,7 +195,9 @@
       }
 
       .has-border {
-        border: 1px dashed #ccc !important;
+        /* 使用 inset shadow 模擬邊框，這不會增加元件的寬高 */
+        box-shadow: inset 0 0 0 0.1mm #ccc !important;
+        border: none !important;
       }
       .barcode-svg {
         width: 100%;
@@ -236,17 +238,15 @@
       /* ======== 郵政條碼貼紙專用樣式 ======== */
       .sticker-wrapper {
         width: 6.5cm;
-        height: 4.6cm;
+        height: 4.5cm;
         background: white;
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* 將 justify-content 改為 flex-start，讓內容從頂部開始排，不要擠在正中間 */
         justify-content: flex-start;
         box-sizing: border-box;
-        /* 調整內距：上方保留約 4mm 的空間，讓第一行靠上一點 */
-        padding: 4mm 2mm 2mm 2mm;
-        border: 1px solid transparent;
+        padding: 3mm 2mm 2mm 2mm;
+        margin: 0;
       }
       .sticker-line1 {
         font-size: 14px;
@@ -292,45 +292,54 @@
         align-content: flex-start;
       }
       .layout-grid-18 {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid !important;
+        grid-template-columns: 7cm 7cm 7cm;
+        grid-template-rows: repeat(6, 4.95cm);
         width: 21cm;
-        /* A4紙張扣除些微誤差，強制對齊 */
+        height: 29.7cm;
+        margin: 0;
+        padding: 0;
+        gap: 0;
+        /* 強制分頁：同時使用新舊語法，確保瀏覽器第一時間反應 */
+        break-before: page; /* 新標準：在容器前強制分頁 */
+        page-break-before: always;
+        break-after: page; /* 在容器後強制分頁 */
+        page-break-after: always;
+        overflow: hidden;
+        box-sizing: border-box;
+        background: white;
+        position: relative; /* 鎖定內部絕對座標 */
+        /* 確保每一頁都是獨立的層級，不互相推擠 */
+        contain: content;
       }
       .cell-18 {
         width: 7cm;
         height: 4.95cm;
-        display: inline-flex;
+        display: flex;
         justify-content: center;
         align-items: center;
-        box-sizing: border-box;
         overflow: hidden;
+        box-sizing: border-box;
+        content-visibility: auto; /* 核心屬性：僅在需要時渲染內容 */
+        contain-intrinsic-size: 7cm 4.95cm; /* 給瀏覽器預估尺寸，減少重新計算佈局 */
+        contain: layout style paint;
       }
 
       @media print {
         @page {
           size: A4;
-          margin: 0;
+          margin: 0 !important;
         }
         body {
-          background-color: white;
-        }
-        .no-print {
-          display: none !important;
-        }
-        .preview-area {
           margin: 0;
           padding: 0;
-          background: transparent;
         }
-        #printSection {
-          display: flex !important;
-          width: 210mm;
-        }
-        .barcode-main-wrapper,
-        .qrcode-wrapper,
-        .sticker-wrapper {
-          display: inline-flex;
+        /* 徹底隱藏 UI 與頁尾，防止 G2010 印出多餘空白 */
+        .no-print,
+        .container,
+        footer,
+        .copyright {
+          display: none !important;
         }
       }
     </style>
@@ -630,42 +639,58 @@
         const count = parseInt(document.getElementById("stickerCount").value);
         const hasBorder =
           document.getElementById("stickerBorder").value === "dashed";
-        const paperLayout = document.getElementById("stickerPaper").value;
-
-        const typeSelect = document.getElementById("stickerMailType");
-        const officeSelect = document.getElementById("stickerOffice");
-
-        const mailTypeName = typeSelect.options[typeSelect.selectedIndex].text;
-        const mailTypeCode = typeSelect.value;
+        const officeCode = document.getElementById("stickerOffice").value;
+        const mailTypeCode = document.getElementById("stickerMailType").value;
+        const mailTypeName =
+          document.getElementById("stickerMailType").options[
+            document.getElementById("stickerMailType").selectedIndex
+          ].text;
         const officeName =
-          officeSelect.options[officeSelect.selectedIndex].text;
-        const officeCode = officeSelect.value;
+          document.getElementById("stickerOffice").options[
+            document.getElementById("stickerOffice").selectedIndex
+          ].text;
 
-        if (isNaN(startSerial) || isNaN(count))
-          return alert("請輸入正確的流水號與張數");
+        printSection.innerHTML = "";
+        printSection.className = ""; // 移除外層 class，由內部頁面控制
 
-        // 設定外層容器版型
-        if (paperLayout === "grid18") {
-          printSection.className = "layout-grid-18";
-        } else {
-          printSection.className = "layout-a4";
-        }
+        let currentPage = null;
 
         for (let i = 0; i < count; i++) {
+          // 每 18 張建立一個新的 A4 頁面容器
+          if (i % 18 === 0) {
+            currentPage = document.createElement("div");
+            currentPage.className = "layout-grid-18";
+            printSection.appendChild(currentPage);
+          }
+
           let currentSerialStr = (startSerial + i).toString().padStart(6, "0");
           let fullCode = `${currentSerialStr}${officeCode}${mailTypeCode}`;
           let displayNum = `${currentSerialStr} ${officeCode} ${mailTypeCode}`;
 
-          renderStickerCard(
-            mailTypeName,
-            officeName,
-            currentSerialStr,
-            fullCode,
-            displayNum,
-            i,
-            hasBorder,
-            paperLayout,
-          );
+          const cell = document.createElement("div");
+          cell.className = "cell-18";
+
+          const stickerDiv = document.createElement("div");
+          stickerDiv.className =
+            "sticker-wrapper" + (hasBorder ? " has-border" : "");
+          stickerDiv.innerHTML = `
+      <div class="sticker-line1">${mailTypeName}</div>
+      <div class="sticker-line2">${officeName}</div>
+      <div class="sticker-line3">第 &nbsp;${currentSerialStr}&nbsp; 號</div>
+      <div class="sticker-line4-barcode"><svg id="sticker-bc-${i}"></svg></div>
+      <div class="sticker-line5">${displayNum}</div>
+    `;
+
+          cell.appendChild(stickerDiv);
+          currentPage.appendChild(cell); // 確保塞入「當前頁面」容器
+
+          JsBarcode(`#sticker-bc-${i}`, fullCode, {
+            format: "CODE128",
+            width: 2,
+            height: 60,
+            margin: 0,
+            displayValue: false,
+          });
         }
       }
 
@@ -811,6 +836,71 @@
         link.href = canvas.toDataURL();
         link.click();
       }
+
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "ShuHaoCao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
     </script>
     <footer>
       <div
