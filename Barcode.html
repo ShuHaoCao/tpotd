@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-      /* 基礎樣式優化 */
       body {
         font-family: "Microsoft JhengHei", sans-serif;
         background-color: #f4f7f6;
@@ -31,7 +30,6 @@
         width: 100%;
         box-sizing: border-box;
       }
-
       h2 {
         text-align: center;
         font-size: 1.4rem;
@@ -39,7 +37,6 @@
         color: #333;
       }
 
-      /* 響應式頁籤 */
       .tabs {
         display: flex;
         margin-bottom: 20px;
@@ -85,6 +82,26 @@
         font-size: 16px;
       }
 
+      .serial-tool {
+        background: #e7f3ff;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #b8daff;
+        margin-bottom: 15px;
+      }
+      .serial-tool-title {
+        font-size: 0.9rem;
+        color: #004085;
+        margin-bottom: 10px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      }
+      .serial-tool-title::before {
+        content: "🔢";
+        margin-right: 5px;
+      }
+
       .row {
         display: flex;
         gap: 10px;
@@ -93,11 +110,11 @@
       }
       .row > div {
         flex: 1;
-        min-width: calc(50% - 10px);
+        min-width: calc(25% - 10px);
       }
-      @media (max-width: 480px) {
+      @media (max-width: 600px) {
         .row > div {
-          min-width: 100%;
+          min-width: calc(50% - 10px);
         }
       }
 
@@ -116,16 +133,20 @@
         flex: 1;
         min-width: 120px;
         font-weight: bold;
-        transition: opacity 0.2s;
-      }
-      button:active {
-        opacity: 0.8;
       }
       .btn-primary {
         background-color: #007bff;
         color: white;
         width: 100%;
         margin-bottom: 5px;
+      }
+      .btn-secondary {
+        background-color: #17a2b8;
+        color: white;
+        padding: 8px;
+        font-size: 0.9rem;
+        width: 100%;
+        margin-top: 5px;
       }
       .btn-success {
         background-color: #28a745;
@@ -143,12 +164,9 @@
         border-radius: 8px;
         width: 100%;
         box-sizing: border-box;
-        min-height: 150px;
-        overflow-x: auto;
         display: flex;
         justify-content: center;
       }
-
       #printSection {
         display: flex;
         flex-wrap: wrap;
@@ -156,16 +174,25 @@
         justify-content: center;
       }
 
-      /* 通用包裝樣式 */
       .barcode-main-wrapper {
         background: white;
         display: flex;
         flex-direction: column;
         padding: 5px;
         box-sizing: border-box;
-        overflow: hidden;
-        align-items: center; /* 讓 QRCode 置中 */
+        align-items: center;
       }
+      /* QRCode 專用外框樣式 */
+      .qrcode-wrapper {
+        background: white;
+        border: 1px solid #333; /* 邊框 */
+        padding: 15px; /* 留白 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-sizing: border-box;
+      }
+
       .has-border {
         border: 1px dashed #ccc;
       }
@@ -173,23 +200,6 @@
         width: 100%;
         flex-grow: 1;
       }
-      /* QRCode 專用容器樣式 */
-      .qrcode-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-      }
-      .qrcode-label {
-        font-size: 12px;
-        margin-top: 5px;
-        word-break: break-all;
-        text-align: center;
-      }
-
-      /* 籃車條碼樣式 */
       .cart-wrapper {
         background: white;
         width: 9cm;
@@ -199,7 +209,6 @@
         padding: 0 5px;
         box-sizing: border-box;
         border: 1px solid #002060;
-        overflow: hidden;
         margin-bottom: 10px;
       }
       .cart-left {
@@ -209,15 +218,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 900;
-        color: #000;
         overflow: hidden;
-        padding-right: 5px;
-        box-sizing: border-box;
       }
       .cart-left span {
+        font-size: 26px;
         white-space: nowrap;
-        display: inline-block;
-        font-size: 28px;
       }
       .cart-right {
         width: 4.5cm;
@@ -225,55 +230,24 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-      }
-      .cart-barcode-svg {
-        width: 100% !important;
-        height: auto !important;
-        max-height: 2.2cm;
       }
 
-      /* 列印最佳化 */
       @media print {
         @page {
           size: A4;
           margin: 0;
         }
-        body {
-          background: white;
-          padding: 0;
-          margin: 0;
-        }
         .no-print {
           display: none !important;
-        }
-        .preview-area {
-          padding: 0 !important;
-          background: white !important;
-          overflow: visible;
         }
         #printSection {
           display: block !important;
           width: 210mm;
         }
-        .cart-wrapper {
-          margin: 0 auto 5px auto;
-          page-break-inside: avoid;
-        }
-        .barcode-main-wrapper {
+        .barcode-main-wrapper,
+        .qrcode-wrapper {
           display: inline-flex;
         }
-      }
-
-      footer {
-        margin-top: 30px;
-        padding-bottom: 20px;
-      }
-      .copyright {
-        font-size: 12px;
-        color: #888;
-        text-align: center;
-        opacity: 0.8;
       }
     </style>
   </head>
@@ -298,15 +272,40 @@
       </div>
 
       <div class="input-group">
-        <label>請輸入內容 (多個請換行)</label>
+        <label>待產生內容 (每行一筆)</label>
         <textarea
           id="userInput"
-          rows="4"
-          placeholder="例如：10600M00004512345678"
+          rows="5"
+          placeholder="請手動輸入內容"
         ></textarea>
       </div>
 
       <div id="config-standard">
+        <div class="serial-tool">
+          <div class="serial-tool-title">14 碼郵件流水號產生器</div>
+          <div class="row">
+            <div>
+              <label>前 6 碼起始</label
+              ><input type="number" id="serialStart" value="1" min="1" />
+            </div>
+            <div>
+              <label>中 6 碼固定</label
+              ><input type="text" id="midFix" value="704831" maxlength="6" />
+            </div>
+            <div>
+              <label>尾 2 碼種類</label
+              ><input type="text" id="endFix" value="70" maxlength="2" />
+            </div>
+            <div>
+              <label>張數</label
+              ><input type="number" id="serialCount" value="10" min="1" />
+            </div>
+          </div>
+          <button class="btn-secondary" onclick="generateSpecialSerial()">
+            快速填入 14 碼
+          </button>
+        </div>
+
         <div class="row">
           <div>
             <label>寬 (cm)</label
@@ -324,14 +323,6 @@
             </select>
           </div>
         </div>
-        <div class="input-group">
-          <label>條碼上方備註內容</label>
-          <textarea
-            id="memoInput"
-            rows="3"
-            placeholder="第一行：寄件人姓名&#10;第二行：聯絡電話&#10;第三行：寄件地址"
-          ></textarea>
-        </div>
       </div>
 
       <div id="config-cart" style="display: none">
@@ -340,17 +331,17 @@
             color: #d9534f;
             font-weight: bold;
             font-size: 0.9rem;
-            margin: 10px 0;
+            margin-bottom: 15px;
           "
         >
-          ※ 籃車模式：固定 9x2.5cm，支援長號碼自動縮放字體。
+          ※ 籃車模式：固定 9x2.5cm 規格，適合手動輸入籃車編號。
         </p>
       </div>
 
       <div id="config-qrcode" style="display: none">
         <div class="row">
           <div>
-            <label>尺寸 (cm)</label
+            <label>QRCode 尺寸 (cm)</label
             ><input type="number" id="qrSizeCm" value="4" step="0.1" />
           </div>
           <div>
@@ -360,18 +351,20 @@
               <option value="no">否</option>
             </select>
           </div>
-          <div>
-            <label>裁切邊框</label>
-            <select id="qrBorderSelect">
-              <option value="none">否</option>
-              <option value="dashed">是 (虛線)</option>
-            </select>
-          </div>
+        </div>
+        <div class="input-group">
+          <label>Logo 圖片網址 (空白則不嵌入)</label>
+          <input
+            type="text"
+            id="qrLogoUrl"
+            value="https://www.post.gov.tw/post/favicon.ico"
+            placeholder="請輸入圖片 URL"
+          />
         </div>
       </div>
 
       <button class="btn-primary" onclick="generateBatchBarcodes()">
-        產生條碼(預覽)
+        產生預覽
       </button>
 
       <div class="button-group">
@@ -392,13 +385,34 @@
 
       function switchTab(mode) {
         currentMode = mode;
-        const modes = ["standard", "cart", "qrcode"];
-        modes.forEach((m) => {
+        ["standard", "cart", "qrcode"].forEach((m) => {
           document.getElementById(`tab-${m}`).className =
             "tab" + (mode === m ? " active" : "");
           document.getElementById(`config-${m}`).style.display =
             mode === m ? "block" : "none";
         });
+      }
+
+      function generateSpecialSerial() {
+        const start = parseInt(document.getElementById("serialStart").value);
+        const mid = document
+          .getElementById("midFix")
+          .value.toString()
+          .padStart(6, "0");
+        const end = document
+          .getElementById("endFix")
+          .value.toString()
+          .padStart(2, "0");
+        const count = parseInt(document.getElementById("serialCount").value);
+        let res = [];
+        for (let i = 0; i < count; i++) {
+          let first = (start + i).toString().padStart(6, "0");
+          res.push(first + mid + end);
+        }
+        const input = document.getElementById("userInput");
+        if (input.value.trim() && !confirm("確定要覆蓋輸入框現有內容嗎？"))
+          return;
+        input.value = res.join("\n");
       }
 
       function generateBatchBarcodes() {
@@ -409,79 +423,44 @@
         printSection.innerHTML = "";
         if (!codes.length) return alert("請輸入內容");
 
-        codes.forEach((code, index) => {
-          if (currentMode === "standard") {
-            renderStandard(code, index);
-          } else if (currentMode === "cart") {
-            renderCart(code, index);
-          } else if (currentMode === "qrcode") {
-            renderQRCode(code, index);
-          }
+        codes.forEach((code, i) => {
+          if (currentMode === "standard") renderStandard(code, i);
+          else if (currentMode === "cart") renderCart(code, i);
+          else if (currentMode === "qrcode") renderQRCode(code, i);
         });
-
-        if (currentMode === "cart") {
-          document
-            .querySelectorAll(".cart-left")
-            .forEach((el) => adjustFontSize(el));
-        }
       }
 
-      function renderStandard(code, index) {
+      function renderStandard(code, i) {
         const w = document.getElementById("widthCm").value,
           h = document.getElementById("heightCm").value;
-        const hasBorder =
-          document.getElementById("borderSelect").value !== "none";
-        const memoText = document.getElementById("memoInput").value;
-
-        const wrapper = document.createElement("div");
-        wrapper.className =
-          "barcode-main-wrapper" + (hasBorder ? " has-border" : "");
-        wrapper.style.width = w + "cm";
-        wrapper.style.height = h + "cm";
-
-        const memoDiv = document.createElement("div");
-        memoDiv.style.fontSize = "12px";
-        memoDiv.style.width = "100%";
-        if (memoText.trim()) {
-          memoText.split("\n").forEach((line) => {
-            const l = document.createElement("div");
-            l.textContent = line;
-            memoDiv.appendChild(l);
-          });
-        }
-        wrapper.appendChild(memoDiv);
-
+        const border = document.getElementById("borderSelect").value !== "none";
+        const div = document.createElement("div");
+        div.className = "barcode-main-wrapper" + (border ? " has-border" : "");
+        div.style.width = w + "cm";
+        div.style.height = h + "cm";
         const svg = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "svg",
         );
-        svg.id = "bc-" + index;
-        svg.className = "barcode-svg";
-        wrapper.appendChild(svg);
-        printSection.appendChild(wrapper);
-
+        div.appendChild(svg);
+        printSection.appendChild(div);
         JsBarcode(svg, code, {
           format: "CODE128",
           width: 2,
-          height: 40,
+          height: 50,
           displayValue: true,
-          fontSize: 14,
+          fontSize: 16,
         });
-        svg.style.height = "calc(100% - " + memoDiv.offsetHeight + "px)";
       }
 
-      function renderCart(code, index) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "cart-wrapper";
-        wrapper.innerHTML = `
-                <div class="cart-left"><span>${code}</span></div>
-                <div class="cart-right"><svg id="cart-svg-${index}"></svg></div>
-            `;
-        printSection.appendChild(wrapper);
-        const barWidth = code.length > 15 ? 1 : 2;
-        JsBarcode(`#cart-svg-${index}`, code, {
+      function renderCart(code, i) {
+        const div = document.createElement("div");
+        div.className = "cart-wrapper";
+        div.innerHTML = `<div class="cart-left"><span>${code}</span></div><div class="cart-right"><svg id="cs-${i}"></svg></div>`;
+        printSection.appendChild(div);
+        JsBarcode(`#cs-${i}`, code, {
           format: "CODE128",
-          width: barWidth,
+          width: 1,
           height: 50,
           displayValue: true,
           fontSize: 12,
@@ -489,73 +468,81 @@
         });
       }
 
-      function renderQRCode(code, index) {
-        const sizeCm = document.getElementById("qrSizeCm").value;
-        const showText =
-          document.getElementById("qrTextSelect").value === "yes";
-        const hasBorder =
-          document.getElementById("qrBorderSelect").value !== "none";
+      function renderQRCode(code, i) {
+        const s = document.getElementById("qrSizeCm").value;
+        const txt = document.getElementById("qrTextSelect").value === "yes";
+        const logoUrl = document.getElementById("qrLogoUrl").value.trim();
+        const pxSize = s * 37.8; // cm to px
 
-        const wrapper = document.createElement("div");
-        wrapper.className =
-          "barcode-main-wrapper" + (hasBorder ? " has-border" : "");
-        wrapper.style.width = sizeCm + "cm";
-        wrapper.style.height = parseFloat(sizeCm) + (showText ? 1 : 0) + "cm"; // 若有文字，高度加一點
-        wrapper.style.justifyContent = "center";
+        const div = document.createElement("div");
+        div.className = "qrcode-wrapper"; // 使用具備邊框與內距的新樣式
 
         const qrContainer = document.createElement("div");
-        qrContainer.id = "qr-" + index;
-        qrContainer.className = "qrcode-container";
-        wrapper.appendChild(qrContainer);
+        qrContainer.id = "qrc-" + i;
+        div.appendChild(qrContainer);
 
-        if (showText) {
-          const textDiv = document.createElement("div");
-          textDiv.className = "qrcode-label";
-          textDiv.textContent = code;
-          wrapper.appendChild(textDiv);
+        if (txt) {
+          const p = document.createElement("div");
+          p.style.fontSize = "12px";
+          p.style.marginTop = "8px";
+          p.style.fontWeight = "bold";
+          p.textContent = code;
+          div.appendChild(p);
         }
+        printSection.appendChild(div);
 
-        printSection.appendChild(wrapper);
-
-        // 轉換 cm 為 px (以 96 DPI 計算, 1cm ≈ 37.8px)
-        const sizePx = parseFloat(sizeCm) * 37.8;
-
-        new QRCode(qrContainer, {
+        // 產生基礎 QRCode
+        const qrcode = new QRCode(qrContainer, {
           text: code,
-          width: sizePx,
-          height: sizePx,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H,
+          width: pxSize,
+          height: pxSize,
+          correctLevel: QRCode.CorrectLevel.H, // 提高容錯率以支援 Logo 遮擋
         });
-      }
 
-      function adjustFontSize(container) {
-        const span = container.querySelector("span");
-        const maxWidth = container.offsetWidth - 10;
-        let fontSize = 28;
-        span.style.fontSize = fontSize + "px";
-        while (span.offsetWidth > maxWidth && fontSize > 8) {
-          fontSize -= 1;
-          span.style.fontSize = fontSize + "px";
+        // 嵌入 Logo 邏輯
+        if (logoUrl) {
+          const img = new Image();
+          img.crossOrigin = "Anonymous";
+          img.src = logoUrl;
+          img.onload = function () {
+            const qrCanvas = qrContainer.querySelector("canvas");
+            if (qrCanvas) {
+              const ctx = qrCanvas.getContext("2d");
+              const logoSize = pxSize * 0.22; // Logo 佔比約 22%
+              const x = (pxSize - logoSize) / 2;
+              const y = (pxSize - logoSize) / 2;
+
+              ctx.fillStyle = "#FFFFFF";
+              ctx.fillRect(x - 2, y - 2, logoSize + 4, logoSize + 4);
+              ctx.drawImage(img, x, y, logoSize, logoSize);
+            }
+          };
         }
       }
 
       async function downloadAllAsImage() {
-        if (!printSection.innerHTML) return alert("請先產生預覽");
         const canvas = await html2canvas(printSection, {
           scale: 2,
-          backgroundColor: "#ffffff",
           useCORS: true,
         });
         const link = document.createElement("a");
-        link.download = `barcodes_qrcodes.png`;
-        link.href = canvas.toDataURL("image/png");
+        link.download = `郵件條碼標籤.png`;
+        link.href = canvas.toDataURL();
         link.click();
       }
     </script>
     <footer>
-      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+      <div
+        class="copyright"
+        style="
+          text-align: center;
+          margin-top: 20px;
+          font-size: 0.8rem;
+          color: #888;
+        "
+      >
+        © 2026 CaoShuHao 版權所有
+      </div>
     </footer>
   </body>
 </html>
