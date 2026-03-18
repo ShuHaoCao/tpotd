@@ -42,6 +42,7 @@
         margin-bottom: 20px;
         border-bottom: 2px solid #ddd;
         width: 100%;
+        flex-wrap: wrap;
       }
       .tab {
         flex: 1;
@@ -54,6 +55,7 @@
         font-weight: bold;
         transition: 0.3s;
         font-size: 0.95rem;
+        min-width: 80px;
       }
       .tab.active {
         background: #007bff;
@@ -182,11 +184,10 @@
         box-sizing: border-box;
         align-items: center;
       }
-      /* QRCode 專用外框樣式 */
       .qrcode-wrapper {
         background: white;
-        border: 1px solid #333; /* 邊框 */
-        padding: 15px; /* 留白 */
+        border: 1px solid #333;
+        padding: 15px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -194,7 +195,7 @@
       }
 
       .has-border {
-        border: 1px dashed #ccc;
+        border: 1px dashed #ccc !important;
       }
       .barcode-svg {
         width: 100%;
@@ -232,20 +233,103 @@
         justify-content: center;
       }
 
+      /* ======== 郵政條碼貼紙專用樣式 ======== */
+      .sticker-wrapper {
+        width: 6.5cm;
+        height: 4.6cm;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* 將 justify-content 改為 flex-start，讓內容從頂部開始排，不要擠在正中間 */
+        justify-content: flex-start;
+        box-sizing: border-box;
+        /* 調整內距：上方保留約 4mm 的空間，讓第一行靠上一點 */
+        padding: 4mm 2mm 2mm 2mm;
+        border: 1px solid transparent;
+      }
+      .sticker-line1 {
+        font-size: 14px;
+        font-weight: bold;
+        /* 大幅增加下邊距，製造出「空一行」的視覺效果 */
+        margin-bottom: 12px;
+        letter-spacing: 0px;
+      }
+      .sticker-line2 {
+        font-size: 15px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        letter-spacing: 0px;
+      }
+      .sticker-line3 {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        letter-spacing: 0px;
+      }
+      .sticker-line4-barcode {
+        width: 4.2cm; /* 稍微加寬讓條碼線條不那麼擠 */
+        height: 1.8cm; /* 將高度從 1.5cm 增加到 1.8cm，讓容器變高 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2px;
+      }
+      .sticker-line4-barcode svg {
+        width: 100%;
+        height: 100%;
+      }
+      .sticker-line5 {
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: 0px;
+      }
+
+      /* 套用紙張格線設定 */
+      .layout-a4 {
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+      }
+      .layout-grid-18 {
+        display: flex;
+        flex-wrap: wrap;
+        width: 21cm;
+        /* A4紙張扣除些微誤差，強制對齊 */
+      }
+      .cell-18 {
+        width: 7cm;
+        height: 4.95cm;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
       @media print {
         @page {
           size: A4;
           margin: 0;
         }
+        body {
+          background-color: white;
+        }
         .no-print {
           display: none !important;
         }
+        .preview-area {
+          margin: 0;
+          padding: 0;
+          background: transparent;
+        }
         #printSection {
-          display: block !important;
+          display: flex !important;
           width: 210mm;
         }
         .barcode-main-wrapper,
-        .qrcode-wrapper {
+        .qrcode-wrapper,
+        .sticker-wrapper {
           display: inline-flex;
         }
       }
@@ -269,9 +353,12 @@
         <div id="tab-qrcode" class="tab" onclick="switchTab('qrcode')">
           QRCode
         </div>
+        <div id="tab-sticker" class="tab" onclick="switchTab('sticker')">
+          郵政條碼貼紙
+        </div>
       </div>
 
-      <div class="input-group">
+      <div id="common-input-group" class="input-group">
         <label>待產生內容 (每行一筆)</label>
         <textarea
           id="userInput"
@@ -363,6 +450,63 @@
         </div>
       </div>
 
+      <div id="config-sticker" style="display: none">
+        <div class="row">
+          <div>
+            <label>郵件種類</label>
+            <select id="stickerMailType"></select>
+          </div>
+          <div>
+            <label>收寄單位</label>
+            <select id="stickerOffice"></select>
+          </div>
+        </div>
+
+        <div class="serial-tool">
+          <div class="serial-tool-title">條碼設定 (單張列印請將張數設為1)</div>
+          <div class="row">
+            <div>
+              <label>起始流水號 (前6碼)</label>
+              <input
+                type="number"
+                id="stickerSerialStart"
+                value="936157"
+                min="0"
+                max="999999"
+              />
+            </div>
+            <div>
+              <label>產生張數</label>
+              <input type="number" id="stickerCount" value="1" min="1" />
+            </div>
+            <div>
+              <label>裁切外框</label>
+              <select id="stickerBorder">
+                <option value="none">否 (空白)</option>
+                <option value="dashed">是 (虛線外框)</option>
+              </select>
+            </div>
+            <div>
+              <label>套用紙張</label>
+              <select id="stickerPaper">
+                <option value="a4">A4 (空白連續印)</option>
+                <option value="grid18">18格，3欄6列(A4貼紙紙)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <p
+          style="
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: -5px;
+            margin-bottom: 15px;
+          "
+        >
+          ※ 貼紙規格固定為 6.5cm x 4.6cm，條碼區塊固定 4cm x 1.5cm。
+        </p>
+      </div>
+
       <button class="btn-primary" onclick="generateBatchBarcodes()">
         產生預覽
       </button>
@@ -380,17 +524,57 @@
     </div>
 
     <script>
+      // ================= 資料設定區 (方便日後新增/刪除) =================
+      const mailTypesData = [
+        { name: "郵政公事普通掛號函件", code: "00" },
+        { name: "普通掛號函件", code: "10" },
+        { name: "限時掛號函件", code: "20" },
+        { name: "普通包裹", code: "30" },
+        { name: "快捷包裹", code: "40" },
+      ];
+
+      const postOfficesData = [
+        { name: "臺南成功路郵局營收股", code: "704451" },
+        { name: "臺南郵局郵務科運輸股", code: "704000" },
+        { name: "臺南鹽埕郵局", code: "702001" },
+        { name: "民雄頭橋郵局", code: "621001" },
+      ];
+
+      // 初始化下拉選單
+      window.onload = function () {
+        const typeSelect = document.getElementById("stickerMailType");
+        mailTypesData.forEach((item) => {
+          let opt = document.createElement("option");
+          opt.value = item.code;
+          opt.text = item.name;
+          typeSelect.appendChild(opt);
+        });
+
+        const officeSelect = document.getElementById("stickerOffice");
+        postOfficesData.forEach((item) => {
+          let opt = document.createElement("option");
+          opt.value = item.code;
+          opt.text = item.name;
+          officeSelect.appendChild(opt);
+        });
+      };
+      // ===================================================================
+
       let currentMode = "standard";
       const printSection = document.getElementById("printSection");
 
       function switchTab(mode) {
         currentMode = mode;
-        ["standard", "cart", "qrcode"].forEach((m) => {
+        ["standard", "cart", "qrcode", "sticker"].forEach((m) => {
           document.getElementById(`tab-${m}`).className =
             "tab" + (mode === m ? " active" : "");
           document.getElementById(`config-${m}`).style.display =
             mode === m ? "block" : "none";
         });
+
+        // 隱藏/顯示共用輸入框 (郵政條碼貼紙不使用此輸入框)
+        document.getElementById("common-input-group").style.display =
+          mode === "sticker" ? "none" : "block";
       }
 
       function generateSpecialSerial() {
@@ -416,17 +600,117 @@
       }
 
       function generateBatchBarcodes() {
+        printSection.innerHTML = "";
+        printSection.className = ""; // 重置排版 class
+
+        // 如果是郵政貼紙模式，走專屬邏輯
+        if (currentMode === "sticker") {
+          generateStickers();
+          return;
+        }
+
+        // 其他模式邏輯
         const codes = document
           .getElementById("userInput")
           .value.split("\n")
           .filter((c) => c.trim());
-        printSection.innerHTML = "";
         if (!codes.length) return alert("請輸入內容");
 
         codes.forEach((code, i) => {
           if (currentMode === "standard") renderStandard(code, i);
           else if (currentMode === "cart") renderCart(code, i);
           else if (currentMode === "qrcode") renderQRCode(code, i);
+        });
+      }
+
+      function generateStickers() {
+        const startSerial = parseInt(
+          document.getElementById("stickerSerialStart").value,
+        );
+        const count = parseInt(document.getElementById("stickerCount").value);
+        const hasBorder =
+          document.getElementById("stickerBorder").value === "dashed";
+        const paperLayout = document.getElementById("stickerPaper").value;
+
+        const typeSelect = document.getElementById("stickerMailType");
+        const officeSelect = document.getElementById("stickerOffice");
+
+        const mailTypeName = typeSelect.options[typeSelect.selectedIndex].text;
+        const mailTypeCode = typeSelect.value;
+        const officeName =
+          officeSelect.options[officeSelect.selectedIndex].text;
+        const officeCode = officeSelect.value;
+
+        if (isNaN(startSerial) || isNaN(count))
+          return alert("請輸入正確的流水號與張數");
+
+        // 設定外層容器版型
+        if (paperLayout === "grid18") {
+          printSection.className = "layout-grid-18";
+        } else {
+          printSection.className = "layout-a4";
+        }
+
+        for (let i = 0; i < count; i++) {
+          let currentSerialStr = (startSerial + i).toString().padStart(6, "0");
+          let fullCode = `${currentSerialStr}${officeCode}${mailTypeCode}`;
+          let displayNum = `${currentSerialStr} ${officeCode} ${mailTypeCode}`;
+
+          renderStickerCard(
+            mailTypeName,
+            officeName,
+            currentSerialStr,
+            fullCode,
+            displayNum,
+            i,
+            hasBorder,
+            paperLayout,
+          );
+        }
+      }
+
+      function renderStickerCard(
+        mailTypeName,
+        officeName,
+        serialStr,
+        fullCode,
+        displayNum,
+        index,
+        hasBorder,
+        paperLayout,
+      ) {
+        // 建立 6.5 x 4.6 cm 的貼紙本體
+        const stickerDiv = document.createElement("div");
+        stickerDiv.className =
+          "sticker-wrapper" + (hasBorder ? " has-border" : "");
+
+        stickerDiv.innerHTML = `
+          <div class="sticker-line1">${mailTypeName}</div>
+          <div class="sticker-line2">${officeName}</div>
+          <div class="sticker-line3">第 &nbsp;${serialStr}&nbsp; 號</div>
+          <div class="sticker-line4-barcode">
+            <svg id="sticker-bc-${index}"></svg>
+          </div>
+          <div class="sticker-line5">${displayNum}</div>
+        `;
+
+        // 如果是 18 格排版，需要包裝一層 7x4.95cm 的 cell
+        if (paperLayout === "grid18") {
+          const cellDiv = document.createElement("div");
+          cellDiv.className = "cell-18";
+          cellDiv.appendChild(stickerDiv);
+          printSection.appendChild(cellDiv);
+        } else {
+          printSection.appendChild(stickerDiv);
+        }
+
+        // 渲染條碼 (關閉顯示文字，因為我們有自己的 Line 5 文字排版)
+        JsBarcode(`#sticker-bc-${index}`, fullCode, {
+          format: "CODE128",
+          width: 2,
+          height: 60,
+          margin: 0,
+          displayValue: false,
         });
       }
 
@@ -472,10 +756,10 @@
         const s = document.getElementById("qrSizeCm").value;
         const txt = document.getElementById("qrTextSelect").value === "yes";
         const logoUrl = document.getElementById("qrLogoUrl").value.trim();
-        const pxSize = s * 37.8; // cm to px
+        const pxSize = s * 37.8;
 
         const div = document.createElement("div");
-        div.className = "qrcode-wrapper"; // 使用具備邊框與內距的新樣式
+        div.className = "qrcode-wrapper";
 
         const qrContainer = document.createElement("div");
         qrContainer.id = "qrc-" + i;
@@ -491,15 +775,13 @@
         }
         printSection.appendChild(div);
 
-        // 產生基礎 QRCode
         const qrcode = new QRCode(qrContainer, {
           text: code,
           width: pxSize,
           height: pxSize,
-          correctLevel: QRCode.CorrectLevel.H, // 提高容錯率以支援 Logo 遮擋
+          correctLevel: QRCode.CorrectLevel.H,
         });
 
-        // 嵌入 Logo 邏輯
         if (logoUrl) {
           const img = new Image();
           img.crossOrigin = "Anonymous";
@@ -508,10 +790,9 @@
             const qrCanvas = qrContainer.querySelector("canvas");
             if (qrCanvas) {
               const ctx = qrCanvas.getContext("2d");
-              const logoSize = pxSize * 0.22; // Logo 佔比約 22%
+              const logoSize = pxSize * 0.22;
               const x = (pxSize - logoSize) / 2;
               const y = (pxSize - logoSize) / 2;
-
               ctx.fillStyle = "#FFFFFF";
               ctx.fillRect(x - 2, y - 2, logoSize + 4, logoSize + 4);
               ctx.drawImage(img, x, y, logoSize, logoSize);
