@@ -36,7 +36,7 @@
         opacity: 0.7;
         margin-top: 20px;
       }
-      
+
       /* 修正 @apply 錯誤：改用標準 CSS 寫法 */
       .btn-action {
         transition: all 0.2s ease-in-out;
@@ -116,7 +116,10 @@
                     <td class="py-3 font-mono" x-text="index + 1"></td>
                     <td class="font-bold">
                       <span x-text="entry.name"></span>
-                      <span class="text-[10px] ml-1 opacity-60" x-text="getRankName(entry.wins)"></span>
+                      <span
+                        class="text-[10px] ml-1 opacity-60"
+                        x-text="getRankName(entry.wins)"
+                      ></span>
                     </td>
                     <td class="text-right font-mono" x-text="entry.wins"></td>
                   </tr>
@@ -135,7 +138,10 @@
           🏆 排行榜
         </button>
         <div class="text-right">
-          <p class="text-[10px] text-gray-400 uppercase tracking-widest" x-text="getRankName(playerWins)"></p>
+          <p
+            class="text-[10px] text-gray-400 uppercase tracking-widest"
+            x-text="getRankName(playerWins)"
+          ></p>
           <p class="text-sm font-bold text-yellow-400" x-text="playerName"></p>
         </div>
       </div>
@@ -183,8 +189,14 @@
               </template>
             </div>
             <div class="flex justify-between items-center px-1">
-               <p class="text-[10px] font-bold uppercase text-yellow-500" x-text="npc.status"></p>
-               <p class="text-[10px] font-mono bg-black/40 px-1 rounded" x-text="npc.score + ' pts'"></p>
+              <p
+                class="text-[10px] font-bold uppercase text-yellow-500"
+                x-text="npc.status"
+              ></p>
+              <p
+                class="text-[10px] font-mono bg-black/40 px-1 rounded"
+                x-text="npc.score + ' pts'"
+              ></p>
             </div>
           </div>
         </template>
@@ -196,8 +208,15 @@
         <div class="flex justify-between items-end mb-4">
           <div>
             <div class="flex items-center gap-2">
-                <span class="text-yellow-400 text-xs font-bold uppercase tracking-wider">Your Hand</span>
-                <span x-show="isDouble" class="bg-red-600 text-[10px] px-1 rounded animate-pulse">DOUBLE</span>
+              <span
+                class="text-yellow-400 text-xs font-bold uppercase tracking-wider"
+                >Your Hand</span
+              >
+              <span
+                x-show="isDouble"
+                class="bg-red-600 text-[10px] px-1 rounded animate-pulse"
+                >DOUBLE</span
+              >
             </div>
             <div class="flex gap-2 mt-1 min-h-[96px]">
               <template x-for="card in player.cards">
@@ -225,7 +244,9 @@
             </button>
           </template>
 
-          <template x-if="gameState === 'playing' && currentPlayer === 'player'">
+          <template
+            x-if="gameState === 'playing' && currentPlayer === 'player'"
+          >
             <div class="grid grid-cols-2 gap-3">
               <button
                 @click="playerHit()"
@@ -299,9 +320,30 @@
           dealer: { cards: [], score: 0, showAll: false },
           player: { id: "player", cards: [], score: 0, status: "playing" },
           npcs: [
-            { id: "npc1", name: "艾米", cards: [], score: 0, status: "等待", strategy: 15 },
-            { id: "npc2", name: "鮑伯", cards: [], score: 0, status: "等待", strategy: 17 },
-            { id: "npc3", name: "查理", cards: [], score: 0, status: "等待", strategy: 16 },
+            {
+              id: "npc1",
+              name: "艾米",
+              cards: [],
+              score: 0,
+              status: "等待",
+              strategy: 15,
+            },
+            {
+              id: "npc2",
+              name: "鮑伯",
+              cards: [],
+              score: 0,
+              status: "等待",
+              strategy: 17,
+            },
+            {
+              id: "npc3",
+              name: "查理",
+              cards: [],
+              score: 0,
+              status: "等待",
+              strategy: 16,
+            },
           ],
 
           init() {
@@ -318,28 +360,45 @@
           },
 
           updatePlayerWins() {
-            const entry = this.leaderboard.find(e => e.name === this.playerName);
+            const entry = this.leaderboard.find(
+              (e) => e.name === this.playerName,
+            );
             this.playerWins = entry ? entry.wins : 0;
           },
 
           getRankName(wins) {
-             if (wins >= 50) return "運輸處處長";
-             if (wins >= 30) return "運輸股長";
-             if (wins >= 15) return "路線調度專員";
-             if (wins >= 5) return "正式司機";
-             return "實習司機";
+            if (wins >= 50) return "運輸處處長";
+            if (wins >= 30) return "運輸股長";
+            if (wins >= 15) return "路線調度專員";
+            if (wins >= 5) return "正式司機";
+            return "實習司機";
           },
 
           createDeck() {
             const suits = ["♠", "♥", "♦", "♣"];
-            const labels = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+            const labels = [
+              "A",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "J",
+              "Q",
+              "K",
+            ];
             this.deck = [];
             for (let s of suits) {
               for (let l of labels) {
                 this.deck.push({
                   label: l,
                   suit: s,
-                  color: s === "♥" || s === "♦" ? "text-red-600" : "text-gray-900",
+                  color:
+                    s === "♥" || s === "♦" ? "text-red-600" : "text-gray-900",
                   value: this.getCardValue(l),
                 });
               }
@@ -376,7 +435,7 @@
             this.isDouble = false;
 
             for (let i = 0; i < 2; i++) {
-              await new Promise(r => setTimeout(r, 200));
+              await new Promise((r) => setTimeout(r, 200));
               this.player.cards.push(this.deck.pop());
               this.dealer.cards.push(this.deck.pop());
               this.npcs.forEach((npc) => npc.cards.push(this.deck.pop()));
@@ -398,8 +457,8 @@
               this.message = "你爆牌了！ (Bust)";
               setTimeout(() => this.playerStand(), 1200);
             } else if (this.player.cards.length === 5) {
-                this.message = "過五關！(Five Charlie) 🏆";
-                setTimeout(() => this.playerStand(), 1200);
+              this.message = "過五關！(Five Charlie) 🏆";
+              setTimeout(() => this.playerStand(), 1200);
             }
           },
 
@@ -413,11 +472,11 @@
           },
 
           playerSurrender() {
-             this.message = "棄牌投降 (Surrender)";
-             setTimeout(() => {
-                this.gameState = "finished";
-                this.message = "已損失一半郵資 🏳️";
-             }, 1000);
+            this.message = "棄牌投降 (Surrender)";
+            setTimeout(() => {
+              this.gameState = "finished";
+              this.message = "已損失一半郵資 🏳️";
+            }, 1000);
           },
 
           async playerStand() {
@@ -460,22 +519,29 @@
           updateScores() {
             this.player.score = this.calculateScore(this.player.cards);
             this.dealer.score = this.calculateScore(this.dealer.cards);
-            this.npcs.forEach((npc) => (npc.score = this.calculateScore(npc.cards)));
+            this.npcs.forEach(
+              (npc) => (npc.score = this.calculateScore(npc.cards)),
+            );
           },
 
           endGame() {
             this.gameState = "finished";
-            
+
             if (this.player.score <= 21 && this.player.cards.length === 5) {
-                this.message = "過五關獲勝！ 🐉";
-                this.saveWin();
-                return;
+              this.message = "過五關獲勝！ 🐉";
+              this.saveWin();
+              return;
             }
 
             if (this.player.score > 21) {
               this.message = "莊家獲勝 😢";
-            } else if (this.dealer.score > 21 || this.player.score > this.dealer.score) {
-              this.message = this.isDouble ? "雙倍勝利！ 💰" : "恭喜你贏了！ 🏆";
+            } else if (
+              this.dealer.score > 21 ||
+              this.player.score > this.dealer.score
+            ) {
+              this.message = this.isDouble
+                ? "雙倍勝利！ 💰"
+                : "恭喜你贏了！ 🏆";
               this.saveWin();
             } else if (this.player.score === this.dealer.score) {
               this.message = "平手 Push 🤝";
@@ -496,12 +562,15 @@
 
             lb.sort((a, b) => b.wins - a.wins);
             this.leaderboard = lb.slice(0, 10);
-            localStorage.setItem("bj_leaderboard", JSON.stringify(this.leaderboard));
+            localStorage.setItem(
+              "bj_leaderboard",
+              JSON.stringify(this.leaderboard),
+            );
             this.updatePlayerWins();
           },
 
           resetState() {
-            if (this.deck.length < 15) this.createDeck(); 
+            if (this.deck.length < 15) this.createDeck();
             this.player.cards = [];
             this.dealer.cards = [];
             this.dealer.showAll = false;
@@ -519,6 +588,71 @@
           },
         };
       }
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      // 監測視窗調整，若開發者工具側邊開啟則觸發
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "shuhaocao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
     </script>
     <footer>
       <div class="copyright">© 2026 CaoShuHao 台南郵局運輸股專用</div>

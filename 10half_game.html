@@ -25,7 +25,9 @@
       }
 
       /* 爆煲時的背景閃爍 */
-      .bg-bust { background-color: #4a1a1a !important; }
+      .bg-bust {
+        background-color: #4a1a1a !important;
+      }
 
       /* 登入介面 */
       #login-screen {
@@ -39,7 +41,8 @@
         z-index: 100;
       }
 
-      input[type="text"], input[type="number"] {
+      input[type="text"],
+      input[type="number"] {
         padding: 10px;
         font-size: 1.2rem;
         border-radius: 5px;
@@ -103,7 +106,7 @@
         pointer-events: none;
       }
       .bubble::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -5px;
         left: 50%;
@@ -146,11 +149,19 @@
         animation: flipIn 0.5s ease-out;
       }
       @keyframes flipIn {
-        from { transform: rotateY(90deg) translateY(-20px); opacity: 0; }
-        to { transform: rotateY(0deg) translateY(0); opacity: 1; }
+        from {
+          transform: rotateY(90deg) translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: rotateY(0deg) translateY(0);
+          opacity: 1;
+        }
       }
 
-      .card.red { color: red; }
+      .card.red {
+        color: red;
+      }
 
       /* 控制區 */
       .controls {
@@ -163,7 +174,7 @@
       }
 
       .betting-zone {
-        background: rgba(0,0,0,0.4);
+        background: rgba(0, 0, 0, 0.4);
         padding: 10px;
         border-radius: 8px;
         display: flex;
@@ -203,7 +214,8 @@
         width: 100%;
         border-collapse: collapse;
       }
-      th, td {
+      th,
+      td {
         padding: 8px;
         text-align: left;
         border-bottom: 1px solid #444;
@@ -225,8 +237,14 @@
       }
 
       @media (max-width: 600px) {
-        .table { grid-template-columns: 1fr 1fr; }
-        .card { width: 40px; height: 60px; font-size: 0.9rem; }
+        .table {
+          grid-template-columns: 1fr 1fr;
+        }
+        .card {
+          width: 40px;
+          height: 60px;
+          font-size: 0.9rem;
+        }
       }
 
       footer div {
@@ -249,7 +267,9 @@
     <div class="game-container">
       <div class="info-bar">
         <div><strong id="display-name">玩家：-</strong></div>
-        <div id="round-counter" style="color: var(--accent-color)">回合: 1 / 10</div>
+        <div id="round-counter" style="color: var(--accent-color)">
+          回合: 1 / 10
+        </div>
         <div id="player-chips">目前積分: 100</div>
       </div>
 
@@ -275,7 +295,9 @@
           <div id="score-p2">點數: 0</div>
         </div>
         <div class="player-area" id="area-player">
-          <span class="name-label" style="color: var(--accent-color)">⭐ 你本人</span>
+          <span class="name-label" style="color: var(--accent-color)"
+            >⭐ 你本人</span
+          >
           <div class="cards-display" id="cards-user"></div>
           <div id="score-user">點數: 0</div>
         </div>
@@ -284,7 +306,14 @@
       <div class="controls">
         <div class="betting-zone">
           <label>下注積分:</label>
-          <input type="number" id="bet-amount" value="10" min="5" step="5" style="width: 60px; margin:0;">
+          <input
+            type="number"
+            id="bet-amount"
+            value="10"
+            min="5"
+            step="5"
+            style="width: 60px; margin: 0"
+          />
         </div>
         <button id="btn-next" onclick="initRound()">開始回合</button>
         <button id="btn-hit" onclick="playerHit()" disabled>要牌</button>
@@ -307,13 +336,49 @@
     </div>
 
     <script>
-      const AI_NAMES = ["剛看完教學的隔壁老王", "輸到脫褲子的賭神", "只想下班的阿明", "自以為會算牌的小明", "連輸 10 把的邊緣人", "數學老師在哭泣", "拿 A 以為是 10 的路人", "不想努力的阿姨", "亂出牌的隔壁大嬸", "賭場派來送分的", "不抽牌會死的強迫症", "永遠在爆煲的衰鬼", "隔壁村的老司機", "靠直覺在玩的小朋友", "以為自己在玩 21 點"];
-      
+      const AI_NAMES = [
+        "剛看完教學的隔壁老王",
+        "輸到脫褲子的賭神",
+        "只想下班的阿明",
+        "自以為會算牌的小明",
+        "連輸 10 把的邊緣人",
+        "數學老師在哭泣",
+        "拿 A 以為是 10 的路人",
+        "不想努力的阿姨",
+        "亂出牌的隔壁大嬸",
+        "賭場派來送分的",
+        "不抽牌會死的強迫症",
+        "永遠在爆煲的衰鬼",
+        "隔壁村的老司機",
+        "靠直覺在玩的小朋友",
+        "以為自己在玩 21 點",
+      ];
+
       const QUOTES = {
-        hit: ["再一張，一定可以！", "搏一把大的！", "這張牌一定很正。", "我有預感..."],
-        bust: ["靠！爆了啦！", "這運氣也太背...", "我不玩了啦 (嗚嗚)", "計算錯誤..."],
-        stand: ["我覺得這樣就夠了。", "見好就收。", "莊家死定了。", "穩紮穩打。"],
-        win: ["哈哈！我就知道！", "運氣也是實力的一種。", "承讓承讓。", "今天的運氣全在這了！"]
+        hit: [
+          "再一張，一定可以！",
+          "搏一把大的！",
+          "這張牌一定很正。",
+          "我有預感...",
+        ],
+        bust: [
+          "靠！爆了啦！",
+          "這運氣也太背...",
+          "我不玩了啦 (嗚嗚)",
+          "計算錯誤...",
+        ],
+        stand: [
+          "我覺得這樣就夠了。",
+          "見好就收。",
+          "莊家死定了。",
+          "穩紮穩打。",
+        ],
+        win: [
+          "哈哈！我就知道！",
+          "運氣也是實力的一種。",
+          "承讓承讓。",
+          "今天的運氣全在這了！",
+        ],
       };
 
       let playerName = "";
@@ -325,11 +390,26 @@
       let deck = [];
       let players = [];
       const SUITS = ["♠", "♥", "♦", "♣"];
-      const VALUES = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+      const VALUES = [
+        "A",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "J",
+        "Q",
+        "K",
+      ];
 
       window.onload = () => {
         const savedName = localStorage.getItem("poker_105_name");
-        if (savedName) document.getElementById("player-name-input").value = savedName;
+        if (savedName)
+          document.getElementById("player-name-input").value = savedName;
         updateLeaderboard();
       };
 
@@ -338,7 +418,8 @@
         if (!input) return alert("請輸入暱稱，不然莊家會生氣");
         playerName = input;
         localStorage.setItem("poker_105_name", playerName);
-        document.getElementById("display-name").innerText = `玩家：${playerName}`;
+        document.getElementById("display-name").innerText =
+          `玩家：${playerName}`;
         document.getElementById("login-screen").style.display = "none";
         pickRandomAIs();
         resetGameSeries();
@@ -350,7 +431,7 @@
         const list = QUOTES[type];
         el.innerText = list[Math.floor(Math.random() * list.length)];
         el.style.opacity = "1";
-        setTimeout(() => el.style.opacity = "0", 2000);
+        setTimeout(() => (el.style.opacity = "0"), 2000);
       }
 
       function pickRandomAIs() {
@@ -372,8 +453,17 @@
         deck = [];
         for (let s of SUITS) {
           for (let v of VALUES) {
-            let pts = ["J", "Q", "K"].includes(v) ? 0.5 : v === "A" ? 1 : parseInt(v);
-            deck.push({ suit: s, val: v, points: pts, color: s === "♥" || s === "♦" ? "red" : "" });
+            let pts = ["J", "Q", "K"].includes(v)
+              ? 0.5
+              : v === "A"
+                ? 1
+                : parseInt(v);
+            deck.push({
+              suit: s,
+              val: v,
+              points: pts,
+              color: s === "♥" || s === "♦" ? "red" : "",
+            });
           }
         }
         deck.sort(() => Math.random() - 0.5);
@@ -399,14 +489,43 @@
         createDeck();
         document.getElementById("btn-next").disabled = true;
         betInput.disabled = true;
-        document.getElementById("round-counter").innerText = `回合: ${currentRound} / ${MAX_ROUNDS}`;
+        document.getElementById("round-counter").innerText =
+          `回合: ${currentRound} / ${MAX_ROUNDS}`;
         document.getElementById("status-msg").innerText = "洗牌中，別想偷看...";
 
         players = [
-          { id: "dealer", name: "莊家", cards: [], score: 0, isDone: false, isBust: false },
-          { id: "p1", name: aiNamesInGame[0], cards: [], score: 0, isDone: false, isBust: false },
-          { id: "p2", name: aiNamesInGame[1], cards: [], score: 0, isDone: false, isBust: false },
-          { id: "user", name: playerName, cards: [], score: 0, isDone: false, isBust: false },
+          {
+            id: "dealer",
+            name: "莊家",
+            cards: [],
+            score: 0,
+            isDone: false,
+            isBust: false,
+          },
+          {
+            id: "p1",
+            name: aiNamesInGame[0],
+            cards: [],
+            score: 0,
+            isDone: false,
+            isBust: false,
+          },
+          {
+            id: "p2",
+            name: aiNamesInGame[1],
+            cards: [],
+            score: 0,
+            isDone: false,
+            isBust: false,
+          },
+          {
+            id: "user",
+            name: playerName,
+            cards: [],
+            score: 0,
+            isDone: false,
+            isBust: false,
+          },
         ];
 
         players.forEach((p) => hit(p));
@@ -420,15 +539,18 @@
         player.score = player.cards.reduce((sum, c) => sum + c.points, 0);
         if (player.score > 10.5) {
           player.isBust = true;
-          if (player.id !== 'user' && player.id !== 'dealer') showBubble(player.id, 'bust');
-          if (player.id === 'user') document.body.classList.add("bg-bust");
+          if (player.id !== "user" && player.id !== "dealer")
+            showBubble(player.id, "bust");
+          if (player.id === "user") document.body.classList.add("bg-bust");
         }
-        if (player.cards.length >= 5 && player.score <= 10.5) player.isDone = true;
+        if (player.cards.length >= 5 && player.score <= 10.5)
+          player.isDone = true;
       }
 
       async function processAI(idx) {
         if (idx > 2) {
-          document.getElementById("status-msg").innerText = "換你了，別在那邊發呆";
+          document.getElementById("status-msg").innerText =
+            "換你了，別在那邊發呆";
           document.getElementById("area-player").classList.add("active-turn");
           document.getElementById("btn-hit").disabled = false;
           document.getElementById("btn-stand").disabled = false;
@@ -439,11 +561,11 @@
         let target = 7 + Math.random() * 2;
         while (!p.isBust && !p.isDone && p.score < target) {
           await new Promise((r) => setTimeout(r, 800));
-          showBubble(p.id, 'hit');
+          showBubble(p.id, "hit");
           hit(p);
           updateUI();
         }
-        if (!p.isBust) showBubble(p.id, 'stand');
+        if (!p.isBust) showBubble(p.id, "stand");
         p.isDone = true;
         document.getElementById(`area-${p.id}`).classList.remove("active-turn");
         processAI(idx + 1);
@@ -512,20 +634,24 @@
           multiplier = -1;
         }
 
-        playerChips += (currentBet * multiplier);
+        playerChips += currentBet * multiplier;
         if (playerChips < 0) playerChips = 0;
 
         updateUI();
 
-        if (multiplier > 0) showBubble('p1', 'win'); 
+        if (multiplier > 0) showBubble("p1", "win");
 
         document.getElementById("bet-amount").disabled = false;
         if (currentRound < MAX_ROUNDS && playerChips > 0) {
           document.getElementById("status-msg").innerText = msg;
           document.getElementById("btn-next").disabled = false;
-          document.getElementById("btn-next").innerText = `第 ${currentRound + 1} 回合`;
+          document.getElementById("btn-next").innerText =
+            `第 ${currentRound + 1} 回合`;
         } else {
-          const finalMsg = playerChips <= 0 ? "你破產了！送你去郵件處理中心勞改" : `10 回合終結！最終分數：${playerChips}`;
+          const finalMsg =
+            playerChips <= 0
+              ? "你破產了！送你去郵件處理中心勞改"
+              : `10 回合終結！最終分數：${playerChips}`;
           document.getElementById("status-msg").innerText = finalMsg;
           document.getElementById("btn-next").disabled = false;
           document.getElementById("btn-next").innerText = "重新開始";
@@ -536,7 +662,9 @@
 
       function updateUI() {
         players.forEach((p) => {
-          const container = document.getElementById(`cards-${p.id === "user" ? "user" : p.id}`);
+          const container = document.getElementById(
+            `cards-${p.id === "user" ? "user" : p.id}`,
+          );
           if (!container) return;
           container.innerHTML = "";
           p.cards.forEach((c) => {
@@ -545,21 +673,27 @@
             div.innerHTML = `<span>${c.suit}</span><span>${c.val}</span>`;
             container.appendChild(div);
           });
-          
+
           let scoreText = p.isBust ? "😂 爆煲" : p.score + " 點";
           if (p.cards.length >= 5 && !p.isBust) scoreText = "🐉 過五關";
-          
-          const scoreEl = document.getElementById(`score-${p.id === "user" ? "user" : p.id}`);
+
+          const scoreEl = document.getElementById(
+            `score-${p.id === "user" ? "user" : p.id}`,
+          );
           scoreEl.innerText = scoreText;
-          if (p.score >= 9 && !p.isBust) scoreEl.style.color = "var(--accent-color)";
+          if (p.score >= 9 && !p.isBust)
+            scoreEl.style.color = "var(--accent-color)";
           else if (p.isBust) scoreEl.style.color = "var(--danger-color)";
           else scoreEl.style.color = "white";
         });
-        document.getElementById("player-chips").innerText = `目前積分: ${playerChips}`;
+        document.getElementById("player-chips").innerText =
+          `目前積分: ${playerChips}`;
       }
 
       function saveFinalScore() {
-        let board = JSON.parse(localStorage.getItem("poker_105_fun_board") || "[]");
+        let board = JSON.parse(
+          localStorage.getItem("poker_105_fun_board") || "[]",
+        );
         board.push({ name: playerName, score: playerChips });
         board.sort((a, b) => b.score - a.score);
         board = board.slice(0, 10);
@@ -567,7 +701,9 @@
       }
 
       function updateLeaderboard() {
-        const board = JSON.parse(localStorage.getItem("poker_105_fun_board") || "[]");
+        const board = JSON.parse(
+          localStorage.getItem("poker_105_fun_board") || "[]",
+        );
         const tbody = document.querySelector("#leaderboard-table tbody");
         tbody.innerHTML = "";
         board.forEach((item, idx) => {
@@ -576,6 +712,71 @@
           tbody.appendChild(tr);
         });
       }
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      // 監測視窗調整，若開發者工具側邊開啟則觸發
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "shuhaocao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
     </script>
     <footer>
       <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
