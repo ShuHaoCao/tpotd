@@ -4,10 +4,168 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1024" />
     <title>每月班表查詢</title>
-    <link rel="stylesheet" href="style_calendar.css" />
+    <style>
+      :root {
+        --border-gray: #dadce0;
+        --border-today: #000000;
+        --header-bg: #555555; /* 平日標題：深灰色 */
+        --header-text: #ffffff; /* 標題文字：白色 */
+        --weekend-header-bg: #ff0000; /* 週末標題：深紅色 */
+        --staff-text: #000000;
+        --date-gray: #a7a7a7; /* 平日日期：深灰色 */
+        --holiday-bg: #fffafa; /* 假日底色：極淺粉紅 */
+        --holiday-text: #ff0000; /* 假日日期：深紅色 */
+        --holiday-tag-bg: #ff0000;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Times New Roman", "Microsoft JhengHei", serif;
+        margin: 0;
+        padding: 10px;
+        background: #fff;
+        min-width: 1024px; /* 確保 body 最小寬度 */
+      }
+
+      /* 頂部控制列固定寬度 */
+      .controls {
+        display: flex;
+        gap: 10px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        align-items: center;
+        border: 2px solid var(--border-gray);
+        width: 1000px; /* 與日曆同寬 */
+      }
+      .staff-area {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      select,
+      button {
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid var(--border-gray);
+        border-radius: 4px;
+      }
+
+      /* 外層滾動容器：若螢幕太小可左右滑動 */
+      .outer-wrapper {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      /* 日曆容器：設定固定寬度 */
+      .calendar-container {
+        width: 1000px;
+        border-top: 1px solid var(--border-gray);
+        border-left: 1px solid var(--border-gray);
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+      }
+
+      .day-label,
+      .day-cell {
+        border-right: 1px solid var(--border-gray);
+        border-bottom: 1px solid var(--border-gray);
+      }
+
+      /* 星期標題：固定高度與樣式 */
+      .day-label {
+        background: var(--header-bg);
+        color: var(--header-text);
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      /* 週末標題專屬：深紅底 */
+      .day-label.label-weekend-header {
+        background-color: var(--weekend-header-bg);
+      }
+
+      /* 格子：固定高度 150px */
+      .day-cell {
+        width: 142.8px; /* 1000px / 7 */
+        height: 150px;
+        padding: 8px;
+        position: relative;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      /* 今日標記 */
+      .is-today {
+        border: 6px solid var(--border-today) !important;
+        z-index: 5;
+      }
+
+      /* 假日底色 */
+      .is-holiday {
+        background-color: var(--holiday-bg) !important;
+      }
+
+      /* 日期數字：固定 48px */
+      .date-number {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--date-gray);
+        line-height: 1;
+        margin-top: 5px;
+        z-index: 1;
+      }
+      .is-holiday .date-number {
+        color: var(--holiday-text);
+      }
+
+      /* 假日名稱 */
+      .holiday-name {
+        background-color: var(--holiday-tag-bg);
+        color: white;
+        font-size: 14px;
+        padding: 2px 8px;
+        border-radius: 3px;
+        font-weight: bold;
+        margin-top: 2px;
+        z-index: 2;
+      }
+
+      /* 班別文字：固定大字體、純黑 */
+      .duty-container {
+        width: 100%;
+        margin-top: auto;
+        margin-bottom: 15px;
+        z-index: 3;
+      }
+      .duty-tag {
+        font-size: 24px;
+        font-weight: 900;
+        color: var(--staff-text);
+        text-align: center;
+        width: 100%;
+      }
+
+      .other-month {
+        background-color: #fafafa !important;
+        opacity: 0.2;
+      }
+
+      /* 徹底移除 @media 響應式區塊，確保手機不會自動縮小 */
+    </style>
   </head>
   <body>
-    <script src="script_calendar.js"></script>
     <div class="controls">
       <div style="display: flex; gap: 10px">
         <select id="yearSelect"></select>
@@ -34,5 +192,199 @@
         <div id="calendarGrid" style="display: contents"></div>
       </div>
     </div>
+
+    <script>
+      let scheduleData = {};
+      const holidays = {
+        "2026-01-01": "元旦",
+        "2026-02-16": "除夕",
+        "2026-02-17": "初一",
+        "2026-02-18": "初二",
+        "2026-02-19": "初三",
+        "2026-02-20": "初四",
+        "2026-02-27": "補假(228紀念日)",
+        "2026-02-28": "228紀念日",
+        "2026-04-03": "補假(兒童節)",
+        "2026-04-04": "兒童節",
+        "2026-04-05": "清明節",
+        "2026-04-06": "補假(清明節)",
+        "2026-05-01": "勞動節",
+        "2026-06-19": "端午節",
+        "2026-09-25": "中秋節",
+        "2026-09-28": "教師節",
+        "2026-10-09": "補假(國慶日)",
+        "2026-10-10": "國慶日",
+        "2026-10-24": "補假(光復節)",
+        "2026-10-25": "光復節",
+        "2026-12-25": "行憲紀念日",
+      };
+
+      const yearSelect = document.getElementById("yearSelect");
+      const monthSelect = document.getElementById("monthSelect");
+      const staffSelect = document.getElementById("staffSelect");
+      const gridEl = document.getElementById("calendarGrid");
+      const now = new Date();
+
+      async function init() {
+        for (let y = 2025; y <= 2027; y++)
+          yearSelect.options.add(new Option(y + "年", y));
+        for (let m = 0; m < 12; m++)
+          monthSelect.options.add(new Option(m + 1 + "月", m));
+        yearSelect.value = now.getFullYear();
+        monthSelect.value = now.getMonth();
+
+        try {
+          const response = await fetch("schedule_data.json");
+          scheduleData = await response.json();
+          populateStaff(scheduleData);
+        } catch (e) {
+          console.error("JSON Error", e);
+        }
+
+        [yearSelect, monthSelect, staffSelect].forEach(
+          (el) => (el.onchange = renderCalendar),
+        );
+        renderCalendar();
+      }
+
+      function populateStaff(data) {
+        let names = new Set();
+        Object.keys(data).forEach((k) => {
+          if (k === "lastUpdated") return;
+          Object.values(data[k]).forEach((v) => {
+            if (
+              v &&
+              v !== "-" &&
+              v !== "" &&
+              v !== "#溢出!" &&
+              v !== "#SPILL!"
+            ) {
+              names.add(v);
+            }
+          });
+        });
+        staffSelect.innerHTML = '<option value="">-- 請選擇 --</option>';
+        Array.from(names)
+          .sort()
+          .forEach((n) => staffSelect.options.add(new Option(n, n)));
+      }
+
+      function renderToday() {
+        yearSelect.value = now.getFullYear();
+        monthSelect.value = now.getMonth();
+        renderCalendar();
+      }
+
+      function renderCalendar() {
+        const y = parseInt(yearSelect.value),
+          m = parseInt(monthSelect.value);
+        const selStaff = staffSelect.value;
+        gridEl.innerHTML = "";
+        const firstDay = new Date(y, m, 1).getDay();
+        const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+        for (let i = 0; i < firstDay; i++)
+          gridEl.innerHTML += `<div class="day-cell other-month"></div>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateObj = new Date(y, m, d);
+          const weekDay = dateObj.getDay();
+          const dateStr = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+          const isToday =
+            y === now.getFullYear() &&
+            m === now.getMonth() &&
+            d === now.getDate();
+
+          const holidayName = holidays[dateStr] || "";
+          const isWeekend = weekDay === 0 || weekDay === 6;
+          const isHoliday = holidayName !== "" || isWeekend;
+
+          let dutyHtml = "";
+          if (selStaff && scheduleData[dateStr]) {
+            const dayShifts = scheduleData[dateStr];
+            const myShifts = Object.keys(dayShifts).filter(
+              (s) => dayShifts[s] === selStaff,
+            );
+            dutyHtml = myShifts
+              .map((s) => `<div class="duty-tag">${s}</div>`)
+              .join("");
+          }
+
+          gridEl.innerHTML += `
+                <div class="day-cell ${isToday ? "is-today" : ""} ${isHoliday ? "is-holiday" : ""}">
+                    <div class="date-number">${d}</div>
+                    ${holidayName ? `<div class="holiday-name">${holidayName}</div>` : ""}
+                    <div class="duty-container">${dutyHtml}</div>
+                </div>
+            `;
+        }
+      }
+      init();
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      // 監測視窗調整，若開發者工具側邊開啟則觸發
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "shuhaocao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
+    </script>
   </body>
 </html>
