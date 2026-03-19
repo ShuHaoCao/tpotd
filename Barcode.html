@@ -296,20 +296,20 @@
         grid-template-columns: 7cm 7cm 7cm;
         grid-template-rows: repeat(6, 4.95cm);
         width: 21cm;
-        height: 29.7cm;
+        /* 將高度微調縮小 0.1cm，防止因計算誤差產生溢出空白頁 */
+        height: 29.6cm;
         margin: 0;
         padding: 0;
         gap: 0;
-        /* 強制分頁：同時使用新舊語法，確保瀏覽器第一時間反應 */
-        break-before: page; /* 新標準：在容器前強制分頁 */
+
+        /* 僅保留 break-before，移除 break-after 避免重複分頁 */
+        break-before: page;
         page-break-before: always;
-        break-after: page; /* 在容器後強制分頁 */
-        page-break-after: always;
+
         overflow: hidden;
         box-sizing: border-box;
         background: white;
-        position: relative; /* 鎖定內部絕對座標 */
-        /* 確保每一頁都是獨立的層級，不互相推擠 */
+        position: relative;
         contain: content;
       }
       .cell-18 {
