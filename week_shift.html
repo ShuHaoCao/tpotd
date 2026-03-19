@@ -4,10 +4,106 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>一週班表查詢</title>
-    <link rel="stylesheet" href="style_week_shift.css" />
+    <style>
+      body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f3f3f3;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .form-group {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .notice {
+        text-align: center;
+        color: #666;
+        font-size: 0.95em;
+        margin-bottom: 20px;
+      }
+
+      select {
+        font-size: 1em;
+        padding: 8px;
+        min-width: 200px;
+      }
+
+      .schedule-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px auto;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+
+      .schedule-item:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .date-block {
+        color: white;
+        flex: 2 1 66%;
+        padding: 14px;
+        font-weight: bold;
+        font-size: 1em;
+      }
+
+      .shift-block {
+        background-color: #ffffff;
+        flex: 1 1 34%;
+        padding: 14px;
+        text-align: center;
+        font-family: "Microsoft JhengHei", sans-serif;
+        font-weight: bold;
+        font-size: 1em;
+        color: #000000;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .schedule-item {
+          flex-direction: row;
+          flex-wrap: nowrap;
+        }
+
+        .date-block,
+        .shift-block {
+          font-size: 0.9em;
+          padding: 12px;
+        }
+
+        .form-group select {
+          font-size: 1em;
+        }
+      }
+    </style>
   </head>
   <body>
-    <script src="script_week_shift.js"></script>
     <h1>一週班表查詢</h1>
 
     <div class="form-group">
@@ -20,6 +116,166 @@
 
     <div id="scheduleList"></div>
 
-    <script></script>
+    <script>
+      const weekdayMap = ["日", "一", "二", "三", "四", "五", "六"];
+
+      function formatLocalDate(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
+      async function loadSchedule() {
+        const res = await fetch("schedule_data.json?t=" + new Date().getTime()); // ✅ 防快取
+        const data = await res.json();
+        delete data["lastUpdated"];
+
+        const nameSet = new Set();
+        for (const day of Object.values(data)) {
+          for (const person of Object.values(day)) {
+            const name = person?.trim();
+            if (
+              name &&
+              name !== "-" &&
+              name !== "#溢出!" &&
+              name !== "賴世豪"
+            ) {
+              nameSet.add(name);
+            }
+          }
+        }
+
+        const sortedNames = [...nameSet].sort();
+        const select = document.getElementById("staffSelect");
+        sortedNames.forEach((name) => {
+          const opt = document.createElement("option");
+          opt.value = opt.textContent = name;
+          select.appendChild(opt);
+        });
+
+        select.addEventListener("change", () => {
+          if (select.value) showWeek(data, select.value);
+          else document.getElementById("scheduleList").innerHTML = "";
+        });
+      }
+
+      function showWeek(data, name) {
+        const container = document.getElementById("scheduleList");
+        container.innerHTML = "";
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() + i);
+          const key = formatLocalDate(d);
+          const displayDate = key.replace(/-/g, "/");
+          const weekIndex = d.getDay();
+          const week = weekdayMap[weekIndex];
+          const dateText = `${displayDate}【星期${week}】`;
+
+          let found = "公休";
+          const shiftData = data[key];
+          if (shiftData) {
+            for (const [shift, person] of Object.entries(shiftData)) {
+              if (person?.trim() === name) {
+                found = shift;
+                break;
+              }
+            }
+          }
+
+          const row = document.createElement("div");
+          row.className = "schedule-item";
+          row.style.animationDelay = `${i * 0.1}s`;
+
+          const dateBlock = document.createElement("div");
+          dateBlock.className = "date-block";
+          dateBlock.textContent = dateText;
+          dateBlock.style.backgroundColor =
+            weekIndex === 0 || weekIndex === 6 ? "#d32f2f" : "#555";
+
+          const shiftBlock = document.createElement("div");
+          shiftBlock.className = "shift-block";
+          shiftBlock.textContent = found;
+          if (found === "公休") {
+            shiftBlock.style.color = "#d32f2f";
+          }
+
+          row.appendChild(dateBlock);
+          row.appendChild(shiftBlock);
+          container.appendChild(row);
+        }
+      }
+
+      loadSchedule();
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      // 監測視窗調整，若開發者工具側邊開啟則觸發
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "shuhaocao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
+    </script>
   </body>
 </html>
