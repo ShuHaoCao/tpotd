@@ -1,0 +1,150 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #e67e22;
+  --bg-color: #f4f7f6;
+  --cell-size: 50px;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --cell-size: 44px;
+  }
+  .game-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .board-wrapper {
+    width: 95%;
+    max-width: 320px;
+  }
+}
+
+body {
+  font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg-color);
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#message-box {
+  width: 90%;
+  max-width: 450px;
+  margin: 10px 0;
+  padding: 15px;
+  background: #2c3e50;
+  color: white;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  min-height: 1.5em;
+}
+
+.controls {
+  margin-bottom: 15px;
+}
+.btn-reset {
+  padding: 10px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #d35400;
+  transition: 0.1s;
+}
+.btn-reset:active {
+  transform: translateY(3px);
+  box-shadow: none;
+}
+
+.game-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.board-wrapper {
+  background: white;
+  padding: 12px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  border-top: 6px solid #ccc;
+  transition: 0.3s;
+}
+.board-wrapper.active {
+  border-top-color: var(--primary-color);
+  transform: translateY(-5px);
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+h2 {
+  margin: 5px 0;
+  font-size: 0.95rem;
+  color: #34495e;
+  white-space: nowrap;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, var(--cell-size));
+  grid-gap: 5px;
+  margin: 10px auto;
+}
+
+.cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ecf0f1;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #2c3e50;
+  -webkit-tap-highlight-color: transparent;
+}
+.cell.marked {
+  background: #ff4757;
+  color: white;
+  animation: pop 0.3s;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.npc-board .cell {
+  cursor: default;
+}
+.status {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #7f8c8d;
+  font-size: 0.85rem;
+}
+
+footer div {
+  font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+  color: #888888; /* 中灰色，不會太刺眼 */
+  text-align: center; /* 居中對齊 */
+  opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+  margin-top: 20px;
+}
