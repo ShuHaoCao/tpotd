@@ -1,0 +1,309 @@
+let score = 0;
+let timeLeft = 30;
+let gameActive = false;
+let spawnTimer, clockTimer;
+let currentPlayerName = localStorage.getItem("popGame_name") || "";
+
+const container = document.getElementById("game-container");
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
+const overlay = document.getElementById("overlay");
+const nameInput = document.getElementById("playerName");
+const leaderBody = document.getElementById("leaderboard-body");
+
+// 初始化：自動填入名字並載入排行榜
+nameInput.value = currentPlayerName;
+updateLeaderboardUI();
+
+const types = [
+  { id: "g1", size: 40, color: "#44bd32", pts: 10, label: "小" },
+  { id: "g2", size: 70, color: "#44bd32", pts: 20, label: "中" },
+  { id: "g3", size: 100, color: "#44bd32", pts: 40, label: "大" },
+  { id: "bad", size: 140, color: "#c23616", pts: -50, label: "扣分!" },
+  { id: "gold", size: 25, color: "#fbc531", pts: 100, label: "VIP" },
+  { id: "bomb", size: 0, color: "#9c88ff", pts: 50, label: "BOOM" },
+];
+
+function startGame() {
+  const name = nameInput.value.trim();
+  if (!name) {
+    alert("請先輸入名稱唷！");
+    return;
+  }
+
+  // 記憶名稱
+  currentPlayerName = name;
+  localStorage.setItem("popGame_name", name);
+
+  score = 0;
+  timeLeft = 30;
+  gameActive = true;
+  scoreEl.innerText = score;
+  overlay.style.display = "none";
+
+  spawnTimer = setInterval(spawnBubble, 450);
+  clockTimer = setInterval(() => {
+    timeLeft--;
+    timeEl.innerText = timeLeft;
+    if (timeLeft <= 0) endGame();
+  }, 1000);
+}
+
+function spawnBubble() {
+  if (!gameActive) return;
+  const hasPurple = document.querySelector(".bubble-bomb");
+  let rand = Math.random() * 100;
+  let type;
+
+  if (rand < 15 && !hasPurple) type = types[5];
+  else if (rand < 25) type = types[4];
+  else if (rand < 40) type = types[3];
+  else if (rand < 60) type = types[2];
+  else if (rand < 80) type = types[1];
+  else type = types[0];
+
+  createBubble(type);
+}
+
+function createBubble(type) {
+  const b = document.createElement("div");
+  const size = type.id === "bomb" ? Math.random() * 60 + 40 : type.size;
+
+  b.className = `bubble bubble-${type.id}`;
+  b.style.width = b.style.height = size + "px";
+  b.style.backgroundColor = type.color;
+  b.innerText = type.label;
+
+  const x = Math.random() * (window.innerWidth - size - 20) + 10;
+  const y = Math.random() * (window.innerHeight - size - 150) + 80;
+  b.style.left = x + "px";
+  b.style.top = y + "px";
+
+  const clickHandler = (e) => {
+    e.preventDefault();
+    if (!gameActive) return;
+    if (type.id === "bomb") triggerBomb();
+    else {
+      updateScore(type.pts);
+      if (type.pts < 0) flashScreen("red");
+    }
+    b.remove();
+  };
+
+  b.addEventListener("touchstart", clickHandler);
+  b.addEventListener("mousedown", clickHandler);
+  container.appendChild(b);
+
+  let duration = 2000;
+  if (type.id === "bad") duration = 1200;
+  if (type.id === "bomb") duration = 4000;
+
+  setTimeout(() => {
+    if (b.parentNode) b.remove();
+  }, duration);
+}
+
+function triggerBomb() {
+  flashScreen("purple");
+  const allBubbles = document.querySelectorAll(".bubble");
+  let count = allBubbles.length;
+  updateScore(50 + count * 5);
+  allBubbles.forEach((b) => b.remove());
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+}
+
+function updateScore(pts) {
+  score += pts;
+  scoreEl.innerText = score;
+  if (navigator.vibrate) navigator.vibrate(pts < 0 ? 100 : 20);
+}
+
+function flashScreen(type) {
+  const f = document.createElement("div");
+  f.style.position = "fixed";
+  f.style.top = 0;
+  f.style.left = 0;
+  f.style.width = "100vw";
+  f.style.height = "100vh";
+  f.style.pointerEvents = "none";
+  f.style.zIndex = 5;
+  f.className = `flash-${type}`;
+  document.body.appendChild(f);
+  setTimeout(() => f.remove(), 500);
+}
+
+function saveHighScore(name, finalScore) {
+  let list = JSON.parse(localStorage.getItem("popGame_leaderboard") || "[]");
+  list.push({
+    name: name,
+    score: finalScore,
+    date: new Date().getTime(),
+  });
+  // 排序：分數高優先，分數相同則日期新優先
+  list.sort((a, b) => b.score - a.score || b.date - a.date);
+  // 只留前10名
+  list = list.slice(0, 10);
+  localStorage.setItem("popGame_leaderboard", JSON.stringify(list));
+}
+
+function updateLeaderboardUI() {
+  const list = JSON.parse(localStorage.getItem("popGame_leaderboard") || "[]");
+  leaderBody.innerHTML = list.length
+    ? list
+        .map(
+          (item, index) => `
+              <tr class="${index === 0 ? "top1" : ""}">
+                <td>${index + 1}</td>
+                <td>${item.name}</td>
+                <td>${item.score}</td>
+              </tr>
+            `,
+        )
+        .join("")
+    : '<tr><td colspan="3" style="padding:20px; color:#999">尚無紀錄，等你來挑戰！</td></tr>';
+}
+
+function endGame() {
+  gameActive = false;
+  clearInterval(spawnTimer);
+  clearInterval(clockTimer);
+  document.querySelectorAll(".bubble").forEach((b) => b.remove());
+
+  // 儲存成績
+  saveHighScore(currentPlayerName, score);
+
+  let rank = "";
+  let rankColor = "";
+  if (score <= 200) {
+    rank = "辦公室透明人 😶";
+    rankColor = "#94a3b8";
+  } else if (score <= 400) {
+    rank = "茶水間常客 ☕";
+    rankColor = "#8ed1fc";
+  } else if (score <= 600) {
+    rank = "急件處理員 📄";
+    rankColor = "#0693e3";
+  } else if (score <= 800) {
+    rank = "資深打字機 ⌨️";
+    rankColor = "#00d084";
+  } else if (score <= 1000) {
+    rank = "專案救火隊 👨‍🚒";
+    rankColor = "#7bdcb5";
+  } else if (score <= 1200) {
+    rank = "部門頂樑柱 🏛️";
+    rankColor = "#abb8c3";
+  } else if (score <= 1400) {
+    rank = "效率守護神 🛡️";
+    rankColor = "#f78da7";
+  } else if (score <= 1600) {
+    rank = "副總經理預備軍 📈";
+    rankColor = "#ff6900";
+  } else if (score <= 1800) {
+    rank = "傳奇總經理 👑";
+    rankColor = "#fcb900";
+  } else {
+    rank = "跨國集團執行長 💎";
+    rankColor = "#eb144c";
+  }
+
+  // 顯示結算畫面 (重寫內容以包含新排行榜)
+  overlay.style.display = "flex";
+  overlay.innerHTML = `
+          <div class="menu-card">
+            <h1 style="color:#2d3436; margin:0">時間到！</h1>
+            <div style="font-size: 1.1rem; color: #636e72;">${currentPlayerName} 的得分</div>
+            <div style="font-size: 3.5rem; font-weight: 900; color: #2d3436; margin: 5px 0;">${score}</div>
+            <div style="background: ${rankColor}; color: white; padding: 8px 20px; border-radius: 50px; font-size: 1.2rem; font-weight: bold; margin-bottom: 20px;">
+                ${rank}
+            </div>
+            <button onclick="location.reload()">再戰一回</button>
+            <div style="margin-top: 25px;">
+              <strong style="color:#2f3640">🏆 最新排行榜</strong>
+              <table id="leaderboard">
+                <thead><tr><th width="20%">名次</th><th width="50%">玩家</th><th width="30%">得分</th></tr></thead>
+                <tbody id="leaderboard-body-end"></tbody>
+              </table>
+            </div>
+          </div>
+        `;
+
+  // 更新結算頁面的排行榜
+  const endBody = document.getElementById("leaderboard-body-end");
+  const list = JSON.parse(localStorage.getItem("popGame_leaderboard") || "[]");
+  endBody.innerHTML = list
+    .map(
+      (item, index) => `
+          <tr class="${index === 0 ? "top1" : ""}">
+            <td>${index + 1}</td>
+            <td>${item.name}</td>
+            <td>${item.score}</td>
+          </tr>
+        `,
+    )
+    .join("");
+}
+// 1. 禁用滑鼠右鍵選單
+document.oncontextmenu = function () {
+  console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+  return false;
+};
+
+// 2. 禁用常用開發者工具快捷鍵
+document.onkeydown = function (e) {
+  // 禁用 F12 (keyCode 123)
+  // 禁用 Ctrl+Shift+I (i = 73)
+  // 禁用 Ctrl+Shift+J (j = 74)
+  // 禁用 Ctrl+U (檢視原始碼, u = 85)
+  if (
+    e.keyCode === 123 ||
+    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+    (e.ctrlKey && e.keyCode === 85)
+  ) {
+    console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+    return false;
+  }
+};
+
+// 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+(function () {
+  const warningStyle =
+    "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+  const infoStyle = "font-size: 14px; color: #333;";
+
+  console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+  console.log(
+    "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+    infoStyle,
+  );
+  console.log(
+    "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+    infoStyle,
+  );
+})();
+// 監測視窗調整，若開發者工具側邊開啟則觸發
+window.onresize = function () {
+  if (
+    window.outerHeight - window.innerHeight > 200 ||
+    window.outerWidth - window.innerWidth > 200
+  ) {
+    document.body.innerHTML =
+      "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+  }
+};
+if (window.location.hostname !== "shuhaocao.github.io") {
+  document.documentElement.innerHTML =
+    "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+  window.stop();
+}
+async function validateAccess() {
+  try {
+    const resp = await fetch("access.json");
+    const config = await resp.json();
+    if (config.status !== "active") {
+      throw new Error("系統已停用");
+    }
+  } catch (e) {
+    document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+  }
+}
+validateAccess();
