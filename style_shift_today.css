@@ -1,0 +1,141 @@
+body {
+  background-color: #f8f9fa;
+  font-family: "Microsoft JhengHei", sans-serif;
+  padding: 10px;
+  margin: 0;
+}
+
+.container {
+  margin: 0 auto;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+/* 所有按鈕整合在同一排並允許換行 */
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 0.9em;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 4px;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+button.active {
+  background-color: #163e64;
+  color: white;
+  border-color: #163e64;
+}
+
+/* 單欄佈局設定 */
+.schedule-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.column {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shift-row {
+  display: flex;
+  align-items: stretch;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  background-color: white;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.shift-label {
+  flex: 1;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  white-space: nowrap;
+  min-width: 40%;
+}
+
+.staff-name {
+  flex: 1;
+  padding: 8px;
+  background-color: #eee;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* 顏色定義 */
+.red {
+  background-color: #c00000;
+}
+.green {
+  background-color: #275317;
+}
+.blue {
+  background-color: #163e64;
+}
+.middle-blue {
+  background-color: #215f9a;
+}
+.light-blue {
+  background-color: #4e95d9;
+}
+.purple {
+  background-color: #78206e;
+}
+.blue-green {
+  background-color: #0e9292;
+}
+.gray {
+  background-color: #595959;
+}
+.orange {
+  background-color: #c04f15;
+}
+.coffee {
+  background-color: #4f443f;
+}
+
+@media (max-width: 480px) {
+  .shift-label,
+  .staff-name {
+    font-size: 18px;
+    padding: 6px;
+  }
+}
+
+footer {
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 0.85em;
+  color: #999;
+}
