@@ -1,0 +1,237 @@
+:root {
+  --green: #1a472a;
+  --card-bg: #fff;
+  --active-gold: #ffeb3b;
+  --modal-bg: rgba(0, 0, 0, 0.85);
+}
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none; /* 防止滑動選牌時選取到文字 */
+}
+body {
+  background-color: var(--green);
+  color: white;
+  font-family: sans-serif;
+  margin: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 遊戲版面佈局 */
+#game-board {
+  display: grid;
+  grid-template-areas:
+    "p2 p2 p2"
+    "p1 table p3"
+    "p0 p0 p0";
+  grid-template-columns: 80px 1fr 80px;
+  grid-template-rows: 80px 1fr 140px;
+  height: 100dvh;
+  width: 100vw;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+#p0 {
+  grid-area: p0;
+  padding-bottom: 10px;
+}
+#p1 {
+  grid-area: p1;
+}
+#p2 {
+  grid-area: p2;
+}
+#p3 {
+  grid-area: p3;
+}
+#table {
+  grid-area: table;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.name-tag {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+  margin-bottom: 5px;
+  z-index: 10;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.active {
+  color: var(--active-gold);
+  border-color: var(--active-gold);
+  box-shadow: 0 0 8px var(--active-gold);
+}
+
+.card-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 80px;
+  touch-action: none; /* 必備：允許滑動選牌 */
+}
+.card {
+  width: 45px;
+  height: 65px;
+  background: var(--card-bg);
+  color: black;
+  border-radius: 4px;
+  margin-left: -20px;
+  border: 1px solid #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+}
+.card:first-child {
+  margin-left: 0;
+}
+.card.red {
+  color: #d00;
+}
+.card.selected {
+  transform: translateY(-25px);
+  border: 2px solid #2196f3;
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.5);
+}
+.card.npc-card {
+  background: #0d2a18;
+  color: transparent;
+  border-color: #222;
+}
+
+.controls {
+  display: flex;
+  gap: 5px;
+  width: 95%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+button {
+  flex: 1;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  background: #eee;
+  color: #333;
+  min-width: 60px;
+}
+button:active {
+  background: #ccc;
+}
+button:disabled {
+  opacity: 0.3;
+}
+
+#last-play-area {
+  display: flex;
+  gap: 5px;
+  min-height: 80px;
+  justify-content: center;
+  align-items: center;
+}
+#last-play-area .card {
+  width: 55px;
+  height: 80px;
+  font-size: 18px;
+  margin-left: 0;
+}
+
+.msg {
+  font-size: 14px;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+  height: 20px;
+  font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  visibility: hidden;
+}
+.modal.show {
+  visibility: visible;
+}
+.modal-content {
+  background: #fff;
+  color: #333;
+  padding: 20px;
+  border-radius: 15px;
+  width: 85%;
+  max-width: 320px;
+  text-align: center;
+}
+
+/* 結算樣式 */
+#result-list {
+  text-align: left;
+  margin: 15px 0;
+}
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.loser {
+  color: #d00;
+}
+.winner {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 480px) {
+  .card {
+    width: 35px;
+    height: 50px;
+    margin-left: -18px;
+    font-size: 12px;
+  }
+  #last-play-area .card {
+    width: 45px;
+    height: 65px;
+  }
+}
+
+footer div {
+  font-size: 10px;
+  color: #ccc;
+  text-align: center;
+  opacity: 0.6;
+  margin-top: 5px;
+}
