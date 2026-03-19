@@ -1,0 +1,288 @@
+:root {
+  --up: #ff4d4d;
+  --down: #2ecc71;
+  --bg: #0b0e11;
+  --card: #1e2329;
+  --text: #eaecef;
+  --accent: #f0b90b;
+  --border: #2b3139;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 10px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 初始進入畫面 */
+#login-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.login-box {
+  background: var(--card);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--accent);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  margin: 20px 0;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #12161c;
+  color: white;
+  font-size: 1rem;
+}
+
+/* 頂部狀態欄 */
+.header {
+  text-align: center;
+  padding: 15px;
+  background: var(--card);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-bottom: 4px solid var(--accent);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+#timer {
+  color: var(--accent);
+  font-size: 2rem;
+  font-weight: bold;
+  font-family: "Courier New", monospace;
+  letter-spacing: 2px;
+}
+.next-refresh {
+  font-size: 0.9rem;
+  color: #848e9c;
+  margin-top: 5px;
+}
+.player-info {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.rank-trigger {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 資產儀表板 */
+.dashboard {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 15px;
+  background: var(--card);
+  padding: 18px;
+  border-radius: 12px;
+  gap: 15px;
+}
+.stat {
+  text-align: center;
+  flex: 1;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: #848e9c;
+  margin-bottom: 5px;
+}
+.stat-val {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* 股市列表 */
+.table-container {
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.market-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.market-table th {
+  background: #2b3139;
+  padding: 15px;
+  font-size: 0.85rem;
+  color: #848e9c;
+}
+.market-table td {
+  padding: 15px 10px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.comp-name {
+  font-weight: bold;
+  text-align: left !important;
+  color: #3498db;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.price-up {
+  color: var(--up);
+  font-weight: bold;
+}
+.price-down {
+  color: var(--down);
+  font-weight: bold;
+}
+
+/* 按鈕 */
+.btn-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.1s;
+}
+.buy {
+  background: rgba(255, 77, 77, 0.15);
+  color: var(--up);
+  border: 1px solid var(--up);
+}
+.sell {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--down);
+  border: 1px solid var(--down);
+}
+.btn-start {
+  background: var(--accent);
+  color: black;
+  width: 100%;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+/* 排行榜表格樣式 */
+.rank-table {
+  width: 100%;
+  color: white;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.rank-table th {
+  border-bottom: 1px solid #444;
+  padding: 10px;
+  color: var(--accent);
+}
+.rank-table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #333;
+}
+
+/* 手機版響應式 */
+@media (max-width: 650px) {
+  .market-table thead {
+    display: none;
+  }
+  .market-table tr {
+    display: block;
+    padding: 15px;
+    border-bottom: 8px solid var(--bg);
+  }
+  .market-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    padding: 8px 0;
+  }
+  .market-table td::before {
+    content: attr(data-label);
+    font-weight: normal;
+    color: #848e9c;
+    font-size: 0.85rem;
+  }
+  .btn-group {
+    width: 100%;
+  }
+  .btn-group button {
+    flex: 1;
+  }
+}
+
+/* 彈窗 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+.modal-content {
+  background: var(--card);
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  border-radius: 15px;
+  position: relative;
+  border: 1px solid #474d57;
+}
+.close-btn {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  font-size: 2.5rem;
+  cursor: pointer;
+  color: #848e9c;
+}
+footer div {
+  font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
+  color: #888888; /* 中灰色，不會太刺眼 */
+  text-align: center; /* 居中對齊 */
+  opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
+  margin-top: 20px;
+}
