@@ -296,21 +296,27 @@
         grid-template-columns: 7cm 7cm 7cm;
         grid-template-rows: repeat(6, 4.95cm);
         width: 21cm;
-        /* 將高度微調縮小 0.1cm，防止因計算誤差產生溢出空白頁 */
-        height: 29.6cm;
-        margin: 0;
+        height: 29.6cm; /* 稍微縮小 0.1cm 避免觸發溢出頁 */
+        margin: 0 auto;
         padding: 0;
         gap: 0;
 
-        /* 僅保留 break-before，移除 break-after 避免重複分頁 */
-        break-before: page;
-        page-break-before: always;
+        /* 修正：僅在非第一頁的容器前觸發分頁 */
+        break-before: auto;
+        page-break-before: auto;
+
+        /* 修正：確保每一組 Grid 都能獨立分頁 */
+        break-inside: avoid;
 
         overflow: hidden;
         box-sizing: border-box;
         background: white;
         position: relative;
-        contain: content;
+      }
+
+      .layout-grid-18 + .layout-grid-18 {
+        break-before: page;
+        page-break-before: always;
       }
       .cell-18 {
         width: 7cm;
@@ -651,7 +657,7 @@
           ].text;
 
         printSection.innerHTML = "";
-        printSection.className = ""; // 移除外層 class，由內部頁面控制
+        printSection.className = "layout-a4"; // 移除外層 class，由內部頁面控制
 
         let currentPage = null;
 
