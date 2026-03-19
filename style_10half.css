@@ -1,0 +1,249 @@
+:root {
+  --bg-color: #1a472a;
+  --card-white: #ffffff;
+  --accent-color: #ffd700;
+  --danger-color: #ff4d4d;
+}
+
+body {
+  font-family: "Microsoft JhengHei", sans-serif;
+  background-color: var(--bg-color);
+  color: white;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  transition: background-color 0.5s ease;
+}
+
+/* 爆煲時的背景閃爍 */
+.bg-bust {
+  background-color: #4a1a1a !important;
+}
+
+/* 登入介面 */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 10px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  border: none;
+  margin: 10px;
+}
+
+/* 遊戲佈局 */
+.game-container {
+  width: 95%;
+  max-width: 1000px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+.table {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.player-area {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  border: 2px solid transparent;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* 對話泡泡 */
+.bubble {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  color: black;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px 5px 0;
+  border-style: solid;
+  border-color: white transparent transparent;
+}
+
+.active-turn {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px var(--accent-color);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.cards-display {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 85px;
+  margin: 10px 0;
+}
+
+/* 卡牌翻轉動畫 */
+.card {
+  width: 45px;
+  height: 70px;
+  background: white;
+  color: black;
+  border-radius: 5px;
+  margin: 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  transform-style: preserve-3d;
+  animation: flipIn 0.5s ease-out;
+}
+@keyframes flipIn {
+  from {
+    transform: rotateY(90deg) translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg) translateY(0);
+    opacity: 1;
+  }
+}
+
+.card.red {
+  color: red;
+}
+
+/* 控制區 */
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.betting-zone {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #e67e22;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+button:disabled {
+  background: #7f8c8d;
+  cursor: not-allowed;
+}
+button:hover:not(:disabled) {
+  background: #d35400;
+  transform: scale(1.05);
+}
+
+.leaderboard {
+  margin-top: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.status-msg {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+  height: 35px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.name-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  height: 40px;
+}
+
+@media (max-width: 600px) {
+  .table {
+    grid-template-columns: 1fr 1fr;
+  }
+  .card {
+    width: 40px;
+    height: 60px;
+    font-size: 0.9rem;
+  }
+}
+
+footer div {
+  font-size: 12px;
+  color: #888888;
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 20px;
+}
