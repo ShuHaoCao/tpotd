@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>五子連珠：指尖佈局</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <script src="script.js"></script>
+    <audio
+      id="soundPlayer"
+      src="5s_sound_stone_player.mp3"
+      preload="auto"
+    ></audio>
+    <audio id="soundAI" src="5s_sound_stone_ai.mp3" preload="auto"></audio>
+    <audio id="soundWin" src="5s_sound_win.mp3" preload="auto"></audio>
+
+    <div id="overlay">
+      <div class="modal">
+        <h3>五子連珠：指尖佈局</h3>
+        <input type="text" id="nameInput" placeholder="請輸入您的暱稱" />
+        <button onclick="saveNameAndStart()" style="width: 100%">
+          開始對戰
+        </button>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2 id="title">玩家(黑) vs 電腦(白)</h2>
+
+      <div class="controls">
+        <label for="difficulty">難度：</label>
+        <select id="difficulty" onchange="resetGame()">
+          <option value="0.5">容易 (新手)</option>
+          <option value="0.8" selected>普通 (老手)</option>
+          <option value="1.2">困難 (專家)</option>
+        </select>
+      </div>
+
+      <div id="status">準備中...</div>
+
+      <div id="board-wrapper">
+        <div class="grid-lines" id="gridLines"></div>
+        <div id="board"></div>
+      </div>
+
+      <div class="controls">
+        <button onclick="resetGame()">重開一局</button>
+        <button id="undoBtn" onclick="undoMove()">悔棋</button>
+        <button onclick="clearRecord()" style="background: #999">
+          清除紀錄
+        </button>
+      </div>
+
+      <div class="leaderboard">
+        <strong>🏆 <span id="rankTitle">普通</span>等級排行榜</strong>
+        <table>
+          <thead>
+            <tr>
+              <th>名次</th>
+              <th>玩家</th>
+              <th>步數</th>
+              <th>日期</th>
+            </tr>
+          </thead>
+          <tbody id="rankBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+    </footer>
+  </body>
+</html>
