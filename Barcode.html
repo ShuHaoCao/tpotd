@@ -294,29 +294,20 @@
       .layout-grid-18 {
         display: grid !important;
         grid-template-columns: 7cm 7cm 7cm;
-        grid-template-rows: repeat(6, 4.95cm);
+        grid-template-rows: repeat(
+          6,
+          4.9cm
+        ); /* 高度調降至 4.9cm，預留容錯空間 */
         width: 21cm;
-        height: 29.6cm; /* 稍微縮小 0.1cm 避免觸發溢出頁 */
+        height: 29.4cm; /* 總高度調降，防止第一頁溢出 */
         margin: 0 auto;
         padding: 0;
-        gap: 0;
 
-        /* 修正：僅在非第一頁的容器前觸發分頁 */
-        break-before: auto;
-        page-break-before: auto;
-
-        /* 修正：確保每一組 Grid 都能獨立分頁 */
+        /* 核心修正：避免第一頁出現空白 */
+        page-break-after: always; /* 每一頁印完才換頁 */
         break-inside: avoid;
-
-        overflow: hidden;
-        box-sizing: border-box;
-        background: white;
         position: relative;
-      }
-
-      .layout-grid-18 + .layout-grid-18 {
-        break-before: page;
-        page-break-before: always;
+        background: white;
       }
       .cell-18 {
         width: 7cm;
@@ -332,20 +323,29 @@
       }
 
       @media print {
-        @page {
-          size: A4;
-          margin: 0 !important;
-        }
-        body {
-          margin: 0;
-          padding: 0;
-        }
-        /* 徹底隱藏 UI 與頁尾，防止 G2010 印出多餘空白 */
-        .no-print,
-        .container,
-        footer,
-        .copyright {
-          display: none !important;
+        @media print {
+          @page {
+            size: A4;
+            margin: 0; /* 必須強制為 0 */
+          }
+          html,
+          body {
+            height: auto;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: visible; /* 確保內容不會被裁切 */
+          }
+          .no-print,
+          .container,
+          footer {
+            display: none !important;
+            height: 0 !important;
+            margin: 0 !important;
+          }
+          .preview-area {
+            padding: 0 !important;
+            margin: 0 !important;
+          }
         }
       }
     </style>
@@ -657,12 +657,12 @@
           ].text;
 
         printSection.innerHTML = "";
-        printSection.className = "layout-a4"; // 移除外層 class，由內部頁面控制
+        printSection.className = ""; // 移除外層 class，由內部頁面控制
 
         let currentPage = null;
 
         for (let i = 0; i < count; i++) {
-          // 每 18 張建立一個新的 A4 頁面容器
+          // 1. 每 18 張建立一個新的 A4 頁面容器 (這部分保留)
           if (i % 18 === 0) {
             currentPage = document.createElement("div");
             currentPage.className = "layout-grid-18";
