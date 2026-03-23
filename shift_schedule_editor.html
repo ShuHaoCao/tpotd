@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>運輸股-班表資料編輯器</title>
+    <style>
+      :root {
+        --primary-color: #4a69bd;
+        --secondary-color: #78e08f;
+        --accent-color: #fa983a;
+        --bg-color: #f1f2f6;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg-color);
+        margin: 0;
+        padding: 10px;
+        color: #2f3542;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      h2 {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+      }
+
+      .section {
+        background: #ffffff;
+        margin-bottom: 15px;
+        padding: 15px;
+        border: 1px solid #e1e4e8;
+        border-radius: 8px;
+      }
+
+      .section-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        display: block;
+        color: #57606f;
+      }
+
+      /* 檔案讀取區 */
+      .file-upload-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      /* 編輯列響應式設計 */
+      .edit-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f1f2f6;
+      }
+
+      label {
+        flex: 0 0 100px;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      select,
+      input[type="date"] {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        font-size: 1rem;
+        background-color: #fff;
+        appearance: none; /* 去除原生箭頭 */
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2724%27%20height%3D%2724%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23ccc%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpolyline%20points%3D%276%209%2012%2015%2018%209%27%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 18px;
+      }
+
+      /* 手機版調整 */
+      @media (max-width: 480px) {
+        .edit-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        label {
+          margin-bottom: 5px;
+          flex: none;
+          width: 100%;
+        }
+        select,
+        input[type="date"] {
+          width: 100%;
+          box-sizing: border-box;
+        }
+        h2 {
+          font-size: 1.2rem;
+        }
+      }
+
+      .btn-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .btn {
+        padding: 12px;
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        transition: opacity 0.2s;
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+      }
+
+      .btn:active {
+        opacity: 0.7;
+      }
+      .btn-load {
+        background-color: var(--primary-color);
+        width: 100%;
+      }
+      .btn-save {
+        background-color: var(--secondary-color);
+        color: #1e370a;
+      }
+      .btn-export {
+        background-color: var(--accent-color);
+      }
+
+      #status {
+        font-size: 0.85rem;
+        color: #eb4d4b;
+        margin-top: 5px;
+      }
+      #dateStatus {
+        font-size: 0.8rem;
+        display: block;
+        margin-top: 5px;
+      }
+
+      .sticky-footer {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 10px 0;
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+      }
+      footer {
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 0.85em;
+        color: #999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>運輸股-班表資料編輯器 v1.0</h2>
+
+      <div class="section">
+        <span class="section-title">第1步：載入來源</span>
+        <div class="file-upload-group">
+          <input type="file" id="fileInput" accept=".json" />
+          <button class="btn btn-load" onclick="loadFile()">
+            讀取 JSON 檔案
+          </button>
+        </div>
+        <div id="status"></div>
+      </div>
+
+      <div id="editorArea" style="display: none">
+        <div class="section">
+          <span class="section-title">第2步：選取日期</span>
+          <input type="date" id="datePicker" onchange="loadDateData()" />
+          <span id="dateStatus"></span>
+        </div>
+
+        <div class="section">
+          <span class="section-title">第3步：編輯人員</span>
+          <div id="fieldsContainer"></div>
+        </div>
+
+        <div class="sticky-footer">
+          <div class="btn-group">
+            <button class="btn btn-save" onclick="saveToMemory()">
+              暫存修改
+            </button>
+            <button class="btn btn-export" onclick="exportJSON()">
+              匯出下載
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let scheduleData = {};
+      let allStaff = [];
+
+      // 這裡可以根據你的需求自定義特定班別的清單
+      const staffConfig = {
+        "股　長": ["王昭文", "-"],
+        早班專員: ["謝勝勳", "曹書豪", "-"],
+        內檯經辦: ["吳家偉", "-"],
+        空袋櫃: ["邱學士", "-"],
+        "早　班 1": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "陳柏林",
+          "程世桓",
+          "周恆毅",
+          "-",
+        ],
+        "早　班 2": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "陳柏林",
+          "-",
+        ],
+        "早　班 3": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "陳柏林",
+          "-",
+        ],
+        "早　班 4": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "施以平",
+          "陳柏林",
+          "葉育宏",
+          "-",
+        ],
+        "新　營 1": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "施以平",
+          "-",
+        ],
+        "新　營 2": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "施以平",
+          "-",
+        ],
+        "嘉　義 2": [
+          "莊景宇",
+          "葉育宏",
+          "邱俊融",
+          "吳佳錚",
+          "周恆毅",
+          "程世桓",
+          "王寶生",
+          "-",
+        ],
+        中班專員: ["謝勝勳", "曹書豪", "-"],
+        "771/772車次": [
+          "葉育宏",
+          "陳緯謙",
+          "翁志峰",
+          "鄭憲鴻",
+          "許瑞廷",
+          "程世桓",
+          "葉吉順",
+          "莊世明",
+          "王寶生",
+          "陳柏林",
+          "邱俊融",
+          "沈銘展",
+          "吳佳錚",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        中1: [
+          "葉育宏",
+          "陳緯謙",
+          "翁志峰",
+          "鄭憲鴻",
+          "許瑞廷",
+          "程世桓",
+          "葉吉順",
+          "莊世明",
+          "王寶生",
+          "陳柏林",
+          "邱俊融",
+          "沈銘展",
+          "吳佳錚",
+          "周恆毅",
+          "周耀宗",
+          ,
+          "-",
+        ],
+        中2: [
+          "沈銘展",
+          "許瑞廷",
+          "鄭憲鴻",
+          "吳佳錚",
+          "王寶生",
+          "邱俊融",
+          "翁志峰",
+          "陳緯謙",
+          "程世桓",
+          "葉吉順",
+          "葉育宏",
+          "周恆毅",
+          "-",
+        ],
+        中3: [
+          "沈銘展",
+          "鄭憲鴻",
+          "翁志峰",
+          "許瑞廷",
+          "邱俊融",
+          "程世桓",
+          "周恆毅",
+          "陳緯謙",
+          "葉育宏",
+          "葉吉順",
+          "-",
+        ],
+        中4: [
+          "吳佳錚",
+          "鄭憲鴻",
+          "程世桓",
+          "沈銘展",
+          "許瑞廷",
+          "葉育宏",
+          "翁志峰",
+          "陳緯謙",
+          "邱俊融",
+          "葉吉順",
+          "陳柏林",
+          "周恆毅",
+          "-",
+        ],
+        中5: [
+          "吳佳錚",
+          "王寶生",
+          "鄭憲鴻",
+          "程世桓",
+          "林凱勳",
+          "許瑞廷",
+          "沈銘展",
+          "陳緯謙",
+          "翁志峰",
+          "周恆毅",
+          "許智勇",
+          "莊世明",
+          "邱俊融",
+          "葉吉順",
+          "葉育宏",
+          "-",
+        ],
+        中6: ["陳柏宇", "沈銘展", "鄭憲鴻", "程世桓", "-"],
+        中7: [
+          "陳緯謙",
+          "吳佳錚",
+          "許瑞廷",
+          "葉育宏",
+          "程世桓",
+          "許智勇",
+          "周恆毅",
+          "邱俊融",
+          "翁志峰",
+          "葉吉順",
+          "-",
+        ],
+        中8: [
+          "程世桓",
+          "陳緯謙",
+          "王寶生",
+          "莊世民",
+          "葉吉順",
+          "張正德",
+          "邱俊融",
+          "葉育宏",
+          "翁志峰",
+          "陳柏林",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        中9: [
+          "程世桓",
+          "陳緯謙",
+          "王寶生",
+          "莊世民",
+          "葉吉順",
+          "張正德",
+          "邱俊融",
+          "葉育宏",
+          "翁志峰",
+          "陳柏林",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        中10: [
+          "程世桓",
+          "陳緯謙",
+          "王寶生",
+          "莊世民",
+          "葉吉順",
+          "張正德",
+          "邱俊融",
+          "葉育宏",
+          "翁志峰",
+          "陳柏林",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        中11: [
+          "程世桓",
+          "陳緯謙",
+          "王寶生",
+          "莊世民",
+          "葉吉順",
+          "張正德",
+          "邱俊融",
+          "葉育宏",
+          "翁志峰",
+          "陳柏林",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        中12: [
+          "程世桓",
+          "陳緯謙",
+          "王寶生",
+          "莊世民",
+          "葉吉順",
+          "張正德",
+          "邱俊融",
+          "葉育宏",
+          "翁志峰",
+          "陳柏林",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        中13: [
+          "程世桓",
+          "陳緯謙",
+          "王寶生",
+          "莊世民",
+          "葉吉順",
+          "張正德",
+          "邱俊融",
+          "葉育宏",
+          "翁志峰",
+          "陳柏林",
+          "周恆毅",
+          "周耀宗",
+          "-",
+        ],
+        夜班專員: ["謝勝勳", "曹書豪", "-"],
+        "大夜班 1": [
+          "陳柏林",
+          "葉吉順",
+          "周恆毅",
+          "莊世明",
+          "金哲駿",
+          "張正德",
+          "施以平",
+          "葉育宏",
+          "邱俊融",
+          "-",
+        ],
+        "大夜班 2": [
+          "陳柏林",
+          "葉吉順",
+          "周恆毅",
+          "莊世明",
+          "金哲駿",
+          "張正德",
+          "施以平",
+          "黃憲章",
+          "葉育宏",
+          "-",
+        ],
+        "大夜班 3": [
+          "陳柏林",
+          "葉吉順",
+          "周恆毅",
+          "莊世明",
+          "金哲駿",
+          "張正德",
+          "施以平",
+          "葉育宏",
+          "邱俊融",
+          "-",
+        ],
+        "127/128車次": [
+          "陳柏林",
+          "葉吉順",
+          "周恆毅",
+          "莊世明",
+          "金哲駿",
+          "張正德",
+          "施以平",
+          "葉育宏",
+          "-",
+        ],
+        "早1(六日)": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "陳柏林",
+          "程世桓",
+          "周恆毅",
+          "-",
+        ],
+        "早3(六)": [
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "陳柏林",
+          "程世桓",
+          "周恆毅",
+          "-",
+        ],
+        "中1(六日)": [, "-"],
+        自運甲線: [
+          "陳柏宇",
+          "沈銘展",
+          "邱俊融",
+          "程世桓",
+          "周恆毅",
+          "翁志峰",
+          "吳佳錚",
+          "張智雄",
+          "陳柏林",
+          "周耀宗",
+          "葉育宏",
+          "-",
+        ],
+        自運乙線: [
+          "吳佳錚",
+          "沈銘展",
+          "葉育宏",
+          "王寶生",
+          "程世桓",
+          "莊景宇",
+          "邱俊融",
+          "葉吉順",
+          "-",
+        ],
+        "夜1(六日)": [
+          "陳柏林",
+          "葉吉順",
+          "周恆毅",
+          "莊世明",
+          "金哲駿",
+          "張正德",
+          "施以平",
+          "葉育宏",
+          "邱俊融",
+          "-",
+        ],
+        進口接送: ["蔡綜哲", "吳政謙", "柯國超", "-"],
+        出口接送: ["蔡綜哲", "吳政謙", "柯國超", "-"],
+        "支　援 1": [, "-"],
+        "支　援 2": [, "-"],
+        "支　援 3": [, "-"],
+        "支　援 4": [, "-"],
+        "見　習 1": [, "-"],
+        "見　習 2": [, "-"],
+      };
+
+      function loadFile() {
+        const file = document.getElementById("fileInput").files[0];
+        if (!file) return alert("請先選擇 JSON 檔案");
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            scheduleData = JSON.parse(e.target.result);
+            extractAllStaff();
+            document.getElementById("editorArea").style.display = "block";
+            document.getElementById("status").innerText = "✅ 讀取成功";
+
+            // 預設選取最新的一天
+            const dates = Object.keys(scheduleData)
+              .filter((k) => k !== "lastUpdated")
+              .sort();
+            document.getElementById("datePicker").value =
+              dates[dates.length - 1];
+            loadDateData();
+          } catch (err) {
+            alert("檔案格式錯誤，請確認是否為正確的 JSON");
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function extractAllStaff() {
+        let staffSet = new Set(["-", ""]);
+        Object.keys(scheduleData).forEach((date) => {
+          if (date === "lastUpdated") return;
+          Object.values(scheduleData[date]).forEach((name) => {
+            if (name && name !== "#溢出!") staffSet.add(name);
+          });
+        });
+        allStaff = Array.from(staffSet);
+      }
+
+      function loadDateData() {
+        const selectedDate = document.getElementById("datePicker").value;
+        const container = document.getElementById("fieldsContainer");
+        const dateStatus = document.getElementById("dateStatus");
+        container.innerHTML = "";
+
+        if (!selectedDate) return;
+
+        let dayData = scheduleData[selectedDate];
+        const isNew = !dayData;
+
+        if (isNew) {
+          dateStatus.innerText = "ℹ️ 此日期無資料，儲存後將新增。";
+          dateStatus.style.color = "orange";
+          // 抓取最近一天的鍵值作為模板
+          const keys = Object.keys(scheduleData).filter(
+            (k) => k !== "lastUpdated",
+          );
+          const template = scheduleData[keys[keys.length - 1]];
+          dayData = {};
+          Object.keys(template).forEach((k) => (dayData[k] = "-"));
+        } else {
+          dateStatus.innerText = "✅ 已載入現有資料";
+          dateStatus.style.color = "green";
+        }
+
+        Object.keys(dayData).forEach((shift) => {
+          const div = document.createElement("div");
+          div.className = "edit-row";
+
+          const label = document.createElement("label");
+          label.innerText = shift;
+
+          const select = document.createElement("select");
+          select.dataset.shift = shift;
+
+          let options = staffConfig[shift] ? staffConfig[shift] : allStaff;
+          if (!options.includes(dayData[shift]))
+            options = [dayData[shift], ...options];
+
+          options.forEach((name) => {
+            const opt = document.createElement("option");
+            opt.value = name;
+            opt.text = name || "(空白)";
+            if (name === dayData[shift]) opt.selected = true;
+            select.appendChild(opt);
+          });
+
+          div.appendChild(label);
+          div.appendChild(select);
+          container.appendChild(div);
+        });
+      }
+
+      function saveToMemory() {
+        const selectedDate = document.getElementById("datePicker").value;
+        const selects = document.querySelectorAll("#fieldsContainer select");
+        let newDayData = {};
+        selects.forEach((s) => (newDayData[s.dataset.shift] = s.value));
+
+        scheduleData[selectedDate] = newDayData;
+
+        const now = new Date();
+        scheduleData.lastUpdated =
+          now.getFullYear() +
+          "-" +
+          (now.getMonth() + 1) +
+          "-" +
+          now.getDate() +
+          " " +
+          now.getHours() +
+          ":" +
+          now.getMinutes();
+
+        alert(
+          "已暫存 " + selectedDate + " 的修改內容。記得最後要按匯出下載檔案。",
+        );
+        loadDateData();
+      }
+
+      function exportJSON() {
+        const sorted = {};
+        if (scheduleData.lastUpdated)
+          sorted.lastUpdated = scheduleData.lastUpdated;
+        Object.keys(scheduleData)
+          .filter((k) => k !== "lastUpdated")
+          .sort()
+          .forEach((d) => (sorted[d] = scheduleData[d]));
+
+        const blob = new Blob([JSON.stringify(sorted, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "schedule_data.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    </script>
+    <footer>
+      <div>© 2025 臺南郵局運輸股</div>
+      <div>僅供內部使用，未經授權不得轉載</div>
+    </footer>
+  </body>
+</html>
