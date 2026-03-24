@@ -332,76 +332,91 @@
         // 您可以根據需求繼續往下增加其他班別
       };
 
-      // 新增：動態建立 Tooltip 元素
+      // 1. 建立 Tooltip 元素 (修正縮排樣式)
       const tooltip = document.createElement("div");
       tooltip.style.cssText = `
-        position: fixed;
-        display: none;
-        background: #333;
-        color: #fff;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        z-index: 1000;
-        pointer-events: none;
-        box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
-        white-space: nowrap;
-      `;
+  position: fixed;
+  display: none;
+  background: rgba(40, 40, 40, 0.95);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 2000;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  white-space: normal;       /* 核心修改：允許自動換行 */
+  word-wrap: break-word;     /* 核心修改：強制長字斷行 */
+  max-width: 250px;          /* 核心修改：限制寬度，超過則自動縮排 */
+  line-height: 1.6;
+`;
       document.body.appendChild(tooltip);
 
-      // 新的事件監聽：左右色塊分別顯示不同內容
-      document.addEventListener("mouseover", function (e) {
-        let content = "";
+      // 2. 座標更新函數 (核心修改：解決手機邊緣遮擋問題)
+      function updateTooltipPosition(e) {
+        if (tooltip.style.display === "block") {
+          let posX = e.clientX + 15;
+          let posY = e.clientY + 15;
 
-        // 1. 如果滑鼠移到「左側深色塊」(班別)
+          // 如果右邊空間不夠，改向左顯示
+          if (posX + tooltip.offsetWidth > window.innerWidth) {
+            posX = e.clientX - tooltip.offsetWidth - 15;
+          }
+          // 如果下面空間不夠，改向上顯示
+          if (posY + tooltip.offsetHeight > window.innerHeight) {
+            posY = e.clientY - tooltip.offsetHeight - 15;
+          }
+
+          tooltip.style.left = posX + "px";
+          tooltip.style.top = posY + "px";
+        }
+      }
+
+      // 3. 滑鼠移入：區分左右色塊內容
+      document.addEventListener("mouseover", function (e) {
+        let note = "";
+
+        // 判斷左側 (深色班別標籤)
         if (e.target.classList.contains("shift-label")) {
           const labelText = e.target.textContent.trim();
-          const timeNote = shiftTimeNotes[labelText];
-          if (timeNote) content = "🕒 上班時間: " + timeNote;
+          const time = shiftTimeNotes[labelText];
+          if (time) note = "🕒 上班時間：\n" + time;
         }
-
-        // 2. 如果滑鼠移到「右側淺色塊」(人名/任務區)
+        // 判斷右側 (淺色人名色塊)
         else if (e.target.classList.contains("staff-name")) {
-          // 透過這一行(row)回頭去找左邊的班別名稱是什麼
           const row = e.target.closest(".shift-row");
           if (row) {
             const shiftLabel = row
               .querySelector(".shift-label")
               .textContent.trim();
-            const taskNote = shiftTaskNotes[shiftLabel];
-            // 如果該班別有設定任務內容才顯示，若無則不顯示或顯示預設文字
-            if (taskNote) content = "📝 工作任務: " + taskNote;
+            const task = shiftTaskNotes[shiftLabel];
+            if (task) note = "📝 工作任務：\n" + task;
           }
         }
 
-        // 執行顯示
-        if (content) {
-          tooltip.textContent = content;
+        if (note) {
+          tooltip.innerText = note; // 使用 innerText 才能解析 \n 換行
           tooltip.style.display = "block";
         }
       });
 
-      // 新增：手機點擊觸發 (原本 mouseover 在手機上較難觸發)
+      // 4. 移動與點擊：更新位置 (包含手機點擊支援)
+      document.addEventListener("mousemove", updateTooltipPosition);
       document.addEventListener("click", function (e) {
         if (
-          e.target.classList.contains("staff-name") ||
-          e.target.classList.contains("shift-label")
+          e.target.classList.contains("shift-label") ||
+          e.target.classList.contains("staff-name")
         ) {
-          // 讓 Tooltip 跟隨點擊位置
-          tooltip.style.left = e.clientX + 10 + "px";
-          tooltip.style.top = e.clientY + 10 + "px";
+          updateTooltipPosition(e);
         }
       });
 
-      document.addEventListener("mousemove", function (e) {
-        if (tooltip.style.display === "block") {
-          tooltip.style.left = e.clientX + 15 + "px";
-          tooltip.style.top = e.clientY + 15 + "px";
-        }
-      });
-
+      // 5. 滑鼠移出：隱藏
       document.addEventListener("mouseout", function (e) {
-        if (e.target.classList.contains("shift-label")) {
+        if (
+          e.target.classList.contains("shift-label") ||
+          e.target.classList.contains("staff-name")
+        ) {
           tooltip.style.display = "none";
         }
       });
