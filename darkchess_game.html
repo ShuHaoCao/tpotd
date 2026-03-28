@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0VSMGFF0E6");
+    </script>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>經典暗棋</title>
+    <style>
+      :root {
+        --bg-color: #f4e4bc;
+        --border-color: #8b4513;
+        --red-piece: #d32f2f;
+        --black-piece: #212121;
+        --text-color: #4a2700;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Microsoft JhengHei", sans-serif;
+        background-color: #2c2c2c;
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        touch-action: manipulation;
+      }
+
+      #game-container {
+        width: 100%;
+        max-width: 450px;
+        height: 100%;
+        background-color: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+
+      #message-panel {
+        background: rgba(139, 69, 19, 0.1);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 8px;
+        text-align: center;
+        margin-bottom: 5px;
+      }
+
+      .status-turn {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: var(--text-color);
+      }
+
+      .status-action {
+        font-size: 0.85rem;
+        color: #555;
+        margin-top: 2px;
+      }
+
+      #captured-area {
+        width: 100%;
+        height: 60px;
+        border: 1px solid var(--border-color);
+        background: rgba(0, 0, 0, 0.05);
+        margin-bottom: 5px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .captured-row {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+        overflow-x: auto;
+      }
+
+      /* 棋盤核心修正 */
+      #board {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        gap: 1px;
+        background-color: var(--border-color);
+        border: 3px solid var(--border-color);
+        flex: 1; /* 讓棋盤佔滿剩餘空間 */
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .cell {
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .piece {
+        /* 核心修正：確保棋子永遠是圓形且不變形 */
+        width: 85%;
+        max-width: 55px; /* 限制最大尺寸防止在大螢幕變形 */
+        aspect-ratio: 1 / 1; /* 強制寬高 1:1 */
+
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        /* 字體大小：根據寬度自動縮放，並設定最小限制確保手機看得清楚 */
+        font-size: min(6vw, 24px);
+
+        font-weight: bold;
+        user-select: none;
+        border: 2px solid #333;
+        box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
+        transition: transform 0.1s;
+      }
+
+      .piece.hidden {
+        background: radial-gradient(circle, #8b4513, #5d2e0a);
+        color: transparent !important;
+        border: 2px solid #3e1f07;
+      }
+
+      .piece.red {
+        background-color: var(--red-piece);
+        color: #fff;
+      }
+      .piece.black {
+        background-color: var(--black-piece);
+        color: #fff;
+      }
+
+      .selected {
+        transform: scale(1.1);
+        outline: 3px solid #ffeb3b;
+        z-index: 5;
+      }
+
+      .controls {
+        padding: 10px 0;
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 25px;
+        font-size: 1rem;
+        background-color: var(--border-color);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      button:active {
+        transform: scale(0.95);
+      }
+      footer div {
+        font-size: 12px;
+        color: #888888;
+        text-align: center;
+        opacity: 0.7;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="message-panel">
+        <div id="current-status" class="status-turn">準備開始...</div>
+        <div id="last-action" class="status-action">請翻牌決定陣營</div>
+      </div>
+
+      <div id="captured-area">
+        <div id="captured-red" class="captured-row"></div>
+        <div id="captured-black" class="captured-row"></div>
+      </div>
+
+      <div id="board"></div>
+
+      <footer class="controls">
+        <button onclick="resetGame()">重置遊戲</button>
+      </footer>
+    </div>
+    <script>
+      /**
+       * 暗棋 - 玩家 vs 電腦
+       * 強化版：加入詳細動作顯示與介面修正
+       */
+
+      const PIECES_CONFIG = [
+        { name: "帥", level: 7, side: "red", count: 1 },
+        { name: "仕", level: 6, side: "red", count: 2 },
+        { name: "相", level: 5, side: "red", count: 2 },
+        { name: "車", level: 4, side: "red", count: 2 },
+        { name: "馬", level: 3, side: "red", count: 2 },
+        { name: "炮", level: 2, side: "red", count: 2 },
+        { name: "兵", level: 1, side: "red", count: 5 },
+        { name: "將", level: 7, side: "black", count: 1 },
+        { name: "士", level: 6, side: "black", count: 2 },
+        { name: "象", level: 5, side: "black", count: 2 },
+        { name: "車", level: 4, side: "black", count: 2 },
+        { name: "馬", level: 3, side: "black", count: 2 },
+        { name: "炮", level: 2, side: "black", count: 2 },
+        { name: "卒", level: 1, side: "black", count: 5 },
+      ];
+
+      let boardData = [];
+      let selectedIndex = null;
+      let currentTurn = null;
+      let playerSide = null;
+      let isAITurn = false;
+
+      // UI 輔助函式
+      const UI = {
+        status: (msg) =>
+          (document.getElementById("current-status").innerText = msg),
+        action: (msg, color = "normal") => {
+          const el = document.getElementById("last-action");
+          el.innerText = msg;
+          el.style.color =
+            color === "red"
+              ? "#d32f2f"
+              : color === "black"
+                ? "#212121"
+                : "#666";
+        },
+        getSideName: (side) => (side === "red" ? "紅方" : "黑方"),
+      };
+
+      function initGame() {
+        const board = document.getElementById("board");
+        board.innerHTML = "";
+        document.getElementById("captured-red").innerHTML = "";
+        document.getElementById("captured-black").innerHTML = "";
+
+        let pool = [];
+        PIECES_CONFIG.forEach((p) => {
+          for (let i = 0; i < p.count; i++) pool.push({ ...p, isHidden: true });
+        });
+        pool.sort(() => Math.random() - 0.5);
+        boardData = pool;
+
+        for (let i = 0; i < 32; i++) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.index = i;
+          cell.onclick = () => handleCellClick(i);
+          board.appendChild(cell);
+          renderPiece(i);
+        }
+
+        playerSide = null;
+        currentTurn = null;
+        isAITurn = false;
+        UI.status("遊戲開始");
+        UI.action("請翻開任意棋子決定陣營");
+      }
+
+      function renderPiece(index) {
+        const cells = document.querySelectorAll(".cell");
+        if (!cells[index]) return;
+        const cell = cells[index];
+        cell.innerHTML = "";
+        const data = boardData[index];
+        if (!data) return;
+
+        const div = document.createElement("div");
+        div.className = `piece ${data.side} ${data.isHidden ? "hidden" : ""}`;
+        div.innerText = data.isHidden ? "?" : data.name;
+        if (selectedIndex === index) div.classList.add("selected");
+        cell.appendChild(div);
+      }
+
+      function handleCellClick(index) {
+        if (isAITurn) return; // 電腦回合，禁用點擊
+
+        const clickedPiece = boardData[index];
+
+        // 1. 翻牌
+        if (clickedPiece && clickedPiece.isHidden) {
+          clickedPiece.isHidden = false;
+          const sideName = UI.getSideName(clickedPiece.side);
+
+          if (!currentTurn) {
+            currentTurn = clickedPiece.side;
+            playerSide = clickedPiece.side;
+            UI.action(
+              `您翻開了 ${sideName}${clickedPiece.name}，您是 ${sideName}`,
+              clickedPiece.side,
+            );
+          } else {
+            UI.action(
+              `您翻開了 ${sideName}${clickedPiece.name}`,
+              clickedPiece.side,
+            );
+          }
+
+          renderPiece(index);
+          endTurn();
+          return;
+        }
+
+        // 2. 選取與移動
+        if (selectedIndex === null) {
+          if (clickedPiece && clickedPiece.side === currentTurn) {
+            selectedIndex = index;
+            refreshBoard(); // 顯示黃色光圈
+          }
+        } else {
+          const fromPiece = boardData[selectedIndex];
+          if (canMove(selectedIndex, index)) {
+            const toPiece = boardData[index];
+
+            // 產生吃子或移動描述
+            let actionMsg = `您移動了 ${fromPiece.name}`;
+            if (toPiece) {
+              actionMsg = `您使用 ${fromPiece.name} 吃掉了 ${UI.getSideName(toPiece.side)}${toPiece.name}`;
+            }
+            UI.action(actionMsg, fromPiece.side);
+
+            executeMove(selectedIndex, index);
+            endTurn();
+          } else {
+            // 切換選取或取消
+            if (clickedPiece && clickedPiece.side === currentTurn) {
+              selectedIndex = index;
+            } else {
+              selectedIndex = null;
+            }
+            refreshBoard();
+          }
+        }
+      }
+
+      // ...canMove, executeMove, capturePiece 函式保持不變...
+      function canMove(from, to) {
+        const p1 = boardData[from];
+        const p2 = boardData[to];
+        const r1 = Math.floor(from / 4),
+          c1 = from % 4;
+        const r2 = Math.floor(to / 4),
+          c2 = to % 4;
+        const dist = Math.abs(r1 - r2) + Math.abs(c1 - c2);
+
+        if (p1.name === "炮") {
+          if (!p2) return dist === 1;
+          if (p2.isHidden) return false;
+          if (r1 === r2 || c1 === c2) {
+            let count = 0;
+            const start = Math.min(from, to),
+              end = Math.max(from, to);
+            const step = r1 === r2 ? 1 : 4;
+            for (let i = start + step; i < end; i += step)
+              if (boardData[i]) count++;
+            return count === 1;
+          }
+          return false;
+        }
+        if (dist !== 1) return false;
+        if (!p2) return true;
+        if (!p2.isHidden && p1.side !== p2.side) {
+          if (p1.level === 7 && p2.level === 1) return false;
+          if (p1.level === 1 && p2.level === 7) return true;
+          return p1.level >= p2.level;
+        }
+        return false;
+      }
+
+      function executeMove(from, to) {
+        if (boardData[to]) capturePiece(boardData[to]);
+        boardData[to] = boardData[from];
+        boardData[from] = null;
+        selectedIndex = null;
+      }
+
+      function capturePiece(piece) {
+        const area = document.getElementById(`captured-${piece.side}`);
+        const div = document.createElement("div");
+        div.className = `piece ${piece.side}`;
+        div.style.width = "20px";
+        div.style.height = "20px";
+        div.style.fontSize = "0.6rem";
+        div.innerText = piece.name;
+        area.appendChild(div);
+      }
+
+      function endTurn() {
+        refreshBoard();
+        if (checkGameOver()) return;
+
+        // 切換回合
+        currentTurn = currentTurn === "red" ? "black" : "red";
+
+        // 如果現在輪到的陣營與玩家陣營不同，則是電腦回合
+        if (currentTurn !== playerSide) {
+          isAITurn = true;
+          UI.status("電腦行動中...");
+          // 延遲 1.2 秒模擬思考
+          setTimeout(aiAction, 1200);
+        } else {
+          isAITurn = false;
+          UI.status("輪到你了");
+        }
+      }
+
+      // --- 電腦 (AI) 強化版 ---
+      function aiAction() {
+        let bestAction = null;
+        let highScores = [];
+        let flips = [];
+
+        // 1. 掃描所有可能性並給予評分
+        for (let i = 0; i < 32; i++) {
+          const p = boardData[i];
+          if (!p) continue;
+
+          if (p.isHidden) {
+            flips.push(i);
+          } else if (p.side === currentTurn) {
+            for (let j = 0; j < 32; j++) {
+              if (canMove(i, j)) {
+                const toPiece = boardData[j];
+                let score = 0;
+
+                if (toPiece) {
+                  // 吃子得分：目標等級越大分數越高
+                  score = toPiece.level * 10;
+                } else {
+                  // 移動得分：給予一個基礎隨機值，增加隨機性
+                  score = Math.floor(Math.random() * 5);
+                }
+                highScores.push({ from: i, to: j, score: score });
+              }
+            }
+          }
+        }
+
+        // 2. 決策優先序
+        // 按分數排序
+        highScores.sort((a, b) => b.score - a.score);
+
+        if (highScores.length > 0 && highScores[0].score > 10) {
+          // 2a. 有明確吃子機會
+          bestAction = highScores[0];
+          const fromP = boardData[bestAction.from];
+          const toP = boardData[bestAction.to];
+          UI.action(
+            `電腦使用 ${fromP.name} 吃掉了您的 ${toP.name}`,
+            fromP.side,
+          );
+          executeMove(bestAction.from, bestAction.to);
+        } else if (flips.length > 0 && Math.random() < 0.8) {
+          // 2b. 沒子吃，80% 機率翻牌
+          const idx = flips[Math.floor(Math.random() * flips.length)];
+          const p = boardData[idx];
+          p.isHidden = false;
+          UI.action(`電腦翻開了 ${UI.getSideName(p.side)}${p.name}`, p.side);
+        } else if (highScores.length > 0) {
+          // 2c. 沒牌翻或 20% 機率選擇隨機移動
+          bestAction =
+            highScores[Math.floor(Math.random() * highScores.length)];
+          const p = boardData[bestAction.from];
+          UI.action(`電腦移動了 ${p.name}`, p.side);
+          executeMove(bestAction.from, bestAction.to);
+        } else if (flips.length > 0) {
+          // 2d. 沒移動機會，只能翻牌
+          const idx = flips[Math.floor(Math.random() * flips.length)];
+          const p = boardData[idx];
+          p.isHidden = false;
+          UI.action(`電腦翻開了 ${UI.getSideName(p.side)}${p.name}`, p.side);
+        }
+
+        endTurn();
+      }
+
+      function checkGameOver() {
+        const redCount = boardData.filter((p) => p && p.side === "red").length;
+        const blackCount = boardData.filter(
+          (p) => p && p.side === "black",
+        ).length;
+        if (redCount === 0 || blackCount === 0) {
+          const winnerSide = redCount === 0 ? "black" : "red";
+          UI.status("遊戲結束");
+          UI.action(`${UI.getSideName(winnerSide)} 獲勝！`, winnerSide);
+          // 使用定時器讓玩家有時間看清楚最後一個動作描述
+          setTimeout(() => {
+            alert(`遊戲結束！${UI.getSideName(winnerSide)}獲勝`);
+            initGame();
+          }, 500);
+          return true;
+        }
+        return false;
+      }
+
+      function refreshBoard() {
+        for (let i = 0; i < 32; i++) renderPiece(i);
+      }
+
+      function resetGame() {
+        if (confirm("確定要重置遊戲嗎？")) {
+          initGame();
+        }
+      }
+
+      // 啟動
+      initGame();
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      // 監測視窗調整，若開發者工具側邊開啟則觸發
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "shuhaocao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
+    </script>
+    <footer>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+    </footer>
+  </body>
+</html>
