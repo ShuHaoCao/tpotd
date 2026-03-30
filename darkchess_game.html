@@ -184,6 +184,35 @@
   <body>
     <div id="game-container">
       <div id="message-panel">
+        <div
+          id="difficulty-selector"
+          style="
+            text-align: center;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 5px;
+            padding: 5px;
+          "
+        >
+          <label
+            style="
+              font-size: 0.9rem;
+              color: var(--text-color);
+              font-weight: bold;
+            "
+            >電腦難度：</label
+          >
+          <select
+            id="difficulty-level"
+            onchange="resetGame()"
+            style="padding: 3px; border-radius: 5px; cursor: pointer"
+          >
+            <option value="easy">簡易-難度</option>
+            <option value="normal" selected>普通-難度</option>
+            <option value="hard">困難-難度</option>
+            <option value="hell">專家-難度</option>
+          </select>
+        </div>
         <div id="current-status" class="status-turn">準備開始...</div>
         <div id="last-action" class="status-action">請翻牌決定陣營</div>
       </div>
@@ -422,73 +451,183 @@
       }
 
       // --- 電腦 (AI) 強化版 ---
+      // --- 強化版 AI 核心邏輯 ---
+
       function aiAction() {
-        let bestAction = null;
-        let highScores = [];
+        const difficulty = document.getElementById("difficulty-level").value;
+        let moves = [];
         let flips = [];
 
-        // 1. 掃描所有可能性並給予評分
+        // 1. 基礎資料收集
         for (let i = 0; i < 32; i++) {
           const p = boardData[i];
           if (!p) continue;
-
           if (p.isHidden) {
             flips.push(i);
           } else if (p.side === currentTurn) {
             for (let j = 0; j < 32; j++) {
-              if (canMove(i, j)) {
-                const toPiece = boardData[j];
-                let score = 0;
-
-                if (toPiece) {
-                  // 吃子得分：目標等級越大分數越高
-                  score = toPiece.level * 10;
-                } else {
-                  // 移動得分：給予一個基礎隨機值，增加隨機性
-                  score = Math.floor(Math.random() * 5);
-                }
-                highScores.push({ from: i, to: j, score: score });
-              }
+              if (canMove(i, j)) moves.push({ from: i, to: j, score: 0 });
             }
           }
         }
 
-        // 2. 決策優先序
-        // 按分數排序
-        highScores.sort((a, b) => b.score - a.score);
+        // 2. 決策邏輯
+        if (difficulty === "easy") {
+          // 簡易：完全隨機
+          const allActions = [
+            ...flips.map((idx) => ({ type: "flip", index: idx })),
+            ...moves.map((m) => ({ type: "move", ...m })),
+          ];
+          if (allActions.length > 0) {
+            executeBestAction(
+              allActions[Math.floor(Math.random() * allActions.length)],
+            );
+          }
+        } else {
+          // 中等以上：權重評分系統
+          const analysis = getBattlefieldAnalysis();
+          const mySide = currentTurn;
+          const opponent = mySide === "red" ? "black" : "red";
 
-        if (highScores.length > 0 && highScores[0].score > 10) {
-          // 2a. 有明確吃子機會
-          bestAction = highScores[0];
-          const fromP = boardData[bestAction.from];
-          const toP = boardData[bestAction.to];
-          UI.action(
-            `電腦使用 ${fromP.name} 吃掉了您的 ${toP.name}`,
-            fromP.side,
-          );
-          executeMove(bestAction.from, bestAction.to);
-        } else if (flips.length > 0 && Math.random() < 0.8) {
-          // 2b. 沒子吃，80% 機率翻牌
-          const idx = flips[Math.floor(Math.random() * flips.length)];
-          const p = boardData[idx];
-          p.isHidden = false;
-          UI.action(`電腦翻開了 ${UI.getSideName(p.side)}${p.name}`, p.side);
-        } else if (highScores.length > 0) {
-          // 2c. 沒牌翻或 20% 機率選擇隨機移動
-          bestAction =
-            highScores[Math.floor(Math.random() * highScores.length)];
-          const p = boardData[bestAction.from];
-          UI.action(`電腦移動了 ${p.name}`, p.side);
-          executeMove(bestAction.from, bestAction.to);
-        } else if (flips.length > 0) {
-          // 2d. 沒移動機會，只能翻牌
-          const idx = flips[Math.floor(Math.random() * flips.length)];
-          const p = boardData[idx];
-          p.isHidden = false;
-          UI.action(`電腦翻開了 ${UI.getSideName(p.side)}${p.name}`, p.side);
+          moves.forEach((move) => {
+            const attacker = boardData[move.from];
+            const target = boardData[move.to];
+
+            // A. 進攻評分
+            if (target) {
+              move.score += target.level * 20;
+            }
+
+            // B. 防守評分 (逃跑邏輯)
+            if (isThreatened(move.from)) {
+              move.score += attacker.level * 15;
+            }
+
+            // C. 地獄難度專屬：大局觀與犧牲
+            if (difficulty === "hell") {
+              // 1. 陷阱檢查：吃完後如果會被反吃，評估價值
+              if (willBeCaptured(move.to, attacker)) {
+                const targetVal = target ? target.level : 0;
+                move.score -= (attacker.level - targetVal) * 25; // 虧本生意大幅扣分
+              }
+
+              // 2. 犧牲邏輯：若對方大牌(將/帥)已死，我方兵/卒不需要拼命保護
+              const oppKingAlive = boardData.some(
+                (p) => p && !p.isHidden && p.side === opponent && p.level === 7,
+              );
+              if (attacker.level === 1 && !oppKingAlive) move.score -= 10;
+
+              // 3. 炮的進攻優勢
+              if (attacker.name === "炮" && target && target.level >= 5)
+                move.score += 35;
+            }
+          });
+
+          // D. 翻牌權重
+          let bestFlip = null;
+          if (flips.length > 0) {
+            let fScore = difficulty === "normal" ? 30 : 15; // 普通難度較愛翻牌
+            if (difficulty === "hell") {
+              // 地獄：評估翻牌點周圍是否安全
+              fScore = evaluateFlipSafety(flips[0]);
+              // 隨機選一個相對安全的翻
+              flips.sort(
+                (a, b) => evaluateFlipSafety(b) - evaluateFlipSafety(a),
+              );
+            }
+            bestFlip = { type: "flip", index: flips[0], score: fScore };
+          }
+
+          // 3. 執行最優動作
+          moves.sort((a, b) => b.score - a.score);
+          const topMove = moves[0];
+
+          if (topMove && (bestFlip ? topMove.score >= bestFlip.score : true)) {
+            executeBestAction({ type: "move", ...topMove });
+          } else if (bestFlip) {
+            executeBestAction(bestFlip);
+          }
         }
-
         endTurn();
+      }
+
+      // --- 輔助運算函式 ---
+
+      function getBattlefieldAnalysis() {
+        const res = { red: { power: 0 }, black: { power: 0 } };
+        boardData.forEach((p) => {
+          if (p && !p.isHidden) res[p.side].power += p.level;
+        });
+        return res;
+      }
+
+      function isThreatened(index) {
+        const me = boardData[index];
+        if (!me) return false;
+        for (let i = 0; i < 32; i++) {
+          const p = boardData[i];
+          if (p && !p.isHidden && p.side !== me.side && canMove(i, index))
+            return true;
+        }
+        return false;
+      }
+
+      function willBeCaptured(targetIdx, attacker) {
+        // 模擬移動後是否會被周圍敵軍吃掉
+        for (let i = 0; i < 32; i++) {
+          const p = boardData[i];
+          if (p && !p.isHidden && p.side !== attacker.side) {
+            // 假設炮的跳吃邏輯，在地獄難度中需特別小心
+            if (canMove(i, targetIdx)) return true;
+          }
+        }
+        return false;
+      }
+
+      function evaluateFlipSafety(index) {
+        let safety = 40; // 基礎分
+        const r = Math.floor(index / 4),
+          c = index % 4;
+        const offsets = [
+          [-1, 0],
+          [1, 0],
+          [0, -1],
+          [0, 1],
+        ];
+
+        offsets.forEach(([dr, dc]) => {
+          const nr = r + dr,
+            nc = c + dc;
+          if (nr >= 0 && nr < 8 && nc >= 0 && nc < 4) {
+            const neighbor = boardData[nr * 4 + nc];
+            if (
+              neighbor &&
+              !neighbor.isHidden &&
+              neighbor.side !== currentTurn
+            ) {
+              safety -= neighbor.level * 12; // 旁邊有大棋，危險！
+            }
+          }
+        });
+        return Math.max(5, safety);
+      }
+
+      function executeBestAction(action) {
+        if (action.type === "flip") {
+          const p = boardData[action.index];
+          p.isHidden = false;
+          UI.action(`電腦翻開了 ${UI.getSideName(p.side)}${p.name}`, p.side);
+        } else {
+          const fromP = boardData[action.from];
+          const toP = boardData[action.to];
+          if (toP)
+            UI.action(
+              `電腦使用 ${fromP.name} 吃掉了您的 ${toP.name}`,
+              fromP.side,
+            );
+          else UI.action(`電腦移動了 ${fromP.name}`, fromP.side);
+          executeMove(action.from, action.to);
+        }
       }
 
       function checkGameOver() {
