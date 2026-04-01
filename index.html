@@ -587,12 +587,6 @@
       function goToBarcode() {
         window.location.href = "Barcode.html";
       }
-      // 1. 禁用滑鼠右鍵選單
-      document.oncontextmenu = function () {
-        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
-        return false;
-      };
-
       // 2. 禁用常用開發者工具快捷鍵
       document.onkeydown = function (e) {
         // 禁用 F12 (keyCode 123)
