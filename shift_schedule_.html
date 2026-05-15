@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-0VSMGFF0E6");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>查詢全部班表</title>
+    <style>
+      body {
+        font-family: "Microsoft JhengHei", sans-serif;
+        background-color: #f8f9fa;
+        padding: 10px;
+      }
+
+      h2 {
+        text-align: center;
+      }
+
+      .date-select {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .filter-buttons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 20px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 4px;
+        transition: 0.2s;
+      }
+
+      button.active {
+        background-color: #163e64;
+        color: white;
+        border-color: #163e64;
+      }
+
+      input[type="date"] {
+        font-size: 1em;
+        padding: 6px;
+      }
+
+      /* 修改：將容器改為垂直排列並置中 */
+      .schedule-grid {
+        display: flex;
+        flex-direction: column; /* 改為垂直排列 */
+        align-items: center; /* 置中 */
+        gap: 10px;
+      }
+
+      /* 修改：讓每一欄寬度占滿，並設定最大寬度避免在電腦螢幕過寬 */
+      .column {
+        width: 100%;
+        max-width: 600px; /* 設定單欄的最大寬度，方便閱讀 */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .shift-row {
+        display: flex;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      }
+
+      .shift-label {
+        flex: 1;
+        padding: 8px;
+        text-align: center;
+        font-weight: bold;
+        color: #fff;
+        white-space: nowrap;
+        min-width: 40%;
+      }
+
+      .staff-name {
+        flex: 1;
+        padding: 8px;
+        background-color: #eee;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      /* 顏色定義 */
+      .red {
+        background-color: #c00000;
+      }
+      .green {
+        background-color: #275317;
+      }
+      .blue {
+        background-color: #163e64;
+      }
+      .middle-blue {
+        background-color: #215f9a;
+      }
+      .light-blue {
+        background-color: #4e95d9;
+      }
+      .purple {
+        background-color: #78206e;
+      }
+      .blue-green {
+        background-color: #0e9292;
+      }
+      .gray {
+        background-color: #595959;
+      }
+      .orange {
+        background-color: #c04f15;
+      }
+      .coffee {
+        background-color: #4f443f;
+      }
+      .olive-gold {
+        background-color: #827717;
+        color: #ffffff;
+      }
+      /* 新增：注意事項圖示樣式 */
+      .note-icon {
+        display: inline-block;
+        margin-left: 8px;
+        background-color: #ffc107;
+        color: #212529;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        font-size: 12px;
+        cursor: help;
+        font-weight: bold;
+        vertical-align: middle;
+      }
+
+      /* 確保 staff-name 容器可以容納圖示並置中 */
+      .staff-name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+        padding: 8px;
+        background-color: #eee;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px 10px;
+        font-size: 0.85em;
+        color: #999;
+      }
+      #update-time {
+        text-align: center;
+        margin-top: 10px;
+        color: #888;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>查詢全部班表</h2>
+
+    <div class="date-select">
+      <label for="date">請選擇日期：</label>
+      <input type="date" id="date" />
+      <span
+        id="weekday"
+        style="margin-left: 10px; font-weight: bold; color: #333"
+      ></span>
+    </div>
+
+    <div class="filter-buttons">
+      <button id="show-all" class="active">顯示全部</button>
+      <button id="show-assigned">顯示排班</button>
+      <button class="group-btn" data-group="morning">早班</button>
+      <button class="group-btn" data-group="afternoon">中班</button>
+      <button class="group-btn" data-group="night">大夜班</button>
+      <button class="group-btn" data-group="momo">MOMO</button>
+      <button class="group-btn" data-group="line">幹線運輸</button>
+      <button class="group-btn" data-group="two">花班</button>
+      <button class="group-btn" data-group="other">支援/見習</button>
+    </div>
+
+    <div class="schedule-grid">
+      <div class="column" id="left-column"></div>
+      <div class="column" id="right-column"></div>
+    </div>
+
+    <div id="update-time"></div>
+
+    <script>
+      // 新增：特定班別的特殊注意事項
+      const shiftSpecialNotes = {
+        自運乙線: "注意:返程時，須將麻豆投遞站之空籃車載回。",
+        // 有需要的才填寫，沒填寫的就不會顯示圖示
+      };
+      // 新增：定義各班別的上班時間資料
+      const shiftTimeNotes = {
+        "股　長": "07:00 - 15:30",
+        早班專員: "06:00 - 14:30",
+        內檯經辦: "08:30 - 17:00",
+        空袋檯: "06:00 - 14:30",
+        "早　班 1": "04:00 - 13:00",
+        "早　班 2": "04:00 - 13:00",
+        "早　班 3": "04:00 - 13:00",
+        "早　班 4": "04:30 - 08:30、16:00 - 20:00",
+        "早　班 5": "03:00 - 14:00",
+        "新　營 1": "04:00 - 08:00、16:00 - 20:00",
+        "新　營 2": "04:00 - 08:00、16:00 - 20:00",
+        "早1(六日)": "06:00 - 15:00",
+        "早3(六)": "07:00 - 16:00",
+        中班專員: "14:30 - 23:00",
+        "771/772車次": "14:30 - 23:00",
+        "771/772車次(六日)": "12:00 - 21:00",
+        "中　班 1": "17:00 - 02:00",
+        "中1(六日)": "12:00 - 21:00",
+        "中　班 2": "12:30 - 21:30",
+        "中　班 3": "12:00 - 20:30",
+        "中　班 4": "13:30 - 22:00",
+        "中　班 5": "13:30 - 22:00",
+        "中　班 6": "12:30 - 21:00",
+        "中　班 7": "14:30 - 23:00",
+        "中　班 8": "16:30 - 01:00",
+        "中　班 9": "17:00 - 02:00",
+        "中　班10": "17:00 - 02:00",
+        "中　班11": "17:00 - 02:00",
+        "中　班12": "17:00 - 02:00",
+        "中　班13": "17:00 - 02:00",
+        自運甲線: "10:30 - 19:00",
+        自運乙線: "10:30 - 19:00",
+        "嘉　義 B": "15:30 - 24:00",
+        "嘉　義 2": "14:30 - 23:30",
+        "嘉　義 4": "13:30 - 22:00",
+        夜班專員: "22:00 - 07:00",
+        "大夜班 1": "20:00 - 01:00、05:30 - 08:30",
+        "夜1(六日)": "21:00 - 06:00",
+        "大夜班 2": "22:00 - 07:00",
+        "大夜班 3": "21:00 - 06:00",
+        "大夜班 4": "22:00 - 07:00",
+        "大夜班 5": "22:00 - 07:00",
+        "127/128車次": "22:00 - 07:00",
+        進口接送: "21:00 - 06:00",
+        出口接送: "21:00 - 06:00",
+        "支　援 1": "08:00 - 17:00",
+        "支　援 2": "08:00 - 17:00",
+        "支　援 3": "08:00 - 17:00",
+        "支　援 4": "08:00 - 17:00",
+        "見 習 1": "08:00 - 17:00",
+        "見 習 2": "08:00 - 17:00",
+      };
+
+      const shiftTaskNotes = {
+        "股　長":
+          "【股長】團隊領導與監督、外包契約履約管理、人力調配與考核、資源管理與審核。",
+        早班專員:
+          "【早班專員】協助股長處理各項事務、處理大夜班未運清郵件、排班、行政庶務、物流數據管理、主管交辦事項。",
+        內檯經辦:
+          "【內檯經辦】協助股長(早班)、專員(中班)處理各項事務、月台各車次籃車刷讀+拆卸封扣(中班)、接聽電話、各類行政庶務、股長休假代理人、其他主管交辦事項。",
+        空袋檯:
+          "【空袋檯】空袋及籃車進出口登記及整理、嘉義+新營+支局申請空袋之整理與封發、主管交辦事項",
+        "早　班 1":
+          "【早班1】永康(第1車次)、嘉義(未運清郵件)、誤封郵件轉運、公件(儲匯大樓)、快捷股(海關EMS)、興南客運(收新化+玉井)、興南客運(交善化快捷)、主管交辦事項。",
+        "早　班 2":
+          "【早班2】大同路郵局(第1車次)、大同路郵局(第2車次)、湖內郵局(湖內+茄萣)、麻豆郵局(未運清郵件)、成功大學、安南投遞股(平件)、796車次(快捷股郵件)、主管交辦事項。",
+        "早　班 3":
+          "【早班3】郵戳檢點、月台作業(進出口郵件處理)、安南投遞股(快捷+限時+掛號)、善化郵局(未運清郵件)、台南機場(收澎湖快捷，給快捷股)、永康郵局(國內快捷+國際包裹+公件)(第5車次)、主管交辦事項。",
+        "早　班 4":
+          "【早班4】月台作業(進出口郵件處理)、收取各股郵件轉交自運車及委外車、新化+玉井郵局(第1車次)、新化+玉井郵局(收)(第2車次)、協助處理誤封郵件、主管交辦事項。",
+        "早　班 5":
+          "【早班5】MOMO新市倉(第2階段)(快捷股)、台中郵局((第2階段momo郵件+籃車刷讀+印路單)、高雄郵局(高雄+台南郵件)、主管交辦事項。",
+        "新　營 1":
+          "【新營1】整理郵件(六甲+白河+下營+鹽水+學甲+隆田)、新營郵局(第1車次)、運回空籃車、新營郵局(收)(第3車次)、主管交辦事項。",
+        "新　營 2":
+          "【新營2】整理郵件(新營)、新營郵局(第2車次)、運回空籃車、(送公件)新營郵局(收)(第4車次)、主管交辦事項。",
+        "早1(六日)": "【早1(六日)】資料建檔中。",
+        "早3(六)": "【早3(六)】資料建檔中。",
+        中班專員:
+          "【中班專員】嘉義+新營+佳里+麻豆+新化郵件運載調度、月台管理與監督、出口郵件載運派車(嘉義+高雄+台中)、萬國行李箱運載作業、空籃車補給作業、行政庶務、物流數據管理、主管交辦事項。",
+        "771/772車次":
+          "【771/772車次】郵戳檢點、791車次(收快捷)、高雄郵局(作業股封清郵件)、載空籃車、主管交辦事項。",
+        "771/772車次(六日)": "12:00 - 21:00",
+        "中　班 1":
+          "【中班1】郵戳檢點、791車次(收快捷)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        "中1(六日)":
+          "【中班1(六日)】郵戳檢點、793車次(13:00)、778車次(快8)(14:10)、798車次(15:00)、777車次(快7)(16:15)、791車次(17:35)、儲匯股公件(送至8號)、主管交辦事項。",
+        "中　班 2":
+          "【中班2】793車次(13:05)、778(快8)(14:10)、支局郵件收纜(第1車次):新義郵局(35支)+灣裡郵局(23支)+茄萣郵局(158支)+湖內郵局(156支)、支局郵件收纜(第2車次)、協助大夜1整理國際快捷郵件、主管交辦事項。",
+        "中　班 3":
+          "【中班3】高鐵642車次(13:13)、高鐵643車次(15:07)、支局郵件收纜:臺南鹽埕郵局(33支)+臺南金華郵局(37支)、國泰郵件、主管交辦事項",
+        "中　班 4":
+          "【中班4】798車次(15:30)、777車次(快7)(16:15)、嘉義加班車(第1車次)或高雄郵局(郵件+籃車)、點交新營郵局快捷+限掛+限平郵袋、點交國際水陸+航空包裹、主管交辦事項。",
+        "中　班 5":
+          "【中班5】點交5樓掛號、整理月台各局國際包裹、月台作業進出口郵件處理(快捷專車+新營線+外包車甲乙線+嘉義2線)、接收快捷股包裹(國際包裹+快捷+限時)交運、行銷科公件、支局郵件收纜:臺南西門路郵局(1支)+臺南水交社郵局(2支)+臺南中正路郵局(5支)、嘉義加班車(第2車次)高雄郵局(郵件+籃車)、主管交辦事項。",
+        "中　班 6":
+          "【中班6】國際航空和水陸包裹之刷讀+分類+裝車、高鐵660車次(16:13)、高鐵657車次(17:33)、國際e小包、兩岸快遞之刷讀+分類+裝車、嘉義國際航空及水陸郵件誤封轉運、主管交辦事項。",
+        "中　班 7":
+          "【中班7】驗車、郵件收纜:和順代辦所+安南郵局(36支)+原佃郵局(47支)、各局及營收股平常函件(運至作業股)、高雄郵局(作業股封清平件+包裹)、載空籃車、主管交辦事項。",
+        "中　班 8":
+          "【中班8】兼投支局郵件運載(新營、佳里、麻豆、新化、新市、善化、玉井)、高雄或嘉義(郵件或籃車)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        "中　班 9":
+          "【中班9】兼投支局郵件運載(新營、佳里、麻豆、新化、新市、善化、玉井)、高雄或嘉義(郵件或籃車)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        "中　班10":
+          "【中班10】兼投支局郵件運載(新營、佳里、麻豆、新化、新市、善化、玉井)、高雄或嘉義(郵件或籃車)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        "中　班11":
+          "【中班11】兼投支局郵件運載(新營、佳里、麻豆、新化、新市、善化、玉井)、高雄或嘉義(郵件或籃車)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        "中　班12":
+          "【中班12】兼投支局郵件運載(新營、佳里、麻豆、新化、新市、善化、玉井)、高雄或嘉義(郵件或籃車)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        "中　班13":
+          "【中班13】兼投支局郵件運載(新營、佳里、麻豆、新化、新市、善化、玉井)、高雄或嘉義(郵件或籃車)、台中郵局(作業股封清郵件)、主管交辦事項。",
+        自運甲線:
+          "【自運甲線】上午送郵件(新化郵局+善化郵局)、下午收郵件(新化郵局+善化郵局)回作業股、主管交辦事項。",
+        自運乙線:
+          "【自運乙線】上午送郵件(佳里郵局+麻豆郵局)、下午收郵件(佳里郵局+麻豆郵局)回作業股、主管交辦事項。",
+        "嘉　義 B":
+          "【嘉義B】永康(快捷)(第6車次)、嘉義(第2車次)、作業股(掛號郵袋點交分揀刷讀)、主管交辦事項。",
+        "嘉　義 2":
+          "【嘉義2】永康(快捷)(第6車次)、嘉義(第2車次)、作業股(掛號郵袋點交分揀刷讀)、主管交辦事項。",
+        "嘉　義 4": "【嘉義4】嘉義郵局(專車，2趟)",
+        夜班專員:
+          "【夜班專員】MOMO新市及永康倉運輸調度與監控、處理中班未運清郵件、排班、行政庶務、MOMO群組回報、主管交辦事項",
+        "大夜班 1":
+          "【大夜班1】快捷股(點交快捷郵件)給94車次、快捷股(點交限時+快捷+水路郵袋)給28車次+30車次+26車次、MOMO永康倉+新市倉(給快捷股)、6號運至8號(快捷郵件)、永康郵局(第3車次)、載回空籃車、主管交辦事項。",
+        "夜1(六日)": "【夜1(六日)】資料建檔中",
+        "大夜班 2":
+          "【大夜班2】MOMO永康倉+新市倉(第1階段)(快捷股)、台中郵局(MOMO郵件+中班未運清郵件)、主管交辦事項。",
+        "大夜班 3":
+          "【大夜班3】刷讀各車次路單(快捷+限時)、刷讀各車次路單(限時+平件)、點交快捷最後班次郵件交接送員、MOMO永康倉+新市倉(給快捷股)、高雄郵局(未運清郵件)、永康郵局(第2車次)、載回空籃車、主管交辦事項。",
+        "大夜班 4":
+          "【大夜班4】MOMO永康倉+新市倉(第1階段)(快捷股)、台中郵局(MOMO郵件+中班未運清郵件)、主管交辦事項。",
+        "大夜班 5":
+          "【大夜班5】MOMO永康倉+新市倉(給快捷股)、台中郵局(MOMO郵件+中班未運清郵件)、主管交辦事項。",
+        "127/128車次":
+          "【127/128車次】MOMO永康倉+新市倉(第1階段)(快捷股)、台中郵局(MOMO郵件+中班未運清郵件)、主管交辦事項。",
+        進口接送:
+          "【進口接送】夜間委外進出口車輛封扣加裝及拆卸、協助處理各類進出口郵件刷讀及分撿、車輛運輸調度、行政庶務、開立及答覆驗單(郵件短少+郵件破損等)、嘉義郵件及兼投支局郵件出口藍車刷讀、主管交辦事項。",
+        出口接送:
+          "【出口接送】夜間委外進出口車輛封扣加裝及拆卸、協助處理各類進出口郵件刷讀及分撿、車輛運輸調度、行政庶務、開立及答覆驗單(郵件短少+郵件破損等)、嘉義郵件及兼投支局郵件出口藍車刷讀、主管交辦事項。",
+        "支　援 1": "【支援1】支援其他單位、萬國行李箱載運、主管交辦事項",
+        "支　援 2": "【支援2】支援其他單位、萬國行李箱載運、主管交辦事項",
+        "支　援 3": "【支援3】支援其他單位、萬國行李箱載運、主管交辦事項",
+        "支　援 4": "【支援4】支援其他單位、萬國行李箱載運、主管交辦事項",
+        "見 習 1": "【見習1】依排班專員所排班別，進行見習、主管交辦事項。",
+        "見 習 2": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
+        // 您可以根據需求繼續往下增加其他班別
+      };
+
+      // 1. 建立 Tooltip 元素 (修正縮排樣式)
+      const tooltip = document.createElement("div");
+      tooltip.style.cssText = `
+  position: fixed;
+  display: none;
+  background: rgba(40, 40, 40, 0.95);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 2000;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  white-space: normal;       /* 核心修改：允許自動換行 */
+  word-wrap: break-word;     /* 核心修改：強制長字斷行 */
+  max-width: 250px;          /* 核心修改：限制寬度，超過則自動縮排 */
+  line-height: 1.6;
+`;
+      document.body.appendChild(tooltip);
+
+      // 2. 座標更新函數 (核心修改：解決手機邊緣遮擋問題)
+      function updateTooltipPosition(e) {
+        if (tooltip.style.display === "block") {
+          let posX = e.clientX + 15;
+          let posY = e.clientY + 15;
+
+          // 如果右邊空間不夠，改向左顯示
+          if (posX + tooltip.offsetWidth > window.innerWidth) {
+            posX = e.clientX - tooltip.offsetWidth - 15;
+          }
+          // 如果下面空間不夠，改向上顯示
+          if (posY + tooltip.offsetHeight > window.innerHeight) {
+            posY = e.clientY - tooltip.offsetHeight - 15;
+          }
+
+          tooltip.style.left = posX + "px";
+          tooltip.style.top = posY + "px";
+        }
+      }
+
+      // 3. 滑鼠移入：區分左右色塊內容
+      document.addEventListener("mouseover", function (e) {
+        let note = "";
+
+        // 1. 判斷左側 (上班時間)
+        if (e.target.classList.contains("shift-label")) {
+          const labelText = e.target.textContent.trim();
+          const time = shiftTimeNotes[labelText];
+          if (time) note = "🕒 上班時間：\n" + time;
+        }
+        // 2. 判斷是否移入「注意事項」圖示
+        else if (e.target.classList.contains("note-icon")) {
+          const specialNote = e.target.getAttribute("data-note");
+          if (specialNote) note = "⚠️ 注意事項：\n" + specialNote;
+        }
+        // 3. 判斷右側人名 (工作任務)
+        else if (
+          e.target.classList.contains("staff-name") ||
+          e.target.parentElement.classList.contains("staff-name")
+        ) {
+          const row = e.target.closest(".shift-row");
+          if (row) {
+            const shiftLabel = row
+              .querySelector(".shift-label")
+              .textContent.trim();
+            const task = shiftTaskNotes[shiftLabel];
+            if (task) note = "📝 工作任務：\n" + task;
+          }
+        }
+
+        if (note) {
+          tooltip.innerText = note;
+          tooltip.style.display = "block";
+        }
+      });
+
+      // 4. 移動與點擊：更新位置 (包含手機點擊支援)
+      document.addEventListener("mousemove", updateTooltipPosition);
+      document.addEventListener("click", function (e) {
+        if (
+          e.target.classList.contains("shift-label") ||
+          e.target.classList.contains("staff-name")
+        ) {
+          updateTooltipPosition(e);
+        }
+      });
+
+      // 5. 滑鼠移出：隱藏
+      document.addEventListener("mouseout", function (e) {
+        if (
+          e.target.classList.contains("shift-label") ||
+          e.target.classList.contains("staff-name")
+        ) {
+          tooltip.style.display = "none";
+        }
+      });
+
+      let currentScheduleData = {};
+      let showOnlyAssigned = false;
+      let currentFilterGroup = "all";
+
+      const filterGroups = {
+        morning: [
+          "股　長",
+          "內檯經辦",
+          "空袋檯",
+          "早　班 1",
+          "早　班 2",
+          "早　班 3",
+          "早　班 4",
+          "早　班 5",
+          "新　營 1",
+          "新　營 2",
+          "早1(六日)",
+          "早3(六)",
+        ],
+        afternoon: [
+          "中班專員",
+          "771/772車次",
+          "771/772車次(六日)",
+          "中　班 1",
+          "中　班 2",
+          "中　班 3",
+          "中　班 4",
+          "中　班 5",
+          "中　班 6",
+          "中　班 7",
+          "中　班 8",
+          "中　班 9",
+          "中　班10",
+          "中　班11",
+          "中　班12",
+          "嘉　義 2",
+          "自運甲線",
+          "自運乙線",
+        ],
+        night: [
+          "夜班專員",
+          "大夜班 1",
+          "大夜班 2",
+          "大夜班 3",
+          "大夜班 4",
+          "127/128車次",
+          "夜1(六日)",
+          "進口接送",
+          "出口接送",
+        ],
+        momo: [
+          "大夜班 1",
+          "大夜班 2",
+          "大夜班 3",
+          "大夜班 4",
+          "早　班 5",
+          "127/128車次",
+          "夜1(六日)",
+        ],
+        line: ["771/772車次", "771/772車次(六日)", "127/128車次", "早　班 5"],
+        two: ["早　班 4", "新　營 1", "新　營 2", "大夜班 1"],
+        other: [
+          "支　援 1",
+          "支　援 2",
+          "支　援 3",
+          "支　援 4",
+          "見 習 1",
+          "見 習 2",
+        ],
+      };
+
+      const shiftListLeft = [
+        { label: "股　長", color: "red" },
+        { label: "早班專員", color: "green" },
+        { label: "內檯經辦", color: "blue" },
+        { label: "空袋檯", color: "green" },
+        { label: "早　班 1", color: "green" },
+        { label: "早　班 2", color: "green" },
+        { label: "早　班 3", color: "green" },
+        { label: "早　班 4", color: "blue-green" },
+        { label: "早　班 5", color: "olive-gold" },
+        { label: "新　營 1", color: "blue-green" },
+        { label: "新　營 2", color: "blue-green" },
+        { label: "早1(六日)", color: "green" },
+        { label: "早3(六)", color: "green" },
+        { label: "中班專員", color: "red" },
+        { label: "771/772車次", color: "light-blue" },
+        { label: "771/772車次(六日)", color: "light-blue" },
+        { label: "中　班 1", color: "light-blue" },
+        { label: "中1(六日)", color: "light-blue" },
+        { label: "中　班 2", color: "middle-blue" },
+        { label: "中　班 3", color: "middle-blue" },
+        { label: "中　班 4", color: "middle-blue" },
+        { label: "中　班 5", color: "middle-blue" },
+        { label: "中　班 6", color: "middle-blue" },
+        { label: "中　班 7", color: "blue" },
+        { label: "中　班 8", color: "light-blue" },
+        { label: "中　班 9", color: "middle-blue" },
+        { label: "中　班10", color: "light-blue" },
+        { label: "中　班11", color: "light-blue" },
+        { label: "中　班12", color: "light-blue" },
+        { label: "中　班13", color: "light-blue" },
+        { label: "自運甲線", color: "purple" },
+        { label: "自運乙線", color: "purple" },
+        { label: "嘉　義 B", color: "blue" },
+        { label: "嘉　義 2", color: "blue" },
+        { label: "嘉　義 4", color: "blue" },
+        { label: "夜班專員", color: "red" },
+        { label: "大夜班 1", color: "gray" },
+        { label: "夜1(六日)", color: "gray" },
+        { label: "大夜班 2", color: "gray" },
+        { label: "大夜班 3", color: "gray" },
+        { label: "大夜班 4", color: "gray" },
+        { label: "大夜班 5", color: "gray" },
+        { label: "127/128車次", color: "gray" },
+        { label: "進口接送", color: "gray" },
+        { label: "出口接送", color: "gray" },
+      ];
+
+      const shiftListRight = [
+        { label: "支　援 1", color: "orange" },
+        { label: "支　援 2", color: "orange" },
+        { label: "支　援 3", color: "orange" },
+        { label: "支　援 4", color: "orange" },
+        { label: "見 習 1", color: "coffee" },
+        { label: "見 習 2", color: "coffee" },
+      ];
+
+      function createRow(shift, name) {
+        const hasStaff =
+          name &&
+          name.trim() !== "" &&
+          name.trim() !== "-" &&
+          name.trim() !== "－";
+
+        if (currentFilterGroup !== "all") {
+          if (!filterGroups[currentFilterGroup].includes(shift.label))
+            return "";
+          if (!hasStaff) return "";
+        } else if (showOnlyAssigned && !hasStaff) {
+          return "";
+        }
+
+        const displayName = hasStaff ? name : "－";
+
+        // 檢查是否有注意事項資料
+        const specialNote = shiftSpecialNotes[shift.label];
+        const noteHtml =
+          hasStaff && specialNote
+            ? `<span class="note-icon" data-note="${specialNote}">!</span>`
+            : "";
+
+        return `
+    <div class="shift-row">
+      <div class="shift-label ${shift.color}">${shift.label}</div>
+      <div class="staff-name">
+        ${displayName} ${noteHtml}
+      </div>
+    </div>`;
+      }
+
+      function renderSchedule() {
+        document.getElementById("left-column").innerHTML = shiftListLeft
+          .map((s) => createRow(s, currentScheduleData[s.label]))
+          .join("");
+        document.getElementById("right-column").innerHTML = shiftListRight
+          .map((s) => createRow(s, currentScheduleData[s.label]))
+          .join("");
+      }
+
+      function fetchSchedule(date) {
+        fetch("schedule_data.json?t=" + new Date().getTime())
+          .then((res) => res.json())
+          .then((allData) => {
+            currentScheduleData = allData[date] || {};
+            renderSchedule();
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.getElementById("date");
+        const btnAll = document.getElementById("show-all");
+        const btnAssigned = document.getElementById("show-assigned");
+        const groupBtns = document.querySelectorAll(".group-btn");
+
+        dateInput.value = new Date().toISOString().split("T")[0];
+        fetchSchedule(dateInput.value);
+
+        const clearActive = () =>
+          [btnAll, btnAssigned, ...groupBtns].forEach((b) =>
+            b.classList.remove("active"),
+          );
+
+        btnAll.addEventListener("click", function () {
+          clearActive();
+          this.classList.add("active");
+          showOnlyAssigned = false;
+          currentFilterGroup = "all";
+          renderSchedule();
+        });
+        btnAssigned.addEventListener("click", function () {
+          clearActive();
+          this.classList.add("active");
+          showOnlyAssigned = true;
+          currentFilterGroup = "all";
+          renderSchedule();
+        });
+        groupBtns.forEach((btn) =>
+          btn.addEventListener("click", function () {
+            clearActive();
+            this.classList.add("active");
+            currentFilterGroup = this.dataset.group;
+            renderSchedule();
+          }),
+        );
+
+        dateInput.addEventListener("change", function () {
+          const days = [
+            "星期日",
+            "星期一",
+            "星期二",
+            "星期三",
+            "星期四",
+            "星期五",
+            "星期六",
+          ];
+          document.getElementById("weekday").textContent =
+            days[new Date(this.value).getDay()];
+          fetchSchedule(this.value);
+        });
+      });
+      // 1. 禁用滑鼠右鍵選單
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+
+      // 2. 禁用常用開發者工具快捷鍵
+      document.onkeydown = function (e) {
+        // 禁用 F12 (keyCode 123)
+        // 禁用 Ctrl+Shift+I (i = 73)
+        // 禁用 Ctrl+Shift+J (j = 74)
+        // 禁用 Ctrl+U (檢視原始碼, u = 85)
+        if (
+          e.keyCode === 123 ||
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)
+        ) {
+          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
+          return false;
+        }
+      };
+
+      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
+      (function () {
+        const warningStyle =
+          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
+        const infoStyle = "font-size: 14px; color: #333;";
+
+        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
+        console.log(
+          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
+          infoStyle,
+        );
+        console.log(
+          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
+          infoStyle,
+        );
+      })();
+      // 監測視窗調整，若開發者工具側邊開啟則觸發
+      window.onresize = function () {
+        if (
+          window.outerHeight - window.innerHeight > 200 ||
+          window.outerWidth - window.innerWidth > 200
+        ) {
+          document.body.innerHTML =
+            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
+        }
+      };
+      if (window.location.hostname !== "shuhaocao.github.io") {
+        document.documentElement.innerHTML =
+          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
+        window.stop();
+      }
+      async function validateAccess() {
+        try {
+          const resp = await fetch("access.json");
+          const config = await resp.json();
+          if (config.status !== "active") {
+            throw new Error("系統已停用");
+          }
+        } catch (e) {
+          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
+        }
+      }
+      validateAccess();
+    </script>
+  </body>
+</html>
