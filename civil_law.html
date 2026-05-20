@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>民法單選模擬測驗題庫</title>
+    <style>
+      /* 基礎樣式重設與全域設定 */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px 10px;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      header h1 {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+      header p {
+        color: #7f8c8d;
+        font-size: 1rem;
+      }
+
+      /* 區塊樣式 */
+      .quiz-section {
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        padding: 25px;
+        margin-bottom: 30px;
+        border-top: 6px solid #ccc;
+        transition: transform 0.2s;
+      }
+      .quiz-section:hover {
+        transform: translateY(-2px);
+      }
+
+      /* 根據難度設定不同的主題顏色 */
+      .easy {
+        border-top-color: #2ecc71;
+      }
+      .medium {
+        border-top-color: #e67e22;
+      }
+      .hard {
+        border-top-color: #e74c3c;
+      }
+
+      .section-title {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        color: #2c3e50;
+      }
+
+      /* 難度標籤 */
+      .badge {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        color: white;
+        margin-left: 10px;
+        font-weight: bold;
+      }
+      .easy .badge {
+        background-color: #2ecc71;
+      }
+      .medium .badge {
+        background-color: #e67e22;
+      }
+      .hard .badge {
+        background-color: #e74c3c;
+      }
+
+      /* 響應式網格按鈕排版 */
+      .button-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+      }
+
+      /* 按鈕樣式 */
+      .quiz-btn {
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        padding: 14px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 1rem;
+        background-color: #f8f9fa;
+        border: 1px solid #e2e8f0;
+        color: #4a5568;
+        transition: all 0.2s ease;
+      }
+
+      /* 滑鼠懸停與點擊效果 */
+      .easy .quiz-btn:hover {
+        background-color: #e8f8f0;
+        border-color: #2ecc71;
+        color: #27ae60;
+      }
+      .medium .quiz-btn:hover {
+        background-color: #fdf5e6;
+        border-color: #e67e22;
+        color: #d35400;
+      }
+      .hard .quiz-btn:hover {
+        background-color: #fdedec;
+        border-color: #e74c3c;
+        color: #c0392b;
+      }
+      .quiz-btn:active {
+        transform: scale(0.98);
+      }
+
+      /* 手機端微調 */
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+        .quiz-section {
+          padding: 20px 15px;
+        }
+        header h1 {
+          font-size: 1.6rem;
+        }
+        .button-grid {
+          grid-template-columns: 1fr; /* 手機上一列只顯示一個按鈕，方便手指點擊 */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>民法單選模擬測驗題庫</h1>
+        <p>請選擇適合的難度與題號開始測驗</p>
+      </header>
+
+      <!-- 民法單選模擬測驗(簡單) -->
+      <section class="quiz-section easy">
+        <h2 class="section-title">
+          民法單選模擬測驗<span class="badge">簡單</span>
+        </h2>
+        <div class="button-grid">
+          <a
+            href="https://gemini.google.com/share/61ee7eb91c83"
+            target="_blank"
+            class="quiz-btn"
+            >簡單難度 第 1-10 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/5374bb1e581f"
+            target="_blank"
+            class="quiz-btn"
+            >簡單難度 第 11-20 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/74b6d69781f6"
+            target="_blank"
+            class="quiz-btn"
+            >簡單難度 第 21-30 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/5abfe1198db8"
+            target="_blank"
+            class="quiz-btn"
+            >簡單難度 第 31-40 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/6b62d3da2a06"
+            target="_blank"
+            class="quiz-btn"
+            >簡單難度 第 41-50 題</a
+          >
+        </div>
+      </section>
+
+      <!-- 民法單選模擬測驗(中等) -->
+      <section class="quiz-section medium">
+        <h2 class="section-title">
+          民法單選模擬測驗<span class="badge">中等</span>
+        </h2>
+        <div class="button-grid">
+          <a
+            href="https://gemini.google.com/share/c6753734bfed"
+            target="_blank"
+            class="quiz-btn"
+            >中等難度 第 1-10 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/71a255980c4a"
+            target="_blank"
+            class="quiz-btn"
+            >中等難度 第 11-20 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/a28a000d2da8"
+            target="_blank"
+            class="quiz-btn"
+            >中等難度 第 21-30 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/a01296d14107"
+            target="_blank"
+            class="quiz-btn"
+            >中等難度 第 31-40 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/33e154796676"
+            target="_blank"
+            class="quiz-btn"
+            >中等難度 第 41-50 題</a
+          >
+        </div>
+      </section>
+
+      <!-- 民法單選模擬測驗(困難) -->
+      <section class="quiz-section hard">
+        <h2 class="section-title">
+          民法單選模擬測驗<span class="badge">困難</span>
+        </h2>
+        <div class="button-grid">
+          <a
+            href="https://gemini.google.com/share/8846970ff89d"
+            target="_blank"
+            class="quiz-btn"
+            >困難難度 第 1-10 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/d11a74f5a7a2"
+            target="_blank"
+            class="quiz-btn"
+            >困難難度 第 11-20 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/125f06b42e7a"
+            target="_blank"
+            class="quiz-btn"
+            >困難難度 第 21-30 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/dca35bbbbceb"
+            target="_blank"
+            class="quiz-btn"
+            >困難難度 第 31-40 題</a
+          >
+          <a
+            href="https://gemini.google.com/share/f33e64d6c5b6"
+            target="_blank"
+            class="quiz-btn"
+            >困難難度 第 41-50 題</a
+          >
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
