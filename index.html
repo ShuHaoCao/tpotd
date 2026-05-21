@@ -1,9 +1,6 @@
 <!doctype html>
-<!--文件類型宣告-->
 <html lang="zh-Hant">
-  <!--指定文件主要語言:中文-漢字系統繁體中文-->
   <head>
-    <!-- Google tag (gtag.js) -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
@@ -214,6 +211,14 @@
       <p id="datetime"></p>
 
       <div class="button-container">
+        <div class="section-title">宣導事項</div>
+        <a href="javascript:void(0)" onclick="openCardA()" class="btn"
+          >車禍處理流程</a
+        >
+        <a href="javascript:void(0)" onclick="openCardB()" class="btn"
+          >行車前安全檢查</a
+        >
+
         <div class="section-title">班表查詢</div>
         <a href="shift_schedule.html" class="btn">全部班表</a>
         <a href="week_shift.html" class="btn">一週班表</a>
@@ -289,6 +294,54 @@
       </div>
     </div>
 
+    <div id="cardAModal" class="modal-overlay" style="display: none">
+      <div
+        class="modal-content"
+        style="max-width: 95%; max-height: 95%; overflow: auto"
+      >
+        <div style="text-align: right">
+          <button
+            onclick="closeCardA()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">
+          可使用手指放大縮小查看或下載後觀看
+        </p>
+        <img
+          src="car_sop.png"
+          alt="車禍事故處理流程"
+          style="width: 100%; height: auto; border-radius: 6px"
+        />
+      </div>
+    </div>
+
+    <div id="cardBModal" class="modal-overlay" style="display: none">
+      <div
+        class="modal-content"
+        style="max-width: 95%; max-height: 95%; overflow: auto"
+      >
+        <div style="text-align: right">
+          <button
+            onclick="closeCardB()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">
+          可使用手指放大縮小查看或下載後觀看
+        </p>
+        <img
+          src="precheck.png"
+          alt="行車前安全檢查"
+          style="width: 100%; height: auto; border-radius: 6px"
+        />
+      </div>
+    </div>
+
     <div id="shiftModal" class="modal-overlay" style="display: none">
       <div
         class="modal-content"
@@ -337,7 +390,6 @@
       </div>
     </div>
 
-    <!-- 新增：加班統計表 Modal -->
     <div id="overtimeModal" class="modal-overlay" style="display: none">
       <div
         class="modal-content"
@@ -511,6 +563,22 @@
       updateDateTime();
       setInterval(updateDateTime, 1000);
 
+      // 新增：控制圖卡 A 的開關函式
+      function openCardA() {
+        document.getElementById("cardAModal").style.display = "flex";
+      }
+      function closeCardA() {
+        document.getElementById("cardAModal").style.display = "none";
+      }
+
+      // 新增：控制圖卡 B 的開關函式
+      function openCardB() {
+        document.getElementById("cardBModal").style.display = "flex";
+      }
+      function closeCardB() {
+        document.getElementById("cardBModal").style.display = "none";
+      }
+
       function openRoster() {
         document.getElementById("rosterModal").style.display = "flex";
       }
@@ -597,65 +665,6 @@
       function goToBarcode() {
         window.location.href = "Barcode.html";
       }
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
   </body>
 </html>
