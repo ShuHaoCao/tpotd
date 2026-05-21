@@ -218,7 +218,9 @@
         <a href="javascript:void(0)" onclick="openCardB()" class="btn"
           >行車前安全檢查</a
         >
-
+        <a href="javascript:void(0)" onclick="openCardC()" class="btn"
+          >TOP10 交通違規</a
+        >
         <div class="section-title">班表查詢</div>
         <a href="shift_schedule.html" class="btn">全部班表</a>
         <a href="week_shift.html" class="btn">一週班表</a>
@@ -337,6 +339,30 @@
         <img
           src="precheck.png"
           alt="行車前安全檢查"
+          style="width: 100%; height: auto; border-radius: 6px"
+        />
+      </div>
+    </div>
+
+    <div id="cardCModal" class="modal-overlay" style="display: none">
+      <div
+        class="modal-content"
+        style="max-width: 95%; max-height: 95%; overflow: auto"
+      >
+        <div style="text-align: right">
+          <button
+            onclick="closeCardC()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">
+          可使用手指放大縮小查看或下載後觀看
+        </p>
+        <img
+          src="top10_fine.jpg"
+          alt="TOP10交通違規"
           style="width: 100%; height: auto; border-radius: 6px"
         />
       </div>
@@ -577,6 +603,14 @@
       }
       function closeCardB() {
         document.getElementById("cardBModal").style.display = "none";
+      }
+
+      // 新增：控制圖卡 C 的開關函式
+      function openCardC() {
+        document.getElementById("cardCModal").style.display = "flex";
+      }
+      function closeCardC() {
+        document.getElementById("cardCModal").style.display = "none";
       }
 
       function openRoster() {
