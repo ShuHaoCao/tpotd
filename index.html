@@ -227,6 +227,9 @@
         <a href="javascript:void(0)" onclick="openCardC()" class="btn"
           >TOP 10 熱門交通違規</a
         >
+        <a href="javascript:void(0)" onclick="openCardF()" class="btn"
+          >TOP 10 汽車故障原因</a
+        >
 
         <div class="section-title">班表查詢</div>
         <a href="shift_schedule.html" class="btn">全部班表</a>
@@ -418,6 +421,30 @@
         <img
           src="causes_accidents.jpeg"
           alt="Top 10 交通事故肇因"
+          style="width: 100%; height: auto; border-radius: 6px"
+        />
+      </div>
+    </div>
+
+    <div id="cardFModal" class="modal-overlay" style="display: none">
+      <div
+        class="modal-content"
+        style="max-width: 95%; max-height: 95%; overflow: auto"
+      >
+        <div style="text-align: right">
+          <button
+            onclick="closeCardF()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">
+          可使用手指放大縮小查看或下載後觀看
+        </p>
+        <img
+          src="cause_failure.jpeg"
+          alt="Top 10 汽車故障原因"
           style="width: 100%; height: auto; border-radius: 6px"
         />
       </div>
@@ -682,6 +709,14 @@
       }
       function closeCardE() {
         document.getElementById("cardEModal").style.display = "none";
+      }
+
+      // 新增：控制圖卡 F 的開關函式
+      function openCardF() {
+        document.getElementById("cardFModal").style.display = "flex";
+      }
+      function closeCardF() {
+        document.getElementById("cardFModal").style.display = "none";
       }
 
       function openRoster() {
