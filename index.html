@@ -212,18 +212,22 @@
 
       <div class="button-container">
         <div class="section-title">宣導事項</div>
-        <a href="javascript:void(0)" onclick="openCardA()" class="btn"
-          >車禍處理流程</a
+        <a href="javascript:void(0)" onclick="openCardD()" class="btn"
+          >月台作業守則</a
         >
         <a href="javascript:void(0)" onclick="openCardB()" class="btn"
           >行車前安全檢查</a
         >
+        <a href="javascript:void(0)" onclick="openCardA()" class="btn"
+          >車禍處理流程</a
+        >
+        <a href="javascript:void(0)" onclick="openCardE()" class="btn"
+          >TOP 10 交通事故肇因</a
+        >
         <a href="javascript:void(0)" onclick="openCardC()" class="btn"
-          >TOP10 交通違規</a
+          >TOP 10 熱門交通違規</a
         >
-        <a href="javascript:void(0)" onclick="openCardD()" class="btn"
-          >月台作業守則</a
-        >
+
         <div class="section-title">班表查詢</div>
         <a href="shift_schedule.html" class="btn">全部班表</a>
         <a href="week_shift.html" class="btn">一週班表</a>
@@ -390,6 +394,30 @@
         <img
           src="Platform_rules.jpg"
           alt="月台作業守則"
+          style="width: 100%; height: auto; border-radius: 6px"
+        />
+      </div>
+    </div>
+
+    <div id="cardEModal" class="modal-overlay" style="display: none">
+      <div
+        class="modal-content"
+        style="max-width: 95%; max-height: 95%; overflow: auto"
+      >
+        <div style="text-align: right">
+          <button
+            onclick="closeCardE()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <p style="font-size: 12px; color: #777; text-align: center">
+          可使用手指放大縮小查看或下載後觀看
+        </p>
+        <img
+          src="Causes_Accidents.jpg"
+          alt="Top 10 交通事故肇因"
           style="width: 100%; height: auto; border-radius: 6px"
         />
       </div>
@@ -646,6 +674,14 @@
       }
       function closeCardD() {
         document.getElementById("cardDModal").style.display = "none";
+      }
+
+      // 新增：控制圖卡 E 的開關函式
+      function openCardE() {
+        document.getElementById("cardEModal").style.display = "flex";
+      }
+      function closeCardE() {
+        document.getElementById("cardEModal").style.display = "none";
       }
 
       function openRoster() {
