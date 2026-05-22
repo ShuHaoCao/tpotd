@@ -19,7 +19,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"
     />
-    <title>臺南郵局運輸股 v2.0</title>
+    <title>臺南郵局運輸股 v3.0</title>
     <style>
       body {
         background-color: #fdf6fd;
@@ -55,14 +55,45 @@
         margin-bottom: 24px;
       }
 
-      .section-title {
-        color: #5d3a91;
-        font-weight: bold;
-        margin: 20px 0 6px;
+      /* 鮮明色彩的收合功能控制按鈕樣式 */
+      .btn-toggle-section {
+        display: block;
+        background: linear-gradient(135deg, #8e44ad, #5d3a91);
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 30px;
+        padding: 14px 26px;
         font-size: 18px;
-        border-left: 4px solid #5d3a91;
-        padding-left: 10px;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(93, 58, 145, 0.4);
+        text-align: center;
+        transition: all 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+        border: none;
+        cursor: pointer;
+        margin: 20px 0 6px;
         animation: fadeIn 1.2s ease;
+      }
+
+      .btn-toggle-section:hover {
+        background: linear-gradient(135deg, #9b59b6, #6c40a6);
+        box-shadow: 0 6px 14px rgba(93, 58, 145, 0.5);
+        transform: scale(1.02);
+      }
+
+      .btn-toggle-section:active {
+        transform: scale(0.98);
+      }
+
+      /* 收合內容的容器 */
+      .collapse-content {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        animation: slideIn 0.4s ease;
       }
 
       .button-container {
@@ -86,6 +117,7 @@
         text-align: center;
         transition: all 0.3s ease;
         width: 100%;
+        box-sizing: border-box;
         transform: scale(0.98);
         animation: zoomIn 0.6s ease;
       }
@@ -112,13 +144,10 @@
           font-size: 20px;
         }
 
-        .btn {
+        .btn,
+        .btn-toggle-section {
           font-size: 16px;
           padding: 12px 22px;
-        }
-
-        .section-title {
-          font-size: 16px;
         }
       }
 
@@ -211,78 +240,113 @@
       <p id="datetime"></p>
 
       <div class="button-container">
-        <div class="section-title">宣導事項</div>
-        <a href="javascript:void(0)" onclick="openCardD()" class="btn"
-          >月台作業守則</a
+        <button
+          onclick="toggleSection('propagandaSection')"
+          class="btn-toggle-section"
         >
-        <a href="javascript:void(0)" onclick="openCardB()" class="btn"
-          >行車前安全檢查</a
-        >
-        <a href="javascript:void(0)" onclick="openCardA()" class="btn"
-          >車禍處理流程</a
-        >
-        <a href="javascript:void(0)" onclick="openCardE()" class="btn"
-          >TOP 10 交通事故肇因</a
-        >
-        <a href="javascript:void(0)" onclick="openCardC()" class="btn"
-          >TOP 10 熱門交通違規</a
-        >
-        <a href="javascript:void(0)" onclick="openCardF()" class="btn"
-          >TOP 10 汽車故障原因</a
-        >
+          📢 宣導事項
+        </button>
+        <div id="propagandaSection" class="collapse-content">
+          <a href="javascript:void(0)" onclick="openCardD()" class="btn"
+            >月台作業守則</a
+          >
+          <a href="javascript:void(0)" onclick="openCardB()" class="btn"
+            >行車前安全檢查</a
+          >
+          <a href="javascript:void(0)" onclick="openCardA()" class="btn"
+            >車禍處理流程</a
+          >
+          <a href="javascript:void(0)" onclick="openCardE()" class="btn"
+            >TOP 10 交通事故肇因</a
+          >
+          <a href="javascript:void(0)" onclick="openCardC()" class="btn"
+            >TOP 10 熱門交通違規</a
+          >
+          <a href="javascript:void(0)" onclick="openCardF()" class="btn"
+            >TOP 10 汽車故障原因</a
+          >
+        </div>
 
-        <div class="section-title">班表查詢</div>
-        <a href="shift_schedule.html" class="btn">全部班表</a>
-        <a href="week_shift.html" class="btn">一週班表</a>
-        <a href="calendar.html" class="btn">一月班表</a>
+        <button
+          onclick="toggleSection('scheduleSection')"
+          class="btn-toggle-section"
+        >
+          📅 班表查詢
+        </button>
+        <div id="scheduleSection" class="collapse-content">
+          <a href="shift_schedule.html" class="btn">全部班表</a>
+          <a href="week_shift.html" class="btn">一週班表</a>
+          <a href="calendar.html" class="btn">一月班表</a>
+        </div>
 
-        <div class="section-title">各類查詢</div>
-        <a href="javascript:void(0)" onclick="openShift()" class="btn"
-          >班別值勤表</a
+        <button
+          onclick="toggleSection('querySection')"
+          class="btn-toggle-section"
         >
-        <a href="shift_time.html" class="btn">工作詳情表</a>
-        <a href="javascript:void(0)" onclick="openRoster()" class="btn"
-          >本月輪值表</a
-        >
-        <a href="javascript:void(0)" onclick="overtime()" class="btn"
-          >加班統計表</a
-        >
-        <a href="javascript:void(0)" onclick="holidayWork()" class="btn"
-          >假日出勤表</a
-        >
-        <a href="javascript:void(0)" onclick="openLeaveStats()" class="btn"
-          >休假統計表</a
-        >
+          🔍 各類查詢
+        </button>
+        <div id="querySection" class="collapse-content">
+          <a href="javascript:void(0)" onclick="openShift()" class="btn"
+            >班別值勤表</a
+          >
+          <a href="shift_time.html" class="btn">工作詳情表</a>
+          <a href="javascript:void(0)" onclick="openRoster()" class="btn"
+            >本月輪值表</a
+          >
+          <a href="javascript:void(0)" onclick="overtime()" class="btn"
+            >加班統計表</a
+          >
+          <a href="javascript:void(0)" onclick="holidayWork()" class="btn"
+            >假日出勤表</a
+          >
+          <a href="javascript:void(0)" onclick="openLeaveStats()" class="btn"
+            >休假統計表</a
+          >
+        </div>
 
-        <div class="section-title">車次查詢</div>
-        <a href="javascript:void(0)" onclick="openNorthbound()" class="btn"
-          >北上車次</a
+        <button
+          onclick="toggleSection('trainSection')"
+          class="btn-toggle-section"
         >
-        <a href="javascript:void(0)" onclick="openSouthbound()" class="btn"
-          >南下車次</a
-        >
-        <a href="javascript:void(0)" onclick="openExpress()" class="btn"
-          >快捷車次</a
-        >
+          🚚 車次查詢
+        </button>
+        <div id="trainSection" class="collapse-content">
+          <a href="javascript:void(0)" onclick="openNorthbound()" class="btn"
+            >北上車次</a
+          >
+          <a href="javascript:void(0)" onclick="openSouthbound()" class="btn"
+            >南下車次</a
+          >
+          <a href="javascript:void(0)" onclick="openExpress()" class="btn"
+            >快捷車次</a
+          >
+        </div>
 
-        <div class="section-title">其他功能</div>
-        <a href="civil_law.html" class="btn">民法模擬測驗題庫</a>
-        <a href="https://gemini.google.com/share/f7b3df733858" class="btn"
-          >郵政法規模擬試題-簡單</a
+        <button
+          onclick="toggleSection('otherSection')"
+          class="btn-toggle-section"
         >
-        <a href="https://gemini.google.com/share/eed16032c3b2" class="btn"
-          >郵政法規模擬試題-中等</a
-        >
-        <a href="https://gemini.google.com/share/2cfcad099263" class="btn"
-          >郵政法規模擬試題-困難</a
-        >
-        <a href="Barcode.html" class="btn">條碼產生器</a>
-        <a href="game.html" class="btn">趣味小遊戲</a>
-        <a href="trivia.html" class="btn">生活小知識</a>
-        <a href="car.html" class="btn">汽車診療室</a>
-        <a href="javascript:void(0)" onclick="checkPassword()" class="btn"
-          >工具箱</a
-        >
+          ⚙️ 其他功能
+        </button>
+        <div id="otherSection" class="collapse-content">
+          <a href="civil_law.html" class="btn">民法模擬測驗題庫</a>
+          <a href="https://gemini.google.com/share/f7b3df733858" class="btn"
+            >郵政法規模擬試題-簡單</a
+          >
+          <a href="https://gemini.google.com/share/eed16032c3b2" class="btn"
+            >郵政法規模擬試題-中等</a
+          >
+          <a href="https://gemini.google.com/share/2cfcad099263" class="btn"
+            >郵政法規模擬試題-困難</a
+          >
+          <a href="Barcode.html" class="btn">條碼產生器</a>
+          <a href="game.html" class="btn">趣味小遊戲</a>
+          <a href="trivia.html" class="btn">生活小知識</a>
+          <a href="car.html" class="btn">汽車診療室</a>
+          <a href="javascript:void(0)" onclick="checkPassword()" class="btn"
+            >工具箱</a
+          >
+        </div>
       </div>
 
       <footer>
@@ -671,7 +735,16 @@
       updateDateTime();
       setInterval(updateDateTime, 1000);
 
-      // 新增：控制圖卡 A 的開關函式
+      // 統一的通用收合控制函式
+      function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (section.style.display === "flex") {
+          section.style.display = "none";
+        } else {
+          section.style.display = "flex";
+        }
+      }
+
       function openCardA() {
         document.getElementById("cardAModal").style.display = "flex";
       }
@@ -679,7 +752,6 @@
         document.getElementById("cardAModal").style.display = "none";
       }
 
-      // 新增：控制圖卡 B 的開關函式
       function openCardB() {
         document.getElementById("cardBModal").style.display = "flex";
       }
@@ -687,7 +759,6 @@
         document.getElementById("cardBModal").style.display = "none";
       }
 
-      // 新增：控制圖卡 C 的開關函式
       function openCardC() {
         document.getElementById("cardCModal").style.display = "flex";
       }
@@ -695,7 +766,6 @@
         document.getElementById("cardCModal").style.display = "none";
       }
 
-      // 新增：控制圖卡 D 的開關函式
       function openCardD() {
         document.getElementById("cardDModal").style.display = "flex";
       }
@@ -703,7 +773,6 @@
         document.getElementById("cardDModal").style.display = "none";
       }
 
-      // 新增：控制圖卡 E 的開關函式
       function openCardE() {
         document.getElementById("cardEModal").style.display = "flex";
       }
@@ -711,7 +780,6 @@
         document.getElementById("cardEModal").style.display = "none";
       }
 
-      // 新增：控制圖卡 F 的開關函式
       function openCardF() {
         document.getElementById("cardFModal").style.display = "flex";
       }
@@ -725,6 +793,15 @@
       function closeRoster() {
         document.getElementById("rosterModal").style.display = "none";
       }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var originalClose = window.closeNorthbound;
+        window.closeNorthbound = function () {
+          var m = document.getElementById("northboundModal");
+          if (m) m.style.display = "none";
+          if (typeof originalClose === "function") originalClose();
+        };
+      });
 
       function overtime() {
         document.getElementById("overtimeModal").style.display = "flex";
