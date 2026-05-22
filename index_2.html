@@ -5,10 +5,6 @@
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
     ></script>
-    <script
-      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
-      async
-    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -538,7 +534,8 @@
         <p>更新可能延遲，請以紙本班表為準</p>
         <button
           onclick="
-            document.getElementById('popup-overlay').style.display = 'none'
+            document.getElementById('popup-overlay').style.display = 'none';
+            playMusic();
           "
           class="confirm-btn"
         >
@@ -791,7 +788,7 @@
       const bgMusic = document.getElementById("bgMusic");
       const musicToggle = document.getElementById("musicToggle");
 
-      // 原有的資源完全下載完畢控制
+      // 修改後的資源完全下載完畢控制：只負責關閉載入畫面，移除強制播放
       window.onload = function () {
         const loader = document.getElementById("loader-wrapper");
         const mainContent = document.getElementById("main-content");
@@ -800,11 +797,11 @@
         setTimeout(() => {
           loader.style.display = "none";
           mainContent.style.opacity = "1";
-          playMusic();
+          // 這裡已移除原有的 playMusic(); 避免觸發瀏覽器阻擋
         }, 400);
       };
 
-      // 原有音樂控制
+      // 音樂播放函式
       function playMusic() {
         bgMusic
           .play()
@@ -812,11 +809,12 @@
             musicToggle.textContent = "🎵";
           })
           .catch((err) => {
-            console.log("瀏覽器阻擋了自動播放，等待使用者首次點擊解鎖。");
+            console.log("播放被阻擋，等待使用者點擊解鎖：", err);
             musicToggle.textContent = "🔇";
           });
       }
 
+      // 音樂開關控制
       function toggleMusic() {
         if (bgMusic.paused) {
           bgMusic.play();
@@ -826,9 +824,6 @@
           musicToggle.textContent = "🔇";
         }
       }
-
-      document.body.addEventListener("click", function () {}, { once: true });
-
       // 原有時間日期更新
       function updateDateTime() {
         const now = new Date();
