@@ -528,6 +528,9 @@
             <a href="javascript:void(0)" onclick="openCardF()" class="btn"
               >TOP 10 汽車故障原因</a
             >
+            <a href="javascript:void(0)" onclick="openCardG()" class="btn"
+              >車輛保管人制度</a
+            >
           </div>
 
           <button
@@ -733,6 +736,23 @@
         <img
           src="cause_failure.jpeg"
           alt="故障原因"
+          style="width: 100%; height: auto"
+        />
+      </div>
+    </div>
+    <div id="cardGModal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div style="text-align: right">
+          <button
+            onclick="closeCardG()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <img
+          src="custodian.png"
+          alt="車輛保管人制度"
           style="width: 100%; height: auto"
         />
       </div>
@@ -1037,6 +1057,12 @@
       }
       function closeCardF() {
         document.getElementById("cardFModal").style.display = "none";
+      }
+      function openCardG() {
+        document.getElementById("cardGModal").style.display = "flex";
+      }
+      function closeCardG() {
+        document.getElementById("cardGModal").style.display = "none";
       }
       function openRoster() {
         document.getElementById("rosterModal").style.display = "flex";
