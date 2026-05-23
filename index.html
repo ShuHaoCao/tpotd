@@ -428,14 +428,26 @@
         align-items: center;
       }
 
+      /* 修改後的互動視窗內容外框 */
       .modal-content {
         background: white;
         padding: 8px 24px 20px;
         border-radius: 12px;
-        max-width: 95%;
-        overflow: auto;
-        text-align: center;
+        max-width: 90%; /* 限制視窗最大寬度為螢幕的 90% */
+        max-height: 90vh; /* 限制視窗最大高度為螢幕高度的 90% */
+        display: flex;
+        flex-direction: column; /* 讓關閉按鈕與圖片上下排列 */
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      /* 確保所有彈出視窗內的圖片都能完美自動縮放 */
+      .modal-content img {
+        width: auto;
+        height: auto;
+        max-width: 100%; /* 寬度不超過外框 */
+        max-height: 75vh; /* 高度限制在 75% 螢幕高度內，留空間給關閉按鈕 */
+        object-fit: contain; /* 保持圖片原始比例不變形 */
+        margin: 0 auto;
       }
 
       .modal-content p {
