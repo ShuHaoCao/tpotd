@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="zh-TW">
   <head>
-    <!-- Google tag (gtag.js) -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
@@ -30,6 +29,9 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Orbitron:wght@500;700;900&display=swap"
       rel="stylesheet"
     />
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
       :root {
@@ -361,7 +363,6 @@
       x-init="init()"
       class="casino-bg flex flex-col"
     >
-      <!-- Player name modal -->
       <div
         x-show="!playerName"
         x-cloak
@@ -399,7 +400,6 @@
         </div>
       </div>
 
-      <!-- Leaderboard modal -->
       <div
         x-show="showLeaderboard"
         x-cloak
@@ -478,7 +478,6 @@
       <main
         class="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-4 md:px-6"
       >
-        <!-- Top HUD -->
         <header
           class="glass-panel rounded-[1.5rem] px-4 py-3 md:px-5 flex items-center justify-between gap-3"
         >
@@ -527,11 +526,9 @@
           </div>
         </header>
 
-        <!-- Table -->
         <section
           class="table-felt relative mt-4 flex-1 rounded-[2rem] p-4 md:p-6 flex flex-col gap-4"
         >
-          <!-- Dealer -->
           <div
             class="gold-panel rounded-[1.6rem] p-4 md:p-5 text-center mx-auto w-full max-w-3xl"
             :class="currentPlayer === 'dealer' ? 'active-seat' : ''"
@@ -576,7 +573,6 @@
             </div>
           </div>
 
-          <!-- Opponents -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <template x-for="npc in npcs" :key="npc.id">
               <div
@@ -629,7 +625,6 @@
             </template>
           </div>
 
-          <!-- Player control deck -->
           <div class="mt-auto glass-panel rounded-[2rem] p-4 md:p-5">
             <div
               class="flex flex-col lg:flex-row lg:items-end gap-5 justify-between"
@@ -753,7 +748,6 @@
         </footer>
       </main>
 
-      <!-- Message overlay -->
       <div
         x-show="message"
         x-transition
@@ -775,20 +769,8 @@
       </div>
     </div>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-      import {
-        getFirestore,
-        collection,
-        doc,
-        getDocs,
-        query,
-        orderBy,
-        limit,
-        runTransaction,
-        serverTimestamp,
-      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
+    <script>
+      // 填入您在第一步申請到的 Firebase 專案設定值
       const firebaseConfig = {
         apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
         authDomain: "fir-game-64891.firebaseapp.com",
@@ -801,11 +783,11 @@
         measurementId: "G-7XXBYKEK00",
       };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getFirestore(app);
-      const RANKING_COLLECTION = "blackjack_rankings";
+      // 初始化 Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
 
-      window.blackjackGame = function () {
+      function blackjackGame() {
         return {
           deck: [],
           gameState: "betting",
@@ -813,14 +795,12 @@
           message: "",
           playerName: localStorage.getItem("bj_playerName") || "",
           tempName: "",
-          leaderboard: [],
+          leaderboard: [], // 改由 Firebase 動態同步更新
           playerWins: 0,
           showLeaderboard: false,
           isDouble: false,
-
           dealer: { cards: [], score: 0, showAll: false },
           player: { id: "player", cards: [], score: 0, status: "playing" },
-
           npcs: [
             {
               id: "npc1",
@@ -848,88 +828,40 @@
             },
           ],
 
-          async init() {
+          init() {
             this.createDeck();
-            await this.loadLeaderboard();
-            this.updatePlayerWins();
+
+            // 監聽 Firebase 排行榜節點：任何裝置更新勝場時，所有人在線上都能同步看見
+            db.ref("blackjack_leaderboard")
+              .orderByChild("wins")
+              .limitToLast(10) // 效能優化：只撈前 10 名
+              .on("value", (snapshot) => {
+                const list = [];
+                snapshot.forEach((childSnapshot) => {
+                  list.push(childSnapshot.val());
+                });
+                // 由於 orderByChild 預設為升序，前端處理成降序 (高分在頂部)
+                this.leaderboard = list.reverse();
+                this.updatePlayerWins();
+              });
           },
 
-          async setPlayerName() {
+          setPlayerName() {
             const name = this.tempName.trim();
             if (!name) return;
-
             this.playerName = name.slice(0, 20);
             localStorage.setItem("bj_playerName", this.playerName);
 
-            await this.loadLeaderboard();
+            // 為了讓新設定名字的使用者能在完全沒玩時也知道自己當下的勝場數
             this.updatePlayerWins();
           },
 
-          async loadLeaderboard() {
-            try {
-              const q = query(
-                collection(db, RANKING_COLLECTION),
-                orderBy("wins", "desc"),
-                limit(10),
-              );
-
-              const snapshot = await getDocs(q);
-
-              this.leaderboard = snapshot.docs.map((docSnap) => ({
-                id: docSnap.id,
-                ...docSnap.data(),
-              }));
-
-              this.updatePlayerWins();
-            } catch (error) {
-              console.error("讀取排行榜失敗：", error);
-              this.leaderboard = [];
-            }
-          },
-
           updatePlayerWins() {
+            if (!this.playerName) return;
             const entry = this.leaderboard.find(
               (e) => e.name === this.playerName,
             );
             this.playerWins = entry ? entry.wins : 0;
-          },
-
-          getPlayerDocId(name) {
-            return encodeURIComponent(name.trim().toLowerCase());
-          },
-
-          async saveWin() {
-            if (!this.playerName) return;
-
-            const playerDocId = this.getPlayerDocId(this.playerName);
-            const playerRef = doc(db, RANKING_COLLECTION, playerDocId);
-
-            try {
-              await runTransaction(db, async (transaction) => {
-                const playerSnap = await transaction.get(playerRef);
-
-                if (playerSnap.exists()) {
-                  const oldData = playerSnap.data();
-                  transaction.update(playerRef, {
-                    name: oldData.name || this.playerName,
-                    wins: Number(oldData.wins || 0) + 1,
-                    updatedAt: serverTimestamp(),
-                  });
-                } else {
-                  transaction.set(playerRef, {
-                    name: this.playerName,
-                    wins: 1,
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp(),
-                  });
-                }
-              });
-
-              await this.loadLeaderboard();
-            } catch (error) {
-              console.error("儲存勝場失敗：", error);
-              alert("排行榜儲存失敗，請檢查 Firebase 設定或 Firestore 規則。");
-            }
           },
 
           getRankName(wins) {
@@ -958,7 +890,6 @@
               "K",
             ];
             this.deck = [];
-
             for (let s of suits) {
               for (let l of labels) {
                 this.deck.push({
@@ -970,7 +901,6 @@
                 });
               }
             }
-
             this.shuffle();
           },
 
@@ -990,12 +920,10 @@
           calculateScore(cards) {
             let score = cards.reduce((sum, card) => sum + card.value, 0);
             let aces = cards.filter((c) => c.label === "A").length;
-
             while (score > 21 && aces > 0) {
               score -= 10;
               aces--;
             }
-
             return score;
           },
 
@@ -1018,7 +946,6 @@
             }
 
             this.currentPlayer = "player";
-
             if (this.player.score === 21) {
               this.message = "Blackjack! 🎊";
               setTimeout(() => this.playerStand(), 1300);
@@ -1028,10 +955,8 @@
           playerHit() {
             if (this.gameState !== "playing" || this.currentPlayer !== "player")
               return;
-
             this.player.cards.push(this.drawCard());
             this.updateScores();
-
             if (this.player.score > 21) {
               this.message = "你爆牌了！Bust";
               setTimeout(() => this.playerStand(), 1100);
@@ -1044,11 +969,9 @@
           playerDouble() {
             if (this.player.cards.length !== 2 || this.gameState !== "playing")
               return;
-
             this.isDouble = true;
             this.player.cards.push(this.drawCard());
             this.updateScores();
-
             this.message =
               this.player.score > 21 ? "雙倍爆牌！Bust" : "雙倍下注！";
             setTimeout(() => this.playerStand(), 1100);
@@ -1057,9 +980,7 @@
           playerSurrender() {
             if (this.player.cards.length !== 2 || this.gameState !== "playing")
               return;
-
             this.message = "棄牌投降 Surrender";
-
             setTimeout(() => {
               this.currentPlayer = null;
               this.gameState = "finished";
@@ -1069,7 +990,6 @@
 
           async playerStand() {
             if (this.gameState !== "playing") return;
-
             this.message = "";
             this.currentPlayer = "npc1";
             await this.npcTours();
@@ -1088,10 +1008,8 @@
                 await new Promise((r) => setTimeout(r, 650));
                 if (npc.score > 21) break;
               }
-
               npc.status = npc.score > 21 ? "爆牌" : "停牌";
             }
-
             await this.dealerTurn();
           },
 
@@ -1105,16 +1023,15 @@
               this.dealer.cards.push(this.drawCard());
               this.updateScores();
             }
-
             this.endGame();
           },
 
           updateScores() {
             this.player.score = this.calculateScore(this.player.cards);
             this.dealer.score = this.calculateScore(this.dealer.cards);
-            this.npcs.forEach((npc) => {
-              npc.score = this.calculateScore(npc.cards);
-            });
+            this.npcs.forEach(
+              (npc) => (npc.score = this.calculateScore(npc.cards)),
+            );
           },
 
           endGame() {
@@ -1142,22 +1059,40 @@
             }
           },
 
+          // 核心修改：利用玩家名字作 key 直接在雲端累加勝場，避免覆蓋他人紀錄
+          saveWin() {
+            if (!this.playerName) return;
+
+            // 使用玩家名字編碼作為節點 ID（避開 Firebase 禁止的非法字元）
+            const safeKey = encodeURIComponent(this.playerName).replace(
+              /\./g,
+              "%2E",
+            );
+            const userRef = db.ref(`blackjack_leaderboard/${safeKey}`);
+
+            // 使用原子性交易 (Transaction) 確保多人同時寫入時點數不混亂
+            userRef.transaction((currentData) => {
+              if (currentData === null) {
+                return { name: this.playerName, wins: 1 };
+              } else {
+                currentData.wins = (currentData.wins || 0) + 1;
+                return currentData;
+              }
+            });
+          },
+
           resetState() {
             if (this.deck.length < 15) this.createDeck();
-
             this.player.cards = [];
             this.player.score = 0;
-
             this.dealer.cards = [];
             this.dealer.score = 0;
             this.dealer.showAll = false;
-
             this.npcs.forEach((n) => {
               n.cards = [];
               n.status = "等待";
               n.score = 0;
             });
-
             this.currentPlayer = null;
             this.message = "";
           },
@@ -1167,7 +1102,7 @@
             this.resetState();
           },
         };
-      };
+      }
 
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
