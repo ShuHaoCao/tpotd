@@ -610,6 +610,9 @@
         measurementId: "G-N6YNBJVSYB",
       };
 
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
       const AI_NAMES = [
         "剛看完教學的隔壁老王",
         "輸到脫褲子的賭神",
@@ -882,7 +885,7 @@
         endRound();
       }
 
-      function endRound() {
+      async function endRound() {
         const d = players[0];
         const p = players[3];
         let multiplier = 0;
@@ -929,8 +932,8 @@
           document.getElementById("status-msg").innerText = finalMsg;
           document.getElementById("btn-next").disabled = false;
           document.getElementById("btn-next").innerText = "重新開始";
-          saveFinalScore();
-          updateLeaderboard();
+          await saveFinalScore();
+          await updateLeaderboard();
         }
       }
 
@@ -996,6 +999,13 @@
           idx++;
         });
       }
+      // type="module" 內的函式不會自動變成全域函式，
+      // 所以要手動掛到 window，HTML onclick 才找得到。
+      window.startGame = startGame;
+      window.initRound = initRound;
+      window.playerHit = playerHit;
+      window.playerStand = playerStand;
+
       // 1. 禁用滑鼠右鍵選單
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
