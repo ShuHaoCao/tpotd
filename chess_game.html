@@ -12,7 +12,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
     <meta charset="UTF-8" />
@@ -23,160 +22,537 @@
     <title>楚河漢界：大將軍</title>
     <style>
       :root {
-        --bg-color: #f4e4bc;
-        --board-color: #eec170;
-        --line-color: #333;
-        --red-piece: #d32f2f;
-        --black-piece: #212121;
+        --bg: #0f0907;
+        --panel: rgba(42, 25, 17, 0.78);
+        --panel-strong: rgba(70, 39, 24, 0.92);
+        --gold: #f7d68a;
+        --gold-dark: #a76d2d;
+        --wood: #b97934;
+        --wood-light: #e3b35e;
+        --ink: #1c100b;
+        --red: #d8332f;
+        --black: #171717;
+        --cream: #fff3d0;
+        --muted: #c5ab7c;
+        --shadow: rgba(0, 0, 0, 0.45);
+        --safe-top: env(safe-area-inset-top, 0px);
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        min-height: 100%;
       }
 
       body {
-        font-family: "Microsoft JhengHei", sans-serif;
-        background-color: #333;
         margin: 0;
+        font-family: "Noto Serif TC", "Microsoft JhengHei", serif;
+        color: var(--cream);
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        justify-content: center;
+        align-items: stretch;
+        background:
+          radial-gradient(
+            circle at 20% 8%,
+            rgba(255, 213, 126, 0.16),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 78% 20%,
+            rgba(178, 44, 35, 0.18),
+            transparent 24%
+          ),
+          linear-gradient(135deg, #120806 0%, #24120b 42%, #080504 100%);
+        overflow-x: hidden;
         touch-action: manipulation;
       }
 
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+          );
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at center, black, transparent 78%);
+      }
+
+      body::after {
+        content: "楚河  漢界";
+        position: fixed;
+        left: 50%;
+        top: 52%;
+        transform: translate(-50%, -50%) rotate(-8deg);
+        font-size: clamp(58px, 13vw, 160px);
+        letter-spacing: 0.2em;
+        white-space: nowrap;
+        color: rgba(255, 220, 145, 0.035);
+        pointer-events: none;
+        font-weight: 900;
+      }
+
       #game-container {
-        width: 100%;
-        max-width: 500px;
-        background: var(--bg-color);
-        padding: 10px;
-        box-sizing: border-box;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        width: min(100%, 560px);
         min-height: 100vh;
+        padding: calc(14px + var(--safe-top)) 14px 16px;
         display: flex;
         flex-direction: column;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero {
+        padding: 16px 16px 12px;
+        border: 1px solid rgba(247, 214, 138, 0.26);
+        border-radius: 24px;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.02)
+          ),
+          rgba(36, 20, 13, 0.72);
+        box-shadow:
+          0 18px 50px rgba(0, 0, 0, 0.32),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(14px);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        right: -72px;
+        top: -92px;
+        background: radial-gradient(
+          circle,
+          rgba(247, 214, 138, 0.32),
+          transparent 64%
+        );
       }
 
       h1 {
+        margin: 0;
         text-align: center;
-        margin: 10px 0;
-        color: #5d4037;
+        font-size: clamp(28px, 8vw, 42px);
+        letter-spacing: 0.12em;
+        line-height: 1.15;
+        color: transparent;
+        background: linear-gradient(180deg, #fff6ce, #f3c065 48%, #a05d24 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        text-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
+      }
+
+      .subtitle {
+        margin: 8px 0 0;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.22em;
       }
 
       #info-panel {
-        display: flex;
-        justify-content: space-between;
-        padding: 5px 10px;
-        background: #fff;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        font-size: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card {
+        position: relative;
+        padding: 12px 12px;
+        min-height: 62px;
+        border-radius: 18px;
+        background: var(--panel);
+        border: 1px solid rgba(247, 214, 138, 0.18);
+        box-shadow:
+          0 12px 30px rgba(0, 0, 0, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .stat-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          110deg,
+          transparent,
+          rgba(255, 255, 255, 0.06),
+          transparent
+        );
+        transform: translateX(-100%);
+        animation: sheen 5s infinite;
+      }
+
+      @keyframes sheen {
+        0%,
+        72% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .stat-label {
+        display: block;
+        color: #bfa275;
+        font-size: 11px;
+        letter-spacing: 0.18em;
+        margin-bottom: 5px;
+      }
+
+      #player-display,
+      #status-display {
+        display: block;
+        color: #fff4cd;
+        font-size: 15px;
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      #board-shell {
+        padding: 10px;
+        border-radius: 26px;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 222, 146, 0.3),
+            rgba(72, 33, 15, 0.18)
+          ),
+          rgba(25, 13, 8, 0.58);
+        border: 1px solid rgba(247, 214, 138, 0.25);
+        box-shadow:
+          0 30px 70px rgba(0, 0, 0, 0.42),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
       }
 
       #board-wrapper {
         position: relative;
         width: 100%;
         aspect-ratio: 9 / 10;
-        background: var(--board-color);
-        border: 2px solid var(--line-color);
-        border-radius: 4px;
+        border-radius: 18px;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 35% 25%,
+            rgba(255, 236, 176, 0.55),
+            transparent 35%
+          ),
+          repeating-linear-gradient(
+            88deg,
+            rgba(105, 55, 18, 0.2) 0 6px,
+            rgba(229, 169, 78, 0.14) 6px 13px
+          ),
+          linear-gradient(135deg, #e6b15d, #bb7630 52%, #8e4d23);
+        box-shadow:
+          inset 0 0 0 4px rgba(43, 21, 9, 0.8),
+          inset 0 0 28px rgba(0, 0, 0, 0.22),
+          0 16px 28px rgba(0, 0, 0, 0.3);
+      }
+
+      #board-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 237, 181, 0.2);
+        pointer-events: none;
       }
 
       canvas {
         width: 100%;
         height: 100%;
         display: block;
+        position: relative;
+        z-index: 1;
+      }
+
+      #thinking-glow {
+        position: absolute;
+        inset: 0;
+        display: none;
+        place-items: center;
+        z-index: 2;
+        pointer-events: none;
+        background: radial-gradient(
+          circle,
+          rgba(0, 0, 0, 0.05),
+          transparent 60%
+        );
+      }
+
+      #thinking-glow.show {
+        display: grid;
+      }
+
+      #thinking-glow span {
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(20, 10, 5, 0.72);
+        border: 1px solid rgba(247, 214, 138, 0.26);
+        color: #ffe2a0;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.38);
+        animation: pulse 1s infinite alternate;
+      }
+
+      @keyframes pulse {
+        from {
+          transform: scale(0.98);
+          opacity: 0.82;
+        }
+        to {
+          transform: scale(1.03);
+          opacity: 1;
+        }
       }
 
       #controls {
-        margin-top: 15px;
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
       }
 
       button {
-        padding: 12px;
-        font-size: 16px;
+        appearance: none;
+        border: 1px solid rgba(255, 225, 158, 0.32);
+        border-radius: 18px;
+        padding: 13px 14px;
         cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        background: #5d4037;
-        color: white;
+        color: #291307;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        background: linear-gradient(180deg, #ffe7a5, #d99a42 58%, #9d5724);
+        box-shadow:
+          0 12px 24px rgba(0, 0, 0, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.55);
+        transition:
+          transform 0.16s ease,
+          filter 0.16s ease,
+          box-shadow 0.16s ease;
       }
 
-      #leaderboard {
-        margin-top: 20px;
-        background: #fff;
-        padding: 10px;
-        border-radius: 5px;
+      button:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+        box-shadow:
+          0 16px 30px rgba(0, 0, 0, 0.34),
+          0 0 18px rgba(247, 214, 138, 0.16);
+      }
+      button:active {
+        transform: translateY(1px) scale(0.99);
+      }
+
+      #leaderboard-section {
+        border-radius: 24px;
+        padding: 14px;
+        background: var(--panel);
+        border: 1px solid rgba(247, 214, 138, 0.18);
+        box-shadow:
+          0 14px 36px rgba(0, 0, 0, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      #leaderboard-section h3 {
+        margin: 0 0 10px;
+        color: #ffe5a1;
+        letter-spacing: 0.08em;
+        font-size: 17px;
       }
 
       table {
         width: 100%;
         border-collapse: collapse;
+        overflow: hidden;
       }
       th,
       td {
-        border-bottom: 1px solid #ddd;
-        padding: 8px;
+        padding: 10px 8px;
         text-align: left;
+        font-size: 14px;
+      }
+      th {
+        color: #d7bc87;
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        border-bottom: 1px solid rgba(247, 214, 138, 0.18);
+      }
+      td {
+        color: #fff4d3;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      tbody tr:nth-child(1) td {
+        color: #ffe083;
+        font-weight: 900;
+      }
+      tbody tr:hover td {
+        background: rgba(255, 255, 255, 0.045);
       }
 
-      /* 彈窗樣式 */
       #overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
+        inset: 0;
+        z-index: 100;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 100;
+        padding: 22px;
+        background:
+          radial-gradient(
+            circle at 50% 38%,
+            rgba(247, 214, 138, 0.18),
+            transparent 28%
+          ),
+          rgba(5, 3, 2, 0.82);
+        backdrop-filter: blur(12px);
       }
+
       .modal {
-        background: white;
-        padding: 25px;
-        border-radius: 10px;
-        width: 80%;
-        max-width: 300px;
+        width: min(92vw, 380px);
+        padding: 28px 22px 22px;
         text-align: center;
+        border-radius: 28px;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.03)
+          ),
+          rgba(47, 26, 16, 0.92);
+        border: 1px solid rgba(247, 214, 138, 0.28);
+        box-shadow:
+          0 30px 80px rgba(0, 0, 0, 0.52),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
       }
+
+      .modal h2 {
+        margin: 0 0 8px;
+        font-size: 28px;
+        color: #ffe6a5;
+        letter-spacing: 0.1em;
+      }
+
+      .modal p {
+        color: #cdb385;
+        margin: 0 0 14px;
+      }
+
       input {
-        padding: 10px;
-        width: 80%;
-        margin: 10px 0;
+        width: 100%;
+        margin: 8px 0 14px;
+        padding: 14px 14px;
+        border-radius: 16px;
+        outline: none;
         font-size: 16px;
-        border: 1px solid #ccc;
+        text-align: center;
+        color: #fff2d0;
+        background: rgba(0, 0, 0, 0.24);
+        border: 1px solid rgba(247, 214, 138, 0.25);
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.25);
+      }
+
+      input:focus {
+        border-color: rgba(255, 225, 158, 0.7);
+        box-shadow:
+          0 0 0 4px rgba(247, 214, 138, 0.1),
+          inset 0 2px 10px rgba(0, 0, 0, 0.25);
       }
 
       footer div {
-        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
-        color: #888888; /* 中灰色，不會太刺眼 */
-        text-align: center; /* 居中對齊 */
-        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
-        margin-top: 20px;
+        font-size: 11px;
+        color: rgba(255, 233, 184, 0.46);
+        text-align: center;
+        margin: 2px 0 0;
+      }
+
+      @media (min-width: 760px) {
+        body {
+          align-items: center;
+        }
+        #game-container {
+          padding-top: 24px;
+          padding-bottom: 24px;
+        }
+      }
+
+      @media (max-width: 380px) {
+        #game-container {
+          padding-left: 9px;
+          padding-right: 9px;
+          gap: 9px;
+        }
+        .hero {
+          padding: 13px 12px 10px;
+          border-radius: 20px;
+        }
+        #board-shell {
+          padding: 7px;
+          border-radius: 21px;
+        }
+        #board-wrapper {
+          border-radius: 15px;
+        }
+        button {
+          padding: 12px 10px;
+          font-size: 14px;
+        }
+        th,
+        td {
+          padding: 8px 6px;
+        }
       }
     </style>
   </head>
   <body>
-    <script src="script_chess.js"></script>
     <div id="game-container">
-      <h1>楚河漢界：大將軍</h1>
+      <header class="hero">
+        <h1>楚河漢界</h1>
+        <p class="subtitle">大將軍 · 國風戰棋</p>
+      </header>
 
       <div id="info-panel">
-        <span id="player-display">玩家: -</span>
-        <span id="status-display">輪到你 (紅方)</span>
+        <div class="stat-card">
+          <span class="stat-label">PLAYER</span>
+          <span id="player-display">玩家: -</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">BATTLE STATUS</span>
+          <span id="status-display">輪到你 (紅方)</span>
+        </div>
       </div>
 
-      <div id="board-wrapper">
-        <canvas id="chessBoard"></canvas>
-      </div>
+      <main id="board-shell">
+        <div id="board-wrapper">
+          <canvas id="chessBoard"></canvas>
+          <div id="thinking-glow"><span>黑方推演中…</span></div>
+        </div>
+      </main>
 
       <div id="controls">
-        <button onclick="resetGame()">重新開始</button>
-        <button onclick="showLeaderboard()">查看排行</button>
+        <button onclick="resetGame()">重新開局</button>
+        <button onclick="showLeaderboard()">查看戰績</button>
       </div>
 
-      <div id="leaderboard-section">
-        <h3>🏆前10名排行榜</h3>
+      <section id="leaderboard-section">
+        <h3>🏆 前 10 名排行榜</h3>
         <table id="rank-table">
           <thead>
             <tr>
@@ -187,37 +563,77 @@
           </thead>
           <tbody id="rank-body"></tbody>
         </table>
-      </div>
+      </section>
+
+      <footer>
+        <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+      </footer>
     </div>
 
     <div id="overlay">
       <div class="modal">
-        <h2>歡迎對戰</h2>
-        <p>請輸入您的暱稱：</p>
+        <h2>歡迎入局</h2>
+        <p>請留下你的將軍名號</p>
         <input
           type="text"
           id="name-input"
           maxlength="8"
-          placeholder="你的大名"
+          placeholder="例如：棋局浪人"
         />
-        <br />
-        <button onclick="startGame()">開始遊戲</button>
+        <button onclick="startGame()">開始對弈</button>
       </div>
     </div>
-    <script>
-      /** * 遊戲邏輯與 AI 核心
+
+    <script type="module">
+      /**
+       * Firebase Cloud Firestore 排行榜設定
+       * 1. 到 Firebase Console 建立專案
+       * 2. 新增 Web App 後，把 firebaseConfig 替換成你的專案設定
+       * 3. 建立 Cloud Firestore Database
+       * 4. 將本文末提供的 Firestore Rules 貼到「規則」並發布
+       */
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        getDocs,
+        query,
+        orderBy,
+        limit,
+        runTransaction,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
+        authDomain: "fir-game-64891.firebaseapp.com",
+        databaseURL:
+          "https://fir-game-64891-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "fir-game-64891",
+        storageBucket: "fir-game-64891.firebasestorage.app",
+        messagingSenderId: "357308899829",
+        appId: "1:357308899829:web:10f760de728b1d3a20c0bc",
+        measurementId: "G-7WHN8QDHFK",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const RANK_COLLECTION = "xiangqi_rankings";
+
+      /** 遊戲邏輯與 AI 核心
        * 棋盤表示：10x9 陣列
        * 棋子代號：紅方(正數), 黑方(負數)
        * 1:帥/將, 2:仕, 3:相, 4:馬, 5:車, 6:炮, 7:兵/卒
        */
-
       const canvas = document.getElementById("chessBoard");
       const ctx = canvas.getContext("2d");
       let playerName = "";
       let selectedSq = null;
       let board = [];
-      let turn = 1; // 1: 紅, -1: 黑
+      let turn = 1;
       let isGameOver = false;
+      let possibleMoves = [];
 
       const PIECE_NAMES = {
         1: "帥",
@@ -236,7 +652,6 @@
         "-7": "卒",
       };
 
-      // 初始化棋盤
       function initBoard() {
         board = [
           [-5, -4, -3, -2, -1, -2, -3, -4, -5],
@@ -244,7 +659,6 @@
           [0, -6, 0, 0, 0, 0, 0, -6, 0],
           [-7, 0, -7, 0, -7, 0, -7, 0, -7],
           [0, 0, 0, 0, 0, 0, 0, 0, 0],
-          // -------------------------
           [0, 0, 0, 0, 0, 0, 0, 0, 0],
           [7, 0, 7, 0, 7, 0, 7, 0, 7],
           [0, 6, 0, 0, 0, 0, 0, 6, 0],
@@ -253,114 +667,286 @@
         ];
       }
 
-      // 繪製棋盤與棋子
-      function draw() {
+      function getMetrics() {
         const w = canvas.width;
         const h = canvas.height;
-        const cellSize = w / 9;
-        ctx.clearRect(0, 0, w, h);
+        const cell = Math.min(w / 9, h / 10);
+        const boardW = cell * 9;
+        const boardH = cell * 10;
+        const ox = (w - boardW) / 2;
+        const oy = (h - boardH) / 2;
+        return { w, h, cell, ox, oy };
+      }
 
-        // 繪製格線
-        ctx.strokeStyle = "#333";
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 10; i++) {
+      function pointOf(r, c, m) {
+        return {
+          x: m.ox + m.cell / 2 + c * m.cell,
+          y: m.oy + m.cell / 2 + r * m.cell,
+        };
+      }
+
+      function drawWoodGrain(m) {
+        const g = ctx.createLinearGradient(0, 0, m.w, m.h);
+        g.addColorStop(0, "#f0c06c");
+        g.addColorStop(0.52, "#b8712d");
+        g.addColorStop(1, "#8d4b22");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, m.w, m.h);
+        ctx.globalAlpha = 0.13;
+        for (let i = 0; i < 38; i++) {
+          const y = (i / 38) * m.h + Math.sin(i * 1.9) * m.cell * 0.16;
           ctx.beginPath();
-          ctx.moveTo(cellSize / 2, cellSize / 2 + i * cellSize);
-          ctx.lineTo(w - cellSize / 2, cellSize / 2 + i * cellSize);
+          ctx.moveTo(0, y);
+          for (let x = 0; x <= m.w; x += m.cell * 0.45)
+            ctx.lineTo(x, y + Math.sin(x * 0.012 + i) * m.cell * 0.13);
+          ctx.strokeStyle = i % 2 ? "#4b220d" : "#fff4c6";
+          ctx.lineWidth = Math.max(1, m.cell * 0.018);
           ctx.stroke();
         }
-        for (let j = 0; j < 9; j++) {
-          ctx.beginPath();
-          ctx.moveTo(cellSize / 2 + j * cellSize, cellSize / 2);
-          ctx.lineTo(cellSize / 2 + j * cellSize, cellSize / 2 + 4 * cellSize);
-          ctx.stroke();
-          ctx.beginPath();
-          ctx.moveTo(cellSize / 2 + j * cellSize, cellSize / 2 + 5 * cellSize);
-          ctx.lineTo(cellSize / 2 + j * cellSize, h - cellSize / 2);
-          ctx.stroke();
-        }
-        // 外框
-        ctx.strokeRect(cellSize / 2, cellSize / 2, w - cellSize, h - cellSize);
+        ctx.globalAlpha = 1;
+      }
 
-        // 繪製棋子
+      function drawBoardLines(m) {
+        const { cell } = m;
+        ctx.save();
+        ctx.strokeStyle = "rgba(31, 15, 8, .88)";
+        ctx.lineWidth = Math.max(2, cell * 0.035);
+        ctx.shadowColor = "rgba(255, 236, 171, .25)";
+        ctx.shadowBlur = cell * 0.04;
+
         for (let r = 0; r < 10; r++) {
-          for (let c = 0; c < 9; c++) {
-            const p = board[r][c];
-            if (p !== 0) {
-              const x = cellSize / 2 + c * cellSize;
-              const y = cellSize / 2 + r * cellSize;
+          const a = pointOf(r, 0, m),
+            b = pointOf(r, 8, m);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+        for (let c = 0; c < 9; c++) {
+          let a = pointOf(0, c, m),
+            b = pointOf(4, c, m);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+          a = pointOf(5, c, m);
+          b = pointOf(9, c, m);
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
 
-              // 選中高亮
-              if (selectedSq && selectedSq.r === r && selectedSq.c === c) {
-                ctx.fillStyle = "rgba(255, 255, 0, 0.5)";
-                ctx.beginPath();
-                ctx.arc(x, y, cellSize * 0.45, 0, Math.PI * 2);
-                ctx.fill();
-              }
+        // 外框
+        const tl = pointOf(0, 0, m),
+          br = pointOf(9, 8, m);
+        ctx.lineWidth = Math.max(4, cell * 0.055);
+        ctx.strokeRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
 
-              ctx.fillStyle = "white";
-              ctx.beginPath();
-              ctx.arc(x, y, cellSize * 0.42, 0, Math.PI * 2);
-              ctx.fill();
-              ctx.strokeStyle = "#333";
-              ctx.stroke();
+        // 九宮斜線
+        drawPalace(0, m);
+        drawPalace(7, m);
+        ctx.restore();
+      }
 
-              ctx.fillStyle = p > 0 ? "red" : "black";
-              ctx.font = `bold ${cellSize * 0.6}px "Microsoft JhengHei"`;
-              ctx.textAlign = "center";
-              ctx.textBaseline = "middle";
-              ctx.fillText(PIECE_NAMES[p], x, y);
-            }
-          }
+      function drawPalace(startR, m) {
+        const p1 = pointOf(startR, 3, m),
+          p2 = pointOf(startR + 2, 5, m);
+        const p3 = pointOf(startR, 5, m),
+          p4 = pointOf(startR + 2, 3, m);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.stroke();
+      }
+
+      function drawRiver(m) {
+        const y = m.oy + m.cell * 4.5;
+        const x1 = m.ox + m.cell * 0.55;
+        const x2 = m.ox + m.cell * 8.45;
+        ctx.save();
+        const river = ctx.createLinearGradient(
+          x1,
+          y - m.cell * 0.32,
+          x2,
+          y + m.cell * 0.32,
+        );
+        river.addColorStop(0, "rgba(40, 18, 10, .16)");
+        river.addColorStop(0.5, "rgba(255, 239, 186, .22)");
+        river.addColorStop(1, "rgba(40, 18, 10, .16)");
+        ctx.fillStyle = river;
+        ctx.fillRect(x1, y - m.cell * 0.38, x2 - x1, m.cell * 0.76);
+        ctx.fillStyle = "rgba(48, 21, 8, .64)";
+        ctx.font = `900 ${m.cell * 0.38}px "Noto Serif TC", "Microsoft JhengHei", serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.letterSpacing = `${m.cell * 0.06}px`;
+        ctx.fillText("楚河", m.ox + m.cell * 2.45, y);
+        ctx.fillText("漢界", m.ox + m.cell * 6.55, y);
+        ctx.restore();
+      }
+
+      function drawMoveHints(m) {
+        if (!selectedSq) return;
+        possibleMoves.forEach(({ r, c, capture }) => {
+          const p = pointOf(r, c, m);
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, m.cell * (capture ? 0.22 : 0.12), 0, Math.PI * 2);
+          ctx.fillStyle = capture
+            ? "rgba(216, 51, 47, .34)"
+            : "rgba(255, 235, 151, .36)";
+          ctx.fill();
+          ctx.strokeStyle = capture
+            ? "rgba(255, 223, 140, .82)"
+            : "rgba(255, 236, 173, .55)";
+          ctx.lineWidth = Math.max(2, m.cell * 0.025);
+          ctx.stroke();
+          ctx.restore();
+        });
+      }
+
+      function drawPiece(r, c, piece, m) {
+        const { x, y } = pointOf(r, c, m);
+        const radius = m.cell * 0.39;
+        const isRed = piece > 0;
+        const isSelected =
+          selectedSq && selectedSq.r === r && selectedSq.c === c;
+
+        ctx.save();
+        if (isSelected) {
+          ctx.beginPath();
+          ctx.arc(x, y, radius * 1.18, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255, 223, 109, .32)";
+          ctx.shadowColor = "rgba(255, 218, 105, .88)";
+          ctx.shadowBlur = m.cell * 0.22;
+          ctx.fill();
+        }
+
+        ctx.shadowColor = "rgba(0,0,0,.50)";
+        ctx.shadowBlur = m.cell * 0.12;
+        ctx.shadowOffsetY = m.cell * 0.08;
+        const g = ctx.createRadialGradient(
+          x - radius * 0.35,
+          y - radius * 0.42,
+          radius * 0.1,
+          x,
+          y,
+          radius * 1.1,
+        );
+        g.addColorStop(0, "#fff8dd");
+        g.addColorStop(0.48, "#f3d188");
+        g.addColorStop(1, "#b86c29");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.lineWidth = Math.max(2, m.cell * 0.045);
+        ctx.strokeStyle = isRed
+          ? "rgba(132, 19, 15, .88)"
+          : "rgba(13, 13, 13, .92)";
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius * 0.78, 0, Math.PI * 2);
+        ctx.lineWidth = Math.max(1, m.cell * 0.018);
+        ctx.strokeStyle = isRed ? "rgba(216, 51, 47, .54)" : "rgba(0,0,0,.42)";
+        ctx.stroke();
+
+        ctx.fillStyle = isRed ? "#b6201e" : "#111";
+        ctx.font = `900 ${m.cell * 0.48}px "Noto Serif TC", "Microsoft JhengHei", serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.shadowColor = "rgba(255,255,255,.32)";
+        ctx.shadowBlur = 1;
+        ctx.fillText(PIECE_NAMES[piece], x, y + m.cell * 0.02);
+        ctx.restore();
+      }
+
+      function draw() {
+        const m = getMetrics();
+        ctx.clearRect(0, 0, m.w, m.h);
+        drawWoodGrain(m);
+        drawRiver(m);
+        drawBoardLines(m);
+        drawMoveHints(m);
+        for (let r = 0; r < 10; r++) {
+          for (let c = 0; c < 9; c++)
+            if (board[r][c] !== 0) drawPiece(r, c, board[r][c], m);
         }
       }
 
-      // 判斷走法是否合法 (核心邏輯簡化版)
+      function computeMoves(r, c) {
+        const moves = [];
+        for (let tr = 0; tr < 10; tr++) {
+          for (let tc = 0; tc < 9; tc++) {
+            if (isLegalMove(r, c, tr, tc, board))
+              moves.push({ r: tr, c: tc, capture: board[tr][tc] !== 0 });
+          }
+        }
+        return moves;
+      }
+
       function isLegalMove(fR, fC, tR, tC, b) {
+        if (
+          fR < 0 ||
+          fR > 9 ||
+          fC < 0 ||
+          fC > 8 ||
+          tR < 0 ||
+          tR > 9 ||
+          tC < 0 ||
+          tC > 8
+        )
+          return false;
         const p = b[fR][fC];
         const target = b[tR][tC];
-        if (target !== 0 && p * target > 0) return false; // 不能吃自己人
-
-        const dr = tR - fR;
-        const dc = tC - fC;
-        const absDr = Math.abs(dr);
-        const absDc = Math.abs(dc);
-
+        if (p === 0) return false;
+        if (target !== 0 && p * target > 0) return false;
+        const dr = tR - fR,
+          dc = tC - fC;
+        const absDr = Math.abs(dr),
+          absDc = Math.abs(dc);
         switch (Math.abs(p)) {
-          case 1: // 將帥
+          case 1:
             if (tC < 3 || tC > 5) return false;
             if (p > 0 && tR < 7) return false;
             if (p < 0 && tR > 2) return false;
             return absDr + absDc === 1;
-          case 2: // 仕
+          case 2:
             if (tC < 3 || tC > 5) return false;
             if (p > 0 && tR < 7) return false;
             if (p < 0 && tR > 2) return false;
             return absDr === 1 && absDc === 1;
-          case 3: // 象
+          case 3:
             if (p > 0 && tR < 5) return false;
             if (p < 0 && tR > 4) return false;
-            if (absDr === 2 && absDc === 2) {
-              if (b[fR + dr / 2][fC + dc / 2] !== 0) return false; // 塞象眼
-              return true;
-            }
+            if (absDr === 2 && absDc === 2)
+              return b[fR + dr / 2][fC + dc / 2] === 0;
             return false;
-          case 4: // 馬
+          case 4:
             if ((absDr === 2 && absDc === 1) || (absDr === 1 && absDc === 2)) {
-              if (absDr === 2 && b[fR + dr / 2][fC] !== 0) return false; // 蹩馬腿
+              if (absDr === 2 && b[fR + dr / 2][fC] !== 0) return false;
               if (absDc === 2 && b[fR][fC + dc / 2] !== 0) return false;
               return true;
             }
             return false;
-          case 5: // 車
+          case 5:
             if (fR !== tR && fC !== tC) return false;
             return countPiecesBetween(fR, fC, tR, tC, b) === 0;
-          case 6: // 炮
+          case 6:
             if (fR !== tR && fC !== tC) return false;
             const count = countPiecesBetween(fR, fC, tR, tC, b);
             if (target === 0) return count === 0;
             return count === 1;
-          case 7: // 兵卒
+          case 7:
             const dir = p > 0 ? -1 : 1;
             if (dr === dir && dc === 0) return true;
             const crossedRiver = p > 0 ? fR <= 4 : fR >= 5;
@@ -382,41 +968,76 @@
         return count;
       }
 
-      // 點擊事件處理
-      canvas.addEventListener("mousedown", (e) => {
-        if (isGameOver || turn === -1) return;
+      function boardPositionFromEvent(e) {
         const rect = canvas.getBoundingClientRect();
-        const cellSize = canvas.width / 9;
-        const c = Math.floor((e.clientX - rect.left) / (rect.width / 9));
-        const r = Math.floor((e.clientY - rect.top) / (rect.height / 10));
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+        const m = getMetrics();
+        const c = Math.round((x - m.ox - m.cell / 2) / m.cell);
+        const r = Math.round((y - m.oy - m.cell / 2) / m.cell);
+        if (r < 0 || r > 9 || c < 0 || c > 8) return null;
+        const p = pointOf(r, c, m);
+        const dist = Math.hypot(x - p.x, y - p.y);
+        if (dist > m.cell * 0.48) return null;
+        return { r, c };
+      }
 
-        if (selectedSq) {
-          if (isLegalMove(selectedSq.r, selectedSq.c, r, c, board)) {
-            makeMove(selectedSq.r, selectedSq.c, r, c);
-            if (!isGameOver) setTimeout(aiMove, 500);
-          }
+      function handleBoardTap(e) {
+        if (isGameOver || turn === -1) return;
+        const pos = boardPositionFromEvent(e);
+        if (!pos) {
           selectedSq = null;
-        } else {
-          if (board[r][c] > 0) selectedSq = { r, c };
+          possibleMoves = [];
+          draw();
+          return;
+        }
+        const { r, c } = pos;
+        if (selectedSq) {
+          if (selectedSq.r === r && selectedSq.c === c) {
+            selectedSq = null;
+            possibleMoves = [];
+          } else if (isLegalMove(selectedSq.r, selectedSq.c, r, c, board)) {
+            makeMove(selectedSq.r, selectedSq.c, r, c);
+            selectedSq = null;
+            possibleMoves = [];
+            draw();
+            if (!isGameOver) {
+              document.getElementById("thinking-glow").classList.add("show");
+              setTimeout(aiMove, 520);
+            }
+            return;
+          } else if (board[r][c] > 0) {
+            selectedSq = { r, c };
+            possibleMoves = computeMoves(r, c);
+          } else {
+            selectedSq = null;
+            possibleMoves = [];
+          }
+        } else if (board[r][c] > 0) {
+          selectedSq = { r, c };
+          possibleMoves = computeMoves(r, c);
         }
         draw();
-      });
+      }
+
+      canvas.addEventListener("pointerdown", handleBoardTap);
 
       function makeMove(fR, fC, tR, tC) {
         const eaten = board[tR][tC];
         board[tR][tC] = board[fR][fC];
         board[fR][fC] = 0;
-
-        if (Math.abs(eaten) === 1) {
+        if (Math.abs(eaten) === 1)
           endGame(board[tR][tC] > 0 ? "你贏了！" : "電腦贏了！");
-        }
         turn = -turn;
         document.getElementById("status-display").innerText =
-          turn === 1 ? "輪到你 (紅方)" : "電腦思考中...";
+          turn === 1 ? "輪到你 (紅方)" : "黑方推演中…";
       }
 
-      // 簡易 AI (隨機合法步子中的子力最大評估)
       function aiMove() {
+        document.getElementById("thinking-glow").classList.remove("show");
+        if (isGameOver) return;
         let moves = [];
         for (let r = 0; r < 10; r++) {
           for (let c = 0; c < 9; c++) {
@@ -429,7 +1050,7 @@
                       fC: c,
                       tR: tr,
                       tC: tc,
-                      score: evaluateMove(r, c, tr, tc),
+                      score: evaluateMove(r, c, tr, tc) + Math.random() * 0.15,
                     });
                   }
                 }
@@ -448,10 +1069,13 @@
       function evaluateMove(fR, fC, tR, tC) {
         const pieceValues = [0, 1000, 20, 20, 40, 90, 45, 10];
         const target = board[tR][tC];
-        return target !== 0 ? pieceValues[Math.abs(target)] : 0;
+        const centerBonus = 4 - Math.abs(4 - tC);
+        return (
+          (target !== 0 ? pieceValues[Math.abs(target)] : 0) +
+          centerBonus * 0.08
+        );
       }
 
-      // --- 排行榜與名稱處理 ---
       function startGame() {
         const input = document.getElementById("name-input").value.trim();
         if (!input) return alert("請輸入名稱");
@@ -465,35 +1089,95 @@
 
       function endGame(msg) {
         isGameOver = true;
-        alert(msg);
-        if (msg.includes("你贏了")) {
-          updateLeaderboard(playerName);
+        document.getElementById("thinking-glow").classList.remove("show");
+        setTimeout(() => alert(msg), 80);
+        if (msg.includes("你贏了")) updateLeaderboard(playerName);
+      }
+
+      function getSafePlayerId(name) {
+        return encodeURIComponent(name.trim().toLowerCase())
+          .replace(/[.#$\[\]/]/g, "_")
+          .slice(0, 120);
+      }
+
+      async function updateLeaderboard(name) {
+        const cleanName = name.trim().slice(0, 8);
+        if (!cleanName) return;
+
+        const playerRef = doc(db, RANK_COLLECTION, getSafePlayerId(cleanName));
+
+        try {
+          await runTransaction(db, async (transaction) => {
+            const snap = await transaction.get(playerRef);
+            if (snap.exists()) {
+              const currentWins = Number(snap.data().wins || 0);
+              transaction.update(playerRef, {
+                wins: currentWins + 1,
+                updatedAt: serverTimestamp(),
+              });
+            } else {
+              transaction.set(playerRef, {
+                name: cleanName,
+                wins: 1,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+              });
+            }
+          });
+          await renderLeaderboard();
+        } catch (error) {
+          console.error("Firestore 排行榜寫入失敗：", error);
+          alert(
+            "排行榜寫入失敗，請確認 Firebase 設定與 Firestore 規則。勝利是真的，只是雲端還沒記住它。",
+          );
         }
       }
 
-      function updateLeaderboard(name) {
-        let scores = JSON.parse(localStorage.getItem("xiangqi_scores") || "{}");
-        scores[name] = (scores[name] || 0) + 1;
-        localStorage.setItem("xiangqi_scores", JSON.stringify(scores));
-        renderLeaderboard();
+      async function renderLeaderboard() {
+        const body = document.getElementById("rank-body");
+        body.innerHTML = `<tr><td colspan="3">戰績載入中…</td></tr>`;
+
+        try {
+          const rankQuery = query(
+            collection(db, RANK_COLLECTION),
+            orderBy("wins", "desc"),
+            limit(10),
+          );
+          const snapshot = await getDocs(rankQuery);
+          const rows = snapshot.docs.map((docSnap) => docSnap.data());
+
+          body.innerHTML = rows.length
+            ? rows
+                .map(
+                  (item, idx) =>
+                    `<tr><td>${idx + 1}</td><td>${escapeHtml(item.name || "無名將軍")}</td><td>${Number(item.wins || 0)}</td></tr>`,
+                )
+                .join("")
+            : `<tr><td colspan="3">尚無勝場，第一個傳說還沒出生。</td></tr>`;
+        } catch (error) {
+          console.error("Firestore 排行榜讀取失敗：", error);
+          body.innerHTML = `<tr><td colspan="3">排行榜讀取失敗，請檢查 Firebase 設定。</td></tr>`;
+        }
       }
 
-      function renderLeaderboard() {
-        const scores = JSON.parse(
-          localStorage.getItem("xiangqi_scores") || "{}",
+      function escapeHtml(text) {
+        return String(text).replace(
+          /[&<>'"]/g,
+          (s) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#39;",
+              '"': "&quot;",
+            })[s],
         );
-        const sorted = Object.entries(scores)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 10);
+      }
 
-        const body = document.getElementById("rank-body");
-        body.innerHTML = sorted
-          .map(
-            (item, idx) => `
-        <tr><td>${idx + 1}</td><td>${item[0]}</td><td>${item[1]}</td></tr>
-    `,
-          )
-          .join("");
+      function showLeaderboard() {
+        document
+          .getElementById("leaderboard-section")
+          .scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
       function resetGame() {
@@ -501,97 +1185,46 @@
         turn = 1;
         isGameOver = false;
         selectedSq = null;
+        possibleMoves = [];
+        document.getElementById("thinking-glow").classList.remove("show");
         document.getElementById("status-display").innerText = "輪到你 (紅方)";
         resize();
-        draw();
       }
 
-      // 響應式調整
       function resize() {
         const wrapper = document.getElementById("board-wrapper");
-        canvas.width = wrapper.clientWidth * 2; // 高清
-        canvas.height = wrapper.clientHeight * 2;
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(wrapper.clientWidth * ratio);
+        canvas.height = Math.floor(wrapper.clientHeight * ratio);
         draw();
       }
 
       window.addEventListener("resize", resize);
+      window.addEventListener("orientationchange", () =>
+        setTimeout(resize, 250),
+      );
 
-      // 初始化
-      window.onload = () => {
+      window.onload = async () => {
         const savedName = localStorage.getItem("xiangqi_player");
         if (savedName) {
           document.getElementById("name-input").value = savedName;
+          playerName = savedName;
+          document.getElementById("player-display").innerText =
+            "玩家: " + savedName;
         }
-        renderLeaderboard();
+        await renderLeaderboard();
+        initBoard();
+        resize();
       };
-      // 1. 禁用滑鼠右鍵選單
+
+      window.startGame = startGame;
+      window.resetGame = resetGame;
+      window.showLeaderboard = showLeaderboard;
+
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
-    <footer>
-      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
-    </footer>
   </body>
 </html>
