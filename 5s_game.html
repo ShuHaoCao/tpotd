@@ -916,12 +916,6 @@
               <button class="btn secondary" id="undoBtn" onclick="undoMove()">
                 悔棋一次
               </button>
-              <button class="btn secondary" onclick="changePlayerName()">
-                更換暱稱
-              </button>
-              <button class="btn danger" onclick="clearRecord()">
-                清除本難度紀錄
-              </button>
             </div>
           </div>
         </aside>
@@ -1001,22 +995,24 @@
           document.getElementById("overlay").classList.add("hidden");
           initGame();
         } else {
+          document.getElementById("overlay").classList.remove("hidden");
           updatePlayerDisplay();
+          updateLeaderboard();
         }
-        updateLeaderboard();
       };
 
       function saveNameAndStart() {
         const val = document.getElementById("nameInput").value.trim();
-        playerName = val || "無名大師";
+        if (!val) {
+          alert("請先輸入暱稱。棋士不能無名上陣，這盤棋需要一個名號。");
+          document.getElementById("nameInput").focus();
+          return;
+        }
+
+        playerName = val;
         localStorage.setItem("gomoku_user", playerName);
         document.getElementById("overlay").classList.add("hidden");
         initGame();
-      }
-
-      function changePlayerName() {
-        document.getElementById("nameInput").value = playerName || "";
-        document.getElementById("overlay").classList.remove("hidden");
       }
 
       function updatePlayerDisplay() {
@@ -1313,19 +1309,26 @@
 
       function getDiffKey() {
         const sel = document.getElementById("difficulty");
-        return "gomoku_ranks_" + sel.value;
+        return sel.value;
       }
 
       async function saveResult(name, steps) {
-        await addDoc(collection(db, "gomoku_rankings"), {
-          name: name,
-          steps: steps,
-          difficulty: getDiffKey(),
-          dateText: new Date().toLocaleDateString("zh-TW"),
-          createdAt: serverTimestamp(),
-        });
+        try {
+          await addDoc(collection(db, "gomoku_rankings"), {
+            name: name,
+            steps: steps,
+            difficulty: getDiffKey(),
+            dateText: new Date().toLocaleDateString("zh-TW"),
+            createdAt: serverTimestamp(),
+          });
 
-        await updateLeaderboard();
+          await updateLeaderboard();
+        } catch (error) {
+          console.error("儲存排行榜失敗：", error);
+          alert(
+            "排行榜儲存失敗，請檢查 Firestore 規則是否允許 create，以及 difficulty 是否為 0.5 / 0.8 / 1.2。",
+          );
+        }
       }
       async function updateLeaderboard() {
         const sel = document.getElementById("difficulty");
@@ -1379,12 +1382,6 @@
         initGame();
       }
 
-      function clearRecord() {
-        alert(
-          "雲端排行榜不建議讓玩家直接清除。若要刪除紀錄，請到 Firebase Console 管理。",
-        );
-      }
-
       function escapeHtml(str) {
         return String(str)
           .replaceAll("&", "&amp;")
@@ -1393,6 +1390,12 @@
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#039;");
       }
+
+      // type="module" 內的函式不會自動掛到全域。
+      // HTML 裡的 onclick / onchange 需要從 window 找函式，所以要明確掛上去。
+      window.saveNameAndStart = saveNameAndStart;
+      window.resetGame = resetGame;
+      window.undoMove = undoMove;
 
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
