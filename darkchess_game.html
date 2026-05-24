@@ -21,200 +21,1033 @@
     <title>經典暗棋</title>
     <style>
       :root {
-        --bg-color: #f4e4bc;
-        --border-color: #8b4513;
-        --red-piece: #d32f2f;
-        --black-piece: #212121;
-        --text-color: #4a2700;
+        --page-bg: #090604;
+        --panel: rgba(32, 21, 13, 0.82);
+        --panel-strong: rgba(71, 43, 20, 0.92);
+        --gold: #f3c766;
+        --gold-soft: #d8a94a;
+        --wood: #5f3518;
+        --wood-dark: #231006;
+        --board-light: #ba7a38;
+        --board-dark: #5b2c10;
+        --red-piece: #b31318;
+        --black-piece: #171717;
+        --text-color: #ffe7b0;
+        --muted: #c9aa73;
+        --danger: #ff5a5f;
+        --shadow: 0 20px 70px rgba(0, 0, 0, 0.65);
       }
 
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
       body {
         margin: 0;
         padding: 0;
-        font-family: "Microsoft JhengHei", sans-serif;
-        background-color: #2c2c2c;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family:
+          "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+        background:
+          radial-gradient(
+            circle at 18% 10%,
+            rgba(243, 199, 102, 0.16),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 80% 12%,
+            rgba(179, 19, 24, 0.15),
+            transparent 30%
+          ),
+          linear-gradient(140deg, #120905 0%, #050302 52%, #1d0f07 100%);
+        color: var(--text-color);
         display: flex;
         justify-content: center;
-        height: 100vh;
-        width: 100vw;
-        overflow: hidden;
+        align-items: stretch;
         touch-action: manipulation;
       }
 
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.22;
+        background-image:
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          ),
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: radial-gradient(circle at center, black, transparent 82%);
+      }
+
       #game-container {
-        width: 100%;
-        max-width: 450px;
-        height: 100%;
-        background-color: var(--bg-color);
+        width: min(100vw, 560px);
+        height: 100dvh;
+        position: relative;
         display: flex;
         flex-direction: column;
-        padding: 10px;
-        box-sizing: border-box;
+        gap: 4px;
+        padding: 6px;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 222, 154, 0.08),
+            rgba(0, 0, 0, 0.12)
+          ),
+          rgba(20, 11, 6, 0.88);
+        border-left: 1px solid rgba(243, 199, 102, 0.22);
+        border-right: 1px solid rgba(243, 199, 102, 0.22);
+        box-shadow: var(--shadow);
+        isolation: isolate;
+      }
+
+      #game-container::before {
+        content: "暗棋";
+        position: absolute;
+        right: -28px;
+        top: 105px;
+        writing-mode: vertical-rl;
+        font-size: 4rem;
+        font-weight: 900;
+        letter-spacing: 0.25em;
+        color: rgba(243, 199, 102, 0.055);
+        z-index: -1;
+      }
+
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 34px;
+      }
+
+      .game-title {
+        position: relative;
+        margin: 0;
+        padding: 0 0 0 2px;
+        text-align: left;
+        letter-spacing: 0.14em;
+        font-size: clamp(1rem, 3.8vw, 1.45rem);
+        line-height: 1;
+        color: #fff4c9;
+        white-space: nowrap;
+        text-shadow:
+          0 2px 0 #4b1d10,
+          0 0 22px rgba(243, 199, 102, 0.45);
+      }
+
+      .game-title small {
+        display: block;
+        margin-top: 2px;
+        font-size: clamp(0.46rem, 1.7vw, 0.62rem);
+        letter-spacing: 0.28em;
+        color: var(--muted);
+        font-weight: 500;
       }
 
       #message-panel {
-        background: rgba(139, 69, 19, 0.1);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 8px;
+        flex: 0 0 auto;
+        position: relative;
+        overflow: hidden;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 35%),
+          linear-gradient(180deg, rgba(93, 50, 20, 0.88), rgba(22, 12, 6, 0.92));
+        border: 1px solid rgba(243, 199, 102, 0.42);
+        border-radius: 16px;
+        padding: 5px 7px;
         text-align: center;
-        margin-bottom: 5px;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          0 12px 28px rgba(0, 0, 0, 0.35);
+      }
+
+      #message-panel::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          110deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.09) 45%,
+          transparent 64%
+        );
+        transform: translateX(-130%);
+        animation: panelShine 6s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes panelShine {
+        0%,
+        55% {
+          transform: translateX(-130%);
+        }
+        80%,
+        100% {
+          transform: translateX(130%);
+        }
+      }
+
+      #difficulty-selector {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        margin: 0;
+        padding: 3px 6px;
+        border-radius: 999px;
+        background: rgba(10, 6, 3, 0.42);
+        border: 1px solid rgba(243, 199, 102, 0.25);
+        flex-shrink: 0;
+      }
+
+      #difficulty-selector label {
+        font-size: clamp(0.68rem, 2.3vw, 0.82rem);
+        color: #ffe7b0;
+        font-weight: 800;
+      }
+
+      #difficulty-level {
+        appearance: none;
+        min-width: clamp(88px, 24vw, 116px);
+        padding: 4px 24px 4px 10px;
+        border: 1px solid rgba(243, 199, 102, 0.6);
+        border-radius: 999px;
+        color: #fff2c7;
+        font-weight: 800;
+        cursor: pointer;
+        background:
+          linear-gradient(45deg, transparent 50%, var(--gold) 50%) right 12px
+            center / 8px 8px no-repeat,
+          linear-gradient(
+            135deg,
+            rgba(111, 56, 16, 0.95),
+            rgba(38, 19, 8, 0.95)
+          );
+        outline: none;
+      }
+
+      .status-line {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 26px;
+        padding-top: 2px;
+        white-space: nowrap;
       }
 
       .status-turn {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: var(--text-color);
+        font-size: clamp(0.88rem, 3.2vw, 1.06rem);
+        font-weight: 900;
+        color: #fff5d0;
+        text-shadow: 0 0 18px rgba(243, 199, 102, 0.45);
       }
 
       .status-action {
-        font-size: 0.85rem;
-        color: #555;
-        margin-top: 2px;
+        min-height: auto;
+        font-size: clamp(0.76rem, 2.8vw, 0.9rem);
+        color: var(--muted);
+        margin-top: 0;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       #captured-area {
+        flex: 0 0 auto;
         width: 100%;
-        height: 60px;
-        border: 1px solid var(--border-color);
-        background: rgba(0, 0, 0, 0.05);
-        margin-bottom: 5px;
+        min-height: 42px;
+        height: 5.8dvh;
+        max-height: 54px;
+        border: 1px solid rgba(243, 199, 102, 0.35);
+        border-radius: 18px;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(179, 19, 24, 0.12),
+            transparent 35%,
+            rgba(0, 0, 0, 0.18)
+          ),
+          rgba(19, 10, 5, 0.72);
+        box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.45);
         display: flex;
         flex-direction: column;
+        overflow: hidden;
       }
 
       .captured-row {
+        position: relative;
         flex: 1;
         display: flex;
         align-items: center;
-        padding: 0 5px;
+        gap: 4px;
+        padding: 2px 8px 2px 34px;
         overflow-x: auto;
+        scrollbar-width: none;
       }
 
-      /* 棋盤核心修正 */
-      #board {
+      .captured-row::-webkit-scrollbar {
+        display: none;
+      }
+      .captured-row + .captured-row {
+        border-top: 1px solid rgba(243, 199, 102, 0.15);
+      }
+
+      .captured-row::before {
+        position: absolute;
+        left: 9px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: repeat(8, 1fr);
-        gap: 1px;
-        background-color: var(--border-color);
-        border: 3px solid var(--border-color);
-        flex: 1; /* 讓棋盤佔滿剩餘空間 */
+        place-items: center;
+        font-size: 0.72rem;
+        font-weight: 900;
+        border: 1px solid rgba(243, 199, 102, 0.45);
+      }
+
+      #captured-red::before {
+        content: "紅";
+        color: #ffd6d6;
+        background: rgba(179, 19, 24, 0.45);
+      }
+      #captured-black::before {
+        content: "黑";
+        color: #f2f2f2;
+        background: rgba(0, 0, 0, 0.52);
+      }
+
+      #board {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-rows: repeat(8, minmax(0, 1fr));
+        gap: clamp(3px, 0.8vw, 5px);
+        flex: 1 1 auto;
         width: 100%;
+        min-height: 0;
+        padding: clamp(6px, 1.5vw, 10px);
         margin: 0 auto;
+        border-radius: 20px;
+        border: 2px solid rgba(243, 199, 102, 0.62);
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 30%),
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 0 2px,
+            transparent 2px 16px
+          ),
+          radial-gradient(
+            circle at center,
+            rgba(220, 151, 71, 0.3),
+            transparent 62%
+          ),
+          linear-gradient(135deg, var(--board-light), var(--board-dark));
+        box-shadow:
+          inset 0 0 0 5px rgba(48, 21, 7, 0.55),
+          inset 0 0 35px rgba(0, 0, 0, 0.55),
+          0 18px 32px rgba(0, 0, 0, 0.48);
       }
 
       .cell {
-        background-color: var(--bg-color);
+        position: relative;
+        background:
+          radial-gradient(
+            circle at 35% 25%,
+            rgba(255, 244, 193, 0.22),
+            transparent 28%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(129, 70, 24, 0.92),
+            rgba(49, 22, 8, 0.95)
+          );
+        border: 1px solid rgba(255, 218, 139, 0.2);
+        border-radius: 12px;
         display: flex;
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.12),
+          inset 0 -8px 18px rgba(0, 0, 0, 0.23);
+      }
+
+      .cell::before {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border-radius: 10px;
+        border: 1px dashed rgba(243, 199, 102, 0.22);
+        pointer-events: none;
       }
 
       .piece {
-        /* 核心修正：確保棋子永遠是圓形且不變形 */
-        width: 85%;
-        max-width: 55px; /* 限制最大尺寸防止在大螢幕變形 */
-        aspect-ratio: 1 / 1; /* 強制寬高 1:1 */
-
+        width: min(92%, calc((100dvh - 150px) / 8 * 0.9), 86px);
+        aspect-ratio: 1 / 1;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-
-        /* 字體大小：根據寬度自動縮放，並設定最小限制確保手機看得清楚 */
-        font-size: min(6vw, 24px);
-
-        font-weight: bold;
+        position: relative;
+        isolation: isolate;
+        font-family: "DFKai-SB", "KaiTi", "Microsoft JhengHei", serif;
+        font-size: clamp(1.15rem, 7vw, 2.1rem);
+        font-weight: 900;
         user-select: none;
-        border: 2px solid #333;
-        box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
-        transition: transform 0.1s;
+        cursor: pointer;
+        border: 3px solid rgba(255, 218, 139, 0.75);
+        box-shadow:
+          inset 0 5px 8px rgba(255, 255, 255, 0.25),
+          inset 0 -8px 12px rgba(0, 0, 0, 0.35),
+          0 8px 14px rgba(0, 0, 0, 0.55);
+        text-shadow: 0 2px 2px rgba(0, 0, 0, 0.5);
+        transition:
+          transform 0.16s ease,
+          filter 0.16s ease,
+          box-shadow 0.16s ease;
+        will-change: transform;
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
+
+      .piece::before {
+        content: "";
+        position: absolute;
+        inset: 5px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 234, 178, 0.55);
+        z-index: -1;
+      }
+
+      .piece:hover {
+        transform: translateY(-2px) scale(1.035);
+        filter: brightness(1.08);
+      }
+
+      @keyframes pieceIn {
+        from {
+          transform: scale(0.72) rotate(-8deg);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) rotate(0);
+          opacity: 1;
+        }
       }
 
       .piece.hidden {
-        background: radial-gradient(circle, #8b4513, #5d2e0a);
         color: transparent !important;
-        border: 2px solid #3e1f07;
+        background:
+          radial-gradient(
+            circle at 35% 22%,
+            rgba(255, 220, 130, 0.38),
+            transparent 20%
+          ),
+          radial-gradient(circle, #4b2915 0 42%, #1a0b05 68%, #080403 100%);
+        border-color: rgba(243, 199, 102, 0.9);
+        box-shadow:
+          inset 0 0 0 5px rgba(0, 0, 0, 0.2),
+          inset 0 10px 14px rgba(255, 255, 255, 0.11),
+          inset 0 -12px 16px rgba(0, 0, 0, 0.55),
+          0 8px 16px rgba(0, 0, 0, 0.62),
+          0 0 16px rgba(243, 199, 102, 0.12);
+      }
+
+      .piece.hidden::after {
+        content: "令";
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: rgba(243, 199, 102, 0.88);
+        font-size: 1.05em;
+        text-shadow: 0 0 12px rgba(243, 199, 102, 0.48);
       }
 
       .piece.red {
-        background-color: var(--red-piece);
-        color: #fff;
+        background:
+          radial-gradient(circle at 34% 22%, #ffb1a8, transparent 20%),
+          radial-gradient(
+            circle at center,
+            #d22a28 0 44%,
+            #7d0b0f 76%,
+            #430607 100%
+          );
+        color: #fff1de;
       }
+
       .piece.black {
-        background-color: var(--black-piece);
-        color: #fff;
+        background:
+          radial-gradient(circle at 34% 22%, #8a8a8a, transparent 20%),
+          radial-gradient(
+            circle at center,
+            #2b2b2b 0 45%,
+            #111 75%,
+            #020202 100%
+          );
+        color: #f5f0df;
       }
 
       .selected {
-        transform: scale(1.1);
-        outline: 3px solid #ffeb3b;
+        transform: scale(1.12) !important;
+        outline: none;
         z-index: 5;
+        box-shadow:
+          inset 0 5px 8px rgba(255, 255, 255, 0.28),
+          inset 0 -8px 12px rgba(0, 0, 0, 0.38),
+          0 0 0 4px rgba(255, 235, 128, 0.55),
+          0 0 26px rgba(255, 214, 80, 0.95),
+          0 10px 20px rgba(0, 0, 0, 0.68);
       }
 
       .controls {
-        padding: 10px 0;
+        flex: 0 0 auto;
+        padding: 0;
         text-align: center;
       }
 
       button {
-        padding: 10px 25px;
-        font-size: 1rem;
-        background-color: var(--border-color);
-        color: white;
-        border: none;
-        border-radius: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        min-width: 130px;
+        padding: 8px 22px;
+        font-size: 0.92rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        color: #221106;
+        border: 1px solid rgba(255, 238, 178, 0.7);
+        border-radius: 999px;
+        cursor: pointer;
+        background: linear-gradient(180deg, #ffe7a4, #d69b34 55%, #8c501a);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.8),
+          0 9px 18px rgba(0, 0, 0, 0.38),
+          0 0 22px rgba(243, 199, 102, 0.14);
+        transition:
+          transform 0.12s ease,
+          filter 0.12s ease;
       }
 
-      button:active {
-        transform: scale(0.95);
+      button:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
       }
-      footer div {
-        font-size: 12px;
-        color: #888888;
+      button:active {
+        transform: translateY(1px) scale(0.97);
+      }
+
+      .mini-btn {
+        min-width: auto;
+        padding: 5px 10px;
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      .step-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 54px;
+        padding: 3px 8px;
+        border: 1px solid rgba(243, 199, 102, 0.35);
+        border-radius: 999px;
+        color: #ffe7b0;
+        background: rgba(10, 6, 3, 0.42);
+        font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+        font-weight: 900;
+      }
+
+      .rank-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 18px;
+        background: rgba(0, 0, 0, 0.64);
+        backdrop-filter: blur(8px);
+        z-index: 99;
+      }
+
+      .rank-modal.show {
+        display: flex;
+      }
+
+      .rank-card {
+        width: min(92vw, 440px);
+        max-height: 82dvh;
+        overflow: hidden;
+        border: 1px solid rgba(243, 199, 102, 0.55);
+        border-radius: 22px;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 32%),
+          linear-gradient(180deg, rgba(72, 43, 20, 0.96), rgba(13, 7, 4, 0.98));
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.72);
+      }
+
+      .rank-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 16px 10px;
+        border-bottom: 1px solid rgba(243, 199, 102, 0.26);
+      }
+
+      .rank-head h2 {
+        margin: 0;
+        font-size: 1.15rem;
+        color: #fff4c9;
+        letter-spacing: 0.08em;
+      }
+
+      .rank-close {
+        min-width: auto;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        font-size: 1.15rem;
+      }
+
+      .rank-list {
+        padding: 10px 12px 14px;
+        max-height: 58dvh;
+        overflow-y: auto;
+      }
+
+      .rank-row {
+        display: grid;
+        grid-template-columns: 38px 1fr 68px;
+        gap: 8px;
+        align-items: center;
+        padding: 9px 10px;
+        margin-bottom: 8px;
+        border: 1px solid rgba(243, 199, 102, 0.22);
+        border-radius: 14px;
+        background: rgba(10, 6, 3, 0.36);
+        color: #ffe7b0;
+        font-weight: 800;
+      }
+
+      .rank-row small {
+        display: block;
+        margin-top: 2px;
+        color: rgba(255, 231, 176, 0.58);
+        font-weight: 600;
+      }
+
+      .rank-empty {
+        padding: 24px 12px;
+        color: var(--muted);
         text-align: center;
-        opacity: 0.7;
-        margin-top: 20px;
+        line-height: 1.7;
+      }
+
+      .copyright {
+        font-size: 11px;
+        color: rgba(255, 231, 176, 0.52);
+        text-align: center;
+        opacity: 0.9;
+        padding: 2px 0 0;
+      }
+
+      .captured-row .piece {
+        flex: 0 0 auto;
+        width: 21px !important;
+        height: 21px !important;
+        font-size: 0.74rem !important;
+        border-width: 1px;
+        box-shadow:
+          inset 0 2px 4px rgba(255, 255, 255, 0.18),
+          0 2px 6px rgba(0, 0, 0, 0.45);
+      }
+
+      @media (max-width: 430px) {
+        #game-container {
+          padding: 4px;
+          gap: 3px;
+        }
+        #message-panel {
+          padding: 4px 6px;
+          border-radius: 14px;
+        }
+        .top-bar {
+          min-height: 32px;
+          gap: 5px;
+        }
+        .game-title {
+          font-size: clamp(0.95rem, 5.4vw, 1.3rem);
+          letter-spacing: 0.1em;
+        }
+        .game-title small {
+          display: none;
+        }
+        #difficulty-selector label {
+          display: none;
+        }
+        #difficulty-level {
+          min-width: 96px;
+          font-size: 0.78rem;
+        }
+        .status-line {
+          min-height: 22px;
+          gap: 6px;
+        }
+        .status-turn {
+          font-size: 0.9rem;
+        }
+        .status-action {
+          font-size: 0.78rem;
+        }
+        #captured-area {
+          min-height: 38px;
+          height: 5.2dvh;
+          border-radius: 14px;
+        }
+        #board {
+          padding: 5px;
+          gap: 3px;
+          border-radius: 16px;
+        }
+        .cell {
+          border-radius: 9px;
+        }
+        .piece {
+          width: min(94%, calc((100dvh - 132px) / 8 * 0.92), 78px);
+          font-size: clamp(1.05rem, 8vw, 2rem);
+        }
+        button {
+          padding: 6px 18px;
+          min-width: 116px;
+          font-size: 0.86rem;
+        }
+
+        .mini-btn {
+          min-width: auto;
+          padding: 5px 10px;
+          font-size: 0.78rem;
+          letter-spacing: 0.04em;
+          white-space: nowrap;
+        }
+
+        .step-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 54px;
+          padding: 3px 8px;
+          border: 1px solid rgba(243, 199, 102, 0.35);
+          border-radius: 999px;
+          color: #ffe7b0;
+          background: rgba(10, 6, 3, 0.42);
+          font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+          font-weight: 900;
+        }
+
+        .rank-modal {
+          position: fixed;
+          inset: 0;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: 18px;
+          background: rgba(0, 0, 0, 0.64);
+          backdrop-filter: blur(8px);
+          z-index: 99;
+        }
+
+        .rank-modal.show {
+          display: flex;
+        }
+
+        .rank-card {
+          width: min(92vw, 440px);
+          max-height: 82dvh;
+          overflow: hidden;
+          border: 1px solid rgba(243, 199, 102, 0.55);
+          border-radius: 22px;
+          background:
+            linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 32%),
+            linear-gradient(
+              180deg,
+              rgba(72, 43, 20, 0.96),
+              rgba(13, 7, 4, 0.98)
+            );
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.72);
+        }
+
+        .rank-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 14px 16px 10px;
+          border-bottom: 1px solid rgba(243, 199, 102, 0.26);
+        }
+
+        .rank-head h2 {
+          margin: 0;
+          font-size: 1.15rem;
+          color: #fff4c9;
+          letter-spacing: 0.08em;
+        }
+
+        .rank-close {
+          min-width: auto;
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          font-size: 1.15rem;
+        }
+
+        .rank-list {
+          padding: 10px 12px 14px;
+          max-height: 58dvh;
+          overflow-y: auto;
+        }
+
+        .rank-row {
+          display: grid;
+          grid-template-columns: 38px 1fr 68px;
+          gap: 8px;
+          align-items: center;
+          padding: 9px 10px;
+          margin-bottom: 8px;
+          border: 1px solid rgba(243, 199, 102, 0.22);
+          border-radius: 14px;
+          background: rgba(10, 6, 3, 0.36);
+          color: #ffe7b0;
+          font-weight: 800;
+        }
+
+        .rank-row small {
+          display: block;
+          margin-top: 2px;
+          color: rgba(255, 231, 176, 0.58);
+          font-weight: 600;
+        }
+
+        .rank-empty {
+          padding: 24px 12px;
+          color: var(--muted);
+          text-align: center;
+          line-height: 1.7;
+        }
+
+        .copyright {
+          display: none;
+        }
+      }
+      @media (max-height: 720px) {
+        #game-container {
+          gap: 3px;
+          padding: 4px;
+        }
+        .game-title {
+          font-size: 1rem;
+        }
+        .game-title small {
+          display: none;
+        }
+        #message-panel {
+          padding: 4px 6px;
+          border-radius: 14px;
+        }
+        #difficulty-selector {
+          padding: 3px 6px;
+        }
+        .status-line {
+          min-height: 21px;
+        }
+        .status-action {
+          font-size: 0.76rem;
+        }
+        #captured-area {
+          min-height: 36px;
+          height: 5dvh;
+        }
+        #board {
+          gap: 3px;
+          padding: 6px;
+          border-radius: 18px;
+        }
+        .cell {
+          border-radius: 10px;
+        }
+        button {
+          padding: 7px 18px;
+        }
+
+        .mini-btn {
+          min-width: auto;
+          padding: 5px 10px;
+          font-size: 0.78rem;
+          letter-spacing: 0.04em;
+          white-space: nowrap;
+        }
+
+        .step-badge {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 54px;
+          padding: 3px 8px;
+          border: 1px solid rgba(243, 199, 102, 0.35);
+          border-radius: 999px;
+          color: #ffe7b0;
+          background: rgba(10, 6, 3, 0.42);
+          font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+          font-weight: 900;
+        }
+
+        .rank-modal {
+          position: fixed;
+          inset: 0;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: 18px;
+          background: rgba(0, 0, 0, 0.64);
+          backdrop-filter: blur(8px);
+          z-index: 99;
+        }
+
+        .rank-modal.show {
+          display: flex;
+        }
+
+        .rank-card {
+          width: min(92vw, 440px);
+          max-height: 82dvh;
+          overflow: hidden;
+          border: 1px solid rgba(243, 199, 102, 0.55);
+          border-radius: 22px;
+          background:
+            linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 32%),
+            linear-gradient(
+              180deg,
+              rgba(72, 43, 20, 0.96),
+              rgba(13, 7, 4, 0.98)
+            );
+          box-shadow: 0 24px 80px rgba(0, 0, 0, 0.72);
+        }
+
+        .rank-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 14px 16px 10px;
+          border-bottom: 1px solid rgba(243, 199, 102, 0.26);
+        }
+
+        .rank-head h2 {
+          margin: 0;
+          font-size: 1.15rem;
+          color: #fff4c9;
+          letter-spacing: 0.08em;
+        }
+
+        .rank-close {
+          min-width: auto;
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          font-size: 1.15rem;
+        }
+
+        .rank-list {
+          padding: 10px 12px 14px;
+          max-height: 58dvh;
+          overflow-y: auto;
+        }
+
+        .rank-row {
+          display: grid;
+          grid-template-columns: 38px 1fr 68px;
+          gap: 8px;
+          align-items: center;
+          padding: 9px 10px;
+          margin-bottom: 8px;
+          border: 1px solid rgba(243, 199, 102, 0.22);
+          border-radius: 14px;
+          background: rgba(10, 6, 3, 0.36);
+          color: #ffe7b0;
+          font-weight: 800;
+        }
+
+        .rank-row small {
+          display: block;
+          margin-top: 2px;
+          color: rgba(255, 231, 176, 0.58);
+          font-weight: 600;
+        }
+
+        .rank-empty {
+          padding: 24px 12px;
+          color: var(--muted);
+          text-align: center;
+          line-height: 1.7;
+        }
+
+        .copyright {
+          display: none;
+        }
+      }
+
+      @media (min-width: 760px) {
+        body {
+          align-items: center;
+        }
+        #game-container {
+          height: min(98dvh, 980px);
+          border-radius: 28px;
+          border: 1px solid rgba(243, 199, 102, 0.25);
+        }
       }
     </style>
   </head>
   <body>
     <div id="game-container">
       <div id="message-panel">
-        <div
-          id="difficulty-selector"
-          style="
-            text-align: center;
-            margin: 10px 0;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 5px;
-            padding: 5px;
-          "
-        >
-          <label
-            style="
-              font-size: 0.9rem;
-              color: var(--text-color);
-              font-weight: bold;
-            "
-            >電腦難度：</label
-          >
-          <select
-            id="difficulty-level"
-            onchange="resetGame()"
-            style="padding: 3px; border-radius: 5px; cursor: pointer"
-          >
-            <option value="easy">簡易-難度</option>
-            <option value="normal" selected>普通-難度</option>
-            <option value="hard">困難-難度</option>
-            <option value="hell">專家-難度</option>
-          </select>
+        <div class="top-bar">
+          <h1 class="game-title">經典暗棋<small>SHADOW CHESS BATTLE</small></h1>
+          <div id="difficulty-selector">
+            <label>電腦難度</label>
+            <select
+              id="difficulty-level"
+              onchange="
+                resetGame();
+                loadLeaderboard();
+              "
+            >
+              <option value="easy">簡易-難度</option>
+              <option value="normal" selected>普通-難度</option>
+              <option value="hard">困難-難度</option>
+              <option value="hell">專家-難度</option>
+            </select>
+          </div>
+          <button class="mini-btn" onclick="openLeaderboard()">排行榜</button>
         </div>
-        <div id="current-status" class="status-turn">準備開始...</div>
-        <div id="last-action" class="status-action">請翻牌決定陣營</div>
+        <div class="status-line">
+          <div id="current-status" class="status-turn">準備開始...</div>
+          <div id="last-action" class="status-action">請翻牌決定陣營</div>
+          <div id="step-counter" class="step-badge">0 步</div>
+        </div>
       </div>
 
       <div id="captured-area">
@@ -225,14 +1058,68 @@
       <div id="board"></div>
 
       <footer class="controls">
-        <button onclick="resetGame()">重置遊戲</button>
+        <button onclick="resetGame()">重置戰局</button>
       </footer>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
     </div>
-    <script>
+    <div id="rank-modal" class="rank-modal" onclick="closeLeaderboard(event)">
+      <div class="rank-card" onclick="event.stopPropagation()">
+        <div class="rank-head">
+          <h2>最少步數排行榜</h2>
+          <button class="rank-close" onclick="closeLeaderboard()">×</button>
+        </div>
+        <div id="rank-list" class="rank-list">
+          <div class="rank-empty">排行榜載入中...</div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        query,
+        orderBy,
+        limit,
+        getDocs,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
       /**
        * 暗棋 - 玩家 vs 電腦
        * 強化版：加入詳細動作顯示與介面修正
        */
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
+        authDomain: "fir-game-64891.firebaseapp.com",
+        databaseURL:
+          "https://fir-game-64891-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "fir-game-64891",
+        storageBucket: "fir-game-64891.firebasestorage.app",
+        messagingSenderId: "357308899829",
+        appId: "1:357308899829:web:c96573305e46f90520c0bc",
+        measurementId: "G-H317LR4BH6",
+      };
+
+      const RANKING_COLLECTION = "darkchess_rankings";
+      const firebaseConfigured =
+        firebaseConfig.apiKey &&
+        !firebaseConfig.apiKey.includes("請貼上") &&
+        firebaseConfig.projectId &&
+        !firebaseConfig.projectId.includes("請貼上");
+
+      let db = null;
+      if (firebaseConfigured) {
+        try {
+          const app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+        } catch (error) {
+          console.warn("Firebase 初始化失敗，暫時改用本機排行榜。", error);
+        }
+      }
 
       const PIECES_CONFIG = [
         { name: "帥", level: 7, side: "red", count: 1 },
@@ -256,8 +1143,20 @@
       let currentTurn = null;
       let playerSide = null;
       let isAITurn = false;
+      let playerSteps = 0;
+      let gameFinished = false;
 
       // UI 輔助函式
+      function updateStepCounter() {
+        const el = document.getElementById("step-counter");
+        if (el) el.textContent = `${playerSteps} 步`;
+      }
+
+      function countPlayerStep() {
+        playerSteps += 1;
+        updateStepCounter();
+      }
+
       const UI = {
         status: (msg) =>
           (document.getElementById("current-status").innerText = msg),
@@ -266,10 +1165,10 @@
           el.innerText = msg;
           el.style.color =
             color === "red"
-              ? "#d32f2f"
+              ? "#ff9a9a"
               : color === "black"
-                ? "#212121"
-                : "#666";
+                ? "#f2f2f2"
+                : "#c9aa73";
         },
         getSideName: (side) => (side === "red" ? "紅方" : "黑方"),
       };
@@ -299,23 +1198,37 @@
         playerSide = null;
         currentTurn = null;
         isAITurn = false;
+        playerSteps = 0;
+        gameFinished = false;
+        updateStepCounter();
         UI.status("遊戲開始");
         UI.action("請翻開任意棋子決定陣營");
       }
 
       function renderPiece(index) {
-        const cells = document.querySelectorAll(".cell");
-        if (!cells[index]) return;
-        const cell = cells[index];
-        cell.innerHTML = "";
-        const data = boardData[index];
-        if (!data) return;
+        const cell = document.querySelector(`.cell[data-index="${index}"]`);
+        if (!cell) return;
 
-        const div = document.createElement("div");
-        div.className = `piece ${data.side} ${data.isHidden ? "hidden" : ""}`;
-        div.innerText = data.isHidden ? "?" : data.name;
-        if (selectedIndex === index) div.classList.add("selected");
-        cell.appendChild(div);
+        const data = boardData[index];
+        let div = cell.querySelector(".piece");
+
+        // 沒有棋子時，只移除該格棋子，不重繪整個棋盤，避免畫面閃爍
+        if (!data) {
+          if (div) div.remove();
+          return;
+        }
+
+        // 有棋子但 DOM 尚未建立時才建立一次；之後只改 class 與文字
+        if (!div) {
+          div = document.createElement("div");
+          div.className = "piece";
+          cell.appendChild(div);
+        }
+
+        // 未翻開前絕對不加 red / black class，避免玩家從顏色判斷陣營
+        div.className = data.isHidden ? "piece hidden" : `piece ${data.side}`;
+        div.textContent = data.isHidden ? "" : data.name;
+        div.classList.toggle("selected", selectedIndex === index);
       }
 
       function handleCellClick(index) {
@@ -343,6 +1256,7 @@
           }
 
           renderPiece(index);
+          countPlayerStep();
           endTurn();
           return;
         }
@@ -350,8 +1264,10 @@
         // 2. 選取與移動
         if (selectedIndex === null) {
           if (clickedPiece && clickedPiece.side === currentTurn) {
+            const oldSelected = selectedIndex;
             selectedIndex = index;
-            refreshBoard(); // 顯示黃色光圈
+            renderPiece(oldSelected);
+            renderPiece(selectedIndex); // 顯示黃色光圈
           }
         } else {
           const fromPiece = boardData[selectedIndex];
@@ -366,15 +1282,20 @@
             UI.action(actionMsg, fromPiece.side);
 
             executeMove(selectedIndex, index);
+            countPlayerStep();
             endTurn();
           } else {
             // 切換選取或取消
             if (clickedPiece && clickedPiece.side === currentTurn) {
+              const oldSelected = selectedIndex;
               selectedIndex = index;
+              renderPiece(oldSelected);
+              renderPiece(selectedIndex);
             } else {
+              const oldSelected = selectedIndex;
               selectedIndex = null;
+              renderPiece(oldSelected);
             }
-            refreshBoard();
           }
         }
       }
@@ -414,10 +1335,15 @@
       }
 
       function executeMove(from, to) {
+        const oldSelected = selectedIndex;
         if (boardData[to]) capturePiece(boardData[to]);
         boardData[to] = boardData[from];
         boardData[from] = null;
         selectedIndex = null;
+        renderPiece(from);
+        renderPiece(to);
+        if (oldSelected !== from && oldSelected !== to)
+          renderPiece(oldSelected);
       }
 
       function capturePiece(piece) {
@@ -432,7 +1358,7 @@
       }
 
       function endTurn() {
-        refreshBoard();
+        // 動作發生時已更新對應棋格，這裡不再重繪整個棋盤，避免翻牌時閃爍
         if (checkGameOver()) return;
 
         // 切換回合
@@ -617,6 +1543,7 @@
           const p = boardData[action.index];
           p.isHidden = false;
           UI.action(`電腦翻開了 ${UI.getSideName(p.side)}${p.name}`, p.side);
+          renderPiece(action.index);
         } else {
           const fromP = boardData[action.from];
           const toP = boardData[action.to];
@@ -631,22 +1558,183 @@
       }
 
       function checkGameOver() {
+        if (gameFinished) return true;
         const redCount = boardData.filter((p) => p && p.side === "red").length;
         const blackCount = boardData.filter(
           (p) => p && p.side === "black",
         ).length;
         if (redCount === 0 || blackCount === 0) {
+          gameFinished = true;
+          isAITurn = true;
           const winnerSide = redCount === 0 ? "black" : "red";
           UI.status("遊戲結束");
           UI.action(`${UI.getSideName(winnerSide)} 獲勝！`, winnerSide);
+
+          if (winnerSide === playerSide) {
+            saveWinningRanking(playerSteps, winnerSide);
+          }
+
           // 使用定時器讓玩家有時間看清楚最後一個動作描述
           setTimeout(() => {
-            alert(`遊戲結束！${UI.getSideName(winnerSide)}獲勝`);
+            const resultText =
+              winnerSide === playerSide
+                ? `恭喜獲勝！本局使用 ${playerSteps} 步。`
+                : `遊戲結束！${UI.getSideName(winnerSide)}獲勝。`;
+            alert(resultText);
             initGame();
-          }, 500);
+          }, 650);
           return true;
         }
         return false;
+      }
+
+      function getPlayerName() {
+        let name = localStorage.getItem("darkchess_player_name") || "";
+        if (!name) {
+          name =
+            prompt("恭喜獲勝！請輸入暱稱，登上最少步數排行榜：", "暗棋高手") ||
+            "暗棋高手";
+          name = name.trim().slice(0, 20) || "暗棋高手";
+          localStorage.setItem("darkchess_player_name", name);
+        }
+        return name;
+      }
+
+      function getLocalRankings() {
+        try {
+          return JSON.parse(localStorage.getItem("darkchess_rankings") || "[]");
+        } catch {
+          return [];
+        }
+      }
+
+      function saveLocalRanking(record) {
+        const rankings = getLocalRankings();
+        rankings.push(record);
+        rankings.sort(
+          (a, b) =>
+            a.steps - b.steps || new Date(a.createdAt) - new Date(b.createdAt),
+        );
+        localStorage.setItem(
+          "darkchess_rankings",
+          JSON.stringify(rankings.slice(0, 20)),
+        );
+      }
+
+      async function saveWinningRanking(steps, winnerSide) {
+        const record = {
+          name: getPlayerName(),
+          steps,
+          difficulty: document.getElementById("difficulty-level").value,
+          side: playerSide,
+          winnerSide,
+          dateText: new Date().toLocaleString("zh-TW", { hour12: false }),
+          createdAt: new Date().toISOString(),
+        };
+
+        if (!db) {
+          saveLocalRanking(record);
+          loadLeaderboard();
+          return;
+        }
+
+        try {
+          await addDoc(collection(db, RANKING_COLLECTION), {
+            ...record,
+            createdAt: serverTimestamp(),
+          });
+          loadLeaderboard();
+        } catch (error) {
+          console.warn("排行榜寫入 Firestore 失敗，改存本機。", error);
+          saveLocalRanking(record);
+          loadLeaderboard();
+        }
+      }
+
+      function renderLeaderboard(records, note = "") {
+        const list = document.getElementById("rank-list");
+        if (!list) return;
+        if (!records.length) {
+          list.innerHTML = `<div class="rank-empty">目前尚無紀錄。<br>${note || "第一個破局的人，名字會像刀刻在木牌上。"}</div>`;
+          return;
+        }
+        list.innerHTML =
+          records
+            .slice(0, 10)
+            .map(
+              (r, i) => `
+            <div class="rank-row">
+              <div>#${i + 1}</div>
+              <div>${escapeHtml(r.name || "暗棋高手")}<small>${formatDifficulty(r.difficulty)}・${escapeHtml(r.dateText || "")}</small></div>
+              <div>${Number(r.steps) || 0} 步</div>
+            </div>
+          `,
+            )
+            .join("") + (note ? `<div class="rank-empty">${note}</div>` : "");
+      }
+
+      async function loadLeaderboard() {
+        const list = document.getElementById("rank-list");
+        if (list)
+          list.innerHTML = `<div class="rank-empty">排行榜載入中...</div>`;
+
+        if (!db) {
+          const records = getLocalRankings()
+            .sort((a, b) => a.steps - b.steps)
+            .slice(0, 10);
+          renderLeaderboard(
+            records,
+            "Firebase 尚未設定，現在顯示本機測試紀錄。",
+          );
+          return;
+        }
+
+        try {
+          const q = query(
+            collection(db, RANKING_COLLECTION),
+            orderBy("steps", "asc"),
+            limit(10),
+          );
+          const snap = await getDocs(q);
+          const records = snap.docs.map((doc) => doc.data());
+          renderLeaderboard(records);
+        } catch (error) {
+          console.warn("排行榜讀取失敗。", error);
+          renderLeaderboard(
+            getLocalRankings(),
+            "Firestore 讀取失敗，暫時顯示本機紀錄。",
+          );
+        }
+      }
+
+      function openLeaderboard() {
+        document.getElementById("rank-modal")?.classList.add("show");
+        loadLeaderboard();
+      }
+
+      function closeLeaderboard(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById("rank-modal")?.classList.remove("show");
+      }
+
+      function formatDifficulty(value) {
+        return (
+          {
+            easy: "簡易",
+            normal: "普通",
+            hard: "困難",
+            hell: "專家",
+          }[value] || "普通"
+        );
+      }
+
+      function escapeHtml(text) {
+        return String(text)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
       }
 
       function refreshBoard() {
@@ -659,76 +1747,20 @@
         }
       }
 
+      // 讓 HTML onclick 可以呼叫 module 內的函式
+      window.resetGame = resetGame;
+      window.openLeaderboard = openLeaderboard;
+      window.closeLeaderboard = closeLeaderboard;
+      window.loadLeaderboard = loadLeaderboard;
+
       // 啟動
       initGame();
+      loadLeaderboard();
       // 1. 禁用滑鼠右鍵選單
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
-    <footer>
-      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
-    </footer>
   </body>
 </html>
