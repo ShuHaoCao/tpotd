@@ -12,117 +12,517 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
+
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>幸運連鎖：賓果之星</title>
+
     <style>
       :root {
-        --primary-color: #3498db;
-        --secondary-color: #e67e22;
-        --bg-color: #f4f7f6;
-        --cell-size: 50px;
+        --bg-0: #080b1d;
+        --bg-1: #121735;
+        --panel: rgba(255, 255, 255, 0.1);
+        --panel-strong: rgba(255, 255, 255, 0.16);
+        --line: rgba(255, 255, 255, 0.18);
+        --text: #f8fbff;
+        --muted: rgba(248, 251, 255, 0.68);
+        --gold: #ffd166;
+        --pink: #ff4d8d;
+        --cyan: #4deeea;
+        --violet: #9b5cff;
+        --green: #5cffb1;
+        --danger: #ff4d6d;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+        --cell-size: clamp(50px, 5vw, 90px);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
       }
 
-      @media (max-width: 600px) {
-        :root {
-          --cell-size: 44px;
-        }
-        .game-container {
-          flex-direction: column;
-          align-items: center;
-        }
-        .board-wrapper {
-          width: 95%;
-          max-width: 320px;
-        }
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        background: var(--bg-0);
       }
 
       body {
-        font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
-        background: var(--bg-color);
+        min-height: 100vh;
         margin: 0;
-        padding: 10px;
+        padding: 22px;
+        overflow-x: hidden;
+        font-family:
+          "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui,
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 15% 15%,
+            rgba(77, 238, 234, 0.22),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 85% 12%,
+            rgba(255, 77, 141, 0.22),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 50% 95%,
+            rgba(155, 92, 255, 0.25),
+            transparent 35%
+          ),
+          linear-gradient(135deg, #070918 0%, #101635 45%, #22123b 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.3;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: radial-gradient(circle at center, black, transparent 74%);
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: -120px;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.13) 1px,
+            transparent 2px
+          ),
+          radial-gradient(circle, rgba(77, 238, 234, 0.16) 1px, transparent 2px);
+        background-size:
+          90px 90px,
+          140px 140px;
+        animation: starFloat 20s linear infinite;
+        opacity: 0.42;
+      }
+
+      @keyframes starFloat {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+        to {
+          transform: translate3d(70px, 90px, 0);
+        }
+      }
+
+      .app-shell {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, 100%);
+        margin: 0 auto;
+      }
+
+      .hero {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: stretch;
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.06)
+          ),
+          radial-gradient(
+            circle at 20% 10%,
+            rgba(255, 209, 102, 0.22),
+            transparent 36%
+          );
+        backdrop-filter: blur(18px);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          115deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.18) 35%,
+          transparent 58%
+        );
+        transform: translateX(-120%);
+        animation: sheen 6s ease-in-out infinite;
+      }
+
+      @keyframes sheen {
+        0%,
+        60% {
+          transform: translateX(-120%);
+        }
+        100% {
+          transform: translateX(120%);
+        }
+      }
+
+      .brand {
+        position: relative;
         display: flex;
-        flex-direction: column;
+        gap: 16px;
         align-items: center;
       }
 
-      #message-box {
-        width: 90%;
-        max-width: 450px;
-        margin: 10px 0;
-        padding: 15px;
-        background: #2c3e50;
-        color: white;
-        border-radius: 15px;
-        font-size: 1.1rem;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        min-height: 1.5em;
+      .logo-orb {
+        width: 66px;
+        height: 66px;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        border-radius: 24px;
+        background:
+          radial-gradient(circle at 35% 30%, #fff9d6, transparent 20%),
+          linear-gradient(135deg, var(--gold), var(--pink), var(--violet));
+        box-shadow:
+          0 0 28px rgba(255, 209, 102, 0.38),
+          inset 0 0 18px rgba(255, 255, 255, 0.22);
+        font-size: 2rem;
+        animation: pulseOrb 2.4s ease-in-out infinite;
       }
 
-      .controls {
-        margin-bottom: 15px;
+      @keyframes pulseOrb {
+        0%,
+        100% {
+          transform: scale(1);
+          filter: saturate(1);
+        }
+        50% {
+          transform: scale(1.04);
+          filter: saturate(1.35);
+        }
       }
+
+      .eyebrow {
+        margin: 0 0 4px;
+        color: var(--cyan);
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 4rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        text-shadow: 0 0 28px rgba(77, 238, 234, 0.26);
+      }
+
+      .subtitle {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: clamp(0.92rem, 2.2vw, 1.02rem);
+        line-height: 1.65;
+      }
+
+      .hero-actions {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        min-width: 210px;
+      }
+
       .btn-reset {
-        padding: 10px 25px;
-        font-size: 1rem;
-        font-weight: bold;
-        background: var(--secondary-color);
-        color: white;
-        border: none;
-        border-radius: 25px;
+        position: relative;
+        min-height: 54px;
+        padding: 13px 22px;
+        border: 0;
+        border-radius: 999px;
         cursor: pointer;
-        box-shadow: 0 4px 0 #d35400;
-        transition: 0.1s;
+        color: #17121f;
+        font-size: 1rem;
+        font-weight: 950;
+        letter-spacing: 0.04em;
+        background: linear-gradient(135deg, var(--gold), #ff9f1c 45%, #ff4d8d);
+        box-shadow:
+          0 12px 0 rgba(106, 51, 0, 0.55),
+          0 24px 34px rgba(255, 77, 141, 0.18);
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          filter 0.18s ease;
       }
+
+      .btn-reset:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+        box-shadow:
+          0 14px 0 rgba(106, 51, 0, 0.55),
+          0 28px 42px rgba(255, 77, 141, 0.24);
+      }
+
       .btn-reset:active {
-        transform: translateY(3px);
-        box-shadow: none;
+        transform: translateY(8px);
+        box-shadow:
+          0 4px 0 rgba(106, 51, 0, 0.6),
+          0 10px 18px rgba(255, 77, 141, 0.2);
+      }
+
+      .rules-chip {
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.16);
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.84rem;
+      }
+
+      #message-box {
+        position: relative;
+        width: 100%;
+        min-height: 74px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 17px 20px;
+        border: 1px solid rgba(77, 238, 234, 0.24);
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(77, 238, 234, 0.16),
+            rgba(155, 92, 255, 0.14)
+          ),
+          rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+        color: #fff;
+        font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+        font-weight: 900;
+        text-align: center;
+        box-shadow:
+          0 20px 54px rgba(0, 0, 0, 0.22),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s ease;
+      }
+
+      #message-box::before,
+      #message-box::after {
+        content: "";
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--cyan);
+        box-shadow: 0 0 14px var(--cyan);
+      }
+
+      #message-box::before {
+        left: 18px;
+        top: 18px;
+      }
+      #message-box::after {
+        right: 18px;
+        bottom: 18px;
+        background: var(--pink);
+        box-shadow: 0 0 14px var(--pink);
+      }
+
+      #message-box.win {
+        border-color: rgba(92, 255, 177, 0.45);
+        background:
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(255, 209, 102, 0.22),
+            transparent 42%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(92, 255, 177, 0.22),
+            rgba(77, 238, 234, 0.16)
+          );
+        animation: winFlash 1s ease-in-out infinite alternate;
+      }
+
+      @keyframes winFlash {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.012);
+        }
       }
 
       .game-container {
-        display: flex;
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        width: 100%;
+        display: grid;
+        grid-template-columns: 1.08fr 0.96fr 0.96fr;
+        gap: 18px;
+        align-items: start;
       }
 
       .board-wrapper {
-        background: white;
-        padding: 12px;
-        border-radius: 15px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        text-align: center;
-        border-top: 6px solid #ccc;
-        transition: 0.3s;
+        flex: 1;
+        min-width: 320px;
+        max-width: 650px;
+        position: relative;
+        min-width: 0;
+        padding: 16px;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.055)
+          ),
+          rgba(10, 13, 35, 0.58);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.25);
+        transition:
+          transform 0.22s ease,
+          border-color 0.22s ease,
+          box-shadow 0.22s ease,
+          opacity 0.22s ease;
+        overflow: hidden;
       }
+
+      .board-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(255, 255, 255, 0.12),
+          transparent 48%
+        );
+        pointer-events: none;
+      }
+
       .board-wrapper.active {
-        border-top-color: var(--primary-color);
-        transform: translateY(-5px);
-        background: #fff;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        border-color: rgba(255, 209, 102, 0.75);
+        transform: translateY(-7px);
+        box-shadow:
+          0 0 0 1px rgba(255, 209, 102, 0.2),
+          0 0 38px rgba(255, 209, 102, 0.18),
+          0 28px 72px rgba(0, 0, 0, 0.38);
+      }
+
+      .board-wrapper.active::after {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        pointer-events: none;
+        background: conic-gradient(
+          from 0deg,
+          transparent,
+          rgba(255, 209, 102, 0.62),
+          transparent,
+          rgba(77, 238, 234, 0.52),
+          transparent
+        );
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        padding: 2px;
+        animation: spinBorder 3.2s linear infinite;
+      }
+
+      @keyframes spinBorder {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .player-card {
+        background:
+          radial-gradient(
+            circle at 30% 0%,
+            rgba(255, 209, 102, 0.16),
+            transparent 38%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.065)
+          ),
+          rgba(10, 13, 35, 0.62);
+      }
+
+      .npc-card {
+        opacity: 0.9;
+      }
+
+      .board-header {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
       }
 
       h2 {
-        margin: 5px 0;
-        font-size: 0.95rem;
-        color: #34495e;
+        margin: 0;
+        min-width: 0;
+        color: var(--text);
+        font-size: clamp(0.9rem, 2vw, 1.05rem);
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0.02em;
+      }
+
+      .tag {
+        flex: 0 0 auto;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #08111d;
+        background: var(--cyan);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+      }
+
+      .npc-card .tag {
+        background: rgba(255, 255, 255, 0.16);
+        color: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(255, 255, 255, 0.12);
       }
 
       .board {
+        justify-content: center;
+        position: relative;
+        z-index: 1;
         display: grid;
         grid-template-columns: repeat(5, var(--cell-size));
-        grid-gap: 5px;
-        margin: 10px auto;
+        gap: 8px;
+        width: max-content;
+        max-width: 100%;
+        margin: 0 auto;
+        justify-content: center;
       }
 
       .cell {
@@ -131,76 +531,609 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #ecf0f1;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #2c3e50;
+        user-select: none;
         -webkit-tap-highlight-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 17px;
+        cursor: pointer;
+        color: #f9fbff;
+        font-size: clamp(0.95rem, 2.5vw, 1.18rem);
+        font-weight: 950;
+        background:
+          radial-gradient(
+            circle at 35% 25%,
+            rgba(255, 255, 255, 0.28),
+            transparent 28%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.055)
+          );
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 12px 24px rgba(0, 0, 0, 0.22);
+        transition:
+          transform 0.16s ease,
+          border-color 0.16s ease,
+          background 0.16s ease,
+          box-shadow 0.16s ease,
+          opacity 0.16s ease;
       }
+
+      .player-card .cell:not(.marked):hover {
+        transform: translateY(-5px) scale(1.04);
+        border-color: rgba(77, 238, 234, 0.7);
+        box-shadow:
+          0 0 22px rgba(77, 238, 234, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          0 18px 32px rgba(0, 0, 0, 0.3);
+      }
+
       .cell.marked {
-        background: #ff4757;
-        color: white;
-        animation: pop 0.3s;
+        position: relative;
+        color: #150715;
+        border-color: rgba(255, 255, 255, 0.32);
+        background:
+          radial-gradient(
+            circle at 35% 22%,
+            rgba(255, 255, 255, 0.72),
+            transparent 24%
+          ),
+          linear-gradient(135deg, var(--gold), var(--pink) 48%, var(--violet));
+        box-shadow:
+          0 0 0 2px rgba(255, 255, 255, 0.08),
+          0 0 26px rgba(255, 77, 141, 0.38),
+          0 14px 26px rgba(0, 0, 0, 0.32);
+        animation: pop 0.33s cubic-bezier(0.2, 1.65, 0.35, 1);
+      }
+
+      .cell.marked::after {
+        content: "✦";
+        position: absolute;
+        top: 3px;
+        right: 6px;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 0.72rem;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
       }
 
       @keyframes pop {
         0% {
-          transform: scale(1);
+          transform: scale(0.75) rotate(-5deg);
         }
-        50% {
-          transform: scale(1.2);
+        65% {
+          transform: scale(1.16) rotate(3deg);
         }
         100% {
-          transform: scale(1);
+          transform: scale(1) rotate(0);
         }
       }
+
       .npc-board .cell {
         cursor: default;
-      }
-      .status {
-        margin-top: 8px;
-        font-weight: bold;
-        color: #7f8c8d;
-        font-size: 0.85rem;
+        opacity: 0.86;
       }
 
-      footer div {
-        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
-        color: #888888; /* 中灰色，不會太刺眼 */
-        text-align: center; /* 居中對齊 */
-        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
-        margin-top: 20px;
+      .status {
+        position: relative;
+        z-index: 1;
+        margin-top: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.18);
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 900;
+      }
+
+      .status::before {
+        content: "BINGO";
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+      }
+
+      .called-strip {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.075);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .called-title {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+      }
+
+      #called-numbers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-height: 31px;
+      }
+
+      .called-pill {
+        min-width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #130b20;
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        font-size: 0.82rem;
+        font-weight: 950;
+        box-shadow: 0 8px 18px rgba(77, 238, 234, 0.16);
+      }
+
+      footer {
+        position: relative;
+        z-index: 1;
+        margin: 22px 0 4px;
+        text-align: center;
+      }
+
+      footer .copyright {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.48);
+      }
+
+      .rank-panel {
+        margin-top: 18px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.075);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .rank-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .rank-title {
+        margin: 0;
+        color: var(--text);
+        font-size: 1.02rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+      }
+
+      .rank-note {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .rank-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .rank-row {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.18);
+      }
+
+      .rank-place {
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #130b20;
+        background: linear-gradient(135deg, var(--gold), var(--pink));
+        font-weight: 950;
+      }
+
+      .rank-name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 950;
+      }
+
+      .rank-meta {
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin-top: 2px;
+      }
+
+      .rank-score {
+        color: var(--cyan);
+        font-weight: 950;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 980px) {
+        body {
+          padding: 16px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-actions {
+          min-width: 0;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .btn-reset {
+          flex: 1 1 230px;
+        }
+        .rules-chip {
+          flex: 1 1 220px;
+        }
+        .game-container {
+          align-items: stretch;
+          grid-template-columns: 1fr;
+        }
+        .board-wrapper {
+          width: min(100%, 430px);
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 520px) {
+        :root {
+          --cell-size: clamp(43px, 15.7vw, 54px);
+        }
+        body {
+          padding: 12px;
+        }
+        .hero {
+          padding: 16px;
+          border-radius: 24px;
+        }
+        .brand {
+          align-items: flex-start;
+        }
+        .logo-orb {
+          width: 54px;
+          height: 54px;
+          border-radius: 18px;
+          font-size: 1.6rem;
+        }
+        .subtitle {
+          font-size: 0.88rem;
+        }
+        #message-box {
+          min-height: 66px;
+          padding-inline: 38px;
+        }
+        .board-wrapper {
+          padding: 12px;
+          border-radius: 22px;
+        }
+        .board {
+          gap: 6px;
+        }
+        .cell {
+          border-radius: 14px;
+        }
+        .rank-row {
+          grid-template-columns: 36px 1fr;
+        }
+        .rank-score {
+          grid-column: 2;
+        }
+        .rank-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .rank-note {
+          text-align: left;
+        }
       }
     </style>
+    <!-- Firebase SDK：使用 compat 版本，保留原本非 module 結構與 onclick 寫法 -->
+    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore-compat.js"></script>
   </head>
+
   <body>
-    <script src="script_bingo.js"></script>
-    <div id="message-box">幸運連鎖：賓果之星</div>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="brand">
+          <div class="logo-orb" aria-hidden="true">✦</div>
+          <div>
+            <p class="eyebrow">Lucky Link Bingo Arena</p>
+            <h1>幸運連鎖：賓果之星</h1>
+            <p class="subtitle">
+              點選你的號碼，等命運亮燈。五條連線即勝利；別眨眼，翻盤通常只差一格。
+            </p>
+          </div>
+        </div>
 
-    <div class="controls">
-      <button class="btn-reset" onclick="resetGame()">♻️ 重新配對對手</button>
-    </div>
+        <div class="hero-actions">
+          <button class="btn-reset" type="button" onclick="resetGame()">
+            ♻️ 重新配對對手
+          </button>
+          <div class="rules-chip">勝利條件：率先完成 5 條連線</div>
+        </div>
+      </section>
 
-    <div class="game-container">
-      <div id="wrapper-0" class="board-wrapper active">
-        <h2 id="title-0">玩家:你(使用者)</h2>
-        <div id="board-0" class="board"></div>
-        <div id="status-0" class="status">連線數: 0</div>
-      </div>
-      <div id="wrapper-1" class="board-wrapper">
-        <h2 id="title-1">玩家:載入中(NPC)</h2>
-        <div id="board-1" class="board npc-board"></div>
-        <div id="status-1" class="status">連線數: 0</div>
-      </div>
-      <div id="wrapper-2" class="board-wrapper">
-        <h2 id="title-2">玩家:載入中(NPC)</h2>
-        <div id="board-2" class="board npc-board"></div>
-        <div id="status-2" class="status">連線數: 0</div>
-      </div>
-    </div>
+      <div id="message-box">幸運連鎖：賓果之星</div>
+
+      <section class="game-container" aria-label="賓果遊戲區">
+        <article id="wrapper-0" class="board-wrapper player-card active">
+          <div class="board-header">
+            <h2 id="title-0">玩家:你(使用者)</h2>
+            <span class="tag">YOU</span>
+          </div>
+          <div id="board-0" class="board"></div>
+          <div id="status-0" class="status">連線數: 0</div>
+        </article>
+
+        <article id="wrapper-1" class="board-wrapper npc-card">
+          <div class="board-header">
+            <h2 id="title-1">玩家:載入中(NPC)</h2>
+            <span class="tag">NPC</span>
+          </div>
+          <div id="board-1" class="board npc-board"></div>
+          <div id="status-1" class="status">連線數: 0</div>
+        </article>
+
+        <article id="wrapper-2" class="board-wrapper npc-card">
+          <div class="board-header">
+            <h2 id="title-2">玩家:載入中(NPC)</h2>
+            <span class="tag">NPC</span>
+          </div>
+          <div id="board-2" class="board npc-board"></div>
+          <div id="status-2" class="status">連線數: 0</div>
+        </article>
+      </section>
+
+      <section class="called-strip" aria-label="已喊號碼">
+        <p class="called-title">已喊號碼</p>
+        <div id="called-numbers"></div>
+      </section>
+
+      <section class="rank-panel" aria-label="雲端排行榜">
+        <div class="rank-head">
+          <h2 class="rank-title">🔥 最高連勝排行榜</h2>
+          <span id="rank-sync-status" class="rank-note">Firebase 尚未設定</span>
+        </div>
+        <div id="rank-list" class="rank-list">
+          <div class="rank-row">
+            <div class="rank-place">?</div>
+            <div>
+              <div class="rank-name">等待 Firebase 設定完成</div>
+              <div class="rank-meta">
+                填入 firebaseConfig 後，所有電腦與手機會共用最高連勝排行榜
+              </div>
+            </div>
+            <div class="rank-score">--</div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+      </footer>
+    </main>
 
     <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
+        authDomain: "fir-game-64891.firebaseapp.com",
+        databaseURL:
+          "https://fir-game-64891-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "fir-game-64891",
+        storageBucket: "fir-game-64891.firebasestorage.app",
+        messagingSenderId: "357308899829",
+        appId: "1:357308899829:web:a6adcc43ad8751b520c0bc",
+        measurementId: "G-8CZBB9L8MH",
+      };
+
+      const FIRESTORE_COLLECTION = "bingo_streak_rankings";
+      const RANK_LIMIT = 10;
+      let db = null;
+      let firebaseReady = false;
+      let playerName = "你";
+      let playerId = "";
+      let currentStreak = 0;
+      let bestStreak = 0;
+      let gameStartAt = Date.now();
+      let recordSavedThisGame = false;
+
+      function isFirebaseConfigured() {
+        return Boolean(
+          firebaseConfig.apiKey &&
+          firebaseConfig.projectId &&
+          !firebaseConfig.apiKey.includes("請貼上") &&
+          !firebaseConfig.projectId.includes("請貼上"),
+        );
+      }
+
+      function initFirebase() {
+        const status = document.getElementById("rank-sync-status");
+
+        if (!isFirebaseConfigured()) {
+          status.innerText = "Firebase 尚未設定";
+          return;
+        }
+
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          db = firebase.firestore();
+          firebaseReady = true;
+          status.innerText = "雲端同步已啟用";
+          loadLeaderboard();
+        } catch (error) {
+          console.error("Firebase 初始化失敗：", error);
+          status.innerText = "Firebase 初始化失敗";
+        }
+      }
+
+      function getPlayerName() {
+        const savedName = localStorage.getItem("bingo_player_name");
+        if (savedName) return savedName;
+
+        const input = prompt(
+          "請輸入玩家暱稱（排行榜會顯示此名稱）：",
+          "賓果旅人",
+        );
+        const cleaned = sanitizeName(input || "賓果旅人");
+        localStorage.setItem("bingo_player_name", cleaned);
+        return cleaned;
+      }
+
+      function sanitizeName(name) {
+        return (
+          String(name)
+            .replace(/[<>\{\}\[\]`]/g, "")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 20) || "賓果旅人"
+        );
+      }
+
+      function getPlayerId() {
+        const savedId = localStorage.getItem("bingo_player_id");
+        if (savedId) return savedId;
+
+        const randomId =
+          crypto && crypto.randomUUID
+            ? crypto.randomUUID()
+            : `player_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+        localStorage.setItem("bingo_player_id", randomId);
+        return randomId;
+      }
+
+      function loadLocalStreak() {
+        currentStreak = Number(
+          localStorage.getItem("bingo_current_streak") || 0,
+        );
+        bestStreak = Number(localStorage.getItem("bingo_best_streak") || 0);
+      }
+
+      function saveLocalStreak() {
+        localStorage.setItem("bingo_current_streak", String(currentStreak));
+        localStorage.setItem("bingo_best_streak", String(bestStreak));
+      }
+
+      async function saveStreakRecord() {
+        if (!firebaseReady || !db || recordSavedThisGame) return;
+
+        recordSavedThisGame = true;
+        const player = participants[0];
+        const lines = player.calcLines();
+        const calledCount = calledNumbers.size;
+        const durationSeconds = Math.max(
+          1,
+          Math.round((Date.now() - gameStartAt) / 1000),
+        );
+
+        try {
+          await db
+            .collection(FIRESTORE_COLLECTION)
+            .doc(playerId)
+            .set(
+              {
+                playerId,
+                name: playerName,
+                currentStreak,
+                bestStreak,
+                lastWinLines: lines,
+                lastCalledCount: calledCount,
+                lastDurationSeconds: durationSeconds,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                dateText: new Date().toLocaleString("zh-TW", { hour12: false }),
+              },
+              { merge: true },
+            );
+
+          document.getElementById("rank-sync-status").innerText =
+            `連勝已同步：${currentStreak} 連勝`;
+          await loadLeaderboard();
+        } catch (error) {
+          console.error("連勝排行榜寫入失敗：", error);
+          document.getElementById("rank-sync-status").innerText =
+            "連勝排行榜寫入失敗";
+        }
+      }
+
+      async function loadLeaderboard() {
+        if (!firebaseReady || !db) return;
+
+        try {
+          const snapshot = await db
+            .collection(FIRESTORE_COLLECTION)
+            .orderBy("bestStreak", "desc")
+            .orderBy("updatedAt", "asc")
+            .limit(RANK_LIMIT)
+            .get();
+
+          const records = [];
+          snapshot.forEach((doc) => records.push(doc.data()));
+          renderLeaderboard(records);
+          document.getElementById("rank-sync-status").innerText =
+            "排行榜已讀取（非即時）";
+        } catch (error) {
+          console.error("連勝排行榜讀取失敗：", error);
+          document.getElementById("rank-sync-status").innerText =
+            "連勝排行榜讀取失敗";
+        }
+      }
+
+      function renderLeaderboard(records) {
+        const list = document.getElementById("rank-list");
+        list.innerHTML = "";
+
+        if (!records.length) {
+          list.innerHTML = `
+            <div class="rank-row">
+              <div class="rank-place">1</div>
+              <div>
+                <div class="rank-name">尚無連勝紀錄</div>
+                <div class="rank-meta">第一個連勝王，可能就是你。NPC 先別太囂張。</div>
+              </div>
+              <div class="rank-score">0 連勝</div>
+            </div>
+          `;
+          return;
+        }
+
+        records.forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "rank-row";
+          row.innerHTML = `
+            <div class="rank-place">${index + 1}</div>
+            <div>
+              <div class="rank-name"></div>
+              <div class="rank-meta">目前 ${Number(item.currentStreak || 0)} 連勝｜最後勝利 ${item.lastCalledCount || "?"} 次喊號｜${item.dateText || ""}</div>
+            </div>
+            <div class="rank-score">${Number(item.bestStreak || 0).toLocaleString()} 連勝</div>
+          `;
+          row.querySelector(".rank-name").innerText = item.name || "匿名玩家";
+          list.appendChild(row);
+        });
+      }
+
       const WIN_LINES = 5;
       const funnyNames = [
         "馬斯克拉",
@@ -242,7 +1175,6 @@
         "名子剛好七個子",
         "苗栗小五郎",
         "AI人工智障",
-        "放屁給你聞",
         "蒙其D罩杯",
         "老公我要硬漢",
         "老爺不可以",
@@ -315,15 +1247,15 @@
         "秋山曉",
       ];
 
-      let gameOver = false,
-        calledNumbers = new Set(),
-        turn = 0,
-        participants = [];
+      let gameOver = false;
+      let calledNumbers = new Set();
+      let turn = 0;
+      let participants = [];
 
       class BingoGame {
         constructor(id, displayName, isPlayer = false) {
           this.id = id;
-          this.displayName = displayName; // 這裡存的是完整格式，如「玩家:你(使用者)」
+          this.displayName = displayName;
           this.isPlayer = isPlayer;
           this.nums = Array.from({ length: 25 }, (_, i) => i + 1).sort(
             () => Math.random() - 0.5,
@@ -331,38 +1263,54 @@
           this.marked = Array(25).fill(false);
           this.render();
         }
+
         render() {
           document.getElementById(`title-${this.id}`).innerText =
             this.displayName;
           const boardEl = document.getElementById(`board-${this.id}`);
           boardEl.innerHTML = "";
+
           this.nums.forEach((num) => {
-            const cell = document.createElement("div");
+            const cell = document.createElement("button");
+            cell.type = "button";
             cell.className = "cell";
             cell.innerText = num;
-            if (this.isPlayer) cell.onclick = () => handleTurn(num);
+            cell.setAttribute("aria-label", `號碼 ${num}`);
+
+            if (this.isPlayer) {
+              cell.onclick = () => handleTurn(num);
+            } else {
+              cell.tabIndex = -1;
+            }
+
             boardEl.appendChild(cell);
           });
         }
+
         mark(num) {
           const idx = this.nums.indexOf(num);
           if (idx !== -1) {
             this.marked[idx] = true;
-            document
-              .getElementById(`board-${this.id}`)
-              .children[idx].classList.add("marked");
+            const targetCell = document.getElementById(`board-${this.id}`)
+              .children[idx];
+            targetCell.classList.add("marked");
+            targetCell.disabled = true;
           }
           return this.calcLines();
         }
+
         calcLines() {
-          let lines = 0,
-            m = this.marked;
+          let lines = 0;
+          const m = this.marked;
+
           for (let i = 0; i < 5; i++) {
             if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
             if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
           }
+
           if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
           if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
+
           document.getElementById(`status-${this.id}`).innerText =
             `連線數: ${lines}`;
           return lines;
@@ -373,45 +1321,57 @@
         gameOver = false;
         calledNumbers.clear();
         turn = 0;
-        const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
+        gameStartAt = Date.now();
+        recordSavedThisGame = false;
 
-        // 設定您指定的名稱格式
+        const messageBox = document.getElementById("message-box");
+        messageBox.classList.remove("win");
+        messageBox.innerText = `🎮 點擊你的數字開始比賽！目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`;
+
+        document.getElementById("called-numbers").innerHTML = "";
+
+        const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
         participants = [
-          new BingoGame(0, "玩家:你(使用者)", true),
+          new BingoGame(0, `玩家:${playerName}(使用者)`, true),
           new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`),
           new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`),
         ];
 
         setTurn(0);
-        document.getElementById("message-box").innerText =
-          "🎮 點擊你的數字開始比賽！";
-        document.getElementById("message-box").style.background = "#2c3e50";
       }
 
       async function handleTurn(num) {
         if (gameOver || calledNumbers.has(num) || turn !== 0) return;
+
         await play(num);
         if (gameOver) return;
 
-        // NPC 回合
         for (let i = 1; i <= 2; i++) {
           setTurn(i);
-          await sleep(1000); // 稍微加長一點延遲，更有比賽感
+          await sleep(850);
+
           const available = participants[i].nums.filter(
             (n) => !calledNumbers.has(n),
           );
+          if (available.length === 0) return;
+
           const npcChoice =
             available[Math.floor(Math.random() * available.length)];
           await play(npcChoice);
+
           if (gameOver) return;
         }
+
         setTurn(0);
       }
 
       async function play(num) {
         calledNumbers.add(num);
+        addCalledNumber(num);
+
+        const speaker = participants[turn].displayName.split("(")[0];
         document.getElementById("message-box").innerText =
-          `${participants[turn].displayName.split("(")[0]} 喊了：${num}`;
+          `${speaker} 喊了：${num}`;
 
         let winners = [];
         participants.forEach((p) => {
@@ -420,99 +1380,115 @@
 
         if (winners.length > 0) {
           gameOver = true;
-          document.getElementById("message-box").innerText =
-            `🏆 贏家：${winners.join(", ")}`;
-          document.getElementById("message-box").style.background = "#27ae60";
+          const messageBox = document.getElementById("message-box");
+          messageBox.innerText = `🏆 贏家：${winners.join("、")}`;
+          messageBox.classList.add("win");
+          participants.forEach((_, i) => {
+            document.getElementById(`wrapper-${i}`).classList.remove("active");
+          });
+
+          const playerWon = winners.some((name) => name.includes(playerName));
+          if (playerWon) {
+            currentStreak += 1;
+            bestStreak = Math.max(bestStreak, currentStreak);
+            saveLocalStreak();
+            messageBox.innerText += `｜🔥 目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`;
+            saveStreakRecord();
+          } else {
+            currentStreak = 0;
+            saveLocalStreak();
+            messageBox.innerText += "｜連勝中斷，再開一局把場子找回來。";
+          }
         }
+      }
+
+      function addCalledNumber(num) {
+        const list = document.getElementById("called-numbers");
+        const pill = document.createElement("span");
+        pill.className = "called-pill";
+        pill.innerText = num;
+        list.prepend(pill);
       }
 
       function setTurn(t) {
         turn = t;
+
         participants.forEach((_, i) => {
           document
             .getElementById(`wrapper-${i}`)
             .classList.toggle("active", i === turn);
         });
+
         if (turn === 0 && !gameOver) {
           document.getElementById("message-box").innerText =
             "🎮 輪到你了，請選一個號碼！";
+        } else if (!gameOver) {
+          document.getElementById("message-box").innerText =
+            `🤖 ${participants[turn].displayName.split("(")[0]} 思考中...`;
         }
       }
 
       function sleep(ms) {
-        return new Promise((r) => setTimeout(r, ms));
+        return new Promise((resolve) => setTimeout(resolve, ms));
       }
 
-      // 初次執行
+      playerName = getPlayerName();
+      playerId = getPlayerId();
+      loadLocalStreak();
       resetGame();
-      // 1. 禁用滑鼠右鍵選單
+      initFirebase();
+
+      /*
+        Cloud Firestore 安全規則建議：
+
+        rules_version = '2';
+        service cloud.firestore {
+          match /databases/{database}/documents {
+            match /bingo_streak_rankings/{docId} {
+              function validStreakDoc() {
+                return request.resource.data.keys().hasOnly([
+                  "playerId", "name", "currentStreak", "bestStreak",
+                  "lastWinLines", "lastCalledCount", "lastDurationSeconds",
+                  "updatedAt", "dateText"
+                ]) &&
+                request.resource.data.playerId is string &&
+                request.resource.data.playerId.size() >= 10 &&
+                request.resource.data.playerId.size() <= 80 &&
+                request.resource.data.name is string &&
+                request.resource.data.name.size() >= 1 &&
+                request.resource.data.name.size() <= 20 &&
+                request.resource.data.currentStreak is int &&
+                request.resource.data.currentStreak >= 1 &&
+                request.resource.data.currentStreak <= 999 &&
+                request.resource.data.bestStreak is int &&
+                request.resource.data.bestStreak >= request.resource.data.currentStreak &&
+                request.resource.data.bestStreak <= 999 &&
+                request.resource.data.lastWinLines is int &&
+                request.resource.data.lastWinLines >= 5 &&
+                request.resource.data.lastWinLines <= 12 &&
+                request.resource.data.lastCalledCount is int &&
+                request.resource.data.lastCalledCount >= 5 &&
+                request.resource.data.lastCalledCount <= 25 &&
+                request.resource.data.lastDurationSeconds is int &&
+                request.resource.data.lastDurationSeconds >= 1 &&
+                request.resource.data.lastDurationSeconds <= 3600 &&
+                request.resource.data.dateText is string;
+              }
+
+              allow read: if true;
+              allow create: if validStreakDoc();
+              allow update: if validStreakDoc() &&
+                request.resource.data.bestStreak >= resource.data.bestStreak;
+              allow delete: if false;
+            }
+          }
+        }
+      */
+
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
-    <footer>
-      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
-    </footer>
   </body>
 </html>
