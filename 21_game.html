@@ -12,130 +12,465 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>黑傑克：決戰21點</title>
-    <style>
-      .card-slide-in {
-        animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-      @keyframes slideIn {
-        from {
-          transform: translateY(-30px) rotate(-10deg);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0) rotate(0deg);
-          opacity: 1;
-        }
-      }
-      .bg-poker {
-        background: radial-gradient(circle, #2d5a27 0%, #1a3a17 100%);
-      }
-      [x-cloak] {
-        display: none !important;
-      }
-      footer div {
-        font-size: 12px;
-        color: #888888;
-        text-align: center;
-        opacity: 0.7;
-        margin-top: 20px;
-      }
 
-      /* 修正 @apply 錯誤：改用標準 CSS 寫法 */
-      .btn-action {
-        transition: all 0.2s ease-in-out;
-      }
-      .btn-action:active {
-        transform: scale(0.95);
-      }
-      .btn-action:disabled {
-        opacity: 0.5;
-        filter: grayscale(1);
-        cursor: not-allowed;
-      }
-    </style>
     <script src="https://cdn.tailwindcss.com"></script>
     <script
       defer
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Orbitron:wght@500;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --gold: #f6c756;
+        --gold-soft: rgba(246, 199, 86, 0.35);
+        --emerald: #0b3f2c;
+        --panel: rgba(8, 13, 18, 0.68);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        color: #fff;
+        font-family:
+          "Noto Sans TC",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        background: #050806;
+        overflow-x: hidden;
+      }
+
+      [x-cloak] {
+        display: none !important;
+      }
+
+      .font-orbitron {
+        font-family: "Orbitron", "Noto Sans TC", sans-serif;
+      }
+
+      .casino-bg {
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 50% -10%,
+            rgba(246, 199, 86, 0.23),
+            transparent 34%
+          ),
+          radial-gradient(
+            circle at 14% 18%,
+            rgba(21, 164, 111, 0.28),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 86% 26%,
+            rgba(58, 109, 255, 0.18),
+            transparent 32%
+          ),
+          linear-gradient(145deg, #03120d 0%, #071510 42%, #030506 100%);
+      }
+
+      .casino-bg::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 44px 44px;
+        mask-image: radial-gradient(circle at center, black, transparent 78%);
+      }
+
+      .casino-bg::after {
+        content: "BLACKJACK";
+        position: absolute;
+        left: 50%;
+        top: 42%;
+        transform: translate(-50%, -50%);
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(54px, 14vw, 180px);
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        color: rgba(255, 255, 255, 0.035);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      .glass-panel {
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.035)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(18px);
+      }
+
+      .gold-panel {
+        background:
+          linear-gradient(
+            145deg,
+            rgba(246, 199, 86, 0.16),
+            rgba(255, 255, 255, 0.04)
+          ),
+          rgba(0, 0, 0, 0.28);
+        border: 1px solid rgba(246, 199, 86, 0.32);
+        box-shadow:
+          0 18px 55px rgba(0, 0, 0, 0.45),
+          0 0 24px rgba(246, 199, 86, 0.08);
+      }
+
+      .table-felt {
+        background:
+          radial-gradient(
+            circle at 50% 20%,
+            rgba(255, 255, 255, 0.08),
+            transparent 32%
+          ),
+          repeating-linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.025) 0 2px,
+            transparent 2px 8px
+          ),
+          linear-gradient(145deg, rgba(10, 91, 59, 0.72), rgba(3, 30, 22, 0.82));
+        border: 1px solid rgba(246, 199, 86, 0.22);
+        box-shadow:
+          inset 0 0 80px rgba(0, 0, 0, 0.42),
+          0 30px 100px rgba(0, 0, 0, 0.32);
+      }
+
+      .playing-card {
+        position: relative;
+        isolation: isolate;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: clamp(46px, 7vw, 74px);
+        height: clamp(68px, 10.2vw, 108px);
+        border-radius: 12px;
+        color: #111827;
+        background:
+          radial-gradient(
+            circle at 25% 18%,
+            rgba(255, 255, 255, 1),
+            rgba(255, 255, 255, 0.78) 36%,
+            transparent 37%
+          ),
+          linear-gradient(145deg, #ffffff 0%, #f4efe3 55%, #d7d1c4 100%);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        box-shadow:
+          0 16px 24px rgba(0, 0, 0, 0.32),
+          inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        font-family: "Orbitron", "Noto Sans TC", sans-serif;
+        font-weight: 900;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease;
+      }
+
+      .playing-card:hover {
+        transform: translateY(-6px) rotate(-1deg);
+        box-shadow:
+          0 24px 32px rgba(0, 0, 0, 0.4),
+          0 0 22px rgba(246, 199, 86, 0.18);
+      }
+
+      .playing-card::before,
+      .playing-card::after {
+        content: attr(data-suit);
+        position: absolute;
+        font-size: 0.65rem;
+        opacity: 0.72;
+      }
+
+      .playing-card::before {
+        top: 8px;
+        left: 9px;
+      }
+      .playing-card::after {
+        bottom: 8px;
+        right: 9px;
+        transform: rotate(180deg);
+      }
+
+      .card-back {
+        color: rgba(255, 255, 255, 0.88);
+        background:
+          radial-gradient(
+            circle at center,
+            rgba(246, 199, 86, 0.24),
+            transparent 32%
+          ),
+          repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.14) 0 2px,
+            transparent 2px 6px
+          ),
+          linear-gradient(145deg, #1b2537, #060912);
+        border-color: rgba(246, 199, 86, 0.35);
+      }
+
+      .card-back::before,
+      .card-back::after {
+        content: "✦";
+      }
+
+      .card-slide-in {
+        animation: dealCard 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+      }
+
+      @keyframes dealCard {
+        from {
+          transform: translateY(-36px) translateX(18px) rotate(-12deg)
+            scale(0.82);
+          opacity: 0;
+          filter: blur(3px);
+        }
+        to {
+          transform: translateY(0) translateX(0) rotate(0) scale(1);
+          opacity: 1;
+          filter: blur(0);
+        }
+      }
+
+      @keyframes softPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 rgba(246, 199, 86, 0);
+        }
+        50% {
+          box-shadow: 0 0 28px rgba(246, 199, 86, 0.28);
+        }
+      }
+
+      .active-seat {
+        border-color: rgba(246, 199, 86, 0.85) !important;
+        animation: softPulse 1.6s ease-in-out infinite;
+      }
+
+      .btn-action {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow:
+          0 14px 28px rgba(0, 0, 0, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        transition:
+          transform 0.18s ease,
+          filter 0.18s ease,
+          box-shadow 0.18s ease;
+      }
+
+      .btn-action::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-120%);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.32),
+          transparent
+        );
+        transition: transform 0.42s ease;
+      }
+
+      .btn-action:hover::before {
+        transform: translateX(120%);
+      }
+      .btn-action:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+      }
+      .btn-action:active {
+        transform: scale(0.97);
+      }
+      .btn-action:disabled {
+        opacity: 0.42;
+        filter: grayscale(1);
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .message-pop {
+        animation: popIn 0.28s ease-out both;
+      }
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -44%) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .chip {
+        background: linear-gradient(
+          145deg,
+          rgba(246, 199, 86, 0.22),
+          rgba(255, 255, 255, 0.06)
+        );
+        border: 1px solid rgba(246, 199, 86, 0.32);
+      }
+
+      footer .copyright {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.45);
+        text-align: center;
+        padding: 14px 0 18px;
+      }
+    </style>
   </head>
-  <body class="bg-gray-900 text-white font-sans overflow-hidden">
+
+  <body>
     <div
       x-data="blackjackGame()"
       x-init="init()"
-      class="h-screen flex flex-col bg-poker relative"
+      class="casino-bg flex flex-col"
     >
+      <!-- Player name modal -->
       <div
         x-show="!playerName"
-        class="absolute inset-0 z-[100] bg-black/90 flex items-center justify-center p-6"
+        x-cloak
+        class="fixed inset-0 z-[100] bg-black/85 flex items-center justify-center p-6"
       >
-        <div
-          class="bg-gray-800 p-8 rounded-2xl border border-yellow-500 w-full max-w-sm text-center"
-        >
-          <h2 class="text-2xl font-black text-yellow-400 mb-4">
-            黑傑克：決戰21點
-          </h2>
-          <p class="text-gray-400 mb-6 text-sm">請輸入暱稱以記錄成績</p>
+        <div class="glass-panel w-full max-w-md rounded-[2rem] p-7 text-center">
+          <div
+            class="mx-auto mb-5 h-16 w-16 rounded-2xl gold-panel flex items-center justify-center text-3xl"
+          >
+            ♠
+          </div>
+          <p
+            class="font-orbitron text-xs tracking-[0.34em] text-yellow-300/80 mb-2"
+          >
+            BLACKJACK TABLE
+          </p>
+          <h1 class="text-3xl font-black text-white mb-3">黑傑克：決戰21點</h1>
+          <p class="text-sm text-white/55 mb-6">
+            輸入暱稱，今晚你就是牌桌上的主角。
+          </p>
           <input
             type="text"
             x-model="tempName"
-            placeholder="輸入名稱..."
-            class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 mb-4 focus:outline-none focus:border-yellow-500 text-center text-xl text-white"
+            @keydown.enter="setPlayerName()"
+            maxlength="20"
+            placeholder="輸入玩家暱稱..."
+            class="w-full rounded-2xl bg-black/35 border border-white/15 px-5 py-4 mb-4 text-center text-xl text-white outline-none focus:border-yellow-300 focus:ring-4 focus:ring-yellow-300/10"
           />
           <button
             @click="setPlayerName()"
-            class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-3 rounded-xl transition-all"
+            class="btn-action w-full rounded-2xl bg-gradient-to-r from-yellow-500 to-amber-300 py-4 font-black text-black"
           >
-            打卡上工
+            進入牌桌 START
           </button>
         </div>
       </div>
 
+      <!-- Leaderboard modal -->
       <div
         x-show="showLeaderboard"
         x-cloak
-        class="absolute inset-0 z-50 bg-black/80 flex items-center justify-center p-6"
+        class="fixed inset-0 z-50 bg-black/75 flex items-center justify-center p-5"
         @click.self="showLeaderboard = false"
       >
         <div
-          class="bg-gray-800 w-full max-w-md rounded-2xl border border-blue-500 overflow-hidden"
+          class="glass-panel w-full max-w-lg rounded-[1.75rem] overflow-hidden"
         >
-          <div class="p-4 bg-blue-600 flex justify-between items-center">
-            <h3 class="font-bold text-lg">🏆 運輸股榮譽榜 (勝場)</h3>
-            <button @click="showLeaderboard = false" class="text-2xl">
-              &times;
+          <div
+            class="flex items-center justify-between px-6 py-5 border-b border-white/10 bg-white/5"
+          >
+            <div>
+              <p
+                class="font-orbitron text-[10px] tracking-[0.26em] text-yellow-300/70"
+              >
+                HALL OF FAME
+              </p>
+              <h3 class="text-xl font-black">🏆 運輸股榮譽榜</h3>
+              <p
+                class="mt-1 text-xs text-white/45"
+                x-text="leaderboardStatus"
+              ></p>
+            </div>
+            <button
+              @click="showLeaderboard = false"
+              class="h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 text-2xl leading-none"
+            >
+              ×
             </button>
           </div>
-          <div class="p-4">
-            <table class="w-full text-left">
+          <div class="p-5">
+            <table class="w-full text-left overflow-hidden rounded-xl">
               <thead>
-                <tr class="text-gray-400 text-xs border-b border-gray-700">
-                  <th class="py-2">排名</th>
-                  <th>玩家 (職位)</th>
-                  <th class="text-right">勝場數</th>
+                <tr class="text-white/45 text-xs border-b border-white/10">
+                  <th class="py-3">排名</th>
+                  <th>玩家 / 職位</th>
+                  <th class="text-right">勝場</th>
                 </tr>
               </thead>
               <tbody>
-                <template x-for="(entry, index) in leaderboard" :key="index">
-                  <tr
-                    class="border-b border-gray-700/50"
-                    :class="entry.name === playerName ? 'text-yellow-400 bg-yellow-400/10' : ''"
-                  >
-                    <td class="py-3 font-mono" x-text="index + 1"></td>
-                    <td class="font-bold">
-                      <span x-text="entry.name"></span>
-                      <span
-                        class="text-[10px] ml-1 opacity-60"
-                        x-text="getRankName(entry.wins)"
-                      ></span>
+                <template x-if="leaderboard.length === 0">
+                  <tr>
+                    <td colspan="3" class="py-8 text-center text-white/45">
+                      目前還沒有紀錄，第一個傳說等你寫下。
                     </td>
-                    <td class="text-right font-mono" x-text="entry.wins"></td>
+                  </tr>
+                </template>
+                <template
+                  x-for="(entry, index) in leaderboard"
+                  :key="entry.name + index"
+                >
+                  <tr
+                    class="border-b border-white/5"
+                    :class="entry.name === playerName ? 'bg-yellow-300/10 text-yellow-200' : 'text-white/85'"
+                  >
+                    <td
+                      class="py-3 font-orbitron"
+                      x-text="String(index + 1).padStart(2, '0')"
+                    ></td>
+                    <td>
+                      <div class="font-bold" x-text="entry.name"></div>
+                      <div
+                        class="text-[10px] opacity-55"
+                        x-text="getRankName(entry.wins)"
+                      ></div>
+                    </td>
+                    <td
+                      class="text-right font-orbitron font-bold"
+                      x-text="entry.wins"
+                    ></td>
                   </tr>
                 </template>
               </tbody>
@@ -144,181 +479,361 @@
         </div>
       </div>
 
-      <div class="flex justify-between items-center px-4 pt-4">
-        <button
-          @click="showLeaderboard = true"
-          class="bg-black/40 hover:bg-black/60 px-3 py-1.5 rounded-full text-xs border border-white/20 flex items-center gap-2"
+      <main
+        class="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-4 md:px-6"
+      >
+        <!-- Top HUD -->
+        <header
+          class="glass-panel rounded-[1.5rem] px-4 py-3 md:px-5 flex items-center justify-between gap-3"
         >
-          🏆 排行榜
-        </button>
-        <div class="text-right">
-          <p
-            class="text-[10px] text-gray-400 uppercase tracking-widest"
-            x-text="getRankName(playerWins)"
-          ></p>
-          <p class="text-sm font-bold text-yellow-400" x-text="playerName"></p>
-        </div>
-      </div>
-
-      <div class="pt-2 pb-2 text-center">
-        <div class="inline-block p-2 rounded-lg bg-black/30">
-          <h2 class="text-xs uppercase tracking-widest text-gray-300">
-            莊家 (股長)
-          </h2>
-          <div class="flex justify-center gap-2 mt-2 h-20 md:h-24">
-            <template x-for="(card, index) in dealer.cards">
-              <div
-                class="card-slide-in w-12 h-18 md:w-16 md:h-24 bg-white rounded-md flex items-center justify-center text-black font-bold border-2 border-gray-400 shadow-xl"
+          <div class="flex items-center gap-3 min-w-0">
+            <div
+              class="hidden sm:flex h-12 w-12 rounded-2xl gold-panel items-center justify-center text-2xl"
+            >
+              ♣
+            </div>
+            <div class="min-w-0">
+              <p
+                class="font-orbitron text-[10px] tracking-[0.28em] text-yellow-300/80"
               >
-                <span
-                  x-text="dealer.showAll || index === 0 ? card.label : '?' "
-                  :class="(dealer.showAll || index === 0) ? card.color : 'text-gray-400'"
-                ></span>
+                POSTAL CASINO
+              </p>
+              <h1 class="text-lg md:text-2xl font-black truncate">
+                黑傑克：決戰21點
+              </h1>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 md:gap-3">
+            <div class="chip hidden md:block rounded-2xl px-4 py-2 text-right">
+              <p class="text-[10px] text-white/45">牌堆</p>
+              <p
+                class="font-orbitron font-bold"
+                x-text="deck.length + ' cards'"
+              ></p>
+            </div>
+            <button
+              @click="showLeaderboard = true"
+              class="btn-action rounded-2xl bg-white/10 hover:bg-white/15 px-4 py-3 text-sm font-bold"
+            >
+              🏆 排行榜
+            </button>
+            <div class="chip rounded-2xl px-4 py-2 text-right max-w-[150px]">
+              <p
+                class="text-[10px] text-white/45 truncate"
+                x-text="getRankName(playerWins)"
+              ></p>
+              <p
+                class="text-sm font-black text-yellow-200 truncate"
+                x-text="playerName || 'Guest'"
+              ></p>
+            </div>
+          </div>
+        </header>
+
+        <!-- Table -->
+        <section
+          class="table-felt relative mt-4 flex-1 rounded-[2rem] p-4 md:p-6 flex flex-col gap-4"
+        >
+          <!-- Dealer -->
+          <div
+            class="gold-panel rounded-[1.6rem] p-4 md:p-5 text-center mx-auto w-full max-w-3xl"
+            :class="currentPlayer === 'dealer' ? 'active-seat' : ''"
+          >
+            <div class="flex items-center justify-between gap-4 mb-3">
+              <div class="text-left">
+                <p
+                  class="font-orbitron text-[10px] tracking-[0.24em] text-yellow-300/70"
+                >
+                  DEALER
+                </p>
+                <h2 class="text-lg md:text-xl font-black">莊家・股長</h2>
+              </div>
+              <div
+                class="rounded-2xl bg-black/35 px-4 py-2 border border-white/10"
+              >
+                <p class="text-[10px] text-white/45">點數</p>
+                <p
+                  class="font-orbitron text-xl font-black"
+                  x-text="dealer.showAll ? dealer.score : '??'"
+                ></p>
+              </div>
+            </div>
+            <div
+              class="flex justify-center gap-2 min-h-[78px] md:min-h-[112px]"
+            >
+              <template
+                x-for="(card, index) in dealer.cards"
+                :key="index + card.label + card.suit"
+              >
+                <div
+                  class="playing-card card-slide-in text-xl md:text-2xl"
+                  :class="(dealer.showAll || index === 0) ? '' : 'card-back'"
+                  :data-suit="dealer.showAll || index === 0 ? card.suit : ''"
+                >
+                  <span
+                    x-text="dealer.showAll || index === 0 ? card.label : '?'"
+                    :class="(dealer.showAll || index === 0) ? card.color : 'text-yellow-200'"
+                  ></span>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Opponents -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <template x-for="npc in npcs" :key="npc.id">
+              <div
+                class="glass-panel rounded-[1.4rem] p-3 md:p-4 border"
+                :class="currentPlayer === npc.id ? 'active-seat bg-yellow-300/10' : 'border-white/10'"
+              >
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="h-9 w-9 rounded-full bg-gradient-to-br from-white/20 to-white/5 border border-white/15 flex items-center justify-center"
+                    >
+                      🎲
+                    </div>
+                    <div>
+                      <p class="font-black leading-tight" x-text="npc.name"></p>
+                      <p class="text-[10px] text-white/45">AI 對手席</p>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <p
+                      class="font-orbitron font-black text-yellow-200"
+                      x-text="npc.score"
+                    ></p>
+                    <p class="text-[10px] text-white/45">PTS</p>
+                  </div>
+                </div>
+                <div class="flex justify-center -space-x-5 min-h-[58px] py-1">
+                  <template
+                    x-for="(card, index) in npc.cards"
+                    :key="npc.id + index + card.label + card.suit"
+                  >
+                    <div
+                      class="playing-card card-slide-in !w-10 !h-14 !rounded-lg text-xs"
+                      :data-suit="card.suit"
+                    >
+                      <span x-text="card.label" :class="card.color"></span>
+                    </div>
+                  </template>
+                </div>
+                <div
+                  class="mt-2 flex items-center justify-between rounded-xl bg-black/25 px-3 py-2 border border-white/5"
+                >
+                  <span class="text-[10px] text-white/45">STATUS</span>
+                  <span
+                    class="text-xs font-black text-yellow-200"
+                    x-text="npc.status"
+                  ></span>
+                </div>
               </div>
             </template>
           </div>
-          <p class="text-sm mt-1 font-mono" x-show="dealer.showAll">
-            點數: <span x-text="dealer.score"></span>
-          </p>
-        </div>
-      </div>
 
-      <div class="grid grid-cols-3 gap-2 px-4 py-2">
-        <template x-for="npc in npcs">
-          <div
-            class="bg-black/20 p-2 rounded-lg text-center border relative"
-            :class="currentPlayer === npc.id ? 'border-yellow-400 bg-yellow-400/10' : 'border-white/10'"
-          >
-            <p
-              class="text-[10px] uppercase text-gray-400"
-              x-text="npc.name"
-            ></p>
-            <div class="flex justify-center -space-x-6 my-1 h-14">
-              <template x-for="card in npc.cards">
-                <div
-                  class="w-10 h-14 bg-white rounded border border-gray-300 text-black text-xs flex items-center justify-center shadow-md transition-all"
-                >
-                  <span x-text="card.label" :class="card.color"></span>
-                </div>
-              </template>
-            </div>
-            <div class="flex justify-between items-center px-1">
-              <p
-                class="text-[10px] font-bold uppercase text-yellow-500"
-                x-text="npc.status"
-              ></p>
-              <p
-                class="text-[10px] font-mono bg-black/40 px-1 rounded"
-                x-text="npc.score + ' pts'"
-              ></p>
-            </div>
-          </div>
-        </template>
-      </div>
-
-      <div
-        class="mt-auto bg-black/40 p-6 rounded-t-3xl border-t border-white/10 shadow-2xl"
-      >
-        <div class="flex justify-between items-end mb-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span
-                class="text-yellow-400 text-xs font-bold uppercase tracking-wider"
-                >Your Hand</span
-              >
-              <span
-                x-show="isDouble"
-                class="bg-red-600 text-[10px] px-1 rounded animate-pulse"
-                >DOUBLE</span
-              >
-            </div>
-            <div class="flex gap-2 mt-1 min-h-[96px]">
-              <template x-for="card in player.cards">
-                <div
-                  class="card-slide-in w-16 h-24 md:w-20 md:h-28 bg-white rounded-lg flex items-center justify-center text-black text-xl font-bold shadow-lg transform"
-                >
-                  <span x-text="card.label" :class="card.color"></span>
-                </div>
-              </template>
-            </div>
-          </div>
-          <div class="text-right">
-            <p class="text-3xl font-mono font-bold" x-text="player.score"></p>
-            <p class="text-xs text-gray-400 uppercase">Points</p>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-3">
-          <template x-if="gameState === 'betting'">
-            <button
-              @click="startRound()"
-              class="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-black py-4 rounded-xl shadow-lg btn-action"
+          <!-- Player control deck -->
+          <div class="mt-auto glass-panel rounded-[2rem] p-4 md:p-5">
+            <div
+              class="flex flex-col lg:flex-row lg:items-end gap-5 justify-between"
             >
-              發牌 START
-            </button>
-          </template>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-4 mb-3">
+                  <div>
+                    <p
+                      class="font-orbitron text-[10px] tracking-[0.26em] text-yellow-300/70"
+                    >
+                      YOUR HAND
+                    </p>
+                    <h2 class="text-xl md:text-2xl font-black">玩家手牌</h2>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span
+                      x-show="isDouble"
+                      x-transition
+                      class="rounded-full bg-red-500 px-3 py-1 text-[10px] font-black animate-pulse"
+                      >DOUBLE</span
+                    >
+                    <div
+                      class="rounded-2xl bg-black/35 px-4 py-2 border border-white/10 text-right"
+                    >
+                      <p class="text-[10px] text-white/45">POINTS</p>
+                      <p
+                        class="font-orbitron text-3xl font-black text-yellow-200"
+                        x-text="player.score"
+                      ></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-2 min-h-[86px] md:min-h-[116px]">
+                  <template
+                    x-for="(card, index) in player.cards"
+                    :key="index + card.label + card.suit"
+                  >
+                    <div
+                      class="playing-card card-slide-in text-xl md:text-2xl"
+                      :data-suit="card.suit"
+                    >
+                      <span x-text="card.label" :class="card.color"></span>
+                    </div>
+                  </template>
+                </div>
+              </div>
 
-          <template
-            x-if="gameState === 'playing' && currentPlayer === 'player'"
-          >
-            <div class="grid grid-cols-2 gap-3">
-              <button
-                @click="playerHit()"
-                class="bg-white text-black font-black py-4 rounded-xl shadow-lg btn-action"
-              >
-                要牌 HIT
-              </button>
-              <button
-                @click="playerStand()"
-                class="bg-red-600 text-white font-black py-4 rounded-xl shadow-lg btn-action"
-              >
-                停牌 STAND
-              </button>
-              <button
-                @click="playerDouble()"
-                :disabled="player.cards.length !== 2"
-                class="bg-blue-600 text-white font-black py-2 rounded-xl text-sm btn-action"
-              >
-                雙倍下注
-              </button>
-              <button
-                @click="playerSurrender()"
-                :disabled="player.cards.length !== 2"
-                class="bg-gray-600 text-white font-black py-2 rounded-xl text-sm btn-action"
-              >
-                投降 SURRENDER
-              </button>
+              <div class="w-full lg:w-[360px]">
+                <template x-if="gameState === 'betting'">
+                  <button
+                    @click="startRound()"
+                    class="btn-action w-full rounded-2xl bg-gradient-to-r from-yellow-500 to-amber-300 py-4 font-black text-black text-lg"
+                  >
+                    發牌 START
+                  </button>
+                </template>
+
+                <template
+                  x-if="gameState === 'playing' && currentPlayer === 'player'"
+                >
+                  <div class="grid grid-cols-2 gap-3">
+                    <button
+                      @click="playerHit()"
+                      class="btn-action rounded-2xl bg-gradient-to-br from-white to-slate-300 py-4 font-black text-black"
+                    >
+                      🎴 要牌 HIT
+                    </button>
+                    <button
+                      @click="playerStand()"
+                      class="btn-action rounded-2xl bg-gradient-to-br from-red-600 to-red-900 py-4 font-black text-white"
+                    >
+                      🛑 停牌 STAND
+                    </button>
+                    <button
+                      @click="playerDouble()"
+                      :disabled="player.cards.length !== 2"
+                      class="btn-action rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-800 py-3 font-black text-white text-sm"
+                    >
+                      💰 雙倍下注
+                    </button>
+                    <button
+                      @click="playerSurrender()"
+                      :disabled="player.cards.length !== 2"
+                      class="btn-action rounded-2xl bg-gradient-to-br from-slate-500 to-slate-900 py-3 font-black text-white text-sm"
+                    >
+                      🏳 投降
+                    </button>
+                  </div>
+                </template>
+
+                <template
+                  x-if="gameState === 'playing' && currentPlayer !== 'player'"
+                >
+                  <div
+                    class="rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-4 text-center"
+                  >
+                    <p
+                      class="font-orbitron text-xs tracking-[0.24em] text-yellow-200/70"
+                    >
+                      PLEASE WAIT
+                    </p>
+                    <p class="mt-1 font-black">對手正在出牌...</p>
+                  </div>
+                </template>
+
+                <template x-if="gameState === 'finished'">
+                  <button
+                    @click="resetGame()"
+                    class="btn-action w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-700 py-4 font-black text-white text-lg"
+                  >
+                    下一局 NEXT ROUND
+                  </button>
+                </template>
+              </div>
             </div>
-          </template>
+          </div>
+        </section>
 
-          <template x-if="gameState === 'finished'">
-            <button
-              @click="resetGame()"
-              class="w-full bg-blue-600 text-white font-black py-4 rounded-xl shadow-lg btn-action"
-            >
-              下一局 NEXT ROUND
-            </button>
-          </template>
-        </div>
-      </div>
+        <footer>
+          <div class="copyright">© 2026 CaoShuHao 台南郵局運輸股專用</div>
+        </footer>
+      </main>
 
+      <!-- Message overlay -->
       <div
         x-show="message"
         x-transition
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/90 px-8 py-6 rounded-2xl border-2 border-yellow-500 text-center z-[60] shadow-2xl min-w-[240px]"
+        class="message-pop fixed left-1/2 top-1/2 z-[60] min-w-[260px] max-w-[88vw] rounded-[1.75rem] border border-yellow-300/45 bg-black/80 px-8 py-7 text-center shadow-2xl backdrop-blur-xl"
       >
+        <p
+          class="font-orbitron text-[10px] tracking-[0.28em] text-yellow-300/70"
+        >
+          TABLE NOTICE
+        </p>
         <h2
-          class="text-2xl font-black text-yellow-400 mb-2"
+          class="mt-2 text-2xl md:text-4xl font-black text-yellow-200 drop-shadow"
           x-text="message"
         ></h2>
-        <p class="text-gray-400 text-sm">
-          <span x-show="gameState === 'finished'">點擊下方按鈕繼續</span>
-          <span x-show="gameState !== 'finished'">請稍候...</span>
+        <p class="mt-3 text-sm text-white/55">
+          <span x-show="gameState === 'finished'">點擊下方按鈕繼續下一局</span>
+          <span x-show="gameState !== 'finished'">牌桌正在結算，請稍候...</span>
         </p>
       </div>
     </div>
-    <script>
-      function blackjackGame() {
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        getDocs,
+        query,
+        orderBy,
+        limit,
+        runTransaction,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
+        authDomain: "fir-game-64891.firebaseapp.com",
+        databaseURL:
+          "https://fir-game-64891-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "fir-game-64891",
+        storageBucket: "fir-game-64891.firebasestorage.app",
+        messagingSenderId: "357308899829",
+        appId: "1:357308899829:web:940401f29f079ed620c0bc",
+        measurementId: "G-7XXBYKEK00",
+      };
+
+      const isFirebaseConfigured = !Object.values(firebaseConfig).some(
+        (value) =>
+          String(value).includes("請填入") || String(value).trim() === "",
+      );
+
+      let db = null;
+      const RANKING_COLLECTION = "blackjack_rankings";
+
+      if (isFirebaseConfigured) {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+      } else {
+        console.warn(
+          "Firebase 尚未設定：排行榜會暫時使用本機紀錄。請填入 firebaseConfig 後即可跨裝置同步。",
+        );
+      }
+
+      function getPlayerDocId(name) {
+        return (
+          name
+            .trim()
+            .toLowerCase()
+            .replace(/[^a-z0-9\u4e00-\u9fa5_-]+/gi, "_")
+            .replace(/^_+|_+$/g, "")
+            .slice(0, 60) || "player"
+        );
+      }
+
+      window.blackjackGame = function () {
         return {
           deck: [],
           gameState: "betting",
@@ -326,7 +841,12 @@
           message: "",
           playerName: localStorage.getItem("bj_playerName") || "",
           tempName: "",
-          leaderboard: JSON.parse(localStorage.getItem("bj_leaderboard")) || [],
+          leaderboard: JSON.parse(
+            localStorage.getItem("bj_leaderboard") || "[]",
+          ),
+          leaderboardStatus: isFirebaseConfigured
+            ? "雲端排行榜同步中..."
+            : "尚未設定 Firebase，目前只使用本機紀錄",
           playerWins: 0,
           showLeaderboard: false,
           isDouble: false,
@@ -359,16 +879,53 @@
             },
           ],
 
-          init() {
+          async init() {
             this.createDeck();
+            await this.loadLeaderboard();
             this.updatePlayerWins();
           },
 
-          setPlayerName() {
-            if (this.tempName.trim()) {
-              this.playerName = this.tempName.trim();
-              localStorage.setItem("bj_playerName", this.playerName);
-              this.updatePlayerWins();
+          async setPlayerName() {
+            const name = this.tempName.trim();
+            if (!name) return;
+            this.playerName = name.slice(0, 20);
+            localStorage.setItem("bj_playerName", this.playerName);
+            await this.loadLeaderboard();
+            this.updatePlayerWins();
+          },
+
+          async loadLeaderboard() {
+            if (!db) {
+              this.leaderboard = JSON.parse(
+                localStorage.getItem("bj_leaderboard") || "[]",
+              );
+              this.leaderboardStatus = "尚未設定 Firebase，目前只使用本機紀錄";
+              return;
+            }
+
+            try {
+              const rankingQuery = query(
+                collection(db, RANKING_COLLECTION),
+                orderBy("wins", "desc"),
+                limit(10),
+              );
+              const snapshot = await getDocs(rankingQuery);
+              this.leaderboard = snapshot.docs.map((item) => ({
+                id: item.id,
+                name: item.data().name,
+                wins: item.data().wins || 0,
+              }));
+              localStorage.setItem(
+                "bj_leaderboard",
+                JSON.stringify(this.leaderboard),
+              );
+              this.leaderboardStatus = "雲端排行榜已同步";
+            } catch (error) {
+              console.error("讀取 Firestore 排行榜失敗：", error);
+              this.leaderboard = JSON.parse(
+                localStorage.getItem("bj_leaderboard") || "[]",
+              );
+              this.leaderboardStatus = "雲端讀取失敗，暫用本機快取";
             }
           },
 
@@ -411,7 +968,7 @@
                   label: l,
                   suit: s,
                   color:
-                    s === "♥" || s === "♦" ? "text-red-600" : "text-gray-900",
+                    s === "♥" || s === "♦" ? "text-red-600" : "text-gray-950",
                   value: this.getCardValue(l),
                 });
               }
@@ -429,7 +986,7 @@
           getCardValue(label) {
             if (["J", "Q", "K"].includes(label)) return 10;
             if (label === "A") return 11;
-            return parseInt(label);
+            return parseInt(label, 10);
           },
 
           calculateScore(cards) {
@@ -442,57 +999,69 @@
             return score;
           },
 
+          drawCard() {
+            if (this.deck.length < 8) this.createDeck();
+            return this.deck.pop();
+          },
+
           async startRound() {
             this.resetState();
             this.gameState = "playing";
             this.isDouble = false;
 
             for (let i = 0; i < 2; i++) {
-              await new Promise((r) => setTimeout(r, 200));
-              this.player.cards.push(this.deck.pop());
-              this.dealer.cards.push(this.deck.pop());
-              this.npcs.forEach((npc) => npc.cards.push(this.deck.pop()));
+              await new Promise((r) => setTimeout(r, 180));
+              this.player.cards.push(this.drawCard());
+              this.dealer.cards.push(this.drawCard());
+              this.npcs.forEach((npc) => npc.cards.push(this.drawCard()));
               this.updateScores();
             }
 
             this.currentPlayer = "player";
-
             if (this.player.score === 21) {
               this.message = "Blackjack! 🎊";
-              setTimeout(() => this.playerStand(), 1500);
+              setTimeout(() => this.playerStand(), 1300);
             }
           },
 
           playerHit() {
-            this.player.cards.push(this.deck.pop());
+            if (this.gameState !== "playing" || this.currentPlayer !== "player")
+              return;
+            this.player.cards.push(this.drawCard());
             this.updateScores();
             if (this.player.score > 21) {
-              this.message = "你爆牌了！ (Bust)";
-              setTimeout(() => this.playerStand(), 1200);
+              this.message = "你爆牌了！Bust";
+              setTimeout(() => this.playerStand(), 1100);
             } else if (this.player.cards.length === 5) {
-              this.message = "過五關！(Five Charlie) 🏆";
-              setTimeout(() => this.playerStand(), 1200);
+              this.message = "過五關！Five Charlie 🏆";
+              setTimeout(() => this.playerStand(), 1100);
             }
           },
 
           playerDouble() {
+            if (this.player.cards.length !== 2 || this.gameState !== "playing")
+              return;
             this.isDouble = true;
-            this.player.cards.push(this.deck.pop());
+            this.player.cards.push(this.drawCard());
             this.updateScores();
-            if (this.player.score > 21) this.message = "雙倍爆牌！ (Bust)";
-            else this.message = "雙倍下注！";
-            setTimeout(() => this.playerStand(), 1200);
+            this.message =
+              this.player.score > 21 ? "雙倍爆牌！Bust" : "雙倍下注！";
+            setTimeout(() => this.playerStand(), 1100);
           },
 
           playerSurrender() {
-            this.message = "棄牌投降 (Surrender)";
+            if (this.player.cards.length !== 2 || this.gameState !== "playing")
+              return;
+            this.message = "棄牌投降 Surrender";
             setTimeout(() => {
+              this.currentPlayer = null;
               this.gameState = "finished";
               this.message = "已損失一半郵資 🏳️";
-            }, 1000);
+            }, 850);
           },
 
           async playerStand() {
+            if (this.gameState !== "playing") return;
             this.message = "";
             this.currentPlayer = "npc1";
             await this.npcTours();
@@ -502,18 +1071,18 @@
             for (let npc of this.npcs) {
               this.currentPlayer = npc.id;
               npc.status = "思考中...";
-              await new Promise((r) => setTimeout(r, 800));
+              await new Promise((r) => setTimeout(r, 650));
 
               while (npc.score < npc.strategy) {
-                npc.cards.push(this.deck.pop());
+                npc.cards.push(this.drawCard());
                 this.updateScores();
                 npc.status = "要牌 Hit";
-                await new Promise((r) => setTimeout(r, 800));
+                await new Promise((r) => setTimeout(r, 650));
                 if (npc.score > 21) break;
               }
               npc.status = npc.score > 21 ? "爆牌" : "停牌";
             }
-            this.dealerTurn();
+            await this.dealerTurn();
           },
 
           async dealerTurn() {
@@ -522,11 +1091,11 @@
             this.updateScores();
 
             while (this.dealer.score < 17) {
-              await new Promise((r) => setTimeout(r, 1000));
-              this.dealer.cards.push(this.deck.pop());
+              await new Promise((r) => setTimeout(r, 850));
+              this.dealer.cards.push(this.drawCard());
               this.updateScores();
             }
-            this.endGame();
+            await this.endGame();
           },
 
           updateScores() {
@@ -537,12 +1106,13 @@
             );
           },
 
-          endGame() {
+          async endGame() {
             this.gameState = "finished";
+            this.currentPlayer = null;
 
             if (this.player.score <= 21 && this.player.cards.length === 5) {
-              this.message = "過五關獲勝！ 🐉";
-              this.saveWin();
+              this.message = "過五關獲勝！🐉";
+              await this.saveWin();
               return;
             }
 
@@ -552,10 +1122,8 @@
               this.dealer.score > 21 ||
               this.player.score > this.dealer.score
             ) {
-              this.message = this.isDouble
-                ? "雙倍勝利！ 💰"
-                : "恭喜你贏了！ 🏆";
-              this.saveWin();
+              this.message = this.isDouble ? "雙倍勝利！💰" : "恭喜你贏了！🏆";
+              await this.saveWin();
             } else if (this.player.score === this.dealer.score) {
               this.message = "平手 Push 🤝";
             } else {
@@ -563,35 +1131,73 @@
             }
           },
 
-          saveWin() {
-            let lb = [...this.leaderboard];
-            let playerEntry = lb.find((e) => e.name === this.playerName);
+          async saveWin() {
+            if (!this.playerName) return;
 
-            if (playerEntry) {
-              playerEntry.wins += 1;
-            } else {
-              lb.push({ name: this.playerName, wins: 1 });
+            if (!db) {
+              const lb = Array.isArray(this.leaderboard)
+                ? [...this.leaderboard]
+                : [];
+              const playerEntry = lb.find((e) => e.name === this.playerName);
+              if (playerEntry) playerEntry.wins += 1;
+              else lb.push({ name: this.playerName, wins: 1 });
+              lb.sort((a, b) => b.wins - a.wins);
+              this.leaderboard = lb.slice(0, 10);
+              localStorage.setItem(
+                "bj_leaderboard",
+                JSON.stringify(this.leaderboard),
+              );
+              this.updatePlayerWins();
+              return;
             }
 
-            lb.sort((a, b) => b.wins - a.wins);
-            this.leaderboard = lb.slice(0, 10);
-            localStorage.setItem(
-              "bj_leaderboard",
-              JSON.stringify(this.leaderboard),
-            );
-            this.updatePlayerWins();
+            try {
+              const playerRef = doc(
+                db,
+                RANKING_COLLECTION,
+                getPlayerDocId(this.playerName),
+              );
+              await runTransaction(db, async (transaction) => {
+                const playerSnap = await transaction.get(playerRef);
+                if (!playerSnap.exists()) {
+                  transaction.set(playerRef, {
+                    name: this.playerName,
+                    wins: 1,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                  });
+                } else {
+                  const currentWins = playerSnap.data().wins || 0;
+                  transaction.update(playerRef, {
+                    name: this.playerName,
+                    wins: currentWins + 1,
+                    updatedAt: serverTimestamp(),
+                  });
+                }
+              });
+
+              await this.loadLeaderboard();
+              this.updatePlayerWins();
+            } catch (error) {
+              console.error("寫入 Firestore 勝場失敗：", error);
+              this.leaderboardStatus =
+                "雲端寫入失敗，請檢查 Firebase 設定與 Firestore 規則";
+            }
           },
 
           resetState() {
             if (this.deck.length < 15) this.createDeck();
             this.player.cards = [];
+            this.player.score = 0;
             this.dealer.cards = [];
+            this.dealer.score = 0;
             this.dealer.showAll = false;
             this.npcs.forEach((n) => {
               n.cards = [];
               n.status = "等待";
               n.score = 0;
             });
+            this.currentPlayer = null;
             this.message = "";
           },
 
@@ -600,75 +1206,12 @@
             this.resetState();
           },
         };
-      }
-      // 1. 禁用滑鼠右鍵選單
+      };
+
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
-    <footer>
-      <div class="copyright">© 2026 CaoShuHao 台南郵局運輸股專用</div>
-    </footer>
   </body>
 </html>
