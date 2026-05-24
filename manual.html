@@ -12,17 +12,27 @@
         background-color: #0d1b2a;
         font-family: "Microsoft JhengHei", sans-serif;
         margin: 0;
-        padding: 15px;
+        padding: 0 15px 15px 15px; /* 移除頂部 padding，交給 banner 容器處理 */
         color: #e0e1dd;
       }
 
-      h2.page-title {
-        text-align: center;
-        color: #ffffff;
-        text-shadow: 0 0 10px rgba(22, 136, 103, 0.6);
-        margin-top: 20px;
-        margin-bottom: 25px;
-        letter-spacing: 1px;
+      /* 📱 橫幅置頂與響應式設計 */
+      .header-banner-container {
+        position: sticky; /* 固定在最頂端 */
+        top: 0;
+        z-index: 999;
+        background-color: #0d1b2a;
+        padding: 15px 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .header-banner {
+        width: 100%; /* 手機版滿版 */
+        max-width: 600px; /* 限制桌上型電腦下的最大寬度 */
+        height: auto; /* 高度自適應 */
+        display: block;
       }
 
       /* 📱 響應式網格佈局 */
@@ -30,8 +40,8 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 16px;
-        max-width: 1100px;
-        margin: 0 auto 40px;
+        max-width: 900px; /* 👈 縮小最大寬度，避免桌機版無限延伸 */
+        margin: 20px auto 40px; /* 增加上方間距，避免被置頂橫幅遮擋 */
       }
 
       @media (min-width: 600px) {
@@ -211,7 +221,13 @@
     </style>
   </head>
   <body>
-    <h2 class="page-title">📘 駕駛與車輛知識手冊</h2>
+    <div class="header-banner-container">
+      <img
+        src="manual_banner_s.png"
+        alt="駕駛與車輛知識手冊"
+        class="header-banner"
+      />
+    </div>
 
     <div class="grid-container" id="card-shelf"></div>
 
@@ -227,15 +243,11 @@
     </div>
 
     <script>
-      // ⚠️ 請在此處貼上您在 Firebase 複製的資料庫網址（記得保留最後的斜線 /）
       const FIREBASE_URL =
         "https://tnpsot-default-rtdb.asia-southeast1.firebasedatabase.app/";
-
-      // 用來暫存各卡片當前觀看次數的物件
       let localViewCounts = {};
 
       document.addEventListener("DOMContentLoaded", () => {
-        // 同時向 manual.json 與 Firebase 請求數據
         Promise.all([
           fetch("manual.json?t=" + new Date().getTime()).then((res) => {
             if (!res.ok) throw new Error("手冊資料讀取失敗");
@@ -248,14 +260,10 @@
           .then(([jsonData, firebaseData]) => {
             const shelf = document.getElementById("card-shelf");
             shelf.innerHTML = "";
-
-            // 如果 Firebase 還沒有任何數據，初始化為空物件
             localViewCounts = firebaseData || {};
 
             jsonData.cards.forEach((card) => {
-              // 從 Firebase 數據中取得對應 ID 的次數，若沒有則為 0
               const views = localViewCounts[card.id] || 0;
-
               const cardHtml = `
               <div class="manual-card" onclick="openModal('${card.id}', '${card.fullImage}')">
                 <div class="card-img-wrapper">
@@ -278,21 +286,17 @@
           });
       });
 
-      // 打開第二層並自動累加點擊次數
       function openModal(cardId, imgSrc) {
         const modalImg = document.getElementById("modal-target-img");
         modalImg.src = imgSrc;
         document.getElementById("bigImageModal").style.display = "flex";
 
-        // 本地數字先累加 +1
         const currentViews = (localViewCounts[cardId] || 0) + 1;
         localViewCounts[cardId] = currentViews;
 
-        // 畫面上即時更新給同仁看
         const badge = document.getElementById(`view-count-${cardId}`);
         if (badge) badge.innerText = `👁 ${currentViews}`;
 
-        // 利用 REST API 發送 PUT 請求同步到 Firebase 資料庫上（非同步執行，不卡網頁速度）
         fetch(`${FIREBASE_URL}views/${cardId}.json`, {
           method: "PUT",
           body: JSON.stringify(currentViews),
