@@ -12,7 +12,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
     <meta charset="UTF-8" />
@@ -22,140 +21,569 @@
     />
     <title>巔峰建築師：摩天挑戰</title>
     <style>
+      :root {
+        --bg-0: #030712;
+        --bg-1: #07111f;
+        --cyan: #38dfff;
+        --blue: #5b7cfa;
+        --violet: #a855f7;
+        --pink: #fb7185;
+        --gold: #facc15;
+        --glass: rgba(255, 255, 255, 0.085);
+        --glass-2: rgba(255, 255, 255, 0.13);
+        --line: rgba(255, 255, 255, 0.18);
+        --text: #f8fafc;
+        --muted: #a8b3c7;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
       body {
+        width: 100%;
+        height: 100%;
         margin: 0;
-        background: #1a1a2e;
         overflow: hidden;
+        color: var(--text);
         font-family:
-          -apple-system, "PingFang TC", "Microsoft JhengHei", sans-serif;
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
+          "Microsoft JhengHei", sans-serif;
+        background:
+          radial-gradient(
+            circle at 50% -10%,
+            rgba(56, 223, 255, 0.25),
+            transparent 34%
+          ),
+          radial-gradient(
+            circle at 15% 18%,
+            rgba(168, 85, 247, 0.2),
+            transparent 30%
+          ),
+          linear-gradient(180deg, #020617 0%, #08111f 46%, #111827 100%);
         touch-action: none;
         -webkit-user-select: none;
         user-select: none;
       }
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      body::before {
+        opacity: 0.55;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 48px 48px;
+        mask-image: linear-gradient(
+          to bottom,
+          transparent 0%,
+          black 18%,
+          black 76%,
+          transparent 100%
+        );
+      }
+      body::after {
+        background:
+          linear-gradient(to top, rgba(3, 7, 18, 0.9) 0%, transparent 42%),
+          radial-gradient(
+            circle at 80% 72%,
+            rgba(56, 223, 255, 0.12),
+            transparent 18%
+          );
+      }
       canvas {
         display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: fixed;
+        inset: 0;
         z-index: 1;
       }
-      #ui {
-        position: absolute;
-        top: 30px;
-        width: 100%;
-        text-align: center;
-        color: #fff;
-        z-index: 10;
-        pointer-events: none;
-      }
-      #score {
-        font-size: 70px;
-        font-weight: 900;
-        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      }
-      #msg {
-        font-size: 1rem;
-        opacity: 0.8;
-      }
-      #overlay {
-        position: absolute;
-        top: 0;
+      #skyline {
+        position: fixed;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(10, 10, 30, 0.9);
-        display: flex;
-        flex-direction: column;
+        right: 0;
+        bottom: 0;
+        height: 26vh;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.78;
+        background:
+          linear-gradient(to top, rgba(0, 0, 0, 0.78), transparent 84%),
+          repeating-linear-gradient(
+            90deg,
+            transparent 0 24px,
+            rgba(56, 223, 255, 0.18) 25px 27px,
+            transparent 28px 52px
+          );
+        clip-path: polygon(
+          0 58%,
+          5% 58%,
+          5% 38%,
+          9% 38%,
+          9% 68%,
+          14% 68%,
+          14% 28%,
+          19% 28%,
+          19% 64%,
+          25% 64%,
+          25% 46%,
+          31% 46%,
+          31% 76%,
+          37% 76%,
+          37% 34%,
+          42% 34%,
+          42% 65%,
+          49% 65%,
+          49% 22%,
+          55% 22%,
+          55% 62%,
+          62% 62%,
+          62% 41%,
+          67% 41%,
+          67% 72%,
+          73% 72%,
+          73% 30%,
+          79% 30%,
+          79% 60%,
+          84% 60%,
+          84% 48%,
+          90% 48%,
+          90% 70%,
+          96% 70%,
+          96% 35%,
+          100% 35%,
+          100% 100%,
+          0 100%
+        );
+        filter: blur(0.1px) drop-shadow(0 -20px 50px rgba(56, 223, 255, 0.1));
+      }
+      .noise {
+        position: fixed;
+        inset: -20%;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.08;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+      }
+      #ui {
+        position: fixed;
+        top: clamp(12px, 3.5vw, 28px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        width: min(92vw, 560px);
+        pointer-events: none;
+        text-align: center;
+      }
+      .hud-card {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        z-index: 100;
-        padding: 20px;
-        box-sizing: border-box;
+        gap: clamp(12px, 3vw, 24px);
+        padding: clamp(10px, 2.5vw, 16px) clamp(16px, 4vw, 28px);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.045)
+        );
+        box-shadow:
+          0 18px 55px rgba(0, 0, 0, 0.34),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(18px);
       }
-
+      #score {
+        min-width: 1.6em;
+        font-size: clamp(54px, 11vw, 116px);
+        line-height: 0.86;
+        font-weight: 950;
+        letter-spacing: -0.06em;
+        text-shadow:
+          0 0 16px rgba(56, 223, 255, 0.58),
+          0 0 44px rgba(91, 124, 250, 0.32);
+      }
+      .hud-meta {
+        text-align: left;
+        min-width: 120px;
+      }
+      .hud-label {
+        font-size: 11px;
+        letter-spacing: 0.32em;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      #msg {
+        margin-top: 4px;
+        font-size: clamp(12px, 2.6vw, 15px);
+        color: #e2e8f0;
+        white-space: nowrap;
+      }
+      #combo {
+        margin-top: 4px;
+        min-height: 18px;
+        font-size: 12px;
+        color: var(--gold);
+        letter-spacing: 0.08em;
+      }
+      #toast {
+        position: fixed;
+        left: 50%;
+        top: 42%;
+        transform: translate(-50%, -50%) scale(0.94);
+        z-index: 12;
+        pointer-events: none;
+        opacity: 0;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        font-size: clamp(34px, 9vw, 86px);
+        color: white;
+        text-shadow:
+          0 0 16px rgba(250, 204, 21, 0.8),
+          0 0 44px rgba(251, 113, 133, 0.45);
+      }
+      #toast.show {
+        animation: toastPop 0.72s ease both;
+      }
+      @keyframes toastPop {
+        0% {
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(0.76);
+          filter: blur(8px);
+        }
+        25% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.08);
+          filter: blur(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(-50%, -70%) scale(1);
+        }
+      }
+      #overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(14px, 4vw, 28px);
+        background:
+          radial-gradient(
+            circle at 50% 8%,
+            rgba(56, 223, 255, 0.18),
+            transparent 38%
+          ),
+          linear-gradient(180deg, rgba(2, 6, 23, 0.78), rgba(2, 6, 23, 0.94));
+        backdrop-filter: blur(10px);
+      }
+      .menu-card {
+        position: relative;
+        width: min(94vw, 450px);
+        max-height: 94dvh;
+        overflow: auto;
+        padding: clamp(20px, 5vw, 34px);
+        border-radius: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.14),
+          rgba(255, 255, 255, 0.055)
+        );
+        box-shadow:
+          0 28px 90px rgba(0, 0, 0, 0.55),
+          inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      }
+      .menu-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: 32px;
+        background: linear-gradient(
+          120deg,
+          transparent 10%,
+          rgba(255, 255, 255, 0.16) 22%,
+          transparent 34%
+        );
+        transform: translateX(-120%);
+        animation: sheen 5.8s ease-in-out infinite;
+      }
+      @keyframes sheen {
+        0%,
+        58% {
+          transform: translateX(-120%);
+        }
+        80%,
+        100% {
+          transform: translateX(120%);
+        }
+      }
+      .eyebrow {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 12px;
+        border-radius: 99px;
+        border: 1px solid rgba(56, 223, 255, 0.25);
+        color: #bff4ff;
+        background: rgba(56, 223, 255, 0.08);
+        font-size: 12px;
+        letter-spacing: 0.16em;
+      }
+      #title {
+        margin: 16px 0 6px;
+        font-size: clamp(34px, 8.5vw, 54px);
+        line-height: 0.92;
+        font-weight: 950;
+        letter-spacing: -0.06em;
+      }
+      #title span {
+        display: block;
+        font-size: 0.42em;
+        margin-top: 12px;
+        letter-spacing: 0.34em;
+        color: var(--cyan);
+        text-shadow: 0 0 22px rgba(56, 223, 255, 0.5);
+      }
+      .subtitle {
+        margin: 0 0 18px;
+        color: #cbd5e1;
+        line-height: 1.65;
+        font-size: 14px;
+      }
       #leaderboard {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 15px;
-        margin: 15px 0;
         width: 100%;
-        max-width: 300px;
-        font-size: 0.9rem;
+        margin: 18px 0;
+        padding: 15px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background: rgba(2, 6, 23, 0.35);
+      }
+      .leader-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-weight: 800;
+      }
+      .leader-title small {
+        color: var(--muted);
+        font-weight: 600;
       }
       .rank-item {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        margin-bottom: 5px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        gap: 10px;
+        padding: 9px 4px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        color: #e5e7eb;
+        font-size: 14px;
       }
       .rank-name {
-        color: #00d2ff;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #7dd3fc;
+        font-weight: 800;
       }
-
+      .rank-score {
+        color: white;
+        font-weight: 900;
+      }
+      .input-wrap {
+        position: relative;
+        margin: 10px 0 14px;
+      }
       input#playerName {
-        padding: 10px;
-        border-radius: 25px;
-        border: none;
-        margin-bottom: 15px;
-        width: 200px;
-        text-align: center;
-        font-size: 1rem;
+        width: 100%;
+        height: 54px;
+        padding: 0 18px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
         outline: none;
+        color: white;
+        background: rgba(15, 23, 42, 0.72);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        font-size: 16px;
+        text-align: center;
       }
-
+      input#playerName::placeholder {
+        color: #94a3b8;
+      }
       button {
-        padding: 15px 60px;
-        font-size: 1.2rem;
-        cursor: pointer;
-        background: #00d2ff;
-        border: none;
-        border-radius: 50px;
-        color: #fff;
-        font-weight: bold;
         position: relative;
         z-index: 101;
-        transition: transform 0.1s;
+        width: 100%;
+        min-height: 58px;
+        border: 0;
+        border-radius: 20px;
+        cursor: pointer;
+        color: white;
+        font-size: 18px;
+        font-weight: 950;
+        letter-spacing: 0.12em;
+        background: linear-gradient(
+          135deg,
+          var(--cyan),
+          var(--blue) 52%,
+          var(--violet)
+        );
+        box-shadow:
+          0 18px 42px rgba(56, 223, 255, 0.22),
+          0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+        transition:
+          transform 0.15s ease,
+          filter 0.15s ease;
+      }
+      button:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
       }
       button:active {
-        transform: scale(0.95);
+        transform: scale(0.98);
       }
-      footer div {
-        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
-        color: #888888; /* 中灰色，不會太刺眼 */
-        text-align: center; /* 居中對齊 */
-        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
-        margin-top: 20px;
+      .hint-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 14px;
+      }
+      .hint {
+        padding: 10px 8px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+        font-size: 12px;
+        color: #cbd5e1;
+      }
+      .hint b {
+        display: block;
+        color: white;
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+      .copyright {
+        position: fixed;
+        left: 50%;
+        bottom: 10px;
+        transform: translateX(-50%);
+        z-index: 120;
+        width: max-content;
+        max-width: 92vw;
+        color: rgba(226, 232, 240, 0.55);
+        font-size: 11px;
+        text-align: center;
+        pointer-events: none;
+      }
+      @media (max-width: 520px) {
+        .hud-card {
+          gap: 12px;
+          border-radius: 22px;
+        }
+        .hud-meta {
+          min-width: 100px;
+        }
+        .hint-row {
+          grid-template-columns: 1fr;
+        }
+        .hint {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .menu-card {
+          border-radius: 26px;
+        }
+        #leaderboard {
+          margin: 14px 0;
+        }
+      }
+      @media (max-height: 680px) {
+        .menu-card {
+          padding: 18px;
+        }
+        #title {
+          margin-top: 10px;
+        }
+        .subtitle {
+          margin-bottom: 10px;
+        }
+        .hint-row {
+          display: none;
+        }
       }
     </style>
   </head>
   <body>
-    <script src="script_stack.js"></script>
+    <div id="skyline" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+
     <div id="ui">
-      <div id="score">0</div>
-      <div id="msg">小心！速度隨時會變</div>
+      <div class="hud-card">
+        <div id="score">0</div>
+        <div class="hud-meta">
+          <div class="hud-label">FLOOR</div>
+          <div id="msg">點擊畫面，鎖定下一層</div>
+          <div id="combo"></div>
+        </div>
+      </div>
     </div>
 
+    <div id="toast">PERFECT</div>
+
     <div id="overlay">
-      <h1 id="title">巔峰建築師：摩天挑戰</h1>
+      <section class="menu-card" role="dialog" aria-labelledby="title">
+        <div class="eyebrow">🏙️ NIGHT CITY BUILDING</div>
+        <h1 id="title">SKYLINE<span>巔峰建築師</span></h1>
+        <p class="subtitle" id="subtitle">
+          在深夜城市裡堆起你的高樓。速度會變、樓層會窄，手一抖，帝國就變危樓。
+        </p>
 
-      <div id="leaderboard">
-        <div style="text-align: center; font-weight: bold; margin-bottom: 10px">
-          🏆頂尖建築師排行榜
+        <div id="leaderboard">
+          <div class="leader-title">
+            <span>🏆 頂尖建築師排行榜</span>
+            <small>本機紀錄</small>
+          </div>
+          <div id="rank-list"></div>
         </div>
-        <div id="rank-list"></div>
-      </div>
 
-      <input
-        type="text"
-        id="playerName"
-        placeholder="輸入你的大名"
-        maxlength="10"
-      />
-      <button id="mainBtn">進入辦公室</button>
+        <div class="input-wrap">
+          <input
+            type="text"
+            id="playerName"
+            placeholder="輸入你的建築師代號"
+            maxlength="10"
+            autocomplete="off"
+          />
+        </div>
+        <button id="mainBtn">開始建造</button>
+
+        <div class="hint-row">
+          <div class="hint"><b>點擊</b>放下積木</div>
+          <div class="hint"><b>精準</b>觸發 Perfect</div>
+          <div class="hint"><b>挑戰</b>最高樓層</div>
+        </div>
+      </section>
     </div>
 
     <canvas id="gameCanvas"></canvas>
+    <footer>
+      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+    </footer>
+
     <script>
       const canvas = document.getElementById("gameCanvas");
       const ctx = canvas.getContext("2d");
@@ -164,137 +592,316 @@
       const mainBtn = document.getElementById("mainBtn");
       const nameInput = document.getElementById("playerName");
       const rankListEl = document.getElementById("rank-list");
+      const titleEl = document.getElementById("title");
+      const subtitleEl = document.getElementById("subtitle");
+      const msgEl = document.getElementById("msg");
+      const comboEl = document.getElementById("combo");
+      const toastEl = document.getElementById("toast");
 
-      let blocks = [],
-        debris = [];
+      let blocks = [];
+      let debris = [];
+      let sparks = [];
+      let stars = [];
       let gameState = "START";
-      let currentSpeed = 2.5; // 當前移動速度
+      let currentSpeed = 2.5;
       let cameraY = 0;
       let currentBlock = {};
       let audioCtx = null;
-
-      // 排行榜資料
+      let animationId = null;
+      let perfectStreak = 0;
+      let screenShake = 0;
       let playerName = localStorage.getItem("stack_game_name") || "";
-      let highScores =
-        JSON.parse(localStorage.getItem("stack_game_ranks")) || [];
+      let highScores = JSON.parse(
+        localStorage.getItem("stack_game_ranks") || "[]",
+      );
 
       nameInput.value = playerName;
       updateRankDisplay();
 
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+      function clamp(value, min, max) {
+        return Math.max(min, Math.min(max, value));
       }
-      window.addEventListener("resize", resize);
+
+      function resize() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.floor(window.innerWidth * dpr);
+        canvas.height = Math.floor(window.innerHeight * dpr);
+        canvas.style.width = window.innerWidth + "px";
+        canvas.style.height = window.innerHeight + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        buildStars();
+      }
+      window.addEventListener("resize", resize, { passive: true });
       resize();
 
+      function vw() {
+        return window.innerWidth;
+      }
+      function vh() {
+        return window.innerHeight;
+      }
+
+      function buildStars() {
+        stars = Array.from(
+          { length: Math.floor(clamp(vw() / 8, 48, 130)) },
+          () => ({
+            x: Math.random() * vw(),
+            y: Math.random() * vh(),
+            r: Math.random() * 1.5 + 0.25,
+            a: Math.random() * 0.65 + 0.18,
+            s: Math.random() * 0.25 + 0.05,
+          }),
+        );
+      }
+
       function start() {
-        playerName = nameInput.value.trim() || "匿名同事";
+        playerName = nameInput.value.trim() || "匿名建築師";
         localStorage.setItem("stack_game_name", playerName);
+        ensureAudio();
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
 
-        if (!audioCtx)
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === "suspended") audioCtx.resume();
-
+        const startWidth = clamp(vw() * 0.48, 150, 240);
         blocks = [
           {
-            x: (canvas.width - 200) / 2,
-            y: canvas.height - 150,
-            width: 200,
-            color: 200,
+            x: (vw() - startWidth) / 2,
+            y: vh() - clamp(vh() * 0.2, 110, 160),
+            width: startWidth,
+            color: 196,
+            height: blockHeight(),
+            perfect: false,
           },
         ];
         debris = [];
+        sparks = [];
+        perfectStreak = 0;
+        screenShake = 0;
         scoreEl.innerText = "0";
-        currentSpeed = 2.5;
+        comboEl.innerText = "";
+        msgEl.innerText = "點擊畫面，鎖定下一層";
+        currentSpeed = clamp(vw() * 0.0048, 2.2, 4.2);
         cameraY = 0;
         newBlock();
         gameState = "PLAYING";
         overlay.style.display = "none";
-        requestAnimationFrame(animate);
+        if (animationId) cancelAnimationFrame(animationId);
+        animationId = requestAnimationFrame(animate);
+      }
+
+      function blockHeight() {
+        return clamp(vh() * 0.052, 34, 46);
+      }
+      function gap() {
+        return blockHeight() + 3;
       }
 
       function newBlock() {
         const last = blocks[blocks.length - 1];
         const level = blocks.length;
-
-        // --- 隨機速度邏輯 ---
-        // 1. 基礎速度隨層數提升
-        let baseSpeed = 2.5 + level * 0.05;
-
-        // 2. 隨機性判定
+        let baseSpeed = clamp(
+          2.2 + level * 0.055 + vw() * 0.0012,
+          2.2,
+          vw() * 0.018,
+        );
         const rand = Math.random();
-        if (rand > 0.8) {
-          // 20% 機率：突然加速 (1.5 ~ 2.0 倍基礎速度)
-          currentSpeed = baseSpeed * (1.5 + Math.random() * 0.5);
-        } else if (rand < 0.15) {
-          // 15% 機率：突然減速 (0.6 ~ 0.8 倍基礎速度)
-          currentSpeed = baseSpeed * (0.6 + Math.random() * 0.2);
-        } else {
-          // 正常速度
-          currentSpeed = baseSpeed;
-        }
+        if (rand > 0.82)
+          currentSpeed = baseSpeed * (1.45 + Math.random() * 0.45);
+        else if (rand < 0.14)
+          currentSpeed = baseSpeed * (0.62 + Math.random() * 0.2);
+        else currentSpeed = baseSpeed;
+        currentSpeed = Math.min(currentSpeed, vw() * 0.024);
 
-        // 限制最高速度不要超過畫面寬度的 2%，避免完全無法反應
-        const maxLimit = canvas.width * 0.025;
-        if (currentSpeed > maxLimit) currentSpeed = maxLimit;
-
+        const fromLeft = Math.random() > 0.5;
         currentBlock = {
-          x: 0,
-          y: last.y - 45,
+          x: fromLeft ? -last.width : vw(),
+          y: last.y - gap(),
           width: last.width,
-          direction: 1,
-          color: 200 + ((level * 15) % 360),
+          height: blockHeight(),
+          direction: fromLeft ? 1 : -1,
+          color: (196 + level * 18) % 360,
+          perfect: false,
         };
+      }
+
+      function drawBackground() {
+        const h = vh();
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, "#020617");
+        grad.addColorStop(0.45, "#07111f");
+        grad.addColorStop(1, "#111827");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, vw(), h);
+
+        stars.forEach((star) => {
+          star.y += star.s;
+          if (star.y > h) {
+            star.y = 0;
+            star.x = Math.random() * vw();
+          }
+          ctx.globalAlpha = star.a;
+          ctx.fillStyle = "#ffffff";
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+
+        const glow = ctx.createRadialGradient(
+          vw() / 2,
+          h * 0.22,
+          0,
+          vw() / 2,
+          h * 0.22,
+          Math.max(vw(), h) * 0.7,
+        );
+        glow.addColorStop(0, "rgba(56,223,255,.11)");
+        glow.addColorStop(0.45, "rgba(168,85,247,.045)");
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, vw(), h);
+      }
+
+      function roundRect(x, y, w, h, r) {
+        r = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+      }
+
+      function drawBlock(b, isCurrent = false) {
+        const height = b.height || blockHeight();
+        ctx.save();
+        ctx.shadowBlur = isCurrent ? 26 : 17;
+        ctx.shadowColor = `hsla(${b.color}, 90%, 62%, ${isCurrent ? 0.55 : 0.28})`;
+        const grd = ctx.createLinearGradient(
+          b.x,
+          b.y,
+          b.x + b.width,
+          b.y + height,
+        );
+        grd.addColorStop(0, `hsl(${b.color}, 90%, 64%)`);
+        grd.addColorStop(0.52, `hsl(${(b.color + 25) % 360}, 86%, 56%)`);
+        grd.addColorStop(1, `hsl(${(b.color + 58) % 360}, 82%, 45%)`);
+        roundRect(b.x, b.y, b.width, height, 8);
+        ctx.fillStyle = grd;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 0.35;
+        ctx.fillStyle = "rgba(255,255,255,.9)";
+        roundRect(
+          b.x + 5,
+          b.y + 4,
+          Math.max(0, b.width - 10),
+          Math.max(3, height * 0.18),
+          5,
+        );
+        ctx.fill();
+        ctx.globalAlpha = 0.25;
+        ctx.strokeStyle = "rgba(255,255,255,.9)";
+        ctx.lineWidth = 1;
+        roundRect(b.x + 0.5, b.y + 0.5, b.width - 1, height - 1, 8);
+        ctx.stroke();
+        if (b.perfect) {
+          ctx.globalAlpha = 0.78;
+          ctx.strokeStyle = "rgba(250,204,21,.9)";
+          ctx.lineWidth = 2;
+          roundRect(b.x - 3, b.y - 3, b.width + 6, height + 6, 11);
+          ctx.stroke();
+        }
+        ctx.restore();
       }
 
       function animate() {
         if (gameState !== "PLAYING" && gameState !== "OVER") return;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const targetCam = (blocks.length - 4) * 45;
-        cameraY += (targetCam - cameraY) * 0.1;
+        drawBackground();
+        const targetCam = Math.max(0, (blocks.length - 5) * gap());
+        cameraY += (targetCam - cameraY) * 0.095;
+        const shakeX = (Math.random() - 0.5) * screenShake;
+        const shakeY = (Math.random() - 0.5) * screenShake;
+        screenShake *= 0.86;
 
         ctx.save();
-        ctx.translate(0, cameraY);
+        ctx.translate(shakeX, cameraY + shakeY);
 
         debris.forEach((d, i) => {
           d.y += d.vy;
-          d.vy += 0.6;
-          d.opacity -= 0.03;
-          ctx.fillStyle = `hsla(${d.color}, 70%, 50%, ${d.opacity})`;
-          ctx.fillRect(d.x, d.y, d.width, 43);
+          d.x += d.vx || 0;
+          d.vy += 0.55;
+          d.opacity -= 0.025;
+          ctx.globalAlpha = Math.max(0, d.opacity);
+          drawBlock(d);
+          ctx.globalAlpha = 1;
           if (d.opacity <= 0) debris.splice(i, 1);
         });
 
-        blocks.forEach((b) => {
-          ctx.fillStyle = `hsl(${b.color}, 70%, 60%)`;
-          ctx.fillRect(b.x, b.y, b.width, 43);
-        });
+        blocks.forEach((b) => drawBlock(b));
 
         if (gameState === "PLAYING") {
-          // 使用隨機計算出的 currentSpeed
           currentBlock.x += currentSpeed * currentBlock.direction;
           if (
-            currentBlock.x + currentBlock.width > canvas.width ||
-            currentBlock.x <= 0
-          )
-            currentBlock.direction *= -1;
-          ctx.fillStyle = `hsl(${currentBlock.color}, 70%, 60%)`;
-          ctx.fillRect(currentBlock.x, currentBlock.y, currentBlock.width, 43);
+            currentBlock.direction > 0 &&
+            currentBlock.x + currentBlock.width > vw()
+          ) {
+            currentBlock.x = vw() - currentBlock.width;
+            currentBlock.direction = -1;
+          } else if (currentBlock.direction < 0 && currentBlock.x < 0) {
+            currentBlock.x = 0;
+            currentBlock.direction = 1;
+          }
+          drawBlock(currentBlock, true);
         }
 
+        sparks.forEach((p, i) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.04;
+          p.life -= 0.028;
+          ctx.globalAlpha = Math.max(0, p.life);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          if (p.life <= 0) sparks.splice(i, 1);
+        });
+
         ctx.restore();
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
       }
 
-      // 輸入監聽
-      const filterTags = ["BUTTON", "INPUT"];
+      function ensureAudio() {
+        try {
+          if (!audioCtx)
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          audioCtx = null;
+        }
+      }
+
+      function beep(freq = 440, duration = 0.05, type = "sine", gain = 0.055) {
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        g.gain.value = gain;
+        g.gain.exponentialRampToValueAtTime(
+          0.0001,
+          audioCtx.currentTime + duration,
+        );
+        osc.connect(g).connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      }
+
+      const filterTags = ["BUTTON", "INPUT", "TEXTAREA", "SELECT", "A"];
       window.addEventListener("mousedown", (e) => {
         if (filterTags.includes(e.target.tagName)) return;
         handleInput();
       });
-
       window.addEventListener(
         "touchstart",
         (e) => {
@@ -304,49 +911,117 @@
         },
         { passive: false },
       );
+      window.addEventListener("keydown", (e) => {
+        if (e.code === "Space" || e.code === "Enter") {
+          if (document.activeElement === nameInput) return;
+          e.preventDefault();
+          if (gameState === "START" || gameState === "OVER") start();
+          else handleInput();
+        }
+      });
 
       function handleInput() {
-        if (gameState === "PLAYING") {
-          const last = blocks[blocks.length - 1];
-          const diff = currentBlock.x - last.x;
+        if (gameState !== "PLAYING") return;
+        const last = blocks[blocks.length - 1];
+        const diff = currentBlock.x - last.x;
+        const absDiff = Math.abs(diff);
+        const perfectTolerance = clamp(currentBlock.width * 0.035, 3, 8);
 
-          if (Math.abs(diff) >= currentBlock.width) {
-            gameState = "OVER";
-            saveScore(blocks.length - 1);
-            showGameOver();
-          } else {
-            if (Math.abs(diff) > 8) {
-              let dWidth = Math.abs(diff);
-              let dX =
-                diff > 0
-                  ? currentBlock.x + (currentBlock.width - diff)
-                  : currentBlock.x;
-              debris.push({
-                x: dX,
-                y: currentBlock.y,
-                width: dWidth,
-                color: currentBlock.color,
-                vy: 2,
-                opacity: 1,
-              });
-              currentBlock.width -= dWidth;
-              if (diff < 0) currentBlock.x = last.x;
-            } else {
-              currentBlock.x = last.x; // Perfect!
-            }
-            blocks.push({ ...currentBlock });
-            scoreEl.innerText = blocks.length - 1;
-            newBlock(); // 每一層都會觸發隨機速度檢查
-          }
+        if (absDiff >= currentBlock.width) {
+          gameState = "OVER";
+          perfectStreak = 0;
+          screenShake = 12;
+          beep(130, 0.18, "sawtooth", 0.045);
+          saveScore(blocks.length - 1);
+          showGameOver();
+          return;
+        }
+
+        if (absDiff <= perfectTolerance) {
+          currentBlock.x = last.x;
+          currentBlock.perfect = true;
+          perfectStreak += 1;
+          screenShake = 3;
+          showToast(
+            perfectStreak >= 3 ? `PERFECT x${perfectStreak}` : "PERFECT",
+          );
+          comboEl.innerText =
+            perfectStreak >= 2 ? `連續精準 ${perfectStreak} 次` : "精準落點";
+          msgEl.innerText = "漂亮，這手感有點東西";
+          spawnSparks(
+            currentBlock.x + currentBlock.width / 2,
+            currentBlock.y + currentBlock.height / 2,
+            currentBlock.color,
+            26,
+          );
+          beep(620 + perfectStreak * 35, 0.07, "triangle", 0.055);
+        } else {
+          perfectStreak = 0;
+          comboEl.innerText = "";
+          msgEl.innerText =
+            absDiff < currentBlock.width * 0.18
+              ? "很接近，再穩一點"
+              : "樓越高，風越狠";
+          const dWidth = absDiff;
+          const dX =
+            diff > 0
+              ? currentBlock.x + (currentBlock.width - diff)
+              : currentBlock.x;
+          debris.push({
+            x: dX,
+            y: currentBlock.y,
+            width: dWidth,
+            height: currentBlock.height,
+            color: currentBlock.color,
+            vy: 2,
+            vx: diff > 0 ? 1.2 : -1.2,
+            opacity: 1,
+          });
+          currentBlock.width -= dWidth;
+          if (diff < 0) currentBlock.x = last.x;
+          screenShake = 4;
+          beep(330, 0.05, "square", 0.035);
+        }
+
+        blocks.push({ ...currentBlock });
+        scoreEl.innerText = blocks.length - 1;
+        scoreEl.animate(
+          [
+            { transform: "scale(1)", filter: "brightness(1)" },
+            { transform: "scale(1.08)", filter: "brightness(1.35)" },
+            { transform: "scale(1)", filter: "brightness(1)" },
+          ],
+          { duration: 220, easing: "ease-out" },
+        );
+        newBlock();
+      }
+
+      function spawnSparks(x, y, hue, count) {
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 4 + 1;
+          sparks.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            r: Math.random() * 2.4 + 1,
+            life: 1,
+            color: `hsla(${hue + Math.random() * 35}, 100%, 70%, .95)`,
+          });
         }
       }
 
+      function showToast(text) {
+        toastEl.textContent = text;
+        toastEl.classList.remove("show");
+        void toastEl.offsetWidth;
+        toastEl.classList.add("show");
+      }
+
       function saveScore(score) {
-        highScores.push({
-          name: playerName,
-          score: score,
-          date: new Date().getTime(),
-        });
+        if (score <= 0) return;
+        highScores.push({ name: playerName, score, date: Date.now() });
         highScores.sort((a, b) => b.score - a.score || b.date - a.date);
         highScores = highScores.slice(0, 10);
         localStorage.setItem("stack_game_ranks", JSON.stringify(highScores));
@@ -354,102 +1029,60 @@
       }
 
       function updateRankDisplay() {
+        if (!Array.isArray(highScores)) highScores = [];
         if (highScores.length === 0) {
-          rankListEl.innerHTML = `<div style="text-align:center; opacity:0.5;">尚無紀錄</div>`;
+          rankListEl.innerHTML =
+            '<div style="text-align:center; opacity:.58; padding:14px 0;">尚無紀錄，第一棟傳奇等你動工</div>';
           return;
         }
         rankListEl.innerHTML = highScores
           .map(
             (item, index) => `
           <div class="rank-item">
-            <span>${index + 1}. <span class="rank-name">${item.name}</span></span>
-            <span><b>${item.score}</b> 層</span>
+            <span>${index + 1}. <span class="rank-name">${escapeHTML(item.name || "匿名建築師")}</span></span>
+            <span class="rank-score">${Number(item.score) || 0} 層</span>
           </div>
         `,
           )
           .join("");
       }
 
+      function escapeHTML(str) {
+        return String(str).replace(
+          /[&<>'"]/g,
+          (ch) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#39;",
+              '"': "&quot;",
+            })[ch],
+        );
+      }
+
       function showGameOver() {
         const score = blocks.length - 1;
-        document.getElementById("title").innerText =
-          "遊戲結束: " + score + " 層";
+        titleEl.innerHTML = `完工高度<span>${score} 層</span>`;
+        subtitleEl.textContent =
+          score >= 30
+            ? "這棟樓已經有傳奇味了。再來一次，看看能不能碰到雲。"
+            : "城市沒倒，只是你的手先抖了。再蓋一棟，別讓夜色看扁你。";
         mainBtn.innerText = "再蓋一棟";
         overlay.style.display = "flex";
       }
 
       mainBtn.addEventListener("click", (e) => {
         e.stopPropagation();
+        titleEl.innerHTML = "SKYLINE<span>巔峰建築師</span>";
+        subtitleEl.textContent =
+          "在深夜城市裡堆起你的高樓。速度會變、樓層會窄，手一抖，帝國就變危樓。";
         start();
       });
-      // 1. 禁用滑鼠右鍵選單
+
       document.oncontextmenu = function () {
-        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
-    <footer>
-      <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
-    </footer>
   </body>
 </html>
