@@ -12,93 +12,603 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>生活小知識</title>
+    <title>生活小知識｜沉浸式隨機抽卡</title>
     <style>
       :root {
-        --primary-color: #3498db;
-        --bg-color: #f4f7f6;
-        --text-dark: #2c3e50;
+        --primary-color: #3b82f6;
+        --primary-glow: rgba(59, 130, 246, 0.34);
+        --bg-1: #07111f;
+        --bg-2: #10233d;
+        --bg-3: #172554;
+        --text-main: #f8fafc;
+        --text-soft: rgba(248, 250, 252, 0.72);
+        --text-muted: rgba(248, 250, 252, 0.52);
+        --card-bg: rgba(255, 255, 255, 0.12);
+        --card-border: rgba(255, 255, 255, 0.18);
+        --shadow-deep: 0 30px 90px rgba(0, 0, 0, 0.42);
+        --radius-xl: 32px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        overflow-x: hidden;
       }
 
       body {
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: var(--bg-color);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
+        min-height: 100svh;
+      }
+
+      body {
         margin: 0;
-        overflow: hidden;
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          "Noto Sans TC",
+          Roboto,
+          sans-serif;
+        color: var(--text-main);
+        background:
+          radial-gradient(
+            circle at 18% 16%,
+            rgba(96, 165, 250, 0.28),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 82% 14%,
+            rgba(168, 85, 247, 0.25),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 50% 94%,
+            rgba(20, 184, 166, 0.18),
+            transparent 36%
+          ),
+          linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        overflow-x: hidden;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      body::before {
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 58px 58px;
+        mask-image: radial-gradient(circle at center, black, transparent 78%);
+      }
+
+      body::after {
+        background:
+          radial-gradient(
+              circle,
+              rgba(255, 255, 255, 0.7) 0 1px,
+              transparent 1px
+            )
+            12% 20% / 180px 180px,
+          radial-gradient(
+              circle,
+              rgba(255, 255, 255, 0.38) 0 1px,
+              transparent 1px
+            )
+            70% 10% / 220px 220px,
+          radial-gradient(
+              circle,
+              rgba(255, 255, 255, 0.46) 0 1px,
+              transparent 1px
+            )
+            84% 72% / 260px 260px;
+        opacity: 0.28;
+        animation: starDrift 18s linear infinite;
+      }
+
+      .app-shell {
+        position: relative;
+        z-index: 1;
+        width: min(1180px, calc(100% - 32px));
+        min-height: 100svh;
+        margin: 0 auto;
+        padding: clamp(14px, 3vh, 28px) 0;
+        display: grid;
+        grid-template-columns: minmax(280px, 0.88fr) minmax(320px, 1.12fr);
+        align-items: center;
+        gap: clamp(18px, 4vw, 56px);
+      }
+
+      .hero {
+        isolation: isolate;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        margin: 0 0 clamp(10px, 2vh, 18px);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.78);
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+        font-size: 0.88rem;
+        letter-spacing: 0.08em;
+      }
+
+      .pulse-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: #5eead4;
+        box-shadow: 0 0 0 8px rgba(94, 234, 212, 0.12);
       }
 
       h1 {
-        font-size: 1.5rem;
-        color: var(--text-dark);
-        margin-bottom: 20px;
+        margin: 0;
+        font-size: clamp(2rem, 6vw, 5rem);
+        line-height: 0.95;
+        letter-spacing: -0.075em;
+      }
+
+      .gradient-text {
+        display: block;
+        margin-top: 8px;
+        background: linear-gradient(90deg, #bfdbfe, #ffffff 45%, #99f6e4);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .subtitle {
+        max-width: 520px;
+        margin: clamp(12px, 2.4vh, 22px) 0 0;
+        color: var(--text-soft);
+        font-size: clamp(0.95rem, 1.6vw, 1.08rem);
+        line-height: 1.72;
+      }
+
+      .stats-panel {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: clamp(16px, 3vh, 30px);
+      }
+
+      .stat-card {
+        min-height: clamp(68px, 11vh, 86px);
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .stat-card strong {
+        display: block;
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        line-height: 1;
+      }
+
+      .stat-card span {
+        display: block;
+        margin-top: 9px;
+        color: var(--text-muted);
+        font-size: 0.82rem;
+      }
+
+      .stage {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: min(680px, calc(100svh - 28px));
+      }
+
+      .orbital-ring {
+        position: absolute;
+        width: min(560px, 86vw);
+        aspect-ratio: 1;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: rotate(-12deg);
+        animation: slowSpin 28s linear infinite;
+      }
+
+      .orbital-ring::before,
+      .orbital-ring::after {
+        content: "";
+        position: absolute;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 0 22px rgba(147, 197, 253, 0.8);
+      }
+
+      .orbital-ring::before {
+        width: 9px;
+        height: 9px;
+        top: 18%;
+        left: 13%;
+      }
+
+      .orbital-ring::after {
+        width: 7px;
+        height: 7px;
+        right: 6%;
+        bottom: 28%;
+      }
+
+      .card-wrap {
+        position: relative;
+        width: min(420px, 88vw);
+        max-height: calc(100svh - 34px);
+      }
+
+      .card-wrap::before,
+      .card-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 24px;
+        border-radius: var(--radius-xl);
+        background: rgba(255, 255, 255, 0.08);
+        transform: rotate(-7deg) translate(-18px, 12px);
+        filter: blur(0.1px);
+        z-index: -1;
+      }
+
+      .card-wrap::after {
+        transform: rotate(8deg) translate(18px, 16px);
+        background: rgba(255, 255, 255, 0.05);
       }
 
       .card-container {
-        width: 85vw;
-        max-width: 340px;
-        height: 480px;
-        perspective: 1000px;
+        width: 100%;
+        height: clamp(340px, 58svh, 520px);
+        min-height: 0;
+        perspective: 1400px;
       }
 
       .card {
         width: 100%;
         height: 100%;
         position: relative;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
       }
 
-      .card.flipped {
+      /*
+        重要修正：不要旋轉整張 .card。
+        在 Chrome 上，若父層旋轉又遇到 backdrop-filter / overflow / 動畫，
+        可能會看到正面內容的鏡像，而不是背面答案。
+        改成分別旋轉正反面，穩定很多，手機瀏覽器也比較不會鬧脾氣。
+      */
+      .card.flipped .card-front {
         transform: rotateY(180deg);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .card.flipped .card-back {
+        transform: rotateY(0deg);
+        opacity: 1;
+        pointer-events: auto;
       }
 
       .card-face {
         position: absolute;
+        inset: 0;
+        overflow: hidden;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        transform-style: preserve-3d;
+        -webkit-transform-style: preserve-3d;
+        will-change: transform, opacity;
+        transition:
+          transform 0.72s cubic-bezier(0.2, 0.85, 0.24, 1),
+          opacity 0.28s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: clamp(18px, 4vw, 34px);
+        border: 1px solid var(--card-border);
+        border-radius: var(--radius-xl);
+        text-align: center;
+        box-shadow: var(--shadow-deep);
+      }
+
+      .card-face::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.22), transparent 38%),
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(255, 255, 255, 0.22),
+            transparent 48%
+          );
+        pointer-events: none;
+      }
+
+      .card-face::after {
+        content: "";
+        position: absolute;
+        inset: 1px;
+        border-radius: calc(var(--radius-xl) - 1px);
+        background: linear-gradient(
+          180deg,
+          transparent,
+          rgba(255, 255, 255, 0.05)
+        );
+        pointer-events: none;
+      }
+
+      .card-front {
+        transform: rotateY(0deg);
+        opacity: 1;
+        background:
+          linear-gradient(
+            160deg,
+            rgba(255, 255, 255, 0.22),
+            rgba(255, 255, 255, 0.08)
+          ),
+          rgba(15, 23, 42, 0.78);
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+      }
+
+      .card-back {
+        color: white;
+        transform: rotateY(-180deg);
+        opacity: 0;
+        pointer-events: none;
+        backdrop-filter: blur(28px);
+        -webkit-backdrop-filter: blur(28px);
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 1;
         width: 100%;
         height: 100%;
-        backface-visibility: hidden;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: clamp(8px, 1.8svh, 16px);
+      }
+
+      .card-main {
+        width: 100%;
+        min-height: 0;
+        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 30px;
-        box-sizing: border-box;
-        border-radius: 25px;
-        text-align: center;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        gap: clamp(8px, 1.6svh, 14px);
+        overflow: hidden;
       }
 
-      .card-front {
-        background: white;
-        color: var(--text-dark);
+      .card-main.answer-main {
+        align-items: stretch;
       }
 
-      .card-back {
-        background: var(--primary-color);
-        color: white;
-        transform: rotateY(180deg);
+      .card-topline {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 0.82rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .icon-container {
+        width: clamp(68px, 13svh, 112px);
+        height: clamp(68px, 13svh, 112px);
+        flex: 0 0 auto;
+        margin: 0 auto;
+        display: grid;
+        place-items: center;
+        border-radius: 42px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background:
+          radial-gradient(
+            circle at 30% 20%,
+            rgba(255, 255, 255, 0.36),
+            transparent 42%
+          ),
+          rgba(255, 255, 255, 0.1);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          0 20px 50px rgba(0, 0, 0, 0.24);
+        overflow: hidden;
+      }
+
+      .icon-container img {
+        width: 80%;
+        height: 80%;
+        object-fit: contain;
+        border-radius: 22px;
+      }
+
+      .icon-text {
+        font-size: clamp(2.5rem, 7vw, 4.25rem);
+        filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.24));
+      }
+
+      .question-text {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        font-size: clamp(1rem, 2.8vw, 1.72rem);
+        line-height: 1.26;
+        letter-spacing: -0.035em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 0;
+        padding: 11px 15px;
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.68);
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 0.9rem;
+      }
+
+      .answer-title {
+        margin: 0;
+        font-size: clamp(1.05rem, 3vw, 1.8rem);
+        line-height: 1.22;
+        letter-spacing: -0.04em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .answer-desc {
+        margin: clamp(6px, 1.3vh, 12px) 0 0;
+        color: rgba(255, 255, 255, 0.84);
+        font-size: clamp(0.82rem, 1.65vw, 1rem);
+        line-height: 1.52;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .tip-box {
+        width: 100%;
+        margin-top: clamp(8px, 1.6vh, 14px);
+        padding: clamp(9px, 2vw, 14px);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.86rem;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .control-panel {
+        width: 100%;
+        display: grid;
+        gap: 16px;
+        margin-top: clamp(12px, 2vh, 22px);
+      }
+
+      .progress-wrap {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .progress-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 0.8rem;
+      }
+
+      .progress-track {
+        height: 8px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .progress-bar {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #60a5fa, #5eead4);
+        box-shadow: 0 0 24px rgba(94, 234, 212, 0.55);
+        transition: width 0.35s ease;
+      }
+
+      .btn-next {
+        width: 100%;
+        min-height: clamp(48px, 7vh, 58px);
+        padding: 13px 22px;
+        border: 0;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #ffffff, #bfdbfe);
+        color: #0f172a;
+        font-size: 1rem;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        box-shadow:
+          0 18px 42px rgba(59, 130, 246, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          filter 0.2s ease,
+          box-shadow 0.2s ease;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .btn-next:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.04);
+        box-shadow:
+          0 24px 52px rgba(59, 130, 246, 0.32),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .btn-next:active {
+        transform: translateY(1px) scale(0.99);
       }
 
       .fade-in {
         animation: fadeIn 0.5s ease-out forwards;
       }
 
+      .shake-in {
+        animation: cardEnter 0.48s ease-out both;
+      }
+
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(14px);
         }
         to {
           opacity: 1;
@@ -106,78 +616,339 @@
         }
       }
 
-      .icon-container {
-        width: 120px;
-        height: 120px;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
+      @keyframes cardEnter {
+        from {
+          opacity: 0;
+          filter: brightness(0.92) saturate(0.92);
+        }
+        to {
+          opacity: 1;
+          filter: brightness(1) saturate(1);
+        }
       }
 
-      .icon-container img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        border-radius: 12px;
+      @keyframes slowSpin {
+        to {
+          transform: rotate(348deg);
+        }
       }
 
-      .icon-text {
-        font-size: 80px;
+      @keyframes starDrift {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-30px);
+        }
       }
 
-      .question-text {
-        font-size: 1.3rem;
-        line-height: 1.5;
-        margin: 0;
+      @media (max-width: 880px) {
+        body {
+          overflow-y: auto;
+        }
+
+        .app-shell {
+          grid-template-columns: 1fr;
+          min-height: auto;
+          padding: 28px 0 42px;
+          gap: 30px;
+        }
+
+        .hero {
+          text-align: center;
+        }
+
+        .subtitle {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .stats-panel {
+          max-width: 560px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .stage {
+          min-height: auto;
+        }
+
+        .orbital-ring {
+          display: none;
+        }
       }
 
-      .hint {
-        margin-top: 25px;
-        font-size: 0.9rem;
-        color: #95a5a6;
+      @media (max-width: 520px) {
+        .app-shell {
+          width: min(100% - 22px, 1180px);
+          padding-top: 18px;
+        }
+
+        .eyebrow {
+          font-size: 0.74rem;
+        }
+
+        .stats-panel {
+          grid-template-columns: 1fr;
+        }
+
+        .stat-card {
+          min-height: auto;
+          padding: 13px 15px;
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+        }
+
+        .stat-card span {
+          margin-top: 0;
+        }
+
+        .card-container {
+          height: clamp(330px, 54dvh, 480px);
+        }
       }
 
-      .btn-next {
-        margin-top: 35px;
-        padding: 15px 40px;
-        background-color: var(--text-dark);
-        color: white;
-        border: none;
-        border-radius: 50px;
-        font-size: 1rem;
-        font-weight: bold;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        transition:
-          transform 0.2s,
-          background-color 0.2s;
-        -webkit-tap-highlight-color: transparent;
+      @media (max-height: 760px) and (min-width: 881px) {
+        .app-shell {
+          align-items: stretch;
+        }
+
+        .hero,
+        .stage {
+          align-self: center;
+        }
+
+        .stats-panel {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .stat-card {
+          padding: 12px 14px;
+        }
+
+        .card-container {
+          height: clamp(320px, 52svh, 470px);
+        }
+
+        .card-topline,
+        .hint,
+        .tip-box {
+          font-size: 0.78rem;
+        }
       }
 
-      .btn-next:active {
-        transform: scale(0.95);
-        background-color: #000;
+      @media (max-width: 880px) {
+        .card-wrap {
+          width: min(420px, 92vw);
+          max-height: none;
+        }
+
+        .card-container {
+          height: clamp(340px, 54svh, 500px);
+        }
+      }
+
+      @media (max-width: 520px) {
+        body {
+          min-height: 100dvh;
+        }
+
+        .app-shell {
+          width: min(100% - 18px, 1180px);
+          padding: 14px 0 22px;
+          gap: 18px;
+        }
+
+        h1 {
+          font-size: clamp(1.9rem, 12vw, 3.2rem);
+          letter-spacing: -0.06em;
+        }
+
+        .subtitle {
+          font-size: 0.92rem;
+          line-height: 1.62;
+        }
+
+        .stats-panel {
+          gap: 8px;
+          margin-top: 14px;
+        }
+
+        .card-container {
+          height: clamp(330px, 54dvh, 480px);
+        }
+
+        .card-face {
+          border-radius: 24px;
+          padding: 16px;
+        }
+
+        .card-wrap::before,
+        .card-wrap::after {
+          display: none;
+        }
+
+        .icon-container {
+          width: clamp(56px, 12dvh, 88px);
+          height: clamp(56px, 12dvh, 88px);
+          border-radius: 24px;
+        }
+
+        .icon-text {
+          font-size: clamp(2.1rem, 12vw, 3.25rem);
+        }
+
+        .question-text {
+          font-size: clamp(0.98rem, 5.2vw, 1.45rem);
+        }
+
+        .answer-title {
+          font-size: clamp(1rem, 5.2vw, 1.42rem);
+        }
+
+        .answer-desc,
+        .tip-box {
+          font-size: 0.88rem;
+          line-height: 1.58;
+        }
+
+        .progress-wrap {
+          padding: 10px 12px;
+        }
+      }
+
+      @media (max-height: 680px) and (max-width: 520px) {
+        .eyebrow,
+        .subtitle,
+        .stats-panel {
+          display: none;
+        }
+
+        .app-shell {
+          min-height: 100dvh;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+
+        .hero {
+          flex: 0 0 auto;
+        }
+
+        .stage {
+          flex: 0 1 auto;
+        }
+
+        .card-container {
+          height: min(500px, 66dvh);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
       }
     </style>
   </head>
   <body>
-    <h1>生活小知識-隨機抽</h1>
+    <main class="app-shell">
+      <section class="hero" aria-label="生活小知識介紹">
+        <p class="eyebrow">
+          <span class="pulse-dot"></span> DAILY MICRO KNOWLEDGE
+        </p>
+        <h1>
+          生活小知識
+          <span class="gradient-text">沉浸式抽卡</span>
+        </h1>
+        <p class="subtitle">
+          每一次翻牌，都是把日常重新點亮一點點。別小看這些冷知識，很多時候，生活就是被一個微小答案默默救場。
+        </p>
 
-    <div class="card-container">
-      <div id="trivia-card" class="card">
-        <div class="card-face card-front" id="front-face">
-          <div class="icon-container">🔍</div>
-          <h2 class="question-text">正在準備內容...</h2>
+        <div class="stats-panel" aria-label="目前抽卡狀態">
+          <div class="stat-card">
+            <strong id="total-count">—</strong>
+            <span>知識總量</span>
+          </div>
+          <div class="stat-card">
+            <strong id="current-count">—</strong>
+            <span>目前進度</span>
+          </div>
+          <div class="stat-card">
+            <strong>Tap</strong>
+            <span>點卡揭曉</span>
+          </div>
         </div>
-        <div class="card-face card-back" id="back-face">
-          <h2>解答載入中</h2>
-        </div>
-      </div>
-    </div>
+      </section>
 
-    <button class="btn-next" onclick="nextTrivia()">換一個試試</button>
+      <section class="stage" aria-label="抽卡區域">
+        <div class="orbital-ring" aria-hidden="true"></div>
+        <div class="card-wrap">
+          <div class="card-container">
+            <div
+              id="trivia-card"
+              class="card"
+              role="button"
+              tabindex="0"
+              aria-label="點擊卡片揭曉答案"
+            >
+              <div class="card-face card-front" id="front-face">
+                <div class="card-content">
+                  <div class="card-topline">
+                    <span class="pill">🔎 探索中</span>
+                    <span>準備內容</span>
+                  </div>
+                  <div>
+                    <div class="icon-container">
+                      <span class="icon-text">🔍</span>
+                    </div>
+                    <h2 class="question-text">正在準備內容...</h2>
+                    <div class="hint">點擊卡片揭曉答案</div>
+                  </div>
+                  <div class="card-topline">
+                    <span>Knowledge Card</span>
+                    <span>Flip</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-face card-back" id="back-face">
+                <div class="card-content">
+                  <div class="card-topline">
+                    <span class="pill">✨ 解答</span>
+                    <span>Answer</span>
+                  </div>
+                  <div>
+                    <h2 class="answer-title">解答載入中</h2>
+                  </div>
+                  <div class="tip-box">再點一次卡片，可回到問題。</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-panel">
+            <div class="progress-wrap" aria-label="閱讀進度">
+              <div class="progress-meta">
+                <span>今日探索進度</span>
+                <span id="progress-text">0 / 0</span>
+              </div>
+              <div class="progress-track">
+                <div id="progress-bar" class="progress-bar"></div>
+              </div>
+            </div>
+            <button class="btn-next" id="next-btn" type="button">
+              換一個試試 →
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
 
     <script>
       let triviaData = []; // 原始資料
@@ -187,6 +958,92 @@
       const card = document.getElementById("trivia-card");
       const frontFace = document.getElementById("front-face");
       const backFace = document.getElementById("back-face");
+      const nextBtn = document.getElementById("next-btn");
+      const progressText = document.getElementById("progress-text");
+      const progressBar = document.getElementById("progress-bar");
+      const totalCount = document.getElementById("total-count");
+      const currentCount = document.getElementById("current-count");
+
+      function escapeHTML(value = "") {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function safeText(value = "") {
+        // 先防 XSS，再把資料中的 <br> / <br/> 還原成換行。
+        return escapeHTML(value)
+          .replaceAll("&lt;br&gt;", "<br>")
+          .replaceAll("&lt;br/&gt;", "<br>")
+          .replaceAll("&lt;br /&gt;", "<br>");
+      }
+
+      function safeColor(color) {
+        const value = String(color || "").trim();
+        if (/^#[0-9a-fA-F]{3,8}$/.test(value)) return value;
+        if (/^rgba?\([0-9\s.,%]+\)$/.test(value)) return value;
+        if (/^hsla?\([0-9\s.,%deg]+\)$/.test(value)) return value;
+        return "#3b82f6";
+      }
+
+      function shrinkToFit(face) {
+        if (!face) return;
+
+        const content = face.querySelector(".card-content");
+        if (!content) return;
+
+        const textNodes = Array.from(
+          face.querySelectorAll(".auto-fit-text, .hint, .tip-box"),
+        );
+        const iconBox = face.querySelector(".icon-container");
+        const iconText = face.querySelector(".icon-text");
+
+        textNodes.forEach((el) => {
+          el.style.fontSize = "";
+          el.style.lineHeight = "";
+        });
+        if (iconBox) {
+          iconBox.style.width = "";
+          iconBox.style.height = "";
+        }
+        if (iconText) iconText.style.fontSize = "";
+
+        const minFont = 11;
+        let guard = 0;
+        while (content.scrollHeight > content.clientHeight + 1 && guard < 34) {
+          textNodes.forEach((el) => {
+            const style = window.getComputedStyle(el);
+            const current = parseFloat(style.fontSize);
+            const next = Math.max(minFont, current - 1);
+            el.style.fontSize = `${next}px`;
+            el.style.lineHeight = next <= 13 ? "1.22" : "";
+          });
+
+          if (iconBox) {
+            const currentW = iconBox.getBoundingClientRect().width;
+            const nextW = Math.max(44, currentW - 4);
+            iconBox.style.width = `${nextW}px`;
+            iconBox.style.height = `${nextW}px`;
+          }
+
+          if (iconText) {
+            const style = window.getComputedStyle(iconText);
+            const current = parseFloat(style.fontSize);
+            iconText.style.fontSize = `${Math.max(30, current - 3)}px`;
+          }
+          guard++;
+        }
+      }
+
+      function fitCurrentCard() {
+        requestAnimationFrame(() => {
+          shrinkToFit(frontFace);
+          shrinkToFit(backFace);
+        });
+      }
 
       async function init() {
         try {
@@ -194,17 +1051,17 @@
           triviaData = await response.json();
 
           if (triviaData.length > 0) {
-            resetAndShuffle(); // 初始載入時進行洗牌
-            nextTrivia(); // 顯示第一個
+            totalCount.textContent = triviaData.length;
+            resetAndShuffle();
+            nextTrivia();
+          } else {
+            renderEmptyState();
           }
         } catch (err) {
-          frontFace.innerHTML = `<div class="icon-text">❌</div><h2>載入失敗</h2><p>請檢查 JSON 檔案</p>`;
+          renderErrorState();
         }
       }
 
-      /**
-       * 洗牌函式：將原始資料隨機打亂並存入 shuffledData
-       */
       function resetAndShuffle() {
         shuffledData = [...triviaData];
         for (let i = shuffledData.length - 1; i > 0; i--) {
@@ -214,7 +1071,7 @@
             shuffledData[i],
           ];
         }
-        currentIndex = -1; // 重置索引，以便 nextTrivia 從 0 開始
+        currentIndex = -1;
       }
 
       function nextTrivia() {
@@ -222,7 +1079,6 @@
 
         currentIndex++;
 
-        // 如果索引超過總數，代表看完了
         if (currentIndex >= shuffledData.length) {
           alert("所有的生活小知識都看過一遍囉！即將重新隨機排序內容。");
           resetAndShuffle();
@@ -230,43 +1086,133 @@
         }
 
         renderCard(shuffledData[currentIndex]);
+        updateProgress();
       }
 
       function renderCard(item) {
-        // 先翻回正面並移除動畫類
-        card.classList.remove("flipped");
+        card.classList.remove("flipped", "shake-in");
         frontFace.classList.remove("fade-in");
-
-        // 強制瀏覽器重繪 (reflow)，確保動畫能重複觸發
         void frontFace.offsetWidth;
 
-        const isImage = item.icon.includes(".") || item.icon.startsWith("http");
+        const themeColor = safeColor(item.theme_color || "#3b82f6");
+        const iconValue = String(item.icon || "💡");
+        const isImage = iconValue.includes(".") || iconValue.startsWith("http");
         const iconHTML = isImage
-          ? `<img src="${item.icon}" alt="icon">`
-          : `<span class="icon-text">${item.icon}</span>`;
+          ? `<img src="${escapeHTML(iconValue)}" alt="知識圖示" loading="lazy">`
+          : `<span class="icon-text">${escapeHTML(iconValue)}</span>`;
 
         frontFace.innerHTML = `
-                <div class="icon-container">${iconHTML}</div>
-                <h2 class="question-text">${item.question}</h2>
-                <div class="hint">點擊卡片揭曉答案</div>
-            `;
-        frontFace.classList.add("fade-in");
+          <div class="card-content fade-in">
+            <div class="card-topline">
+              <span class="pill">🔎 第 ${currentIndex + 1} 張</span>
+              <span>Question</span>
+            </div>
+            <div class="card-main question-main">
+              <div class="icon-container">${iconHTML}</div>
+              <h2 class="question-text auto-fit-text">${safeText(item.question || "今天的小知識是什麼？")}</h2>
+              <div class="hint">點擊卡片揭曉答案</div>
+            </div>
+            <div class="card-topline">
+              <span>Life Trivia</span>
+              <span>Flip Card</span>
+            </div>
+          </div>
+        `;
 
         backFace.innerHTML = `
-                <h3 style="font-size:1.5rem; margin-bottom:15px;">${item.answer}</h3>
-                <p style="line-height: 1.6; font-size:1.1rem;">${item.description}</p>
-                <hr style="width: 40%; border: 0.5px solid rgba(255,255,255,0.3); margin: 20px 0;">
-                <p style="font-size: 0.9rem; font-style: italic; opacity: 0.9;">${item.tip}</p>
-            `;
-        backFace.style.backgroundColor = item.theme_color || "#3498db";
+          <div class="card-content">
+            <div class="card-topline">
+              <span class="pill">✨ 原來如此</span>
+              <span>Answer</span>
+            </div>
+            <div class="card-main answer-main">
+              <h2 class="answer-title auto-fit-text">${safeText(item.answer || "答案尚未提供")}</h2>
+              <p class="answer-desc auto-fit-text">${safeText(item.description || "這則小知識還沒有補充說明。")}</p>
+              <div class="tip-box auto-fit-text">${safeText(item.tip || "把這個小知識收進口袋，哪天它可能會突然派上用場。")}</div>
+            </div>
+          </div>
+        `;
+
+        backFace.style.background = `
+          radial-gradient(circle at 20% 18%, rgba(255, 255, 255, 0.28), transparent 34%),
+          linear-gradient(145deg, ${themeColor}, #0f172a 115%)
+        `;
+        document.documentElement.style.setProperty(
+          "--primary-color",
+          themeColor,
+        );
+        card.classList.add("shake-in");
+        fitCurrentCard();
       }
 
-      card.addEventListener("click", () => {
+      function updateProgress() {
+        const total = shuffledData.length || 0;
+        const current = total ? currentIndex + 1 : 0;
+        const percent = total ? Math.round((current / total) * 100) : 0;
+
+        progressText.textContent = `${current} / ${total}`;
+        progressBar.style.width = `${percent}%`;
+        currentCount.textContent = total ? `${current}` : "—";
+      }
+
+      function renderErrorState() {
+        totalCount.textContent = "—";
+        currentCount.textContent = "—";
+        progressText.textContent = "0 / 0";
+        progressBar.style.width = "0%";
+        frontFace.innerHTML = `
+          <div class="card-content">
+            <div class="card-topline"><span class="pill">⚠️ 載入失敗</span><span>Error</span></div>
+            <div>
+              <div class="icon-container"><span class="icon-text">❌</span></div>
+              <h2 class="question-text">找不到 trivia_data.json</h2>
+              <div class="hint">請確認 JSON 檔案與本 HTML 放在同一層資料夾</div>
+            </div>
+            <div class="card-topline"><span>File Check</span><span>JSON</span></div>
+          </div>
+        `;
+      }
+
+      function renderEmptyState() {
+        totalCount.textContent = "0";
+        currentCount.textContent = "0";
+        progressText.textContent = "0 / 0";
+        progressBar.style.width = "0%";
+        frontFace.innerHTML = `
+          <div class="card-content">
+            <div class="card-topline"><span class="pill">📭 空資料</span><span>Empty</span></div>
+            <div>
+              <div class="icon-container"><span class="icon-text">📭</span></div>
+              <h2 class="question-text">目前沒有任何生活小知識</h2>
+              <div class="hint">請在 trivia_data.json 補上資料</div>
+            </div>
+            <div class="card-topline"><span>Waiting</span><span>Data</span></div>
+          </div>
+        `;
+      }
+
+      function toggleCard(event) {
+        if (event) event.preventDefault();
         card.classList.toggle("flipped");
+      }
+
+      window.nextTrivia = nextTrivia;
+      window.toggleCard = toggleCard;
+
+      card.addEventListener("click", toggleCard);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleCard();
+        }
+      });
+      nextBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        nextTrivia();
       });
 
       init();
-      // 1. 禁用滑鼠右鍵選單
+
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
