@@ -1,7 +1,9 @@
 <!doctype html>
-<html>
+<html lang="zh-Hant">
   <head>
-    <!-- Google tag (gtag.js) -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>臺南郵局運輸股各班別工作時間軸</title>
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
@@ -12,634 +14,1849 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
-    <meta charset="UTF-8" />
-    <title>臺南郵局運輸股各班別工作時間軸</title>
-    <script
-      type="text/javascript"
-      src="https://www.gstatic.com/charts/loader.js"
-    ></script>
-    <script type="text/javascript">
-      google.charts.load("current", { packages: ["timeline"] });
-      google.charts.setOnLoadCallback(drawChart);
+    <style>
+      :root {
+        --bg: #07111f;
+        --bg2: #0b1629;
+        --panel: rgba(15, 23, 42, 0.78);
+        --panel2: rgba(255, 255, 255, 0.075);
+        --line: rgba(255, 255, 255, 0.12);
+        --text: #e8f2ff;
+        --muted: #9fb2c8;
+        --green: #22d38d;
+        --cyan: #22d3ee;
+        --yellow: #ffd166;
+        --purple: #8b5cf6;
+        --pink: #fb7185;
+        --orange: #fb923c;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+        --radius: 24px;
+        --hourWidth: 84px;
+        --labelWidth: 148px;
+      }
 
-      function drawChart() {
-        var container = document.getElementById("timeline");
-        var chart = new google.visualization.Timeline(container);
-        var dataTable = new google.visualization.DataTable();
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          "Noto Sans TC",
+          "Microsoft JhengHei",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 10% 12%,
+            rgba(34, 211, 238, 0.18),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 85% 8%,
+            rgba(34, 211, 141, 0.16),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 65% 90%,
+            rgba(139, 92, 246, 0.16),
+            transparent 34%
+          ),
+          linear-gradient(145deg, var(--bg), var(--bg2) 48%, #050814);
+        overflow-x: hidden;
+      }
 
-        dataTable.addColumn({ type: "string", id: "班別" });
-        dataTable.addColumn({ type: "string", id: "工作內容" });
-        dataTable.addColumn({ type: "datetime", id: "開始時間" });
-        dataTable.addColumn({ type: "datetime", id: "結束時間" });
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 42px 42px;
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.8),
+          transparent 85%
+        );
+      }
 
-        dataTable.addRows([
-          [
-            "早班1",
-            "臺南(送郵件)→永康郵局→臺南",
-            new Date(0, 0, 0, 4, 0),
-            new Date(0, 0, 0, 6, 0),
-          ],
-          [
-            "早班1",
-            "臺南(送郵件)→嘉義郵局或新營郵局→臺南",
-            new Date(0, 0, 0, 6, 0),
-            new Date(0, 0, 0, 8, 30),
-          ],
-          [
-            "早班1",
-            "各兼投局誤封郵件協運",
-            new Date(0, 0, 0, 8, 30),
-            new Date(0, 0, 0, 10, 30),
-          ],
-          [
-            "早班1",
-            "1.送公件→儲匯大樓  2.送海關EMS→快捷股",
-            new Date(0, 0, 0, 10, 30),
-            new Date(0, 0, 0, 11, 30),
-          ],
-          [
-            "早班1",
-            "11點半交興南客運(善化)(快捷)，12點接興南客運(新化+玉井)(限時+快捷)  ",
-            new Date(0, 0, 0, 11, 30),
-            new Date(0, 0, 0, 13, 0),
-          ],
-          [
-            "早班2",
-            "整理郵件",
-            new Date(0, 0, 0, 4, 0),
-            new Date(0, 0, 0, 5, 0),
-          ],
-          [
-            "早班2",
-            "臺南(送郵件)→大同路郵局(第1趟)→臺南",
-            new Date(0, 0, 0, 5, 0),
-            new Date(0, 0, 0, 6, 0),
-          ],
-          [
-            "早班2",
-            "臺南(送郵件)→大同路郵局(第2趟)→臺南",
-            new Date(0, 0, 0, 6, 0),
-            new Date(0, 0, 0, 7, 0),
-          ],
-          [
-            "早班2",
-            "1.臺南→湖內郵局(湖內+茄萣)→臺南  2.臺南→麻豆郵局→臺南",
-            new Date(0, 0, 0, 7, 0),
-            new Date(0, 0, 0, 9, 30),
-          ],
-          [
-            "早班2",
-            "臺南→成功大學郵局→臺南",
-            new Date(0, 0, 0, 9, 30),
-            new Date(0, 0, 0, 10, 30),
-          ],
-          [
-            "早班2",
-            "臺南(收郵件)→機場(澎湖快捷)(送郵件)→臺南快捷股",
-            new Date(0, 0, 0, 10, 30),
-            new Date(0, 0, 0, 11, 30),
-          ],
-          [
-            "早班2",
-            "臺南快捷股→交流道(796車次，12:45北上)→臺南",
-            new Date(0, 0, 0, 11, 30),
-            new Date(0, 0, 0, 13, 0),
-          ],
-          [
-            "早班3",
-            "月台進出口郵件處理",
-            new Date(0, 0, 0, 4, 0),
-            new Date(0, 0, 0, 6, 30),
-          ],
-          [
-            "早班3",
-            "1.臺南(送郵件)→安南投遞股(快捷+限時+掛號)→臺南  2.臺南(送郵件)→善化郵局→臺南",
-            new Date(0, 0, 0, 6, 30),
-            new Date(0, 0, 0, 9, 0),
-          ],
-          [
-            "早班3",
-            "臺南→安南投遞股(平M)→臺南",
-            new Date(0, 0, 0, 9, 0),
-            new Date(0, 0, 0, 10, 30),
-          ],
-          [
-            "早班3",
-            "1.臺南(送郵件)→永康郵局(快捷+國際+公件)→臺南  2.永康郵局(收郵件)→臺南快捷股(快捷)",
-            new Date(0, 0, 0, 10, 30),
-            new Date(0, 0, 0, 13, 0),
-          ],
-          [
-            "早班4",
-            "1.月台進出口郵件處理  2.各股郵件(收郵件)→自運車+外包車",
-            new Date(0, 0, 0, 4, 30),
-            new Date(0, 0, 0, 6, 0),
-          ],
-          [
-            "早班4",
-            "1.臺南(送郵件)→新化→玉井→臺南(空籃車載回)  2.回程時支援各兼投局誤封郵件協運(加班)",
-            new Date(0, 0, 0, 6, 0),
-            new Date(0, 0, 0, 8, 30),
-          ],
-          [
-            "早班4",
-            "1.臺南→玉井(收郵件)→新化(收郵件)→臺南  2.各兼投局誤封郵件協運",
-            new Date(0, 0, 0, 16, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "早班5",
-            "支援momo新市倉郵件運載作業",
-            new Date(0, 0, 0, 3, 0),
-            new Date(0, 0, 0, 5, 0),
-          ],
-          [
-            "早班5",
-            "台中郵局(momo郵件+藍車刷讀+印路單)",
-            new Date(0, 0, 0, 5, 0),
-            new Date(0, 0, 0, 9, 0),
-          ],
-          [
-            "早班5",
-            "將台中運往台南高雄郵件，先運至高雄，再返回臺南",
-            new Date(0, 0, 0, 9, 0),
-            new Date(0, 0, 0, 14, 0),
-          ],
-          [
-            "新營1線",
-            "整理郵件(六甲+白河+下營+鹽水+學甲+隆田)",
-            new Date(0, 0, 0, 4, 0),
-            new Date(0, 0, 0, 5, 0),
-          ],
-          [
-            "新營1線",
-            "臺南(送郵件)→新營郵局→臺南(空籃車載回)",
-            new Date(0, 0, 0, 5, 0),
-            new Date(0, 0, 0, 8, 0),
-          ],
-          [
-            "新營1線",
-            "臺南→新營郵局(收郵件)→臺南作業股",
-            new Date(0, 0, 0, 16, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "新營2線",
-            "整理新營郵件+後趕郵件",
-            new Date(0, 0, 0, 4, 0),
-            new Date(0, 0, 0, 6, 0),
-          ],
-          [
-            "新營2線",
-            "臺南(送郵件)→新營郵局→臺南(空籃車載回)",
-            new Date(0, 0, 0, 6, 0),
-            new Date(0, 0, 0, 8, 0),
-          ],
-          [
-            "新營2線",
-            "臺南(送郵件)(公件)→新營郵局(收郵件)→臺南作業股",
-            new Date(0, 0, 0, 16, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "自運甲線(六)",
-            "上午：臺南(送郵件)→新化→善化→臺南",
-            new Date(0, 0, 0, 10, 30),
-            new Date(0, 0, 0, 15, 0),
-          ],
-          [
-            "自運甲線(六)",
-            "下午：臺南→新化(收郵件)→善化(收郵件)→臺南作業股",
-            new Date(0, 0, 0, 15, 0),
-            new Date(0, 0, 0, 19, 0),
-          ],
-          [
-            "自運乙線(六)",
-            "上午：臺南(送郵件)→佳里→麻豆→臺南",
-            new Date(0, 0, 0, 10, 30),
-            new Date(0, 0, 0, 15, 0),
-          ],
-          [
-            "自運乙線(六)",
-            "下午：臺南→佳里(收郵件)→麻豆(收郵件)→臺南作業股",
-            new Date(0, 0, 0, 15, 0),
-            new Date(0, 0, 0, 19, 0),
-          ],
-          [
-            "中班3",
-            "臺南→高鐵(830車次，13:40北上)(接送快捷郵件)",
-            new Date(0, 0, 0, 12, 0),
-            new Date(0, 0, 0, 14, 30),
-          ],
-          [
-            "中班3",
-            "1.高鐵→(645車次，15:30南下)(接送快捷郵件)→臺南  2.萬國工廠載行李箱(吳小姐06-2303952#5714)→營收股",
-            new Date(0, 0, 0, 14, 30),
-            new Date(0, 0, 0, 17, 0),
-          ],
-          [
-            "中班3",
-            "臺南→金華郵局(37)收郵件+新義郵局(35)收郵件+鹽埕郵局(33)收郵件→臺南作業股",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 19, 0),
-          ],
-          [
-            "中班3",
-            "臺南→國泰(收郵件)→臺南作業股",
-            new Date(0, 0, 0, 19, 0),
-            new Date(0, 0, 0, 20, 30),
-          ],
-          [
-            "中班6",
-            "國際航空+水陸包裹(刷讀+分撿+裝車)",
-            new Date(0, 0, 0, 12, 30),
-            new Date(0, 0, 0, 14, 0),
-          ],
-          [
-            "中班6",
-            "臺南→高鐵(660車次，16:10北上)(接送快捷郵件)",
-            new Date(0, 0, 0, 14, 0),
-            new Date(0, 0, 0, 16, 30),
-          ],
-          [
-            "中班6",
-            "高鐵→(657車次，17:30南下)(接送快捷郵件)→臺南",
-            new Date(0, 0, 0, 16, 30),
-            new Date(0, 0, 0, 19, 0),
-          ],
-          [
-            "中班6",
-            "1.國際e小包+兩岸速遞(刷讀+分撿+裝車)  2.嘉義國際航空+水陸郵件誤封至臺南時，協助轉運出口",
-            new Date(0, 0, 0, 19, 0),
-            new Date(0, 0, 0, 21, 0),
-          ],
-          [
-            "中班2",
-            "臺南快捷股→高公局(793車次，13:00南下)",
-            new Date(0, 0, 0, 12, 30),
-            new Date(0, 0, 0, 13, 30),
-          ],
-          [
-            "中班2",
-            "高公局→(778車次，14:10北上)(快8)→臺南",
-            new Date(0, 0, 0, 13, 30),
-            new Date(0, 0, 0, 14, 30),
-          ],
-          [
-            "中班2",
-            "臺南→灣裡郵局(23)收郵件+茄萣郵局(收郵件)+湖內郵局(收郵件)→臺南作業股(第1趟)",
-            new Date(0, 0, 0, 14, 30),
-            new Date(0, 0, 0, 16, 0),
-          ],
-          [
-            "中班2",
-            "臺南→灣裡郵局(23)收郵件+茄萣郵局(收郵件)+湖內郵局(收郵件)→臺南作業股(第2趟)(或開大台的只跑1趟)",
-            new Date(0, 0, 0, 16, 0),
-            new Date(0, 0, 0, 19, 30),
-          ],
-          [
-            "中班2",
-            "1.協助大夜1整理國際快捷郵件EMS  2.交94車次(往台中處理中心轉桃園機場出口)",
-            new Date(0, 0, 0, 19, 30),
-            new Date(0, 0, 0, 21, 30),
-          ],
-          [
-            "中班4",
-            "臺南(送快捷)→高公局(798車次，15:30北上)",
-            new Date(0, 0, 0, 13, 30),
-            new Date(0, 0, 0, 16, 0),
-          ],
-          [
-            "中班4",
-            "高公局→777車次，16:15南下(快7)→臺南",
-            new Date(0, 0, 0, 16, 0),
-            new Date(0, 0, 0, 18, 0),
-          ],
-          [
-            "中班4",
-            "臺南→嘉義收郵件(加班車第1班)→臺南",
-            new Date(0, 0, 0, 18, 0),
-            new Date(0, 0, 0, 20, 30),
-          ],
-          [
-            "中班4",
-            "1.點交新營郵局快捷+限掛+限平郵袋(協運嘉義不及，可請月台協助)  2.點交營收股國際航空水路包裹(協運嘉義不及，可請月台協助)",
-            new Date(0, 0, 0, 20, 30),
-            new Date(0, 0, 0, 22, 0),
-          ],
-          [
-            "中班5",
-            "1.點交5樓掛件+整理攔車棧板箱框+分檢各局國際包裹  2.月台進出口郵件處理",
-            new Date(0, 0, 0, 13, 30),
-            new Date(0, 0, 0, 15, 0),
-          ],
-          [
-            "中班5",
-            "接送快捷股快捷包裹+行銷科公件",
-            new Date(0, 0, 0, 15, 0),
-            new Date(0, 0, 0, 16, 0),
-          ],
-          [
-            "中班5",
-            "臺南→將水交社郵局(2支)→西門路郵局(1支)→中正路郵局(5支)收郵件→作業股",
-            new Date(0, 0, 0, 16, 0),
-            new Date(0, 0, 0, 18, 0),
-          ],
-          [
-            "中班5",
-            "1.臺南→嘉義收郵件(加班車第2班)→臺南  2.若無派車去嘉義，協助中6處理郵件，交28或94車次",
-            new Date(0, 0, 0, 18, 0),
-            new Date(0, 0, 0, 22, 0),
-          ],
-          [
-            "嘉義4(中9)",
-            "每逢休假日後第一天上班，臺南→嘉義收郵件→臺南(跑2次)",
-            new Date(0, 0, 0, 13, 30),
-            new Date(0, 0, 0, 22, 0),
-          ],
-          [
-            "771/772車次",
-            "將快捷郵件帶至嘉義給794車次，回程停靠新營將郵件帶回快捷股",
-            new Date(0, 0, 0, 14, 30),
-            new Date(0, 0, 0, 17, 0),
-          ],
-          [
-            "771/772車次",
-            "將快捷郵件帶至嘉義給771車次，回程停靠新營將郵件帶回快捷股",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 19, 0),
-          ],
-          [
-            "771/772車次",
-            "協助運載嘉義、高雄、新營或其他區內運輸作業",
-            new Date(0, 0, 0, 19, 0),
-            new Date(0, 0, 0, 23, 0),
-          ],
-          [
-            "中班7",
-            "本月公務車輛驗車工作+其他臨時交辦事項",
-            new Date(0, 0, 0, 14, 30),
-            new Date(0, 0, 0, 16, 30),
-          ],
-          [
-            "中班7",
-            "臺南→和順代辦所(上收)+安南郵局(36)(上收)+原佃郵局(47)(上收)→臺南作業股",
-            new Date(0, 0, 0, 16, 30),
-            new Date(0, 0, 0, 18, 30),
-          ],
-          [
-            "中班7",
-            "1.將各兼投支局進口之平件運至作業股  2.19:40將營收股之大宗函件運至作業股",
-            new Date(0, 0, 0, 18, 30),
-            new Date(0, 0, 0, 21, 0),
-          ],
-          [
-            "中班7",
-            "將作業股之平件+印刷物，運往高雄郵件處理中心",
-            new Date(0, 0, 0, 21, 0),
-            new Date(0, 0, 0, 23, 0),
-          ],
-          [
-            "嘉義2(B)",
-            "臺南(送快捷郵件)→永康郵局→臺南",
-            new Date(0, 0, 0, 14, 30),
-            new Date(0, 0, 0, 18, 0),
-          ],
-          [
-            "嘉義2(B)",
-            "臺南(送郵件)→嘉義郵局收郵件→臺南作業股",
-            new Date(0, 0, 0, 18, 0),
-            new Date(0, 0, 0, 21, 0),
-          ],
-          [
-            "嘉義2(B)",
-            "至作業股處理掛號郵袋(點交+分檢+刷讀)，交由晚班人員封出",
-            new Date(0, 0, 0, 21, 0),
-            new Date(0, 0, 0, 23, 30),
-          ],
-          [
-            "中班8",
-            "視各兼頭支局郵件量，支援協運(由值班專員指派)",
-            new Date(0, 0, 0, 16, 30),
-            new Date(0, 0, 0, 19, 0),
-          ],
-          [
-            "中班8",
-            "協助中6處理郵件，交28或94車次",
-            new Date(0, 0, 0, 19, 0),
-            new Date(0, 0, 0, 20, 30),
-          ],
-          [
-            "中班8",
-            "臺南(送郵件)→臺中(收郵件)→臺南",
-            new Date(0, 0, 0, 20, 30),
-            new Date(0, 0, 1, 1, 0),
-          ],
-          [
-            "中班1",
-            "郵戳檢點",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 17, 30),
-          ],
-          [
-            "中班1",
-            "臺南→高公局(791車次)收快捷郵件→臺南快捷股",
-            new Date(0, 0, 0, 17, 30),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "中班1",
-            "臺南(送郵件)→臺中→臺南",
-            new Date(0, 0, 0, 20, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "中班10",
-            "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "中班10",
-            "臺南(送郵件)→臺中→臺南",
-            new Date(0, 0, 0, 20, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "中班11",
-            "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "中班11",
-            "臺南(送郵件)→臺中→臺南",
-            new Date(0, 0, 0, 20, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "中班12",
-            "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "中班12",
-            "臺南(送郵件)→臺中→臺南",
-            new Date(0, 0, 0, 20, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "中班13",
-            "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
-            new Date(0, 0, 0, 17, 0),
-            new Date(0, 0, 0, 20, 0),
-          ],
-          [
-            "中班13",
-            "臺南(送郵件)→臺中→臺南",
-            new Date(0, 0, 0, 20, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "大夜班1",
-            "快捷股點交國際包裹→月台94車次",
-            new Date(0, 0, 0, 20, 0),
-            new Date(0, 0, 0, 21, 0),
-          ],
-          [
-            "大夜班1",
-            "快捷股點交限時+快捷+水路郵袋→月台→28車次",
-            new Date(0, 0, 0, 21, 0),
-            new Date(0, 0, 0, 22, 0),
-          ],
-          [
-            "大夜班1",
-            "點交限時+快捷郵袋→月台→30車次",
-            new Date(0, 0, 0, 22, 0),
-            new Date(0, 0, 0, 22, 30),
-          ],
-          [
-            "大夜班1",
-            "推限時+快捷郵袋→月台→台中+嘉義車次",
-            new Date(0, 0, 0, 22, 30),
-            new Date(0, 0, 0, 23, 30),
-          ],
-          [
-            "大夜班1",
-            "推限時+快捷郵袋→月台→26車次",
-            new Date(0, 0, 0, 23, 30),
-            new Date(0, 0, 1, 0, 0),
-          ],
-          [
-            "大夜班1",
-            "快捷股(送郵件)→月台",
-            new Date(0, 0, 1, 5, 30),
-            new Date(0, 0, 1, 6, 0),
-          ],
-          [
-            "大夜班1",
-            "裝載永康後趕郵件",
-            new Date(0, 0, 1, 6, 0),
-            new Date(0, 0, 1, 6, 30),
-          ],
-          [
-            "大夜班1",
-            "臺南(送郵件)→永康郵局(載空籃車)→臺南",
-            new Date(0, 0, 1, 6, 30),
-            new Date(0, 0, 1, 8, 30),
-          ],
-          [
-            "大夜班3",
-            "整理刷讀路單，刷讀快捷股各車次快捷郵件；各車次限掛郵件",
-            new Date(0, 0, 0, 21, 0),
-            new Date(0, 0, 0, 22, 30),
-          ],
-          [
-            "大夜班3",
-            "1.刷讀各車次限時、平件。  2.收最後班次快捷郵件給接送員。",
-            new Date(0, 0, 0, 22, 30),
-            new Date(0, 0, 1, 0, 0),
-          ],
-          [
-            "大夜班3",
-            "協助疏運高雄、嘉義無法運清之郵件",
-            new Date(0, 0, 1, 0, 0),
-            new Date(0, 0, 1, 4, 0),
-          ],
-          [
-            "大夜班3",
-            "臺南(送郵件)→永康郵局(載空籃車)→臺南",
-            new Date(0, 0, 1, 4, 0),
-            new Date(0, 0, 1, 6, 0),
-          ],
-          [
-            "進/出口接送員",
-            "1.夜間委外出口車輛加裝封扣及進口車輛拆卸封扣。2.督導大夜班人員處理進出口郵件。3.督導夜間進口郵袋分揀。4.夜間車輛運輸調度。5.夜間運輸車輛途中故障，協助聯繫盡快將郵件運回本局處理。",
-            new Date(0, 0, 0, 21, 0),
-            new Date(0, 0, 1, 6, 0),
-          ],
-          [
-            "大夜班2",
-            "支援momo新市倉郵件運載作業",
-            new Date(0, 0, 0, 22, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "大夜班2",
-            "momo及當日剩餘包裹郵件運載作業",
-            new Date(0, 0, 1, 2, 0),
-            new Date(0, 0, 1, 7, 0),
-          ],
-          [
-            "127/128車次",
-            "支援momo新市倉郵件運載作業",
-            new Date(0, 0, 0, 22, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "127/128車次",
-            "momo及當日剩餘包裹郵件運載作業",
-            new Date(0, 0, 1, 2, 0),
-            new Date(0, 0, 1, 7, 0),
-          ],
-          [
-            "大夜班4",
-            "支援momo新市倉郵件運載作業",
-            new Date(0, 0, 0, 22, 0),
-            new Date(0, 0, 1, 2, 0),
-          ],
-          [
-            "大夜班4",
-            "momo及當日剩餘包裹郵件運載作業",
-            new Date(0, 0, 1, 2, 0),
-            new Date(0, 0, 1, 7, 0),
-          ],
-        ]);
+      .shell {
+        width: min(1500px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 42px;
+      }
 
-        chart.draw(dataTable, {
-          timeline: {
-            rowLabelStyle: { fontSize: 14 },
-            barLabelStyle: { fontSize: 12 },
-          },
-          avoidOverlappingGridLines: false,
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        padding: clamp(24px, 4vw, 44px);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.035)
+          ),
+          radial-gradient(
+            circle at 78% 20%,
+            rgba(34, 211, 141, 0.22),
+            transparent 38%
+          );
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        right: -160px;
+        top: -180px;
+        background: conic-gradient(
+          from 120deg,
+          rgba(34, 211, 238, 0.15),
+          rgba(34, 211, 141, 0.35),
+          rgba(139, 92, 246, 0.25),
+          rgba(34, 211, 238, 0.15)
+        );
+        filter: blur(10px);
+        border-radius: 50%;
+        animation: floatGlow 9s ease-in-out infinite alternate;
+      }
+
+      @keyframes floatGlow {
+        from {
+          transform: translateY(0) rotate(0deg);
+        }
+        to {
+          transform: translateY(42px) rotate(28deg);
+        }
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 13px;
+        border: 1px solid rgba(34, 211, 141, 0.36);
+        border-radius: 999px;
+        color: #baf7df;
+        background: rgba(34, 211, 141, 0.1);
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .pulse {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 18px var(--green);
+      }
+      h1 {
+        position: relative;
+        z-index: 1;
+        margin: 18px 0 12px;
+        font-size: clamp(30px, 4.8vw, 60px);
+        line-height: 1.08;
+        letter-spacing: -0.04em;
+      }
+      .subtitle {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(15px, 1.8vw, 18px);
+        line-height: 1.75;
+      }
+      .heroTools {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+      }
+      .chip {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.07);
+        color: #dbeafe;
+        font-size: 14px;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(150px, 1fr));
+        gap: 14px;
+        margin: 18px 0;
+      }
+      .stat {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px;
+        background: var(--panel);
+        box-shadow: 0 14px 42px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(16px);
+      }
+      .stat b {
+        display: block;
+        font-size: 28px;
+        letter-spacing: -0.03em;
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .toolbar {
+        position: sticky;
+        top: 10px;
+        z-index: 20;
+        display: grid;
+        grid-template-columns: 1.2fr auto;
+        gap: 12px;
+        margin: 18px 0;
+        padding: 12px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(7, 17, 31, 0.78);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+      }
+      .searchBox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 0 14px;
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .searchBox input {
+        width: 100%;
+        height: 48px;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--text);
+        font-size: 15px;
+      }
+      .searchBox input::placeholder {
+        color: #7d91aa;
+      }
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .filter {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 13px 15px;
+        color: #dbeafe;
+        background: rgba(255, 255, 255, 0.06);
+        transition: 0.2s ease;
+      }
+      .filter:hover,
+      .filter.active {
+        border-color: rgba(34, 211, 141, 0.5);
+        background: rgba(34, 211, 141, 0.14);
+        color: #d7ffe9;
+        transform: translateY(-1px);
+      }
+
+      .timelinePanel {
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        backdrop-filter: blur(18px);
+      }
+      .panelHeader {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+      }
+      .panelHeader h2 {
+        margin: 0;
+        font-size: 18px;
+      }
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .dot {
+        display: inline-block;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        margin-right: 6px;
+      }
+
+      .timelineWrap {
+        overflow: auto;
+        max-height: 72vh;
+      }
+      .timelineGrid {
+        position: relative;
+        min-width: calc(var(--labelWidth) + 28 * var(--hourWidth));
+        padding-bottom: 18px;
+      }
+      .hours {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: var(--labelWidth) repeat(28, var(--hourWidth));
+        height: 42px;
+        background: rgba(5, 10, 20, 0.88);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--line);
+      }
+      .hour,
+      .corner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #91a7c2;
+        font-size: 12px;
+        border-right: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .corner {
+        justify-content: flex-start;
+        padding-left: 16px;
+        color: #cce1ff;
+        font-weight: 700;
+      }
+      .lane {
+        display: grid;
+        grid-template-columns: var(--labelWidth) 1fr;
+        min-height: 58px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .lane.hidden {
+        display: none;
+      }
+      .laneLabel {
+        position: sticky;
+        left: 0;
+        z-index: 8;
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        background: rgba(10, 21, 38, 0.96);
+        border-right: 1px solid var(--line);
+        font-weight: 800;
+        color: #f4fbff;
+      }
+      .laneTrack {
+        position: relative;
+        min-height: 58px;
+        background-image: repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.075) 0 1px,
+          transparent 1px var(--hourWidth)
+        );
+      }
+      .seg {
+        position: absolute;
+        top: 10px;
+        height: 38px;
+        border-radius: 13px;
+        padding: 8px 11px;
+        color: #05111f;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow:
+          0 10px 26px rgba(0, 0, 0, 0.3),
+          inset 0 1px rgba(255, 255, 255, 0.28);
+        cursor: pointer;
+        transition:
+          transform 0.18s ease,
+          filter 0.18s ease,
+          box-shadow 0.18s ease;
+      }
+      .seg:hover {
+        transform: translateY(-4px) scale(1.01);
+        filter: saturate(1.14);
+        box-shadow:
+          0 18px 38px rgba(0, 0, 0, 0.42),
+          0 0 0 1px rgba(255, 255, 255, 0.18);
+        z-index: 9;
+      }
+      .seg small {
+        opacity: 0.72;
+        margin-right: 6px;
+      }
+      .nowLine {
+        position: absolute;
+        top: 42px;
+        bottom: 18px;
+        width: 2px;
+        background: #ff4d6d;
+        box-shadow: 0 0 18px rgba(255, 77, 109, 0.8);
+        z-index: 7;
+        pointer-events: none;
+      }
+      .nowLine::before {
+        content: "現在";
+        position: absolute;
+        top: -28px;
+        left: -18px;
+        padding: 4px 7px;
+        border-radius: 999px;
+        background: #ff4d6d;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+      }
+
+      .cards {
+        display: none;
+        margin-top: 18px;
+        gap: 12px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.075);
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+      }
+      .cardTop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+      .badge {
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 12px;
+        font-weight: 900;
+        color: #06111f;
+      }
+      .time {
+        color: #b9cdf0;
+        font-weight: 800;
+        font-size: 13px;
+      }
+      .task {
+        margin: 0;
+        color: #eaf4ff;
+        line-height: 1.6;
+      }
+
+      .tooltip {
+        position: fixed;
+        z-index: 999;
+        display: none;
+        width: min(420px, calc(100vw - 28px));
+        padding: 14px 15px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(3, 10, 20, 0.93);
+        color: var(--text);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+        pointer-events: none;
+      }
+      .tooltip b {
+        display: block;
+        margin-bottom: 6px;
+      }
+      .tooltip span {
+        color: #a9bdd8;
+        font-size: 13px;
+      }
+      .tooltip p {
+        margin: 8px 0 0;
+        line-height: 1.55;
+      }
+
+      .empty {
+        display: none;
+        margin: 18px 0 0;
+        padding: 18px;
+        border: 1px dashed rgba(255, 255, 255, 0.22);
+        border-radius: 18px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .early {
+        background: linear-gradient(135deg, #2dd4bf, #22d3ee);
+      }
+      .mid {
+        background: linear-gradient(135deg, #ffd166, #fb923c);
+      }
+      .night {
+        background: linear-gradient(135deg, #8b5cf6, #22d3ee);
+        color: #fff;
+      }
+      .momo {
+        background: linear-gradient(135deg, #fb7185, #f0abfc);
+      }
+      .rail {
+        background: linear-gradient(135deg, #22c55e, #bef264);
+      }
+      .intl {
+        background: linear-gradient(135deg, #fb923c, #facc15);
+      }
+      .default {
+        background: linear-gradient(135deg, #93c5fd, #c4b5fd);
+      }
+
+      @media (max-width: 980px) {
+        .dashboard {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+        .filters {
+          justify-content: flex-start;
+        }
+        .panelHeader {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        :root {
+          --hourWidth: 72px;
+          --labelWidth: 120px;
+        }
+      }
+      @media (max-width: 720px) {
+        .shell {
+          width: min(100% - 22px, 1500px);
+          padding-top: 12px;
+        }
+        .hero {
+          border-radius: 24px;
+        }
+        .dashboard {
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .stat {
+          padding: 14px;
+        }
+        .timelineWrap {
+          display: none;
+        }
+        .cards {
+          display: grid;
+        }
+        .toolbar {
+          position: relative;
+          top: auto;
+        }
+        .filter {
+          padding: 10px 12px;
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="eyebrow">
+          <span class="pulse"></span> Tainan Post Logistics Timeline
+        </div>
+        <h1>臺南郵局運輸股<br />各班別工作時間軸</h1>
+        <p class="subtitle">
+          把密密麻麻的班別、車次、郵件流向，整理成一座可以閱讀、可以篩選、也能一眼掌握節奏的物流戰情室。
+        </p>
+        <div class="heroTools">
+          <span class="chip" id="nowText">現在時間 --:--</span>
+          <span class="chip">桌機時間軸｜手機卡片流</span>
+          <span class="chip">搜尋、篩選、即時定位</span>
+        </div>
+      </section>
+
+      <section class="dashboard" id="dashboard"></section>
+
+      <section class="toolbar">
+        <label class="searchBox" aria-label="搜尋班別或工作內容">
+          <span>🔎</span>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="搜尋班別、郵局、車次、momo、高鐵、台中……"
+          />
+        </label>
+        <div class="filters" id="filters"></div>
+      </section>
+
+      <section class="timelinePanel">
+        <div class="panelHeader">
+          <h2>班別任務時間軸</h2>
+          <div class="legend">
+            <span><i class="dot early"></i>早班</span>
+            <span><i class="dot mid"></i>中班</span>
+            <span><i class="dot night"></i>大夜</span>
+            <span><i class="dot momo"></i>momo</span>
+            <span><i class="dot rail"></i>高鐵</span>
+            <span><i class="dot intl"></i>國際</span>
+          </div>
+        </div>
+        <div class="timelineWrap">
+          <div class="timelineGrid" id="timelineGrid"></div>
+        </div>
+        <div class="cards" id="cards"></div>
+        <div class="empty" id="emptyState">
+          沒有找到符合條件的班別。換個關鍵字吧，別讓資料躲太深。
+        </div>
+      </section>
+    </main>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+      const SHIFT_DATA = [
+        {
+          shift: "早班1",
+          task: "臺南(送郵件)→永康郵局→臺南",
+          startDay: 0,
+          startHour: 4,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "早班1",
+          task: "臺南(送郵件)→嘉義郵局或新營郵局→臺南",
+          startDay: 0,
+          startHour: 6,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 8,
+          endMinute: 30,
+        },
+        {
+          shift: "早班1",
+          task: "各兼投局誤封郵件協運",
+          startDay: 0,
+          startHour: 8,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 10,
+          endMinute: 30,
+        },
+        {
+          shift: "早班1",
+          task: "1.送公件→儲匯大樓  2.送海關EMS→快捷股",
+          startDay: 0,
+          startHour: 10,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 11,
+          endMinute: 30,
+        },
+        {
+          shift: "早班1",
+          task: "11點半交興南客運(善化)(快捷)，12點接興南客運(新化+玉井)(限時+快捷)",
+          startDay: 0,
+          startHour: 11,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 13,
+          endMinute: 0,
+        },
+        {
+          shift: "早班2",
+          task: "整理郵件",
+          startDay: 0,
+          startHour: 4,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 5,
+          endMinute: 0,
+        },
+        {
+          shift: "早班2",
+          task: "臺南(送郵件)→大同路郵局(第1趟)→臺南",
+          startDay: 0,
+          startHour: 5,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "早班2",
+          task: "臺南(送郵件)→大同路郵局(第2趟)→臺南",
+          startDay: 0,
+          startHour: 6,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 7,
+          endMinute: 0,
+        },
+        {
+          shift: "早班2",
+          task: "1.臺南→湖內郵局(湖內+茄萣)→臺南  2.臺南→麻豆郵局→臺南",
+          startDay: 0,
+          startHour: 7,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 9,
+          endMinute: 30,
+        },
+        {
+          shift: "早班2",
+          task: "臺南→成功大學郵局→臺南",
+          startDay: 0,
+          startHour: 9,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 10,
+          endMinute: 30,
+        },
+        {
+          shift: "早班2",
+          task: "臺南(收郵件)→機場(澎湖快捷)(送郵件)→臺南快捷股",
+          startDay: 0,
+          startHour: 10,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 11,
+          endMinute: 30,
+        },
+        {
+          shift: "早班2",
+          task: "臺南快捷股→交流道(796車次，12:45北上)→臺南",
+          startDay: 0,
+          startHour: 11,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 13,
+          endMinute: 0,
+        },
+        {
+          shift: "早班3",
+          task: "月台進出口郵件處理",
+          startDay: 0,
+          startHour: 4,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 6,
+          endMinute: 30,
+        },
+        {
+          shift: "早班3",
+          task: "1.臺南(送郵件)→安南投遞股(快捷+限時+掛號)→臺南  2.臺南(送郵件)→善化郵局→臺南",
+          startDay: 0,
+          startHour: 6,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 9,
+          endMinute: 0,
+        },
+        {
+          shift: "早班3",
+          task: "臺南→安南投遞股(平M)→臺南",
+          startDay: 0,
+          startHour: 9,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 10,
+          endMinute: 30,
+        },
+        {
+          shift: "早班3",
+          task: "1.臺南(送郵件)→永康郵局(快捷+國際+公件)→臺南  2.永康郵局(收郵件)→臺南快捷股(快捷)",
+          startDay: 0,
+          startHour: 10,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 13,
+          endMinute: 0,
+        },
+        {
+          shift: "早班4",
+          task: "1.月台進出口郵件處理  2.各股郵件(收郵件)→自運車+外包車",
+          startDay: 0,
+          startHour: 4,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "早班4",
+          task: "1.臺南(送郵件)→新化→玉井→臺南(空籃車載回)  2.回程時支援各兼投局誤封郵件協運(加班)",
+          startDay: 0,
+          startHour: 6,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 8,
+          endMinute: 30,
+        },
+        {
+          shift: "早班4",
+          task: "1.臺南→玉井(收郵件)→新化(收郵件)→臺南  2.各兼投局誤封郵件協運",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "早班5",
+          task: "支援momo新市倉郵件運載作業",
+          startDay: 0,
+          startHour: 3,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 5,
+          endMinute: 0,
+        },
+        {
+          shift: "早班5",
+          task: "台中郵局(momo郵件+藍車刷讀+印路單)",
+          startDay: 0,
+          startHour: 5,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 9,
+          endMinute: 0,
+        },
+        {
+          shift: "早班5",
+          task: "將台中運往台南高雄郵件，先運至高雄，再返回臺南",
+          startDay: 0,
+          startHour: 9,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 14,
+          endMinute: 0,
+        },
+        {
+          shift: "新營1線",
+          task: "整理郵件(六甲+白河+下營+鹽水+學甲+隆田)",
+          startDay: 0,
+          startHour: 4,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 5,
+          endMinute: 0,
+        },
+        {
+          shift: "新營1線",
+          task: "臺南(送郵件)→新營郵局→臺南(空籃車載回)",
+          startDay: 0,
+          startHour: 5,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 8,
+          endMinute: 0,
+        },
+        {
+          shift: "新營1線",
+          task: "臺南→新營郵局(收郵件)→臺南作業股",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "新營2線",
+          task: "整理新營郵件+後趕郵件",
+          startDay: 0,
+          startHour: 4,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "新營2線",
+          task: "臺南(送郵件)→新營郵局→臺南(空籃車載回)",
+          startDay: 0,
+          startHour: 6,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 8,
+          endMinute: 0,
+        },
+        {
+          shift: "新營2線",
+          task: "臺南(送郵件)(公件)→新營郵局(收郵件)→臺南作業股",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "自運甲線(六)",
+          task: "上午：臺南(送郵件)→新化→善化→臺南",
+          startDay: 0,
+          startHour: 10,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 15,
+          endMinute: 0,
+        },
+        {
+          shift: "自運甲線(六)",
+          task: "下午：臺南→新化(收郵件)→善化(收郵件)→臺南作業股",
+          startDay: 0,
+          startHour: 15,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 0,
+        },
+        {
+          shift: "自運乙線(六)",
+          task: "上午：臺南(送郵件)→佳里→麻豆→臺南",
+          startDay: 0,
+          startHour: 10,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 15,
+          endMinute: 0,
+        },
+        {
+          shift: "自運乙線(六)",
+          task: "下午：臺南→佳里(收郵件)→麻豆(收郵件)→臺南作業股",
+          startDay: 0,
+          startHour: 15,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 0,
+        },
+        {
+          shift: "中班3",
+          task: "臺南→高鐵(830車次，13:40北上)(接送快捷郵件)",
+          startDay: 0,
+          startHour: 12,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 14,
+          endMinute: 30,
+        },
+        {
+          shift: "中班3",
+          task: "1.高鐵→(645車次，15:30南下)(接送快捷郵件)→臺南  2.萬國工廠載行李箱(吳小姐06-2303952#5714)→營收股",
+          startDay: 0,
+          startHour: 14,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 17,
+          endMinute: 0,
+        },
+        {
+          shift: "中班3",
+          task: "臺南→金華郵局(37)收郵件+新義郵局(35)收郵件+鹽埕郵局(33)收郵件→臺南作業股",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 0,
+        },
+        {
+          shift: "中班3",
+          task: "臺南→國泰(收郵件)→臺南作業股",
+          startDay: 0,
+          startHour: 19,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 30,
+        },
+        {
+          shift: "中班6",
+          task: "國際航空+水陸包裹(刷讀+分撿+裝車)",
+          startDay: 0,
+          startHour: 12,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 14,
+          endMinute: 0,
+        },
+        {
+          shift: "中班6",
+          task: "臺南→高鐵(660車次，16:10北上)(接送快捷郵件)",
+          startDay: 0,
+          startHour: 14,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 16,
+          endMinute: 30,
+        },
+        {
+          shift: "中班6",
+          task: "高鐵→(657車次，17:30南下)(接送快捷郵件)→臺南",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 0,
+        },
+        {
+          shift: "中班6",
+          task: "1.國際e小包+兩岸速遞(刷讀+分撿+裝車)  2.嘉義國際航空+水陸郵件誤封至臺南時，協助轉運出口",
+          startDay: 0,
+          startHour: 19,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 21,
+          endMinute: 0,
+        },
+        {
+          shift: "中班2",
+          task: "臺南快捷股→高公局(793車次，13:00南下)",
+          startDay: 0,
+          startHour: 12,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 13,
+          endMinute: 30,
+        },
+        {
+          shift: "中班2",
+          task: "高公局→(778車次，14:10北上)(快8)→臺南",
+          startDay: 0,
+          startHour: 13,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 14,
+          endMinute: 30,
+        },
+        {
+          shift: "中班2",
+          task: "臺南→灣裡郵局(23)收郵件+茄萣郵局(收郵件)+湖內郵局(收郵件)→臺南作業股(第1趟)",
+          startDay: 0,
+          startHour: 14,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 16,
+          endMinute: 0,
+        },
+        {
+          shift: "中班2",
+          task: "臺南→灣裡郵局(23)收郵件+茄萣郵局(收郵件)+湖內郵局(收郵件)→臺南作業股(第2趟)(或開大台的只跑1趟)",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 30,
+        },
+        {
+          shift: "中班2",
+          task: "1.協助大夜1整理國際快捷郵件EMS  2.交94車次(往台中處理中心轉桃園機場出口)",
+          startDay: 0,
+          startHour: 19,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 21,
+          endMinute: 30,
+        },
+        {
+          shift: "中班4",
+          task: "臺南(送快捷)→高公局(798車次，15:30北上)",
+          startDay: 0,
+          startHour: 13,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 16,
+          endMinute: 0,
+        },
+        {
+          shift: "中班4",
+          task: "高公局→777車次，16:15南下(快7)→臺南",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 18,
+          endMinute: 0,
+        },
+        {
+          shift: "中班4",
+          task: "臺南→嘉義收郵件(加班車第1班)→臺南",
+          startDay: 0,
+          startHour: 18,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 30,
+        },
+        {
+          shift: "中班4",
+          task: "1.點交新營郵局快捷+限掛+限平郵袋(協運嘉義不及，可請月台協助)  2.點交營收股國際航空水路包裹(協運嘉義不及，可請月台協助)",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 22,
+          endMinute: 0,
+        },
+        {
+          shift: "中班5",
+          task: "1.點交5樓掛件+整理攔車棧板箱框+分檢各局國際包裹  2.月台進出口郵件處理",
+          startDay: 0,
+          startHour: 13,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 15,
+          endMinute: 0,
+        },
+        {
+          shift: "中班5",
+          task: "接送快捷股快捷包裹+行銷科公件",
+          startDay: 0,
+          startHour: 15,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 16,
+          endMinute: 0,
+        },
+        {
+          shift: "中班5",
+          task: "臺南→將水交社郵局(2支)→西門路郵局(1支)→中正路郵局(5支)收郵件→作業股",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 18,
+          endMinute: 0,
+        },
+        {
+          shift: "中班5",
+          task: "1.臺南→嘉義收郵件(加班車第2班)→臺南  2.若無派車去嘉義，協助中6處理郵件，交28或94車次",
+          startDay: 0,
+          startHour: 18,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 22,
+          endMinute: 0,
+        },
+        {
+          shift: "嘉義4(中9)",
+          task: "每逢休假日後第一天上班，臺南→嘉義收郵件→臺南(跑2次)",
+          startDay: 0,
+          startHour: 13,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 22,
+          endMinute: 0,
+        },
+        {
+          shift: "771/772車次",
+          task: "將快捷郵件帶至嘉義給794車次，回程停靠新營將郵件帶回快捷股",
+          startDay: 0,
+          startHour: 14,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 17,
+          endMinute: 0,
+        },
+        {
+          shift: "771/772車次",
+          task: "將快捷郵件帶至嘉義給771車次，回程停靠新營將郵件帶回快捷股",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 0,
+        },
+        {
+          shift: "771/772車次",
+          task: "協助運載嘉義、高雄、新營或其他區內運輸作業",
+          startDay: 0,
+          startHour: 19,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 23,
+          endMinute: 0,
+        },
+        {
+          shift: "中班7",
+          task: "本月公務車輛驗車工作+其他臨時交辦事項",
+          startDay: 0,
+          startHour: 14,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 16,
+          endMinute: 30,
+        },
+        {
+          shift: "中班7",
+          task: "臺南→和順代辦所(上收)+安南郵局(36)(上收)+原佃郵局(47)(上收)→臺南作業股",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 18,
+          endMinute: 30,
+        },
+        {
+          shift: "中班7",
+          task: "1.將各兼投支局進口之平件運至作業股  2.19:40將營收股之大宗函件運至作業股",
+          startDay: 0,
+          startHour: 18,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 21,
+          endMinute: 0,
+        },
+        {
+          shift: "中班7",
+          task: "將作業股之平件+印刷物，運往高雄郵件處理中心",
+          startDay: 0,
+          startHour: 21,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 23,
+          endMinute: 0,
+        },
+        {
+          shift: "嘉義2(B)",
+          task: "臺南(送快捷郵件)→永康郵局→臺南",
+          startDay: 0,
+          startHour: 14,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 18,
+          endMinute: 0,
+        },
+        {
+          shift: "嘉義2(B)",
+          task: "臺南(送郵件)→嘉義郵局收郵件→臺南作業股",
+          startDay: 0,
+          startHour: 18,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 21,
+          endMinute: 0,
+        },
+        {
+          shift: "嘉義2(B)",
+          task: "至作業股處理掛號郵袋(點交+分檢+刷讀)，交由晚班人員封出",
+          startDay: 0,
+          startHour: 21,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 23,
+          endMinute: 30,
+        },
+        {
+          shift: "中班8",
+          task: "視各兼頭支局郵件量，支援協運(由值班專員指派)",
+          startDay: 0,
+          startHour: 16,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 19,
+          endMinute: 0,
+        },
+        {
+          shift: "中班8",
+          task: "協助中6處理郵件，交28或94車次",
+          startDay: 0,
+          startHour: 19,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 30,
+        },
+        {
+          shift: "中班8",
+          task: "臺南(送郵件)→臺中(收郵件)→臺南",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 30,
+          endDay: 1,
+          endHour: 1,
+          endMinute: 0,
+        },
+        {
+          shift: "中班1",
+          task: "郵戳檢點",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 17,
+          endMinute: 30,
+        },
+        {
+          shift: "中班1",
+          task: "臺南→高公局(791車次)收快捷郵件→臺南快捷股",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "中班1",
+          task: "臺南(送郵件)→臺中→臺南",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "中班10",
+          task: "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "中班10",
+          task: "臺南(送郵件)→臺中→臺南",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "中班11",
+          task: "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "中班11",
+          task: "臺南(送郵件)→臺中→臺南",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "中班12",
+          task: "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "中班12",
+          task: "臺南(送郵件)→臺中→臺南",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "中班13",
+          task: "協運各局郵件：嘉義、新營、新市、新化、善化、佳里、麻豆、玉井、鹽埕郵局等",
+          startDay: 0,
+          startHour: 17,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 20,
+          endMinute: 0,
+        },
+        {
+          shift: "中班13",
+          task: "臺南(送郵件)→臺中→臺南",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班1",
+          task: "快捷股點交國際包裹→月台94車次",
+          startDay: 0,
+          startHour: 20,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 21,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班1",
+          task: "快捷股點交限時+快捷+水路郵袋→月台→28車次",
+          startDay: 0,
+          startHour: 21,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 22,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班1",
+          task: "點交限時+快捷郵袋→月台→30車次",
+          startDay: 0,
+          startHour: 22,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 22,
+          endMinute: 30,
+        },
+        {
+          shift: "大夜班1",
+          task: "推限時+快捷郵袋→月台→台中+嘉義車次",
+          startDay: 0,
+          startHour: 22,
+          startMinute: 30,
+          endDay: 0,
+          endHour: 23,
+          endMinute: 30,
+        },
+        {
+          shift: "大夜班1",
+          task: "推限時+快捷郵袋→月台→26車次",
+          startDay: 0,
+          startHour: 23,
+          startMinute: 30,
+          endDay: 1,
+          endHour: 0,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班1",
+          task: "快捷股(送郵件)→月台",
+          startDay: 1,
+          startHour: 5,
+          startMinute: 30,
+          endDay: 1,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班1",
+          task: "裝載永康後趕郵件",
+          startDay: 1,
+          startHour: 6,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 6,
+          endMinute: 30,
+        },
+        {
+          shift: "大夜班1",
+          task: "臺南(送郵件)→永康郵局(載空籃車)→臺南",
+          startDay: 1,
+          startHour: 6,
+          startMinute: 30,
+          endDay: 1,
+          endHour: 8,
+          endMinute: 30,
+        },
+        {
+          shift: "大夜班3",
+          task: "整理刷讀路單，刷讀快捷股各車次快捷郵件；各車次限掛郵件",
+          startDay: 0,
+          startHour: 21,
+          startMinute: 0,
+          endDay: 0,
+          endHour: 22,
+          endMinute: 30,
+        },
+        {
+          shift: "大夜班3",
+          task: "1.刷讀各車次限時、平件。  2.收最後班次快捷郵件給接送員。",
+          startDay: 0,
+          startHour: 22,
+          startMinute: 30,
+          endDay: 1,
+          endHour: 0,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班3",
+          task: "協助疏運高雄、嘉義無法運清之郵件",
+          startDay: 1,
+          startHour: 0,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 4,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班3",
+          task: "臺南(送郵件)→永康郵局(載空籃車)→臺南",
+          startDay: 1,
+          startHour: 4,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "進/出口接送員",
+          task: "1.夜間委外出口車輛加裝封扣及進口車輛拆卸封扣。2.督導大夜班人員處理進出口郵件。3.督導夜間進口郵袋分揀。4.夜間車輛運輸調度。5.夜間運輸車輛途中故障，協助聯繫盡快將郵件運回本局處理。",
+          startDay: 0,
+          startHour: 21,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 6,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班2",
+          task: "支援momo新市倉郵件運載作業",
+          startDay: 0,
+          startHour: 22,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班2",
+          task: "momo及當日剩餘包裹郵件運載作業",
+          startDay: 1,
+          startHour: 2,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 7,
+          endMinute: 0,
+        },
+        {
+          shift: "127/128車次",
+          task: "支援momo新市倉郵件運載作業",
+          startDay: 0,
+          startHour: 22,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "127/128車次",
+          task: "momo及當日剩餘包裹郵件運載作業",
+          startDay: 1,
+          startHour: 2,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 7,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班4",
+          task: "支援momo新市倉郵件運載作業",
+          startDay: 0,
+          startHour: 22,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 2,
+          endMinute: 0,
+        },
+        {
+          shift: "大夜班4",
+          task: "momo及當日剩餘包裹郵件運載作業",
+          startDay: 1,
+          startHour: 2,
+          startMinute: 0,
+          endDay: 1,
+          endHour: 7,
+          endMinute: 0,
+        },
+      ];
+      const START_MIN = 3 * 60;
+      const END_MIN = 31 * 60;
+      const TOTAL_MIN = END_MIN - START_MIN;
+      const FILTERS = [
+        { key: "all", label: "全部" },
+        { key: "early", label: "早班" },
+        { key: "mid", label: "中班" },
+        { key: "night", label: "大夜" },
+        { key: "momo", label: "momo" },
+        { key: "rail", label: "高鐵" },
+        { key: "taichung", label: "台中" },
+        { key: "international", label: "國際" },
+      ];
+      let activeFilter = "all";
+      let searchTerm = "";
+
+      const pad = (n) => String(n).padStart(2, "0");
+      const startTotal = (item) =>
+        item.startDay * 1440 + item.startHour * 60 + item.startMinute;
+      const endTotal = (item) =>
+        item.endDay * 1440 + item.endHour * 60 + item.endMinute;
+      const timeText = (item) =>
+        `${pad(item.startHour)}:${pad(item.startMinute)} - ${item.endDay > item.startDay ? "翌日 " : ""}${pad(item.endHour)}:${pad(item.endMinute)}`;
+      const durationText = (item) => {
+        const mins = endTotal(item) - startTotal(item);
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return `${h ? h + "小時" : ""}${m ? m + "分" : ""}`;
+      };
+
+      function typeOf(item) {
+        const t = `${item.shift} ${item.task}`;
+        if (/momo/i.test(t)) return "momo";
+        if (/高鐵/.test(t)) return "rail";
+        if (/國際|EMS|航空|水陸|兩岸/.test(t)) return "intl";
+        if (/大夜|接送員|127\/128/.test(item.shift)) return "night";
+        if (/中班|嘉義|771|772/.test(item.shift)) return "mid";
+        if (/早班|新營|自運/.test(item.shift)) return "early";
+        return "default";
+      }
+
+      function matchFilter(item) {
+        const hay = `${item.shift} ${item.task}`;
+        if (activeFilter === "all") return true;
+        if (activeFilter === "early") return typeOf(item) === "early";
+        if (activeFilter === "mid") return typeOf(item) === "mid";
+        if (activeFilter === "night") return typeOf(item) === "night";
+        if (activeFilter === "momo") return /momo/i.test(hay);
+        if (activeFilter === "rail") return /高鐵/.test(hay);
+        if (activeFilter === "taichung") return /臺中|台中/.test(hay);
+        if (activeFilter === "international")
+          return /國際|EMS|航空|水陸|兩岸/.test(hay);
+        return true;
+      }
+
+      function filteredData() {
+        const q = searchTerm.trim().toLowerCase();
+        return SHIFT_DATA.filter((item) => {
+          const hay =
+            `${item.shift} ${item.task} ${timeText(item)}`.toLowerCase();
+          return matchFilter(item) && (!q || hay.includes(q));
         });
       }
-      // 1. 禁用滑鼠右鍵選單
+
+      function groupByShift(data) {
+        const map = new Map();
+        data.forEach((item) => {
+          if (!map.has(item.shift)) map.set(item.shift, []);
+          map.get(item.shift).push(item);
+        });
+        return [...map.entries()];
+      }
+
+      function renderDashboard() {
+        const uniq = new Set(SHIFT_DATA.map((i) => i.shift)).size;
+        const totalHours =
+          SHIFT_DATA.reduce(
+            (sum, i) => sum + (endTotal(i) - startTotal(i)),
+            0,
+          ) / 60;
+        const rail = SHIFT_DATA.filter((i) =>
+          /高鐵/.test(`${i.shift} ${i.task}`),
+        ).length;
+        const momo = SHIFT_DATA.filter((i) =>
+          /momo/i.test(`${i.shift} ${i.task}`),
+        ).length;
+        const night = SHIFT_DATA.filter((i) => typeOf(i) === "night").length;
+        const stats = [
+          ["班別數", uniq],
+          ["任務段落", SHIFT_DATA.length],
+          ["總任務時數", Math.round(totalHours)],
+          ["高鐵任務", rail],
+          ["夜間任務", night + momo],
+        ];
+        document.getElementById("dashboard").innerHTML = stats
+          .map(
+            ([label, value]) =>
+              `<div class="stat"><b>${value}</b><span>${label}</span></div>`,
+          )
+          .join("");
+      }
+
+      function renderFilters() {
+        document.getElementById("filters").innerHTML = FILTERS.map(
+          (f) =>
+            `<button class="filter ${f.key === activeFilter ? "active" : ""}" data-filter="${f.key}">${f.label}</button>`,
+        ).join("");
+        document.querySelectorAll(".filter").forEach((btn) =>
+          btn.addEventListener("click", () => {
+            activeFilter = btn.dataset.filter;
+            renderFilters();
+            renderAll();
+          }),
+        );
+      }
+
+      function renderHours() {
+        const hours = [];
+        for (let h = 3; h <= 30; h++) {
+          const label = h >= 24 ? `翌${pad(h - 24)}:00` : `${pad(h)}:00`;
+          hours.push(`<div class="hour">${label}</div>`);
+        }
+        return `<div class="hours"><div class="corner">班別</div>${hours.join("")}</div>`;
+      }
+
+      function renderTimeline() {
+        const data = filteredData();
+        const groups = groupByShift(data);
+        let html = renderHours();
+        groups.forEach(([shift, items]) => {
+          const bars = items
+            .map((item) => {
+              const left = ((startTotal(item) - START_MIN) / TOTAL_MIN) * 100;
+              const width =
+                ((endTotal(item) - startTotal(item)) / TOTAL_MIN) * 100;
+              const cls = typeOf(item);
+              return `<div class="seg ${cls}" style="left:${left}%;width:max(${width}%,42px);" data-shift="${escapeHtml(item.shift)}" data-time="${escapeHtml(timeText(item))}" data-duration="${escapeHtml(durationText(item))}" data-task="${escapeHtml(item.task)}"><small>${timeText(item)}</small>${escapeHtml(item.task)}</div>`;
+            })
+            .join("");
+          html += `<div class="lane"><div class="laneLabel">${escapeHtml(shift)}</div><div class="laneTrack">${bars}</div></div>`;
+        });
+        const nowLeft = getNowLeft();
+        if (nowLeft !== null)
+          html += `<div class="nowLine" style="left:calc(var(--labelWidth) + ${nowLeft}%);"></div>`;
+        document.getElementById("timelineGrid").innerHTML = html;
+        bindTooltip();
+        document.getElementById("emptyState").style.display = data.length
+          ? "none"
+          : "block";
+      }
+
+      function renderCards() {
+        const data = filteredData().sort(
+          (a, b) => startTotal(a) - startTotal(b),
+        );
+        document.getElementById("cards").innerHTML = data
+          .map((item) => {
+            const cls = typeOf(item);
+            return `<article class="card">
+      <div class="cardTop"><span class="badge ${cls}">${escapeHtml(item.shift)}</span><span class="time">${timeText(item)}｜${durationText(item)}</span></div>
+      <p class="task">${escapeHtml(item.task)}</p>
+    </article>`;
+          })
+          .join("");
+      }
+
+      function getNowLeft() {
+        const now = new Date();
+        let minutes = now.getHours() * 60 + now.getMinutes();
+        if (minutes < START_MIN) minutes += 1440;
+        if (minutes < START_MIN || minutes > END_MIN) return null;
+        return ((minutes - START_MIN) / TOTAL_MIN) * 100;
+      }
+
+      function updateNow() {
+        const now = new Date();
+        document.getElementById("nowText").textContent =
+          `現在時間 ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(
+          /[&<>'"]/g,
+          (s) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#39;",
+              '"': "&quot;",
+            })[s],
+        );
+      }
+
+      function bindTooltip() {
+        const tip = document.getElementById("tooltip");
+        document.querySelectorAll(".seg").forEach((seg) => {
+          seg.addEventListener("mousemove", (e) => {
+            tip.style.display = "block";
+            tip.style.left =
+              Math.min(
+                e.clientX + 16,
+                window.innerWidth - tip.offsetWidth - 14,
+              ) + "px";
+            tip.style.top =
+              Math.min(
+                e.clientY + 16,
+                window.innerHeight - tip.offsetHeight - 14,
+              ) + "px";
+            tip.innerHTML = `<b>${seg.dataset.shift}</b><span>${seg.dataset.time}｜${seg.dataset.duration}</span><p>${seg.dataset.task}</p>`;
+          });
+          seg.addEventListener(
+            "mouseleave",
+            () => (tip.style.display = "none"),
+          );
+        });
+      }
+
+      function renderAll() {
+        renderTimeline();
+        renderCards();
+      }
+
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchTerm = e.target.value;
+        renderAll();
+      });
+
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
+
+      renderDashboard();
+      renderFilters();
+      updateNow();
+      renderAll();
+      setInterval(updateNow, 1000 * 20);
     </script>
-  </head>
-  <body>
-    <h2 style="text-align: center">臺南郵局運輸股各班別工作時間軸</h2>
-    <div
-      id="timeline"
-      style="height: 600px; width: 100%; overflow-x: auto"
-    ></div>
   </body>
 </html>
