@@ -1,134 +1,598 @@
 <!doctype html>
 <html lang="zh-Hant">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-0VSMGFF0E6");
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>一週班表查詢</title>
+    <title>一週班表查詢｜星軌勤務</title>
+
     <style>
-      body {
-        font-family: "Microsoft JhengHei", sans-serif;
+      * {
+        box-sizing: border-box;
         margin: 0;
-        padding: 20px;
-        background-color: #f3f3f3;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #07111f;
+        --panel: #101b31;
+        --panel2: #14233e;
+        --text: #eef6ff;
+        --sub: #9fb1ce;
+        --line: rgba(255, 255, 255, 0.1);
+        --cyan: #5ee7ff;
+        --blue: #7487ff;
+        --orange: #ffb454;
+        --purple: #a77cff;
+        --red: #ff7e8a;
+        --green: #7dffbf;
+        --muted: #75839b;
+        --shadow: 0 18px 55px rgba(0, 0, 0, 0.36);
+      }
+
+      body {
+        min-height: 100vh;
+        font-family:
+          "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 12% 0%,
+            rgba(94, 231, 255, 0.18),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 88% 10%,
+            rgba(116, 135, 255, 0.18),
+            transparent 34%
+          ),
+          linear-gradient(135deg, #07111f, #0a1528 45%, #08101d);
+        padding: 18px;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, black, transparent 92%);
+        pointer-events: none;
+      }
+
+      .app {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero {
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          145deg,
+          rgba(18, 31, 55, 0.92),
+          rgba(8, 17, 31, 0.95)
+        );
+        box-shadow: var(--shadow);
+        border-radius: 28px;
+        padding: 24px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        top: -130px;
+        width: 340px;
+        height: 340px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle,
+          rgba(94, 231, 255, 0.22),
+          transparent 68%
+        );
+        filter: blur(5px);
+        pointer-events: none;
+      }
+
+      .topbar {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .logo {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        color: var(--cyan);
+        background: rgba(94, 231, 255, 0.11);
+        border: 1px solid rgba(94, 231, 255, 0.2);
+        box-shadow: 0 0 28px rgba(94, 231, 255, 0.13);
+        font-size: 1.45rem;
+        flex: 0 0 auto;
       }
 
       h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 1.8em;
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        letter-spacing: 0.08em;
+        line-height: 1.2;
+        white-space: nowrap;
       }
 
-      .form-group {
-        text-align: center;
-        margin-bottom: 10px;
+      h1 span {
+        background: linear-gradient(90deg, var(--cyan), #fff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
       }
 
-      .notice {
-        text-align: center;
-        color: #666;
-        font-size: 0.95em;
-        margin-bottom: 20px;
+      .desc {
+        color: var(--sub);
+        font-size: 0.9rem;
+        margin-top: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: min(380px, 45%);
+      }
+
+      label {
+        color: var(--sub);
+        font-size: 0.9rem;
+        white-space: nowrap;
       }
 
       select {
-        font-size: 1em;
-        padding: 8px;
-        min-width: 200px;
+        width: 100%;
+        border: none;
+        outline: none;
+        color: #fff;
+
+        background: linear-gradient(
+          90deg,
+          rgba(24, 35, 56, 0.96),
+          rgba(34, 55, 78, 0.96)
+        );
+
+        border: 1px solid rgba(94, 231, 255, 0.24);
+        border-radius: 15px;
+        padding: 12px 14px;
+        font-size: 1rem;
+
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          0 0 18px rgba(94, 231, 255, 0.05);
       }
 
-      .schedule-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 10px auto;
-        border-radius: 8px;
+      option {
+        background: #162338;
+        color: #ffffff;
+      }
+
+      select:hover,
+      select:focus {
+        border-color: #5ee7ff;
+
+        box-shadow:
+          0 0 0 4px rgba(94, 231, 255, 0.12),
+          0 0 22px rgba(94, 231, 255, 0.18);
+      }
+
+      .notice {
+        margin-top: 14px;
+        color: #ffd6d9;
+        background: rgba(255, 126, 138, 0.1);
+        border: 1px solid rgba(255, 126, 138, 0.14);
+        border-radius: 18px;
+        padding: 12px 14px;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .week-card {
+        margin-top: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(
+          145deg,
+          rgba(17, 32, 58, 0.88),
+          rgba(11, 20, 37, 0.92)
+        );
+        border-radius: 28px;
+        box-shadow: var(--shadow);
         overflow: hidden;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
+      }
+
+      .week-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .week-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        font-size: 1.05rem;
+      }
+
+      .range {
+        color: var(--cyan);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+
+      .person-chip {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(94, 231, 255, 0.09);
+        border: 1px solid rgba(94, 231, 255, 0.18);
+        color: #dffbff;
+        max-width: 190px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.9rem;
+      }
+
+      .schedule-list {
+        padding: 10px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .schedule-row {
+        min-height: 56px;
+        display: grid;
+        grid-template-columns: 110px 70px 1fr;
+        align-items: center;
+        gap: 10px;
+        border-radius: 18px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.045);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        animation: fadeUp 0.45s ease forwards;
         opacity: 0;
-        transform: translateY(20px);
-        animation: fadeInUp 0.6s ease-out forwards;
+        transform: translateY(10px);
+        transition: 0.22s ease;
       }
 
-      .schedule-item:hover {
-        transform: scale(1.02);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      .schedule-row:hover {
+        transform: translateY(-2px);
+        border-color: rgba(94, 231, 255, 0.28);
+        background: rgba(255, 255, 255, 0.065);
       }
 
-      .date-block {
-        color: white;
-        flex: 2 1 66%;
-        padding: 14px;
-        font-weight: bold;
-        font-size: 1em;
+      .date-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
       }
 
-      .shift-block {
-        background-color: #ffffff;
-        flex: 1 1 34%;
-        padding: 14px;
+      .date {
+        font-size: 1.12rem;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        color: #f3f8ff;
+        white-space: nowrap;
+      }
+
+      .week {
+        justify-self: start;
+        color: #d3def2;
+        font-size: 0.98rem;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        white-space: nowrap;
+      }
+
+      .shift {
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+        font-size: 1.16rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+
+      .shift .icon {
+        font-size: 1.18rem;
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+      }
+
+      .shift.work {
+        color: #8cf6ff;
+        text-shadow: 0 0 16px rgba(94, 231, 255, 0.25);
+      }
+
+      .shift.off {
+        color: var(--muted);
+        text-shadow: none;
+      }
+
+      .schedule-row.weekend {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 126, 138, 0.075),
+          rgba(255, 255, 255, 0.035)
+        );
+      }
+
+      .schedule-row.today {
+        border-color: rgba(94, 231, 255, 0.42);
+        box-shadow:
+          inset 4px 0 0 var(--cyan),
+          0 0 28px rgba(94, 231, 255, 0.08);
+      }
+
+      .empty {
+        padding: 34px 18px;
         text-align: center;
-        font-family: "Microsoft JhengHei", sans-serif;
-        font-weight: bold;
-        font-size: 1em;
-        color: #000000;
+        color: var(--sub);
+        line-height: 1.8;
       }
 
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
+      @keyframes fadeUp {
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
 
-      @media (max-width: 600px) {
-        .schedule-item {
-          flex-direction: row;
-          flex-wrap: nowrap;
+      @media (min-width: 860px) {
+        .schedule-list {
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+
+          width: min(100%, 980px);
+          margin: 0 auto;
+
+          gap: 0;
+          padding: 18px 10px;
         }
 
-        .date-block,
-        .shift-block {
-          font-size: 0.9em;
+        .schedule-row {
+          min-height: 132px;
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+          align-content: start;
+          gap: 12px;
+          border-radius: 0;
+          border-width: 0 1px 0 0;
+          background: transparent;
+
+          padding: 12px 10px;
+        }
+
+        .date-group {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+
+        .schedule-row:first-child {
+          border-radius: 20px 0 0 20px;
+        }
+
+        .schedule-row:last-child {
+          border-right: none;
+          border-radius: 0 20px 20px 0;
+        }
+
+        .date {
+          font-size: 1rem;
+        }
+
+        .week {
+          padding: 0;
+          border: none;
+          background: transparent;
+          color: var(--sub);
+        }
+
+        .shift {
+          align-self: end;
+          justify-self: start;
+          font-size: 1.25rem;
+        }
+
+        .week-card {
+          border-radius: 30px;
+        }
+      }
+
+      @media (max-width: 760px) {
+        body {
           padding: 12px;
         }
 
-        .form-group select {
-          font-size: 1em;
+        .hero {
+          padding: 18px;
+          border-radius: 24px;
+        }
+
+        .topbar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .brand {
+          align-items: flex-start;
+        }
+
+        .logo {
+          width: 42px;
+          height: 42px;
+          border-radius: 14px;
+        }
+
+        h1 {
+          white-space: normal;
+        }
+
+        .desc {
+          white-space: normal;
+          overflow: visible;
+        }
+
+        .control {
+          min-width: 0;
+          width: 100%;
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+
+        .week-header {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 16px;
+        }
+
+        .person-chip {
+          max-width: 100%;
+        }
+
+        .schedule-list {
+          padding: 8px;
+        }
+
+        .schedule-row {
+          grid-template-columns: 1fr auto;
+          min-height: 54px;
+          padding: 10px 14px;
+          border-radius: 16px;
+        }
+
+        .date {
+          font-size: 1.14rem;
+        }
+
+        .week {
+          font-size: 0.92rem;
+          padding: 4px 8px;
+        }
+
+        .shift {
+          font-size: 1.08rem;
+          letter-spacing: 0.04em;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .schedule-row {
+          grid-template-columns: 1fr auto;
+          gap: 8px;
+          padding: 9px 10px;
+        }
+
+        .date-group {
+          gap: 7px;
+        }
+
+        .date {
+          font-size: 1rem;
+        }
+
+        .week {
+          font-size: 0.82rem;
+          padding: 3px 7px;
+        }
+
+        .shift {
+          font-size: 0.98rem;
         }
       }
     </style>
   </head>
+
   <body>
-    <h1>一週班表查詢</h1>
+    <main class="app">
+      <section class="hero">
+        <div class="topbar">
+          <div class="brand">
+            <div class="logo">▦</div>
+            <div>
+              <h1>一週<span>班表查詢</span></h1>
+              <div class="desc">手機直向快速掃描，桌機橫向完整展開。</div>
+            </div>
+          </div>
 
-    <div class="form-group">
-      <label for="staffSelect">選擇人員：</label>
-      <select id="staffSelect">
-        <option value="">請選擇</option>
-      </select>
-    </div>
-    <div class="notice">公休代表沒上班或尚未排班(日期在後面的)</div>
+          <div class="control">
+            <label for="staffSelect">人員</label>
+            <select id="staffSelect">
+              <option value="">請選擇人員</option>
+            </select>
+          </div>
+        </div>
 
-    <div id="scheduleList"></div>
+        <div class="notice">
+          公休代表沒上班或尚未排班；選擇人員後，立即顯示未來七日班別。
+        </div>
+      </section>
+
+      <section class="week-card">
+        <div class="week-header">
+          <div class="week-title">
+            <span>📅 本週班別</span>
+            <span class="range" id="dateRange">--/-- ~ --/--</span>
+          </div>
+          <div class="person-chip" id="personChip">尚未選擇人員</div>
+        </div>
+
+        <div class="schedule-list" id="scheduleList">
+          <div class="empty">
+            請先選擇人員。<br />班表要像戰情板，一眼就知道今天是副本還是休息。
+          </div>
+        </div>
+      </section>
+    </main>
 
     <script>
       const weekdayMap = ["日", "一", "二", "三", "四", "五", "六"];
@@ -140,15 +604,45 @@
         return `${yyyy}-${mm}-${dd}`;
       }
 
+      function shortDate(date) {
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        return `${mm}/${dd}`;
+      }
+
+      function shiftIcon(shift) {
+        if (shift === "公休") return "☕";
+        if (/早/.test(shift)) return "☀️";
+        if (/晚|夜/.test(shift)) return "🌙";
+        if (/中/.test(shift)) return "⚡";
+        return "✦";
+      }
+
+      function updateDateRange() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const end = new Date(today);
+        end.setDate(end.getDate() + 6);
+
+        document.getElementById("dateRange").textContent =
+          `${shortDate(today)} ~ ${shortDate(end)}`;
+      }
+
       async function loadSchedule() {
-        const res = await fetch("schedule_data.json?t=" + new Date().getTime()); // ✅ 防快取
+        updateDateRange();
+
+        const res = await fetch("schedule_data.json?t=" + new Date().getTime());
         const data = await res.json();
+
         delete data["lastUpdated"];
 
         const nameSet = new Set();
+
         for (const day of Object.values(data)) {
           for (const person of Object.values(day)) {
             const name = person?.trim();
+
             if (
               name &&
               name !== "-" &&
@@ -162,6 +656,7 @@
 
         const sortedNames = [...nameSet].sort();
         const select = document.getElementById("staffSelect");
+
         sortedNames.forEach((name) => {
           const opt = document.createElement("option");
           opt.value = opt.textContent = name;
@@ -169,8 +664,14 @@
         });
 
         select.addEventListener("change", () => {
-          if (select.value) showWeek(data, select.value);
-          else document.getElementById("scheduleList").innerHTML = "";
+          if (select.value) {
+            document.getElementById("personChip").textContent = select.value;
+            showWeek(data, select.value);
+          } else {
+            document.getElementById("personChip").textContent = "尚未選擇人員";
+            document.getElementById("scheduleList").innerHTML =
+              `<div class="empty">請先選擇人員。<br>班表要像戰情板，一眼就知道今天是副本還是休息。</div>`;
+          }
         });
       }
 
@@ -184,14 +685,13 @@
         for (let i = 0; i < 7; i++) {
           const d = new Date(today);
           d.setDate(d.getDate() + i);
+
           const key = formatLocalDate(d);
-          const displayDate = key.replace(/-/g, "/");
           const weekIndex = d.getDay();
-          const week = weekdayMap[weekIndex];
-          const dateText = `${displayDate}【星期${week}】`;
 
           let found = "公休";
           const shiftData = data[key];
+
           if (shiftData) {
             for (const [shift, person] of Object.entries(shiftData)) {
               if (person?.trim() === name) {
@@ -202,32 +702,40 @@
           }
 
           const row = document.createElement("div");
-          row.className = "schedule-item";
-          row.style.animationDelay = `${i * 0.1}s`;
+          row.className = "schedule-row";
+          row.style.animationDelay = `${i * 0.045}s`;
 
-          const dateBlock = document.createElement("div");
-          dateBlock.className = "date-block";
-          dateBlock.textContent = dateText;
-          dateBlock.style.backgroundColor =
-            weekIndex === 0 || weekIndex === 6 ? "#d32f2f" : "#555";
+          if (i === 0) row.classList.add("today");
+          if (weekIndex === 0 || weekIndex === 6) row.classList.add("weekend");
 
-          const shiftBlock = document.createElement("div");
-          shiftBlock.className = "shift-block";
-          shiftBlock.textContent = found;
-          if (found === "公休") {
-            shiftBlock.style.color = "#d32f2f";
-          }
+          const date = document.createElement("div");
+          date.className = "date";
+          date.textContent = shortDate(d);
 
-          row.appendChild(dateBlock);
-          row.appendChild(shiftBlock);
+          const week = document.createElement("div");
+          week.className = "week";
+          week.textContent = weekdayMap[weekIndex];
+
+          const shift = document.createElement("div");
+          shift.className = found === "公休" ? "shift off" : "shift work";
+          shift.innerHTML = `<span class="icon">${shiftIcon(found)}</span><span>${found}</span>`;
+
+          const dateGroup = document.createElement("div");
+          dateGroup.className = "date-group";
+          dateGroup.appendChild(date);
+          dateGroup.appendChild(week);
+
+          row.appendChild(dateGroup);
+          row.appendChild(shift);
+
           container.appendChild(row);
         }
       }
 
       loadSchedule();
-      // 1. 禁用滑鼠右鍵選單
+
       document.oncontextmenu = function () {
-        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        console.warn("已停用右鍵功能。");
         return false;
       };
     </script>
