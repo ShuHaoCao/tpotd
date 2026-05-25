@@ -12,274 +12,831 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>逆轉之翼：奧賽羅</title>
     <style>
       :root {
-        --bg-color: #2c3e50;
-        --board-color: #2e7d32;
-        --cell-border: #1b5e20;
-        --black-piece: #222;
-        --white-piece: #fff;
-        --highlight: rgba(255, 255, 0, 0.4);
-        --last-move: #ff5722;
+        --bg-0: #04070d;
+        --bg-1: #08131d;
+        --bg-2: #10283a;
+        --panel: rgba(11, 22, 32, 0.72);
+        --panel-strong: rgba(14, 28, 40, 0.92);
+        --line: rgba(135, 225, 255, 0.18);
+        --line-strong: rgba(135, 225, 255, 0.35);
+        --text: #eaf8ff;
+        --muted: #8fb6c9;
+        --cyan: #20e7ff;
+        --cyan-soft: rgba(32, 231, 255, 0.2);
+        --gold: #ffd166;
+        --green: #18c58f;
+        --green-dark: #0b4031;
+        --danger: #ff6375;
+        --black-piece: #0d1117;
+        --white-piece: #f7fbff;
+        --radius-lg: 28px;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        background: var(--bg-0);
       }
 
       body {
-        font-family: "Microsoft JhengHei", sans-serif;
-        background-color: var(--bg-color);
-        color: white;
         margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
         min-height: 100vh;
+        font-family:
+          "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", system-ui,
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 50% -10%,
+            rgba(32, 231, 255, 0.24),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at 10% 25%,
+            rgba(24, 197, 143, 0.17),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 90% 70%,
+            rgba(255, 209, 102, 0.12),
+            transparent 30%
+          ),
+          linear-gradient(140deg, var(--bg-0), var(--bg-1) 52%, #061018);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+          );
+        background-size: 42px 42px;
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.9),
+          rgba(0, 0, 0, 0.25)
+        );
+        pointer-events: none;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: auto -12% -28% -12%;
+        height: 42vh;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(32, 231, 255, 0.12),
+          transparent 68%
+        );
+        pointer-events: none;
       }
 
       .container {
-        width: 95%;
-        max-width: 500px;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: clamp(18px, 3vw, 36px) 0 36px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero {
+        display: grid;
+        gap: 10px;
         text-align: center;
-        padding: 20px 0;
+        margin-bottom: 22px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        justify-self: center;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--cyan);
+        background: rgba(255, 255, 255, 0.035);
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 14px var(--cyan);
       }
 
       h1 {
-        margin-bottom: 10px;
-        font-size: 1.5rem;
+        margin: 0;
+        font-size: clamp(2rem, 5.5vw, 4.2rem);
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: 0.08em;
+        text-shadow:
+          0 0 18px rgba(32, 231, 255, 0.35),
+          0 0 42px rgba(32, 231, 255, 0.18);
+      }
+
+      .hero-subtitle {
+        margin: 0;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        font-size: clamp(0.84rem, 2vw, 1rem);
+      }
+
+      .game-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+        gap: 22px;
+        align-items: start;
+      }
+
+      .side-panel,
+      .main-panel {
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          145deg,
+          rgba(13, 27, 39, 0.84),
+          rgba(7, 15, 23, 0.7)
+        );
+        border-radius: var(--radius-lg);
+        box-shadow:
+          var(--shadow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(18px);
+      }
+
+      .side-panel {
+        padding: 20px;
+        position: sticky;
+        top: 18px;
+      }
+
+      .main-panel {
+        padding: clamp(14px, 2.5vw, 28px);
+      }
+
+      .panel-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 14px;
+        color: var(--cyan);
+        font-weight: 850;
+        letter-spacing: 0.16em;
+        font-size: 0.84rem;
+      }
+
+      .panel-title span:last-child {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+      }
+
+      .settings-bar {
+        margin-bottom: 16px;
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        background: rgba(255, 255, 255, 0.035);
+        text-align: left;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 9px;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      select,
+      input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.055);
+        color: var(--text);
+        border-radius: 16px;
+        padding: 13px 14px;
+        outline: none;
+        font: inherit;
+      }
+
+      select:focus,
+      input:focus {
+        border-color: var(--line-strong);
+        box-shadow: 0 0 0 4px var(--cyan-soft);
+      }
+
+      option {
+        color: #111;
       }
 
       #status-panel {
-        display: flex;
-        justify-content: space-between;
-        background: rgba(0, 0, 0, 0.3);
-        padding: 10px 20px;
-        border-radius: 10px;
-        margin-bottom: 10px;
+        display: grid;
+        gap: 10px;
       }
 
-      /* 棋盤設計 */
+      .score-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .score-name {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        color: var(--muted);
+        min-width: 0;
+      }
+
+      .score-name span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 150px;
+      }
+
+      .stone-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        flex: none;
+      }
+
+      .stone-dot.black {
+        background: radial-gradient(circle at 30% 25%, #6d7480, #090b0f 68%);
+        box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+      }
+
+      .stone-dot.white {
+        background: radial-gradient(circle at 30% 25%, #fff, #cbd6df 76%);
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.38);
+      }
+
+      .score-value {
+        font-size: 1.7rem;
+        font-weight: 900;
+      }
+
+      .turn-box {
+        margin-top: 12px;
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(32, 231, 255, 0.28);
+        background: linear-gradient(
+          135deg,
+          rgba(32, 231, 255, 0.17),
+          rgba(255, 255, 255, 0.035)
+        );
+        text-align: center;
+        box-shadow: inset 0 0 24px rgba(32, 231, 255, 0.08);
+      }
+
+      .turn-label {
+        color: var(--muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+      }
+      #turn-display {
+        display: block;
+        margin-top: 5px;
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 900;
+      }
+
+      .board-shell {
+        position: relative;
+        width: min(100%, 720px);
+        margin: 0 auto;
+        padding: clamp(8px, 1.5vw, 14px);
+        border-radius: 34px;
+        background: linear-gradient(
+          135deg,
+          rgba(32, 231, 255, 0.26),
+          rgba(255, 255, 255, 0.035),
+          rgba(24, 197, 143, 0.22)
+        );
+        box-shadow: 0 0 50px rgba(32, 231, 255, 0.12);
+      }
+
+      .board-shell.ai-thinking {
+        animation: boardThinking 1.1s infinite ease-in-out;
+      }
+
+      @keyframes boardThinking {
+        0%,
+        100% {
+          box-shadow: 0 0 44px rgba(32, 231, 255, 0.12);
+        }
+        50% {
+          box-shadow: 0 0 70px rgba(32, 231, 255, 0.27);
+        }
+      }
+
       #board {
         display: grid;
-        grid-template-columns: repeat(8, 12.5%);
-        grid-template-rows: repeat(8, 12.5%);
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
         width: 100%;
         aspect-ratio: 1 / 1;
-        background-color: var(--cell-border);
-        border: 5px solid #1a331a;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(145deg, #106247, #092c22);
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        box-shadow:
+          inset 0 0 55px rgba(0, 0, 0, 0.55),
+          0 26px 70px rgba(0, 0, 0, 0.45);
         position: relative;
       }
 
       .cell {
-        background-color: var(--board-color);
-        border: 1px solid var(--cell-border);
+        background:
+          radial-gradient(
+            circle at 35% 30%,
+            rgba(255, 255, 255, 0.055),
+            transparent 45%
+          ),
+          linear-gradient(145deg, rgba(24, 197, 143, 0.2), rgba(2, 16, 13, 0.1));
+        border: 1px solid rgba(255, 255, 255, 0.055);
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: default;
+        position: relative;
+        user-select: none;
+        transition:
+          background 0.18s ease,
+          transform 0.18s ease;
+      }
+
+      .cell.hint {
         cursor: pointer;
+      }
+      .cell.hint:hover {
+        background: rgba(32, 231, 255, 0.12);
+      }
+
+      .piece {
+        width: 82%;
+        height: 82%;
+        border-radius: 50%;
+        transition:
+          transform 0.55s cubic-bezier(0.2, 1.4, 0.28, 1),
+          filter 0.25s ease;
+        transform-style: preserve-3d;
+        animation: dropIn 0.28s ease both;
         position: relative;
       }
 
-      /* 棋子與翻轉動畫 */
-      .piece {
-        width: 85%;
-        height: 85%;
-        border-radius: 50%;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-        transition:
-          transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-          background-color 0.3s;
-        transform-style: preserve-3d;
+      @keyframes dropIn {
+        from {
+          transform: translateY(-8px) scale(0.86);
+          opacity: 0.65;
+        }
+        to {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
       }
 
       .piece.black {
-        background-color: var(--black-piece);
-        transform: rotateY(0deg);
-      }
-      .piece.white {
-        background-color: var(--white-piece);
-        transform: rotateY(180deg);
+        background: radial-gradient(
+          circle at 32% 24%,
+          #6b7280,
+          #141820 45%,
+          #05070a 78%
+        );
+        box-shadow:
+          inset -9px -11px 18px rgba(0, 0, 0, 0.7),
+          inset 5px 6px 10px rgba(255, 255, 255, 0.1),
+          0 10px 20px rgba(0, 0, 0, 0.48);
       }
 
-      /* 上一步標記 */
+      .piece.white {
+        background: radial-gradient(
+          circle at 32% 24%,
+          #ffffff,
+          #e5edf4 50%,
+          #b8c1cb 85%
+        );
+        box-shadow:
+          inset -9px -11px 18px rgba(0, 0, 0, 0.13),
+          inset 6px 7px 14px rgba(255, 255, 255, 0.82),
+          0 10px 20px rgba(255, 255, 255, 0.12);
+      }
+
       .last-move-marker {
-        width: 8px;
-        height: 8px;
-        background-color: var(--last-move);
+        width: 12px;
+        height: 12px;
+        background: var(--gold);
         border-radius: 50%;
         position: absolute;
         z-index: 10;
+        box-shadow:
+          0 0 16px var(--gold),
+          0 0 28px rgba(255, 209, 102, 0.55);
       }
 
       .hint::after {
         content: "";
-        width: 20%;
-        height: 20%;
-        background-color: var(--highlight);
+        width: 18%;
+        height: 18%;
+        background: var(--cyan);
         border-radius: 50%;
+        box-shadow:
+          0 0 14px var(--cyan),
+          0 0 28px rgba(32, 231, 255, 0.4);
+        animation: pulse 1.25s infinite ease-in-out;
       }
 
-      /* 控制區 */
-      .controls {
-        margin-top: 15px;
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(0.72);
+          opacity: 0.55;
+        }
+        50% {
+          transform: scale(1.15);
+          opacity: 1;
+        }
+      }
+
+      .board-footer {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-      }
-      button {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-weight: bold;
-        background: #e67e22;
-        color: white;
-        transition: 0.2s;
-      }
-      button:hover {
-        background: #d35400;
-      }
-      button:disabled {
-        background: #7f8c8d;
-        cursor: not-allowed;
-      }
-
-      .settings-bar {
-        margin-bottom: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 18px;
+        color: var(--muted);
         font-size: 0.9rem;
       }
-      select {
-        padding: 5px;
-        border-radius: 5px;
-        background: #34495e;
+
+      .controls {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+
+      button {
+        padding: 13px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        cursor: pointer;
+        font-weight: 850;
+        letter-spacing: 0.04em;
+        background: linear-gradient(135deg, #0aa8bf, #087579);
         color: white;
-        border: 1px solid #555;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          filter 0.2s ease,
+          opacity 0.2s ease;
+        box-shadow:
+          0 12px 24px rgba(0, 0, 0, 0.32),
+          inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      }
+
+      button:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow:
+          0 18px 30px rgba(0, 0, 0, 0.38),
+          0 0 22px rgba(32, 231, 255, 0.22);
+      }
+
+      button:active:not(:disabled) {
+        transform: scale(0.97);
+      }
+      button:disabled {
+        opacity: 0.42;
+        cursor: not-allowed;
+        filter: grayscale(1);
+      }
+      .btn-secondary {
+        background: linear-gradient(135deg, #273749, #172431);
+      }
+      .btn-danger {
+        background: linear-gradient(135deg, #c84c66, #7f2439);
       }
 
       #leaderboard {
-        margin-top: 20px;
-        background: rgba(255, 255, 255, 0.1);
-        padding: 15px;
-        border-radius: 10px;
-        width: 100%;
+        margin-top: 18px;
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.035);
       }
+
+      #leaderboard h3 {
+        margin: 0 0 12px;
+        color: var(--gold);
+        letter-spacing: 0.08em;
+        font-size: 1rem;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
+        overflow: hidden;
       }
       th,
       td {
-        padding: 8px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 10px 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         text-align: center;
+      }
+      th {
+        color: var(--muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.1em;
+      }
+      td:first-child {
+        color: var(--gold);
+        font-weight: 900;
       }
 
       #overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 50% 30%,
+            rgba(32, 231, 255, 0.2),
+            transparent 34%
+          ),
+          rgba(2, 5, 8, 0.9);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 100;
-      }
-      .modal {
-        background: #fff;
-        color: #333;
-        padding: 30px;
-        border-radius: 15px;
-        text-align: center;
-        width: 80%;
-        max-width: 300px;
-      }
-      .modal input {
-        width: 80%;
-        padding: 10px;
-        margin: 15px 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
+        backdrop-filter: blur(10px);
+        padding: 18px;
       }
 
-      footer div {
-        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
-        color: #888888; /* 中灰色，不會太刺眼 */
-        text-align: center; /* 居中對齊 */
-        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
-        margin-top: 20px;
+      .modal {
+        width: min(420px, 100%);
+        background: linear-gradient(
+          145deg,
+          rgba(12, 25, 36, 0.96),
+          rgba(5, 12, 18, 0.94)
+        );
+        color: var(--text);
+        padding: 32px;
+        border-radius: 30px;
+        text-align: center;
+        border: 1px solid var(--line-strong);
+        box-shadow:
+          0 0 60px rgba(32, 231, 255, 0.15),
+          0 30px 90px rgba(0, 0, 0, 0.72);
+      }
+
+      .modal-badge {
+        display: inline-flex;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: rgba(32, 231, 255, 0.12);
+        color: var(--cyan);
+        font-size: 0.75rem;
+        letter-spacing: 0.16em;
+        margin-bottom: 16px;
+      }
+
+      .modal h3 {
+        margin: 0 0 8px;
+        font-size: clamp(1.7rem, 8vw, 2.45rem);
+        line-height: 1.05;
+      }
+
+      .modal p {
+        color: var(--muted);
+        margin: 6px 0 18px;
+      }
+      .modal button {
+        width: 100%;
+        margin-top: 14px;
+      }
+
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(7, 15, 23, 0.9);
+        color: var(--text);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.38);
+        transition: 0.25s ease;
+        z-index: 120;
+        pointer-events: none;
+        max-width: calc(100% - 28px);
+        text-align: center;
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      footer {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 0 0 28px;
+        color: rgba(234, 248, 255, 0.42);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+      }
+
+      @media (max-width: 940px) {
+        .game-layout {
+          grid-template-columns: 1fr;
+        }
+        .side-panel {
+          position: relative;
+          top: auto;
+          order: 2;
+        }
+        .main-panel {
+          order: 1;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .container {
+          width: min(100% - 20px, 1180px);
+          padding-top: 16px;
+        }
+        h1 {
+          letter-spacing: 0.04em;
+        }
+        .main-panel,
+        .side-panel {
+          border-radius: 22px;
+        }
+        .board-shell {
+          border-radius: 24px;
+        }
+        #board {
+          border-radius: 17px;
+        }
+        .controls {
+          grid-template-columns: 1fr;
+        }
+        .board-footer {
+          flex-direction: column;
+          align-items: stretch;
+          text-align: center;
+        }
+        .modal {
+          padding: 26px 20px;
+        }
       }
     </style>
   </head>
   <body>
-    <script src="script_othello.js"></script>
     <div id="overlay">
       <div class="modal">
-        <h3>逆轉之翼：奧賽羅</h3>
-        <p>請輸入您的名字：</p>
+        <div class="modal-badge">SYSTEM ONLINE</div>
+        <h3>逆轉之翼</h3>
+        <p>戰術核心已啟動。請輸入玩家代號，進入奧賽羅棋局。</p>
         <input
           type="text"
           id="playerNameInput"
           maxlength="10"
           placeholder="玩家名稱"
+          autocomplete="nickname"
         />
-        <br />
         <button onclick="startGame()">開始遊戲</button>
       </div>
     </div>
 
-    <div class="container">
-      <h1>逆轉之翼：奧賽羅</h1>
+    <main class="container">
+      <section class="hero">
+        <div class="eyebrow">Reversi Cyber Strategy</div>
+        <h1>逆轉之翼：奧賽羅</h1>
+        <p class="hero-subtitle">黑白之間，一步翻盤。這局，別讓 AI 看穿你。</p>
+      </section>
 
-      <div class="settings-bar">
-        AI 難度:
-        <select id="difficulty">
-          <option value="easy">簡單 (隨機)</option>
-          <option value="normal" selected>普通 (權重)</option>
-        </select>
-      </div>
+      <section class="game-layout">
+        <aside class="side-panel">
+          <div class="panel-title">
+            <span>COMMAND HUD</span><span>ARES-7</span>
+          </div>
 
-      <div id="status-panel">
-        <div><span id="pName">?</span>: <b id="black-score">2</b></div>
-        <div>AI: <b id="white-score">2</b></div>
-        <div>回合: <span id="turn-display">黑棋</span></div>
-      </div>
+          <div class="settings-bar">
+            <label for="difficulty">AI 難度</label>
+            <select id="difficulty">
+              <option value="easy">簡單：隨機落子</option>
+              <option value="normal" selected>普通：權重判斷</option>
+            </select>
+          </div>
 
-      <div id="board"></div>
+          <div id="status-panel">
+            <div class="score-card">
+              <div class="score-name">
+                <i class="stone-dot black"></i><span id="pName">?</span>
+              </div>
+              <b class="score-value" id="black-score">2</b>
+            </div>
+            <div class="score-card">
+              <div class="score-name">
+                <i class="stone-dot white"></i><span>AI CORE</span>
+              </div>
+              <b class="score-value" id="white-score">2</b>
+            </div>
+          </div>
 
-      <div class="controls">
-        <button onclick="undoMove()" id="undoBtn">悔棋</button>
-        <button onclick="resetGame()">重新開始</button>
-        <button onclick="toggleLeaderboard()">排行榜</button>
-      </div>
+          <div class="turn-box">
+            <div class="turn-label">CURRENT TURN</div>
+            <span id="turn-display">黑棋</span>
+          </div>
 
-      <div id="leaderboard" style="display: none">
-        <h3>前 10 名排行榜 (勝場)</h3>
-        <table id="rankTable">
-          <thead>
-            <tr>
-              <th>名次</th>
-              <th>玩家</th>
-              <th>勝場</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
+          <div class="controls">
+            <button onclick="undoMove()" id="undoBtn" class="btn-secondary">
+              悔棋
+            </button>
+            <button onclick="resetGame()" class="btn-danger">重新開始</button>
+            <button onclick="toggleLeaderboard()">排行榜</button>
+          </div>
+
+          <div id="leaderboard" style="display: none">
+            <h3>前 10 名排行榜</h3>
+            <table id="rankTable">
+              <thead>
+                <tr>
+                  <th>名次</th>
+                  <th>玩家</th>
+                  <th>勝場</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </aside>
+
+        <section class="main-panel">
+          <div class="panel-title">
+            <span>TACTICAL BOARD</span><span>8 × 8 GRID</span>
+          </div>
+          <div class="board-shell" id="boardShell">
+            <div id="board" aria-label="奧賽羅棋盤"></div>
+          </div>
+          <div class="board-footer">
+            <span>提示光點代表你目前可落子的位置。</span>
+            <span id="moveHint">等待玩家部署。</span>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <footer>
+      <div class="copyright">© 2026 CaoShuHao 版權所有，請勿抄襲</div>
+    </footer>
+
     <script>
       let board = [];
       let currentPlayer = 1;
       let playerName = "";
-      let history = []; // 用於悔棋
-      let lastMove = null; // 標記上一步位置
+      let history = [];
+      let lastMove = null;
+      let toastTimer = null;
       const BOARD_SIZE = 8;
 
       const weights = [
@@ -298,25 +855,44 @@
         if (savedName)
           document.getElementById("playerNameInput").value = savedName;
 
-        // 嘗試讀取自動存檔
         const savedGame = localStorage.getItem("reversi_autosave");
         if (savedGame) {
-          const data = JSON.parse(savedGame);
-          if (confirm("偵測到未完成的棋局，是否繼續？")) {
-            playerName =
-              sessionStorage.getItem("reversi_playerName") || "匿名玩家";
-            document.getElementById("pName").innerText = playerName;
-            document.getElementById("overlay").style.display = "none";
-            board = data.board;
-            currentPlayer = data.currentPlayer;
-            history = data.history || [];
-            lastMove = data.lastMove || null;
-            renderBoard();
-            updateScore();
+          try {
+            const data = JSON.parse(savedGame);
+            if (confirm("偵測到未完成的棋局，是否繼續？")) {
+              playerName =
+                sessionStorage.getItem("reversi_playerName") || "匿名玩家";
+              document.getElementById("pName").innerText = playerName;
+              document.getElementById("overlay").style.display = "none";
+              board = data.board;
+              currentPlayer = data.currentPlayer;
+              history = data.history || [];
+              lastMove = data.lastMove || null;
+              renderBoard();
+              updateScore();
+            } else {
+              localStorage.removeItem("reversi_autosave");
+            }
+          } catch (err) {
+            localStorage.removeItem("reversi_autosave");
           }
         }
         updateLeaderboardDisplay();
       };
+
+      document
+        .getElementById("playerNameInput")
+        .addEventListener("keydown", (event) => {
+          if (event.key === "Enter") startGame();
+        });
+
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+      }
 
       function startGame() {
         const input = document.getElementById("playerNameInput").value.trim();
@@ -341,10 +917,12 @@
         saveGameState();
         renderBoard();
         updateScore();
+        showToast("棋局已展開。黑棋先行。");
       }
 
       function renderBoard() {
         const boardEl = document.getElementById("board");
+        const boardShell = document.getElementById("boardShell");
         boardEl.innerHTML = "";
         const validMoves = getValidMoves(currentPlayer);
 
@@ -352,12 +930,13 @@
           for (let c = 0; c < BOARD_SIZE; c++) {
             const cell = document.createElement("div");
             cell.className = "cell";
+            cell.setAttribute("role", "button");
+            cell.setAttribute("aria-label", `第 ${r + 1} 列，第 ${c + 1} 欄`);
 
             if (board[r][c] !== 0) {
               const piece = document.createElement("div");
               piece.className = `piece ${board[r][c] === 1 ? "black" : "white"}`;
               cell.appendChild(piece);
-              // 如果是最後一步，加入標記
               if (lastMove && lastMove.r === r && lastMove.c === c) {
                 const marker = document.createElement("div");
                 marker.className = "last-move-marker";
@@ -373,13 +952,22 @@
             boardEl.appendChild(cell);
           }
         }
+
         document.getElementById("turn-display").innerText =
-          currentPlayer === 1 ? "黑棋 (你)" : "白棋 (AI)";
-        document.getElementById("undoBtn").disabled = history.length === 0;
+          currentPlayer === 1 ? "黑棋：玩家行動" : "白棋：AI 思考中";
+        document.getElementById("undoBtn").disabled =
+          history.length === 0 || currentPlayer !== 1;
+        document.getElementById("moveHint").innerText =
+          currentPlayer === 1
+            ? `可落子位置：${validMoves.length}`
+            : "AI 正在推演下一步。";
+        boardShell.classList.toggle("ai-thinking", currentPlayer === 2);
       }
 
       function handleMove(r, c) {
         if (currentPlayer !== 1) return;
+        const flips = getFlips(r, c, 1);
+        if (flips.length === 0) return;
         saveHistory();
         makeMove(r, c, 1);
         lastMove = { r, c };
@@ -387,8 +975,7 @@
         renderBoard();
         updateScore();
         saveGameState();
-
-        setTimeout(aiTurn, 800);
+        setTimeout(aiTurn, 650);
       }
 
       function aiTurn() {
@@ -400,7 +987,13 @@
             makeMove(randomMove.r, randomMove.c, 2);
             lastMove = randomMove;
           } else {
-            moves.sort((a, b) => weights[b.r][b.c] - weights[a.r][a.c]);
+            moves.sort((a, b) => {
+              const bScore =
+                weights[b.r][b.c] + getFlips(b.r, b.c, 2).length * 2;
+              const aScore =
+                weights[a.r][a.c] + getFlips(a.r, a.c, 2).length * 2;
+              return bScore - aScore;
+            });
             const bestMove = moves[0];
             makeMove(bestMove.r, bestMove.c, 2);
             lastMove = bestMove;
@@ -410,11 +1003,16 @@
         currentPlayer = 1;
         if (getValidMoves(1).length === 0) {
           if (getValidMoves(2).length === 0) {
+            renderBoard();
+            updateScore();
             endGame();
+            return;
           } else {
-            alert("你無處落子，換電腦繼續。");
+            showToast("你目前無處落子，AI 繼續行動。這就是黑白棋的毒辣之處。");
             currentPlayer = 2;
-            setTimeout(aiTurn, 800);
+            renderBoard();
+            setTimeout(aiTurn, 650);
+            return;
           }
         }
         renderBoard();
@@ -424,11 +1022,11 @@
 
       function saveHistory() {
         history.push(JSON.stringify({ board, lastMove }));
-        if (history.length > 10) history.shift(); // 最多存10步
+        if (history.length > 10) history.shift();
       }
 
       function undoMove() {
-        if (history.length > 0) {
+        if (history.length > 0 && currentPlayer === 1) {
           const prev = JSON.parse(history.pop());
           board = prev.board;
           lastMove = prev.lastMove;
@@ -436,18 +1034,14 @@
           renderBoard();
           updateScore();
           saveGameState();
+          showToast("已回到上一個玩家回合。");
         }
       }
 
       function saveGameState() {
         localStorage.setItem(
           "reversi_autosave",
-          JSON.stringify({
-            board,
-            currentPlayer,
-            history,
-            lastMove,
-          }),
+          JSON.stringify({ board, currentPlayer, history, lastMove }),
         );
       }
 
@@ -497,7 +1091,8 @@
             if (board[currR][currC] === opponent)
               tempFlips.push({ r: currR, c: currC });
             else if (board[currR][currC] === color) {
-              totalFlips = totalFlips.concat(tempFlips);
+              if (tempFlips.length > 0)
+                totalFlips = totalFlips.concat(tempFlips);
               break;
             } else break;
             currR += dr;
@@ -524,12 +1119,12 @@
       function endGame() {
         localStorage.removeItem("reversi_autosave");
         const score = updateScore();
-        let resultMsg =
+        const resultMsg =
           score.b > score.w
-            ? `恭喜！你以 ${score.b}:${score.w} 獲勝！`
+            ? `恭喜！你以 ${score.b}:${score.w} 獲勝。這波翻盤很有料。`
             : score.w > score.b
-              ? `AI 以 ${score.w}:${score.b} 獲勝。`
-              : "平手！";
+              ? `AI 以 ${score.w}:${score.b} 獲勝。別難過，它只是冷血，不是比較帥。`
+              : "平手！黑白各不相讓，宇宙暫時沉默。";
         if (score.b > score.w) saveWin(playerName);
         setTimeout(() => {
           alert("遊戲結束！\n" + resultMsg);
@@ -550,12 +1145,30 @@
         const sorted = Object.entries(scores)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 10);
-        document.querySelector("#rankTable tbody").innerHTML = sorted
-          .map(
-            (item, index) =>
-              `<tr><td>${index + 1}</td><td>${item[0]}</td><td>${item[1]}</td></tr>`,
-          )
-          .join("");
+        const tbody = document.querySelector("#rankTable tbody");
+        if (!tbody) return;
+        tbody.innerHTML = sorted.length
+          ? sorted
+              .map(
+                (item, index) =>
+                  `<tr><td>#${index + 1}</td><td>${escapeHtml(item[0])}</td><td>${item[1]}</td></tr>`,
+              )
+              .join("")
+          : `<tr><td colspan="3">尚無勝場紀錄</td></tr>`;
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(
+          /[&<>'"]/g,
+          (tag) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              "'": "&#39;",
+              '"': "&quot;",
+            })[tag],
+        );
       }
 
       function toggleLeaderboard() {
@@ -570,74 +1183,11 @@
           initBoard();
         }
       }
-      // 1. 禁用滑鼠右鍵選單
+
       document.oncontextmenu = function () {
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
-    <footer>
-      <div class="copyright">© 2026 CaoShuHao 版權所有，請勿抄襲</div>
-    </footer>
   </body>
 </html>
