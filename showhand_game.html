@@ -12,7 +12,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
     <meta charset="UTF-8" />
@@ -20,220 +19,766 @@
     <title>巔峰對賭：梭哈</title>
     <style>
       :root {
-        --felt-green: #27ae60;
-        --gold: #f1c40f;
-        --panel-bg: rgba(0, 0, 0, 0.8);
+        --bg-0: #05070b;
+        --bg-1: #09150f;
+        --felt: #0f6b45;
+        --felt-2: #073722;
+        --gold: #f6d27a;
+        --gold-2: #b88933;
+        --danger: #e23b4d;
+        --cyan: #55d8ff;
+        --ink: #090a0d;
+        --panel: rgba(9, 12, 18, 0.72);
+        --panel-2: rgba(255, 255, 255, 0.08);
+        --line: rgba(246, 210, 122, 0.34);
+        --text: #fff9e9;
+        --muted: #b9b4a6;
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.48);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
       }
 
       body {
-        font-family: "Microsoft JhengHei", sans-serif;
-        background-color: #1a1a1a;
-        color: white;
+        font-family:
+          "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+        background:
+          radial-gradient(
+            circle at 15% 12%,
+            rgba(246, 210, 122, 0.16),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 90% 16%,
+            rgba(85, 216, 255, 0.12),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at 50% 105%,
+            rgba(15, 107, 69, 0.65),
+            transparent 38%
+          ),
+          linear-gradient(135deg, #030407 0%, #08130e 46%, #020304 100%);
+        color: var(--text);
         margin: 0;
-        height: 100vh;
+        min-height: 100dvh;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        isolation: isolate;
+      }
+
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      body::before {
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.018) 1px,
+            transparent 1px
+          );
+        background-size: 42px 42px;
+        mask-image: radial-gradient(
+          circle at center,
+          black 0 45%,
+          transparent 78%
+        );
+      }
+
+      body::after {
+        background: radial-gradient(
+          circle at center,
+          transparent 36%,
+          rgba(0, 0, 0, 0.66) 100%
+        );
       }
 
       /* 介面層 */
       #login-screen,
       #leaderboard-screen {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.95);
+        inset: 0;
         z-index: 1000;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 12px;
+        padding: 24px;
+        text-align: center;
+        background:
+          radial-gradient(
+            circle at 50% 28%,
+            rgba(246, 210, 122, 0.19),
+            transparent 22%
+          ),
+          radial-gradient(
+            circle at 50% 62%,
+            rgba(15, 107, 69, 0.28),
+            transparent 36%
+          ),
+          rgba(2, 4, 6, 0.94);
+        backdrop-filter: blur(18px);
+      }
+
+      #login-screen::before,
+      #leaderboard-screen::before {
+        content: "";
+        position: absolute;
+        width: min(760px, 86vw);
+        height: min(760px, 86vw);
+        border-radius: 50%;
+        border: 1px solid rgba(246, 210, 122, 0.16);
+        box-shadow:
+          inset 0 0 80px rgba(246, 210, 122, 0.08),
+          0 0 70px rgba(0, 0, 0, 0.6);
+        pointer-events: none;
+      }
+
+      #login-screen > *,
+      #leaderboard-screen > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      h1 {
+        margin: 0 0 2px;
+        font-size: clamp(2.1rem, 7vw, 4.8rem);
+        letter-spacing: 0.12em;
+        color: var(--gold) !important;
+        text-shadow:
+          0 0 18px rgba(246, 210, 122, 0.45),
+          0 8px 34px rgba(0, 0, 0, 0.92);
+      }
+
+      h1::after {
+        content: "SHOWHAND ROYALE";
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(0.68rem, 2.2vw, 0.9rem);
+        letter-spacing: 0.5em;
+        color: rgba(255, 249, 233, 0.62);
+      }
+
+      #leaderboard-screen h2 {
+        margin: 0 0 8px;
+        color: var(--gold);
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        letter-spacing: 0.16em;
+      }
+
+      #welcome-back {
+        color: rgba(255, 249, 233, 0.68) !important;
+        margin: 0 0 10px !important;
       }
 
       .input-group {
-        margin: 20px;
+        margin: 12px 0 6px;
         text-align: center;
       }
+
       input {
-        padding: 12px;
-        font-size: 1.1rem;
-        border-radius: 5px;
-        border: none;
-        width: 220px;
+        width: min(320px, 78vw);
+        padding: 15px 18px;
+        font-size: 1.05rem;
+        color: var(--text);
         text-align: center;
+        border-radius: 999px;
+        border: 1px solid rgba(246, 210, 122, 0.42);
+        outline: none;
+        background: rgba(0, 0, 0, 0.52);
+        box-shadow:
+          inset 0 0 24px rgba(0, 0, 0, 0.72),
+          0 0 0 4px rgba(246, 210, 122, 0.04);
+      }
+
+      input:focus {
+        border-color: rgba(246, 210, 122, 0.88);
+        box-shadow:
+          inset 0 0 24px rgba(0, 0, 0, 0.72),
+          0 0 26px rgba(246, 210, 122, 0.22);
       }
 
       button {
-        padding: 12px 25px;
-        font-size: 1rem;
-        cursor: pointer;
-        background: var(--gold);
-        border: none;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: transform 0.1s;
+        position: relative;
+        min-height: 46px;
+        padding: 12px 24px;
         margin: 5px;
-        color: #333;
-      }
-      button:hover {
-        background: #f39c12;
-      }
-      button:disabled {
-        background: #7f8c8d;
-        cursor: not-allowed;
+        border: 0;
+        border-radius: 999px;
+        cursor: pointer;
+        color: #17120a;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        background: linear-gradient(180deg, #ffe9a9, #d7a847 48%, #8b5e18);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.58),
+          inset 0 -8px 14px rgba(0, 0, 0, 0.24),
+          0 12px 26px rgba(0, 0, 0, 0.36);
+        transition:
+          transform 0.16s ease,
+          filter 0.16s ease,
+          box-shadow 0.16s ease;
+        user-select: none;
       }
 
-      /* 遊戲桌佈局 */
+      button:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+      }
+      button:active {
+        transform: translateY(1px) scale(0.985);
+      }
+      button:disabled {
+        cursor: not-allowed;
+        filter: grayscale(0.72) brightness(0.66);
+        transform: none;
+        opacity: 0.62;
+      }
+
+      #status-bar {
+        order: 1;
+        margin: 12px auto 8px;
+        width: min(1120px, calc(100% - 24px));
+        min-height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 18px;
+        border: 1px solid rgba(246, 210, 122, 0.28);
+        border-radius: 999px;
+        color: var(--gold);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-align: center;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.16),
+          rgba(246, 210, 122, 0.08),
+          rgba(0, 0, 0, 0.16)
+        );
+        box-shadow:
+          inset 0 0 28px rgba(0, 0, 0, 0.42),
+          0 14px 38px rgba(0, 0, 0, 0.32);
+      }
+
       #game-board {
-        flex: 1;
-        background: radial-gradient(circle, var(--felt-green) 0%, #1e5d34 100%);
+        order: 2;
+        flex: 1 1 auto;
+        width: min(1180px, calc(100% - 24px));
+        min-height: 0;
+        margin: 0 auto;
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        padding: 10px;
+        gap: 8px;
+        padding: clamp(10px, 2vw, 22px);
+        border-radius: clamp(26px, 4vw, 56px);
+        border: 1px solid rgba(246, 210, 122, 0.3);
+        background:
+          radial-gradient(
+            ellipse at center,
+            rgba(24, 156, 98, 0.92) 0%,
+            rgba(12, 91, 57, 0.94) 42%,
+            rgba(4, 35, 23, 0.98) 78%
+          ),
+          repeating-radial-gradient(
+            ellipse at center,
+            rgba(255, 255, 255, 0.035) 0 1px,
+            transparent 1px 9px
+          );
+        box-shadow:
+          inset 0 0 0 8px rgba(0, 0, 0, 0.28),
+          inset 0 0 90px rgba(0, 0, 0, 0.58),
+          0 30px 90px rgba(0, 0, 0, 0.54);
+        overflow: hidden;
+      }
+
+      #game-board::before {
+        content: "";
+        position: absolute;
+        inset: 7%;
+        border-radius: 50%;
+        border: 1px solid rgba(246, 210, 122, 0.2);
+        box-shadow: inset 0 0 40px rgba(246, 210, 122, 0.08);
+        pointer-events: none;
+      }
+
+      #game-board::after {
+        content: "HIGH STAKES TABLE";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) rotate(-8deg);
+        color: rgba(255, 255, 255, 0.045);
+        font-size: clamp(2.2rem, 8vw, 6rem);
+        font-weight: 900;
+        letter-spacing: 0.14em;
+        white-space: nowrap;
+        pointer-events: none;
       }
 
       .player-row {
+        position: relative;
+        z-index: 1;
         display: flex;
         justify-content: space-around;
         align-items: center;
-        height: 28%;
+        gap: clamp(8px, 1.6vw, 18px);
+        min-height: 0;
+        height: 30%;
       }
+
+      .player-row:nth-of-type(2) {
+        height: 38%;
+      }
+
       .hand-area {
-        background: var(--panel-bg);
-        border-radius: 12px;
-        padding: 10px;
-        min-width: 140px;
+        width: clamp(150px, 24vw, 258px);
+        min-width: 0;
         text-align: center;
-        border: 2px solid #444;
-        transition: all 0.3s;
+        border-radius: 24px;
+        padding: clamp(9px, 1.5vw, 16px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.035)
+          ),
+          rgba(4, 8, 12, 0.72);
+        box-shadow:
+          var(--shadow),
+          inset 0 0 24px rgba(255, 255, 255, 0.035);
+        backdrop-filter: blur(16px);
+        transition:
+          transform 0.28s ease,
+          opacity 0.28s ease,
+          box-shadow 0.28s ease,
+          border-color 0.28s ease;
       }
+
+      .hand-area:hover {
+        transform: translateY(-3px);
+      }
+
       .active-turn {
-        border-color: var(--gold);
-        box-shadow: 0 0 20px var(--gold);
+        border-color: rgba(246, 210, 122, 0.98) !important;
+        box-shadow:
+          0 0 0 2px rgba(246, 210, 122, 0.14),
+          0 0 36px rgba(246, 210, 122, 0.46),
+          var(--shadow) !important;
+        animation: activePulse 1.35s ease-in-out infinite;
+      }
+
+      @keyframes activePulse {
+        0%,
+        100% {
+          filter: brightness(1);
+        }
+        50% {
+          filter: brightness(1.16);
+        }
       }
 
       .info {
-        font-size: 0.85rem;
-        margin-bottom: 5px;
-        color: #bbb;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4px;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: clamp(0.72rem, 1.4vw, 0.9rem);
       }
-      .chips {
-        color: var(--gold);
-        font-weight: bold;
-        font-size: 1rem;
-      }
+
       .name-label {
         display: block;
+        max-width: 100%;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 130px;
+        color: rgba(255, 249, 233, 0.88);
+        font-weight: 900;
+        letter-spacing: 0.06em;
       }
 
-      /* 卡牌 */
-      .cards-container {
-        display: flex;
-        gap: 4px;
+      .chips {
+        justify-self: center;
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        min-height: 60px;
+        min-width: 76px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        color: var(--gold);
+        font-weight: 900;
+        background: rgba(0, 0, 0, 0.34);
+        border: 1px solid rgba(246, 210, 122, 0.22);
+        text-shadow: 0 0 10px rgba(246, 210, 122, 0.32);
       }
-      .card {
-        width: 40px;
-        height: 58px;
-        background: white;
-        color: black;
-        border-radius: 5px;
+
+      .cards-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        font-weight: bold;
-        font-size: 1.1rem;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-      }
-      .card.red {
-        color: #e74c3c;
-      }
-      .card.back {
-        background: #c0392b;
-        border: 1px solid white;
-        color: transparent;
+        gap: clamp(3px, 0.75vw, 7px);
+        min-height: clamp(58px, 11vw, 88px);
+        perspective: 800px;
       }
 
-      /* 控制與狀態 */
+      .card {
+        width: clamp(34px, 6vw, 58px);
+        height: clamp(50px, 8.5vw, 82px);
+        border-radius: clamp(7px, 1.1vw, 12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #111318;
+        font-weight: 1000;
+        font-size: clamp(0.82rem, 2vw, 1.28rem);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(235, 231, 219, 0.98)
+        );
+        border: 1px solid rgba(246, 210, 122, 0.46);
+        box-shadow:
+          0 10px 18px rgba(0, 0, 0, 0.38),
+          inset 0 0 0 2px rgba(255, 255, 255, 0.42);
+        transform: rotate(var(--tilt, 0deg));
+        animation: cardIn 0.34s ease both;
+      }
+
+      .card:nth-child(1) {
+        --tilt: -4deg;
+      }
+      .card:nth-child(2) {
+        --tilt: -2deg;
+      }
+      .card:nth-child(4) {
+        --tilt: 2deg;
+      }
+      .card:nth-child(5) {
+        --tilt: 4deg;
+      }
+
+      @keyframes cardIn {
+        from {
+          opacity: 0;
+          transform: translateY(12px) rotate(var(--tilt, 0deg)) scale(0.92);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) rotate(var(--tilt, 0deg)) scale(1);
+        }
+      }
+
+      .card.red {
+        color: #c71f36;
+      }
+
+      .card.back {
+        color: transparent;
+        background:
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(246, 210, 122, 0.22),
+            transparent 26%
+          ),
+          repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.12) 0 3px,
+            transparent 3px 8px
+          ),
+          linear-gradient(135deg, #4b0714, #b41228 48%, #3a050d);
+        border-color: rgba(255, 232, 164, 0.7);
+        box-shadow:
+          0 10px 20px rgba(0, 0, 0, 0.46),
+          0 0 18px rgba(226, 59, 77, 0.25),
+          inset 0 0 0 2px rgba(255, 255, 255, 0.24);
+      }
+
+      .card.back::before {
+        content: "◆";
+        color: rgba(255, 232, 164, 0.88);
+        font-size: 1.2em;
+        text-shadow: 0 0 10px rgba(246, 210, 122, 0.54);
+      }
+
+      #pot-area {
+        position: absolute;
+        z-index: 2;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: clamp(132px, 20vw, 220px);
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        border-radius: 50%;
+        border: 1px solid rgba(246, 210, 122, 0.38);
+        background: radial-gradient(
+          circle at 50% 42%,
+          rgba(246, 210, 122, 0.18),
+          rgba(0, 0, 0, 0.18) 44%,
+          rgba(0, 0, 0, 0.48) 100%
+        );
+        box-shadow:
+          0 0 46px rgba(246, 210, 122, 0.18),
+          inset 0 0 44px rgba(0, 0, 0, 0.55);
+      }
+
+      #pot-area::before {
+        content: "";
+        width: clamp(54px, 8vw, 82px);
+        height: clamp(28px, 4vw, 42px);
+        margin-bottom: 4px;
+        border-radius: 50%;
+        background:
+          radial-gradient(ellipse at 50% 20%, #fff1b9 0 14%, transparent 15%),
+          repeating-linear-gradient(90deg, #d4a33b 0 7px, #6d4310 7px 11px);
+        box-shadow:
+          0 8px 0 #8a5a17,
+          0 14px 0 #c8952d,
+          0 18px 24px rgba(0, 0, 0, 0.48);
+      }
+
+      #pot-area .info {
+        margin: 0;
+        color: rgba(255, 249, 233, 0.7);
+        letter-spacing: 0.24em;
+        font-size: clamp(0.65rem, 1.2vw, 0.82rem);
+      }
+
+      .pot-amount {
+        margin-top: 2px;
+        color: var(--gold);
+        font-size: clamp(1.35rem, 4vw, 2.7rem);
+        font-weight: 1000;
+        text-shadow:
+          0 0 18px rgba(246, 210, 122, 0.46),
+          0 4px 16px rgba(0, 0, 0, 0.9);
+      }
+
       #controls {
-        background: #222;
-        padding: 15px;
+        order: 3;
+        width: min(1120px, calc(100% - 24px));
+        margin: 8px auto 10px;
+        padding: 10px;
         display: flex;
         justify-content: center;
         gap: 8px;
         flex-wrap: wrap;
-      }
-      #status-bar {
-        background: #333;
-        text-align: center;
-        padding: 8px;
-        color: var(--gold);
-        font-weight: bold;
-        min-height: 1.2em;
-      }
-      #pot-area {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-      }
-      .pot-amount {
-        font-size: 1.8rem;
-        color: var(--gold);
-        text-shadow: 2px 2px 4px black;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        background: rgba(4, 7, 10, 0.72);
+        box-shadow:
+          0 18px 44px rgba(0, 0, 0, 0.34),
+          inset 0 0 28px rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
       }
 
-      @media (min-width: 768px) {
-        .card {
-          width: 55px;
-          height: 80px;
-          font-size: 1.4rem;
+      #controls button {
+        flex: 0 1 138px;
+      }
+      #btn-fold {
+        color: #f3f3f3;
+        background: linear-gradient(180deg, #5d6572, #262c35 55%, #12151a);
+      }
+      #btn-call {
+        color: #06151d;
+        background: linear-gradient(180deg, #a7eeff, #55d8ff 52%, #137a9b);
+      }
+      #btn-raise {
+        background: linear-gradient(180deg, #ffe9a9, #d7a847 48%, #8b5e18);
+      }
+      #btn-allin {
+        color: white !important;
+        background: linear-gradient(
+          180deg,
+          #ff7b86,
+          #e23b4d 48%,
+          #7c0718
+        ) !important;
+        animation: dangerBeat 1.25s ease-in-out infinite;
+      }
+      #btn-next {
+        color: white !important;
+        background: linear-gradient(
+          180deg,
+          #75b9ff,
+          #2d73d4 48%,
+          #123e82
+        ) !important;
+      }
+      #btn-reset {
+        color: white !important;
+        background: linear-gradient(
+          180deg,
+          #a2a7b0,
+          #606875 48%,
+          #292f38
+        ) !important;
+      }
+
+      @keyframes dangerBeat {
+        0%,
+        100% {
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.36),
+            0 12px 26px rgba(0, 0, 0, 0.36),
+            0 0 0 rgba(226, 59, 77, 0);
         }
-        .hand-area {
-          min-width: 200px;
-        }
-        .name-label {
-          max-width: 190px;
+        50% {
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.36),
+            0 12px 26px rgba(0, 0, 0, 0.36),
+            0 0 24px rgba(226, 59, 77, 0.52);
         }
       }
 
       table {
-        width: 90%;
-        max-width: 450px;
-        border-collapse: collapse;
-        margin-top: 20px;
+        width: min(520px, 92vw);
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        border-radius: 20px;
+        margin: 10px 0 16px;
+        background: rgba(0, 0, 0, 0.42);
+        border: 1px solid rgba(246, 210, 122, 0.22);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
       }
+
       th,
       td {
-        border-bottom: 1px solid #444;
-        padding: 12px;
+        padding: 13px 15px;
         text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      th {
+        color: var(--gold);
+        background: rgba(246, 210, 122, 0.08);
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      footer {
+        order: 4;
+        width: 100%;
+        padding: 0 10px 8px;
       }
 
       footer div {
-        font-size: 12px; /* 縮小字體，通常 12px 或 0.8rem 很適合 */
-        color: #888888; /* 中灰色，不會太刺眼 */
-        text-align: center; /* 居中對齊 */
-        opacity: 0.7; /* 稍微增加透明度，讓它更融入背景 */
-        margin-top: 20px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.38);
+        text-align: center;
+      }
+
+      @media (max-width: 760px) {
+        body {
+          overflow: auto;
+        }
+        #status-bar {
+          margin-top: 8px;
+          font-size: 0.86rem;
+          border-radius: 18px;
+        }
+        #game-board {
+          min-height: 560px;
+          border-radius: 30px;
+        }
+        .player-row {
+          height: 28%;
+        }
+        .player-row:nth-of-type(2) {
+          height: 38%;
+          justify-content: space-between !important;
+        }
+        .hand-area {
+          width: clamp(118px, 39vw, 160px);
+          border-radius: 18px;
+        }
+        .cards-container {
+          gap: 0;
+        }
+        .card {
+          margin-left: -8px;
+        }
+        .card:first-child {
+          margin-left: 0;
+        }
+        #pot-area {
+          width: 128px;
+        }
+        #controls {
+          position: sticky;
+          bottom: 8px;
+          z-index: 30;
+          border-radius: 20px;
+        }
+        #controls button {
+          flex: 1 1 calc(50% - 12px);
+          padding-inline: 12px;
+        }
+      }
+
+      @media (max-width: 430px) {
+        #game-board {
+          width: calc(100% - 12px);
+          min-height: 520px;
+          padding: 8px;
+        }
+        .hand-area {
+          width: 122px;
+          padding: 8px;
+        }
+        .card {
+          width: 31px;
+          height: 46px;
+          font-size: 0.72rem;
+          margin-left: -10px;
+        }
+        #pot-area {
+          width: 108px;
+        }
+        .pot-amount {
+          font-size: 1.25rem;
+        }
+        #controls {
+          width: calc(100% - 12px);
+          padding: 8px;
+          gap: 6px;
+        }
+        #controls button {
+          min-height: 42px;
+          font-size: 0.88rem;
+        }
       }
     </style>
   </head>
   <body>
-    <script src="script_showhand.js"></script>
     <div id="login-screen">
-      <h1 style="color: var(--gold); margin-bottom: 5px">巔峰對賭：梭哈</h1>
-      <p id="welcome-back" style="color: #888; margin-bottom: 20px"></p>
+      <h1>巔峰對賭：梭哈</h1>
+      <p id="welcome-back"></p>
       <div class="input-group">
         <input
           type="text"
@@ -243,13 +788,11 @@
         />
       </div>
       <button onclick="handleStartGame()">進入遊戲 / 繼續進度</button>
-      <button onclick="toggleLB(true)" style="background: #555; color: white">
-        查看英雄榜
-      </button>
+      <button onclick="toggleLB(true)">查看英雄榜</button>
     </div>
 
     <div id="leaderboard-screen" style="display: none">
-      <h2>英雄榜(前10名)</h2>
+      <h2>英雄榜 TOP 10</h2>
       <table id="lb-table">
         <thead>
           <tr>
@@ -260,7 +803,7 @@
         </thead>
         <tbody></tbody>
       </table>
-      <button onclick="toggleLB(false)">返回</button>
+      <button onclick="toggleLB(false)">返回牌桌</button>
     </div>
 
     <div id="status-bar">歡迎來到賭神對決現場！</div>
@@ -314,25 +857,11 @@
       <button onclick="handleAction('fold')" id="btn-fold">蓋牌</button>
       <button onclick="handleAction('call')" id="btn-call">跟注</button>
       <button onclick="handleAction('raise')" id="btn-raise">加注</button>
-      <button
-        onclick="handleAction('allin')"
-        id="btn-allin"
-        style="background: #c0392b; color: white"
-      >
-        All-in
-      </button>
-      <button
-        onclick="newGame()"
-        id="btn-next"
-        style="display: none; background: #2980b9; color: white"
-      >
+      <button onclick="handleAction('allin')" id="btn-allin">All-in</button>
+      <button onclick="newGame()" id="btn-next" style="display: none">
         下一局
       </button>
-      <button
-        onclick="resetMoney()"
-        id="btn-reset"
-        style="display: none; background: #7f8c8d; color: white"
-      >
+      <button onclick="resetMoney()" id="btn-reset" style="display: none">
         破產重生
       </button>
     </div>
@@ -386,6 +915,11 @@
       };
 
       window.onload = () => {
+        document
+          .getElementById("p-name")
+          .addEventListener("keydown", (event) => {
+            if (event.key === "Enter") handleStartGame();
+          });
         const savedName = localStorage.getItem("stud_playerName");
         if (savedName) {
           document.getElementById("p-name").value = savedName;
@@ -689,12 +1223,14 @@
         if (show) {
           const lb = JSON.parse(localStorage.getItem("stud_global_lb") || "[]");
           const tbody = document.querySelector("#lb-table tbody");
-          tbody.innerHTML = lb
-            .map(
-              (x, i) =>
-                `<tr><td>${i + 1}</td><td>${x.name}</td><td>$${x.score}</td></tr>`,
-            )
-            .join("");
+          tbody.innerHTML = lb.length
+            ? lb
+                .map(
+                  (x, i) =>
+                    `<tr><td>${i + 1}</td><td>${x.name}</td><td>$${x.score}</td></tr>`,
+                )
+                .join("")
+            : `<tr><td colspan="3" style="text-align:center;color:#b9b4a6;">尚無紀錄，今晚第一把就由你開桌。</td></tr>`;
           document.getElementById("leaderboard-screen").style.display = "flex";
         } else {
           document.getElementById("leaderboard-screen").style.display = "none";
@@ -705,66 +1241,6 @@
         console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
         return false;
       };
-
-      // 2. 禁用常用開發者工具快捷鍵
-      document.onkeydown = function (e) {
-        // 禁用 F12 (keyCode 123)
-        // 禁用 Ctrl+Shift+I (i = 73)
-        // 禁用 Ctrl+Shift+J (j = 74)
-        // 禁用 Ctrl+U (檢視原始碼, u = 85)
-        if (
-          e.keyCode === 123 ||
-          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-          (e.ctrlKey && e.keyCode === 85)
-        ) {
-          console.warn("系統提示：禁止開啟開發者工具或檢視原始碼。");
-          return false;
-        }
-      };
-
-      // 3. Console 警告 (當有人強行開啟開發者工具時顯示)
-      (function () {
-        const warningStyle =
-          "font-size: 20px; color: red; font-weight: bold; background: yellow; padding: 10px;";
-        const infoStyle = "font-size: 14px; color: #333;";
-
-        console.log("%c⚠️ 警告：版權所有 ⚠️", warningStyle);
-        console.log(
-          "%c本程式由 CaoShuHao 開發，專供台南郵局運輸股內部使用。",
-          infoStyle,
-        );
-        console.log(
-          "%c未經授權嚴禁複製、修改或轉載原始碼。所有排版參數均受保護。",
-          infoStyle,
-        );
-      })();
-      // 監測視窗調整，若開發者工具側邊開啟則觸發
-      window.onresize = function () {
-        if (
-          window.outerHeight - window.innerHeight > 200 ||
-          window.outerWidth - window.innerWidth > 200
-        ) {
-          document.body.innerHTML =
-            "<h1 style='text-align:center; margin-top:100px;'>偵測到非正常操作，請關閉開發者工具後重整頁面。</h1>";
-        }
-      };
-      if (window.location.hostname !== "shuhaocao.github.io") {
-        document.documentElement.innerHTML =
-          "<h1>授權無效：此工具僅限官方網址使用。</h1>";
-        window.stop();
-      }
-      async function validateAccess() {
-        try {
-          const resp = await fetch("access.json");
-          const config = await resp.json();
-          if (config.status !== "active") {
-            throw new Error("系統已停用");
-          }
-        } catch (e) {
-          document.body.innerHTML = "<h1>驗證失敗，請聯繫管理員</h1>";
-        }
-      }
-      validateAccess();
     </script>
     <footer>
       <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
