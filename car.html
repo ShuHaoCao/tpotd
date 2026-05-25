@@ -12,73 +12,761 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-0VSMGFF0E6");
     </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>汽車診療室</title>
+    <meta
+      name="description"
+      content="汽車診療室：用沉浸式卡片瀏覽汽車保養、柴油、安全與駕駛知識。"
+    />
+    <title>汽車診療室｜Neo Garage</title>
+
     <style>
       :root {
-        --bg-color: #f0f2f5;
-        --card-white: #ffffff;
-        --text-main: #2c3e50;
-        --text-sub: #7f8c8d;
-        /* 分類顏色 */
-        --color-maintenance: #27ae60;
-        --color-diesel: #2980b9;
-        --color-safety: #e74c3c;
+        --bg: #050816;
+        --bg-soft: #09111f;
+        --panel: rgba(255, 255, 255, 0.08);
+        --panel-strong: rgba(255, 255, 255, 0.14);
+        --line: rgba(255, 255, 255, 0.16);
+        --text: #f7fbff;
+        --muted: #a7b3c6;
+        --cyan: #22d3ee;
+        --green: #34d399;
+        --red: #fb7185;
+        --blue: #60a5fa;
+        --amber: #fbbf24;
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+        --radius-xl: 30px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
         margin: 0;
-        padding: 0;
+        min-height: 100vh;
         font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: var(--bg-color);
-        color: var(--text-main);
+          "Noto Sans TC",
+          "Microsoft JhengHei",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background:
+          radial-gradient(
+            circle at 12% 8%,
+            rgba(34, 211, 238, 0.22),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 85% 6%,
+            rgba(251, 113, 133, 0.18),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 50% 95%,
+            rgba(52, 211, 153, 0.12),
+            transparent 34%
+          ),
+          linear-gradient(135deg, #030712 0%, #07101f 48%, #0f172a 100%);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 46px 46px;
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.8),
+          transparent 88%
+        );
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          115deg,
+          transparent 0 42%,
+          rgba(255, 255, 255, 0.08) 48%,
+          transparent 54% 100%
+        );
+        opacity: 0.18;
+        transform: translateX(-35%);
+        animation: scanLight 8s ease-in-out infinite;
+      }
+
+      @keyframes scanLight {
+        0%,
+        100% {
+          transform: translateX(-42%);
+          opacity: 0.07;
+        }
+        48% {
+          opacity: 0.2;
+        }
+        70% {
+          transform: translateX(42%);
+          opacity: 0.03;
+        }
+      }
+
+      .site-shell {
+        position: relative;
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 18px 0 56px;
       }
 
       .navbar {
         position: sticky;
-        top: 0;
-        background: white;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        top: 12px;
         z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(5, 8, 22, 0.72);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(
+            circle at 35% 20%,
+            rgba(255, 255, 255, 0.9),
+            transparent 18%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(34, 211, 238, 0.9),
+            rgba(52, 211, 153, 0.75)
+          );
+        color: #06111f;
+        box-shadow: 0 0 28px rgba(34, 211, 238, 0.45);
+        flex: 0 0 auto;
+      }
+
+      .brand-title {
+        margin: 0;
+        font-size: clamp(1rem, 2.7vw, 1.22rem);
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+
+      .brand-subtitle {
+        margin: 2px 0 0;
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 12px;
+        border: 1px solid rgba(34, 211, 238, 0.28);
+        border-radius: 999px;
+        color: #cffafe;
+        background: rgba(34, 211, 238, 0.08);
+        font-size: 0.82rem;
+        white-space: nowrap;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.12fr) minmax(260px, 0.88fr);
+        gap: 22px;
+        align-items: stretch;
+        padding: 34px 0 24px;
+      }
+
+      .hero-main,
+      .dashboard-card,
+      .toolbox,
+      .empty-card {
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          150deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.045)
+        );
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(22px);
+      }
+
+      .hero-main {
+        position: relative;
+        overflow: hidden;
+        min-height: 344px;
+        padding: clamp(24px, 4.5vw, 44px);
+        border-radius: var(--radius-xl);
+      }
+
+      .hero-main::before {
+        content: "";
+        position: absolute;
+        right: -70px;
+        bottom: -95px;
+        width: 420px;
+        height: 230px;
+        background:
+          radial-gradient(
+            ellipse at center,
+            rgba(34, 211, 238, 0.24),
+            transparent 60%
+          ),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent);
+        clip-path: polygon(
+          7% 70%,
+          18% 46%,
+          36% 35%,
+          62% 34%,
+          82% 46%,
+          95% 68%,
+          88% 76%,
+          68% 73%,
+          58% 62%,
+          33% 62%,
+          24% 74%
+        );
+        filter: blur(0.3px);
+        opacity: 0.72;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 18px;
+        padding: 8px 12px;
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        border-radius: 999px;
+        color: #bbf7d0;
+        background: rgba(52, 211, 153, 0.08);
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+      }
+
+      .hero h2 {
+        position: relative;
+        margin: 0;
+        max-width: 780px;
+        font-size: clamp(2.45rem, 7vw, 5.6rem);
+        line-height: 0.95;
+        letter-spacing: -0.08em;
+      }
+
+      .hero h2 span {
+        display: block;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.65);
+        text-shadow: none;
+      }
+
+      .hero-copy {
+        position: relative;
+        max-width: 640px;
+        margin: 20px 0 0;
+        color: #cbd5e1;
+        font-size: clamp(1rem, 2vw, 1.12rem);
+        line-height: 1.9;
+      }
+
+      .hero-actions {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .primary-btn,
+      .ghost-btn {
+        appearance: none;
+        border: 0;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 12px 16px;
+        color: var(--text);
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .primary-btn {
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        color: #03111c;
+        box-shadow: 0 14px 36px rgba(34, 211, 238, 0.32);
+      }
+
+      .ghost-btn {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .primary-btn:hover,
+      .ghost-btn:hover,
+      .filter-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .dashboard-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--radius-xl);
+        padding: 24px;
+      }
+
+      .dashboard-card::before {
+        content: "";
+        position: absolute;
+        inset: auto -40px -50px auto;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(96, 165, 250, 0.26),
+          transparent 66%
+        );
+      }
+
+      .gauge {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: min(245px, 72vw);
+        aspect-ratio: 1;
+        margin: 4px auto 18px;
+        border-radius: 50%;
+        background:
+          conic-gradient(
+            from 220deg,
+            var(--green),
+            var(--cyan),
+            var(--blue),
+            var(--red),
+            transparent 76%
+          ),
+          radial-gradient(
+            circle at center,
+            rgba(7, 16, 31, 0.96) 0 58%,
+            rgba(255, 255, 255, 0.08) 59% 63%,
+            transparent 64%
+          );
+        box-shadow:
+          inset 0 0 42px rgba(255, 255, 255, 0.06),
+          0 0 48px rgba(34, 211, 238, 0.18);
+      }
+
+      .gauge::after {
+        content: "";
+        position: absolute;
+        width: 3px;
+        height: 38%;
+        bottom: 50%;
+        left: calc(50% - 1.5px);
+        border-radius: 99px;
+        transform-origin: bottom;
+        transform: rotate(42deg);
+        background: linear-gradient(to top, #fff, var(--cyan));
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.75);
+      }
+
+      .gauge-center {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+      }
+
+      .gauge-center strong {
+        display: block;
+        font-size: clamp(2.5rem, 7vw, 4.1rem);
+        line-height: 1;
+        letter-spacing: -0.06em;
+      }
+
+      .gauge-center span {
+        color: var(--muted);
+        font-size: 0.82rem;
+        letter-spacing: 0.16em;
+      }
+
+      .dashboard-list {
+        position: relative;
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .dashboard-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.055);
+        color: #dbeafe;
+        font-size: 0.92rem;
+      }
+
+      .dashboard-list b {
+        color: var(--text);
+      }
+
+      .toolbox {
+        display: grid;
+        grid-template-columns: minmax(230px, 1fr) auto;
+        gap: 14px;
+        align-items: center;
+        margin: 0 0 20px;
+        padding: 14px;
+        border-radius: var(--radius-lg);
+      }
+
+      .search-box {
+        position: relative;
+      }
+
+      .search-box input {
+        width: 100%;
+        min-height: 52px;
+        padding: 0 16px 0 46px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        outline: none;
+        color: var(--text);
+        background: rgba(2, 6, 23, 0.62);
+        font-size: 1rem;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .search-box input:focus {
+        border-color: rgba(34, 211, 238, 0.65);
+        box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1);
+      }
+
+      .search-box span {
+        position: absolute;
+        left: 17px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 9px;
+      }
+
+      .filter-btn {
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        padding: 10px 13px;
+        color: #dbeafe;
+        background: rgba(255, 255, 255, 0.07);
+        cursor: pointer;
+        font-weight: 800;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .filter-btn.active {
+        color: #03111c;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        box-shadow: 0 12px 30px rgba(34, 211, 238, 0.22);
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+        margin: 22px 0 16px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(1.45rem, 3.2vw, 2.25rem);
+        letter-spacing: -0.04em;
+      }
+
+      .section-head p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .result-count {
+        flex: 0 0 auto;
+        color: #cffafe;
+        font-size: 0.9rem;
+        border: 1px solid rgba(34, 211, 238, 0.24);
+        border-radius: 999px;
+        padding: 9px 12px;
+        background: rgba(34, 211, 238, 0.075);
       }
 
       .feed-container {
-        padding: 15px;
-        max-width: 500px;
-        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
       }
 
-      /* 骨架屏動畫 (載入中效果) */
-      .loading-text {
-        text-align: center;
-        padding: 20px;
-        color: #999;
-      }
-
-      /* 卡片樣式 */
       .info-card {
-        background: var(--card-white);
-        border-radius: 18px;
-        padding: 20px;
-        margin-bottom: 15px;
+        position: relative;
+        min-height: 250px;
+        overflow: hidden;
         display: flex;
-        align-items: flex-start;
-        gap: 15px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        animation: slideUp 0.5s ease-out forwards;
+        flex-direction: column;
+        gap: 16px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(
+            150deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.055)
+          ),
+          rgba(15, 23, 42, 0.56);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.26);
+        animation: slideUp 0.5s ease-out both;
+        transition:
+          transform 0.22s ease,
+          border-color 0.22s ease,
+          box-shadow 0.22s ease;
+      }
+
+      .info-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 4px;
+        background: var(--accent, var(--cyan));
+        box-shadow: 0 0 22px var(--accent, var(--cyan));
+      }
+
+      .info-card::after {
+        content: "";
+        position: absolute;
+        right: -70px;
+        top: -80px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          color-mix(in srgb, var(--accent, var(--cyan)) 42%, transparent),
+          transparent 68%
+        );
+        opacity: 0.45;
+      }
+
+      .info-card:hover {
+        transform: translateY(-6px);
+        border-color: color-mix(
+          in srgb,
+          var(--accent, var(--cyan)) 55%,
+          white 0%
+        );
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.38);
+      }
+
+      .card-top {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .icon-box {
+        flex: 0 0 auto;
+        width: 58px;
+        height: 58px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 18px;
+        background: rgba(2, 6, 23, 0.46);
+        font-size: 1.9rem;
+        box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.04);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        color: var(--tag-color, #cffafe);
+        background: color-mix(
+          in srgb,
+          var(--accent, var(--cyan)) 14%,
+          transparent
+        );
+        border: 1px solid
+          color-mix(in srgb, var(--accent, var(--cyan)) 30%, transparent);
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      .content-box {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .content-box h3 {
+        margin: 0 0 12px;
+        font-size: clamp(1.18rem, 2.4vw, 1.45rem);
+        line-height: 1.35;
+        letter-spacing: -0.03em;
+      }
+
+      .content-box p {
+        margin: 0;
+        color: #cbd5e1;
+        line-height: 1.85;
+        font-size: 0.96rem;
+      }
+
+      .card-footer {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 16px;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .read-more {
+        color: #cffafe;
+        font-weight: 900;
+      }
+
+      .info-card[data-type="maintenance"] {
+        --accent: var(--green);
+        --tag-color: #bbf7d0;
+      }
+      .info-card[data-type="diesel"] {
+        --accent: var(--blue);
+        --tag-color: #dbeafe;
+      }
+      .info-card[data-type="safety"] {
+        --accent: var(--red);
+        --tag-color: #ffe4e6;
+      }
+      .info-card[data-type="driving"] {
+        --accent: var(--amber);
+        --tag-color: #fef3c7;
+      }
+      .info-card[data-type="engine"] {
+        --accent: var(--cyan);
+        --tag-color: #cffafe;
+      }
+
+      .loading-text,
+      .empty-card {
+        grid-column: 1 / -1;
+        min-height: 180px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        border-radius: var(--radius-lg);
+        color: var(--muted);
+      }
+
+      .loading-text {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.055);
+      }
+
+      .loader {
+        width: 52px;
+        height: 52px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        border: 3px solid rgba(255, 255, 255, 0.12);
+        border-top-color: var(--cyan);
+        animation: spin 0.85s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       @keyframes slideUp {
         from {
           opacity: 0;
-          transform: translateY(20px);
+          transform: translateY(18px);
         }
         to {
           opacity: 1;
@@ -86,102 +774,515 @@
         }
       }
 
-      .icon-box {
-        font-size: 2.2rem;
-        min-width: 60px;
-        height: 60px;
-        background: #f8f9fa;
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        display: none;
+        padding: 18px;
+        place-items: center;
+        background: rgba(2, 6, 23, 0.72);
+        backdrop-filter: blur(16px);
+      }
+
+      .modal.show {
+        display: grid;
+      }
+
+      .modal-panel {
+        width: min(720px, 100%);
+        max-height: min(760px, calc(100vh - 40px));
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 28px;
+        background:
+          linear-gradient(
+            150deg,
+            rgba(255, 255, 255, 0.14),
+            rgba(255, 255, 255, 0.07)
+          ),
+          #08111f;
+        box-shadow: 0 32px 100px rgba(0, 0, 0, 0.62);
+        padding: clamp(22px, 4vw, 34px);
+      }
+
+      .modal-head {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 14px;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: flex-start;
+        margin-bottom: 18px;
       }
 
-      .content-box h2 {
-        margin: 0 0 6px 0;
-        font-size: 1.15rem;
+      .modal-title {
+        margin: 12px 0 0;
+        font-size: clamp(1.55rem, 4vw, 2.3rem);
+        letter-spacing: -0.04em;
+        line-height: 1.25;
       }
 
-      .content-box p {
-        margin: 0;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        color: var(--text-sub);
+      .modal-desc {
+        margin: 18px 0 0;
+        color: #dbeafe;
+        line-height: 2;
+        font-size: 1.04rem;
       }
 
-      /* 動態標籤顏色 */
-      .tag {
-        display: inline-block;
-        font-size: 0.75rem;
-        padding: 2px 10px;
-        border-radius: 6px;
-        margin-bottom: 8px;
-        font-weight: bold;
-        background: #eee; /* 預設 */
+      .close-btn {
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        font-size: 1.3rem;
       }
 
-      .tag-maintenance {
-        background: #e8f5e9;
-        color: var(--color-maintenance);
-      }
-      .tag-diesel {
-        background: #e3f2fd;
-        color: var(--color-diesel);
-      }
-      .tag-safety {
-        background: #fdeded;
-        color: var(--color-safety);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="navbar">
-      <h1 style="font-size: 1.2rem; margin: 0">汽車診療室</h1>
-    </div>
+      @media (max-width: 980px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
 
-    <div class="feed-container" id="feed-container">
-      <div class="loading-text">正在連接資料庫...</div>
-    </div>
+        .dashboard-card {
+          display: grid;
+          grid-template-columns: minmax(180px, 0.72fr) 1fr;
+          align-items: center;
+          gap: 18px;
+        }
 
-    <script>
-      async function loadFeed() {
-        const container = document.getElementById("feed-container");
+        .gauge {
+          margin: 0;
+        }
 
-        try {
-          const response = await fetch("car_data.json");
-          let data = await response.json();
-
-          // --- 核心：洗牌演算法 (Shuffle) ---
-          // 從最後一個元素開始，隨機選一個前面的元素交換位置
-          for (let i = data.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [data[i], data[j]] = [data[j], data[i]];
-          }
-          // ------------------------------
-
-          container.innerHTML = "";
-
-          data.forEach((item) => {
-            const card = document.createElement("div");
-            card.className = "info-card";
-            const tagClass = `tag-${item.type}`;
-
-            card.innerHTML = `
-                <div class="icon-box">${item.icon}</div>
-                <div class="content-box">
-                    <span class="tag ${tagClass}">${item.tag_text}</span>
-                    <h2>${item.title}</h2>
-                    <p>${item.description}</p>
-                </div>
-            `;
-            container.appendChild(card);
-          });
-        } catch (error) {
-          container.innerHTML = `<div class="loading-text">載入失敗，請確認資料格式。</div>`;
+        .feed-container {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
-      // 初始化
+      @media (max-width: 720px) {
+        .site-shell {
+          width: min(100% - 22px, 1180px);
+          padding-top: 10px;
+        }
+
+        .navbar {
+          top: 8px;
+          border-radius: 22px;
+        }
+
+        .brand-subtitle,
+        .nav-pill {
+          display: none;
+        }
+
+        .hero {
+          padding-top: 18px;
+          gap: 14px;
+        }
+
+        .hero-main {
+          min-height: auto;
+        }
+
+        .hero h2 {
+          letter-spacing: -0.065em;
+        }
+
+        .dashboard-card {
+          grid-template-columns: 1fr;
+        }
+
+        .gauge {
+          width: min(220px, 74vw);
+          margin: 0 auto 8px;
+        }
+
+        .toolbox {
+          grid-template-columns: 1fr;
+        }
+
+        .filters {
+          justify-content: flex-start;
+          overflow-x: auto;
+          flex-wrap: nowrap;
+          padding-bottom: 4px;
+        }
+
+        .filter-btn {
+          flex: 0 0 auto;
+        }
+
+        .section-head {
+          display: block;
+        }
+
+        .result-count {
+          display: inline-block;
+          margin-top: 12px;
+        }
+
+        .feed-container {
+          grid-template-columns: 1fr;
+        }
+
+        .info-card {
+          min-height: 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="site-shell">
+      <nav class="navbar" aria-label="主導覽">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">⚙</div>
+          <div>
+            <h1 class="brand-title">汽車診療室</h1>
+            <p class="brand-subtitle">Neo Garage Knowledge Feed</p>
+          </div>
+        </div>
+        <div class="nav-pill" id="today-label">今晚，讓車說話</div>
+      </nav>
+
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-main">
+          <div class="eyebrow">✦ 深夜車庫・知識引擎啟動</div>
+          <h2 id="hero-title">汽車診療室 <span>NEO GARAGE</span></h2>
+          <p class="hero-copy">
+            車不只會載你到目的地，也會用異音、油耗、震動與溫度留下線索。
+            這裡把保養、安全與駕駛知識做成沉浸式卡片，讓每一次滑動都像打開一扇車庫門。
+          </p>
+          <div class="hero-actions">
+            <button class="primary-btn" type="button" id="random-btn">
+              隨機巡檢一張
+            </button>
+            <button class="ghost-btn" type="button" id="reset-btn">
+              重整知識流
+            </button>
+          </div>
+        </div>
+
+        <aside class="dashboard-card" aria-label="資訊儀表板">
+          <div class="gauge" aria-hidden="true">
+            <div class="gauge-center">
+              <strong id="total-count">--</strong>
+              <span>CAR TIPS</span>
+            </div>
+          </div>
+          <ul class="dashboard-list">
+            <li><span>目前顯示</span><b id="visible-count">--</b></li>
+            <li><span>分類狀態</span><b id="active-filter-text">全部</b></li>
+            <li><span>閱讀模式</span><b>沉浸卡片</b></li>
+          </ul>
+        </aside>
+      </section>
+
+      <section class="toolbox" aria-label="搜尋與分類工具">
+        <label class="search-box" for="search-input">
+          <span aria-hidden="true">⌕</span>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="搜尋異音、煞車、柴油、保養、安全..."
+            autocomplete="off"
+          />
+        </label>
+        <div class="filters" id="filters" aria-label="分類篩選">
+          <button class="filter-btn active" type="button" data-filter="all">
+            全部
+          </button>
+        </div>
+      </section>
+
+      <section aria-labelledby="feed-title">
+        <div class="section-head">
+          <div>
+            <h2 id="feed-title">知識流</h2>
+            <p>每張卡片都是一個訊號。別讓小問題，偷偷長成大帳單。</p>
+          </div>
+          <div class="result-count" id="result-count">準備連接資料庫...</div>
+        </div>
+
+        <div class="feed-container" id="feed-container">
+          <div class="loading-text">
+            <div>
+              <div class="loader"></div>
+              正在連接資料庫...
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div
+      class="modal"
+      id="detail-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <article class="modal-panel">
+        <div class="modal-head">
+          <div>
+            <span class="tag" id="modal-tag">分類</span>
+            <h2 class="modal-title" id="modal-title">標題</h2>
+          </div>
+          <button
+            class="close-btn"
+            type="button"
+            id="close-modal"
+            aria-label="關閉"
+          >
+            ×
+          </button>
+        </div>
+        <p class="modal-desc" id="modal-desc"></p>
+      </article>
+    </div>
+
+    <script>
+      const DATA_URL = "car_data.json";
+
+      const TYPE_META = {
+        maintenance: { label: "保養維修", icon: "🛠️" },
+        diesel: { label: "柴油系統", icon: "⛽" },
+        safety: { label: "行車安全", icon: "🛡️" },
+        driving: { label: "駕駛技巧", icon: "🏁" },
+        engine: { label: "引擎知識", icon: "⚙️" },
+        default: { label: "汽車知識", icon: "🚗" },
+      };
+
+      const state = {
+        allData: [],
+        filteredData: [],
+        activeFilter: "all",
+        keyword: "",
+      };
+
+      const els = {
+        container: document.getElementById("feed-container"),
+        filters: document.getElementById("filters"),
+        search: document.getElementById("search-input"),
+        totalCount: document.getElementById("total-count"),
+        visibleCount: document.getElementById("visible-count"),
+        resultCount: document.getElementById("result-count"),
+        activeFilterText: document.getElementById("active-filter-text"),
+        randomBtn: document.getElementById("random-btn"),
+        resetBtn: document.getElementById("reset-btn"),
+        modal: document.getElementById("detail-modal"),
+        modalTag: document.getElementById("modal-tag"),
+        modalTitle: document.getElementById("modal-title"),
+        modalDesc: document.getElementById("modal-desc"),
+        closeModal: document.getElementById("close-modal"),
+        todayLabel: document.getElementById("today-label"),
+      };
+
+      function escapeHTML(value = "") {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function shuffle(array) {
+        const result = [...array];
+        for (let i = result.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [result[i], result[j]] = [result[j], result[i]];
+        }
+        return result;
+      }
+
+      function normalizeItem(item, index) {
+        const type = item.type || "default";
+        const meta = TYPE_META[type] || TYPE_META.default;
+        return {
+          id: `${type}-${index}-${item.title || "tip"}`,
+          type,
+          icon: item.icon || meta.icon,
+          tag_text: item.tag_text || meta.label,
+          title: item.title || "未命名知識卡",
+          description: item.description || "這張卡片目前沒有說明內容。",
+        };
+      }
+
+      function buildFilters(data) {
+        const types = [...new Set(data.map((item) => item.type))];
+        const buttons = [
+          `<button class="filter-btn active" type="button" data-filter="all">全部</button>`,
+          ...types.map((type) => {
+            const meta = TYPE_META[type] || TYPE_META.default;
+            const count = data.filter((item) => item.type === type).length;
+            return `<button class="filter-btn" type="button" data-filter="${escapeHTML(type)}">${escapeHTML(meta.icon)} ${escapeHTML(meta.label)} ${count}</button>`;
+          }),
+        ];
+        els.filters.innerHTML = buttons.join("");
+      }
+
+      function renderCards() {
+        const keyword = state.keyword.trim().toLowerCase();
+        state.filteredData = state.allData.filter((item) => {
+          const matchType =
+            state.activeFilter === "all" || item.type === state.activeFilter;
+          const content =
+            `${item.tag_text} ${item.title} ${item.description}`.toLowerCase();
+          return matchType && content.includes(keyword);
+        });
+
+        updateStats();
+
+        if (!state.filteredData.length) {
+          els.container.innerHTML = `
+            <div class="empty-card">
+              <div>
+                <strong>沒有找到符合的汽車線索。</strong><br />
+                換個關鍵字試試，例如「煞車」、「輪胎」、「柴油」或「保養」。
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        els.container.innerHTML = state.filteredData
+          .map((item, index) => {
+            return `
+              <article class="info-card" data-type="${escapeHTML(item.type)}" data-index="${index}" style="animation-delay:${Math.min(index * 0.035, 0.45)}s">
+                <div class="card-top">
+                  <div class="icon-box" aria-hidden="true">${escapeHTML(item.icon)}</div>
+                  <span class="tag">${escapeHTML(item.tag_text)}</span>
+                </div>
+                <div class="content-box">
+                  <h3>${escapeHTML(item.title)}</h3>
+                  <p>${escapeHTML(item.description)}</p>
+                </div>
+                <div class="card-footer">
+                  <span>Diagnostic Note</span>
+                  <span class="read-more">點擊展開 →</span>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function updateStats() {
+        const activeMeta = TYPE_META[state.activeFilter] || TYPE_META.default;
+        const activeText =
+          state.activeFilter === "all" ? "全部" : activeMeta.label;
+        els.totalCount.textContent = state.allData.length;
+        els.visibleCount.textContent = state.filteredData.length;
+        els.activeFilterText.textContent = activeText;
+        els.resultCount.textContent = `顯示 ${state.filteredData.length} / ${state.allData.length} 張知識卡`;
+      }
+
+      function setFilter(filter) {
+        state.activeFilter = filter;
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.filter === filter);
+        });
+        renderCards();
+      }
+
+      function openModal(item) {
+        els.modalTag.textContent = item.tag_text;
+        els.modalTitle.textContent = item.title;
+        els.modalDesc.textContent = item.description;
+        els.modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        els.modal.classList.remove("show");
+        document.body.style.overflow = "";
+      }
+
+      function randomPick() {
+        const pool = state.filteredData.length
+          ? state.filteredData
+          : state.allData;
+        if (!pool.length) return;
+        const item = pool[Math.floor(Math.random() * pool.length)];
+        openModal(item);
+      }
+
+      async function loadFeed() {
+        try {
+          const response = await fetch(DATA_URL, { cache: "no-store" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const rawData = await response.json();
+          if (!Array.isArray(rawData)) throw new Error("資料必須是陣列格式");
+
+          state.allData = shuffle(rawData.map(normalizeItem));
+          buildFilters(state.allData);
+          renderCards();
+        } catch (error) {
+          console.error(error);
+          els.totalCount.textContent = "0";
+          els.visibleCount.textContent = "0";
+          els.resultCount.textContent = "資料載入失敗";
+          els.container.innerHTML = `
+            <div class="empty-card">
+              <div>
+                <strong>載入失敗，請確認 car_data.json 是否與本檔案放在同一層。</strong><br />
+                也請確認 JSON 格式為陣列，例如：[{ "type": "maintenance", "title": "..." }]
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      els.search.addEventListener("input", (event) => {
+        state.keyword = event.target.value;
+        renderCards();
+      });
+
+      els.filters.addEventListener("click", (event) => {
+        const button = event.target.closest(".filter-btn");
+        if (!button) return;
+        setFilter(button.dataset.filter);
+      });
+
+      els.container.addEventListener("click", (event) => {
+        const card = event.target.closest(".info-card");
+        if (!card) return;
+        const index = Number(card.dataset.index);
+        const item = state.filteredData[index];
+        if (item) openModal(item);
+      });
+
+      els.randomBtn.addEventListener("click", randomPick);
+      els.resetBtn.addEventListener("click", () => {
+        state.allData = shuffle(state.allData);
+        renderCards();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+      els.closeModal.addEventListener("click", closeModal);
+      els.modal.addEventListener("click", (event) => {
+        if (event.target === els.modal) closeModal();
+      });
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeModal();
+      });
+
+      const hour = new Date().getHours();
+      els.todayLabel.textContent =
+        hour >= 18 || hour < 6 ? "深夜車庫模式" : "日間巡檢模式";
+
       loadFeed();
     </script>
   </body>
