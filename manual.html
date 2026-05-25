@@ -602,8 +602,8 @@
       }
 
       .modal-content {
-        width: min(1080px, 100%);
-        max-height: min(92vh, 980px);
+        width: min(1120px, 100%);
+        height: min(92vh, 980px);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -620,9 +620,9 @@
       }
 
       .close-row {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
         align-items: center;
-        justify-content: space-between;
         gap: 12px;
         padding: 10px 12px 10px 18px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -638,6 +638,17 @@
         font-weight: 900;
       }
 
+      .zoom-toolbar {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      .zoom-btn,
       .close-btn {
         width: 42px;
         height: 42px;
@@ -647,33 +658,66 @@
         color: #fff;
         background: rgba(255, 255, 255, 0.08);
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1.08rem;
+        font-weight: 950;
         transition:
           transform 0.18s ease,
           background 0.18s ease;
       }
 
+      .zoom-btn:hover,
+      .close-btn:hover {
+        transform: scale(1.04);
+        background: rgba(255, 255, 255, 0.16);
+      }
+
       .close-btn:hover {
         transform: rotate(90deg) scale(1.04);
-        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .zoom-value {
+        min-width: 58px;
+        text-align: center;
+        color: #eaf9ff;
+        font-size: 0.86rem;
+        font-weight: 950;
       }
 
       .modal-img-wrap {
         min-height: 0;
+        flex: 1 1 auto;
         padding: 12px;
         overflow: auto;
         text-align: center;
+        cursor: grab;
+        overscroll-behavior: contain;
+        touch-action: none;
+      }
+
+      .modal-img-wrap.is-dragging {
+        cursor: grabbing;
+        user-select: none;
       }
 
       .modal-content img {
+        display: block;
         width: auto;
         height: auto;
-        max-width: 100%;
-        max-height: calc(92vh - 88px);
+        max-width: none;
+        max-height: none;
+        margin: 0 auto;
         object-fit: contain;
         border-radius: 14px;
         background: rgba(255, 255, 255, 0.92);
         image-rendering: -webkit-optimize-contrast;
+      }
+
+      .zoom-hint {
+        padding: 7px 14px 12px;
+        color: rgba(219, 231, 247, 0.72);
+        text-align: center;
+        font-size: 0.82rem;
+        font-weight: 800;
       }
 
       @media (max-width: 820px) {
@@ -749,6 +793,23 @@
 
         .manual-card:hover {
           transform: none;
+        }
+
+        .close-row {
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        .zoom-toolbar {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .zoom-btn,
+        .close-btn {
+          width: 38px;
+          height: 38px;
         }
       }
 
@@ -831,6 +892,33 @@
       >
         <div class="close-row">
           <div class="modal-title" id="modal-title">詳細宣導圖卡</div>
+          <div class="zoom-toolbar" aria-label="圖片縮放控制">
+            <button
+              class="zoom-btn"
+              type="button"
+              onclick="zoomModalImage(-0.2)"
+              aria-label="縮小圖片"
+            >
+              −
+            </button>
+            <span class="zoom-value" id="zoomValue">100%</span>
+            <button
+              class="zoom-btn"
+              type="button"
+              onclick="zoomModalImage(0.2)"
+              aria-label="放大圖片"
+            >
+              ＋
+            </button>
+            <button
+              class="zoom-btn"
+              type="button"
+              onclick="resetModalZoom()"
+              aria-label="重設圖片大小"
+            >
+              ⟲
+            </button>
+          </div>
           <button
             class="close-btn"
             type="button"
@@ -840,8 +928,11 @@
             ✕
           </button>
         </div>
-        <div class="modal-img-wrap">
+        <div class="modal-img-wrap" id="modal-img-wrap">
           <img id="modal-target-img" src="" alt="詳細宣導圖卡" />
+        </div>
+        <div class="zoom-hint">
+          滑鼠滾輪可放大／縮小，拖曳可移動畫面，雙擊回到適合大小。
         </div>
       </div>
     </div>
@@ -859,6 +950,16 @@
       const modal = document.getElementById("bigImageModal");
       const modalImg = document.getElementById("modal-target-img");
       const modalTitle = document.getElementById("modal-title");
+      const modalImgWrap = document.getElementById("modal-img-wrap");
+      const zoomValue = document.getElementById("zoomValue");
+
+      let modalZoom = 1;
+      let modalBaseWidth = 0;
+      let isDraggingImage = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let startScrollLeft = 0;
+      let startScrollTop = 0;
 
       document.addEventListener("DOMContentLoaded", initManualPage);
 
@@ -960,6 +1061,11 @@
         modalTitle.textContent = title;
         modal.classList.add("is-open");
         document.body.style.overflow = "hidden";
+        resetImageState();
+
+        modalImg.onload = () => {
+          fitImageToModal();
+        };
 
         const currentViews = (localViewCounts[cardId] || 0) + 1;
         localViewCounts[cardId] = currentViews;
@@ -976,8 +1082,120 @@
       function closeModal() {
         modal.classList.remove("is-open");
         modalImg.src = "";
+        modalImg.onload = null;
         document.body.style.overflow = "";
+        resetImageState();
       }
+
+      function resetImageState() {
+        modalZoom = 1;
+        modalBaseWidth = 0;
+        modalImg.style.width = "";
+        modalImgWrap.scrollLeft = 0;
+        modalImgWrap.scrollTop = 0;
+        updateZoomValue();
+      }
+
+      function fitImageToModal() {
+        if (!modalImg.naturalWidth || !modalImg.naturalHeight) return;
+
+        const wrapRect = modalImgWrap.getBoundingClientRect();
+        const availableWidth = Math.max(260, wrapRect.width - 24);
+        const availableHeight = Math.max(260, wrapRect.height - 24);
+        const scaleByWidth = availableWidth / modalImg.naturalWidth;
+        const scaleByHeight = availableHeight / modalImg.naturalHeight;
+        const fitScale = Math.min(1, scaleByWidth, scaleByHeight);
+
+        modalBaseWidth = Math.max(1, modalImg.naturalWidth * fitScale);
+        modalZoom = 1;
+        applyModalZoom(false);
+      }
+
+      function applyModalZoom(keepCenter = true) {
+        if (!modalBaseWidth) fitImageToModal();
+        if (!modalBaseWidth) return;
+
+        const oldWidth =
+          modalImg.getBoundingClientRect().width || modalBaseWidth;
+        const centerX = modalImgWrap.scrollLeft + modalImgWrap.clientWidth / 2;
+        const centerY = modalImgWrap.scrollTop + modalImgWrap.clientHeight / 2;
+        const ratioX = centerX / Math.max(oldWidth, 1);
+        const ratioY =
+          centerY / Math.max(modalImg.getBoundingClientRect().height || 1, 1);
+
+        modalImg.style.width = `${modalBaseWidth * modalZoom}px`;
+        updateZoomValue();
+
+        if (keepCenter) {
+          requestAnimationFrame(() => {
+            modalImgWrap.scrollLeft =
+              ratioX * modalImg.getBoundingClientRect().width -
+              modalImgWrap.clientWidth / 2;
+            modalImgWrap.scrollTop =
+              ratioY * modalImg.getBoundingClientRect().height -
+              modalImgWrap.clientHeight / 2;
+          });
+        }
+      }
+
+      function zoomModalImage(delta) {
+        modalZoom = Math.min(5, Math.max(0.35, modalZoom + delta));
+        applyModalZoom(true);
+      }
+
+      function resetModalZoom() {
+        modalZoom = 1;
+        applyModalZoom(false);
+        modalImgWrap.scrollLeft = 0;
+        modalImgWrap.scrollTop = 0;
+      }
+
+      function updateZoomValue() {
+        if (zoomValue)
+          zoomValue.textContent = `${Math.round(modalZoom * 100)}%`;
+      }
+
+      modalImgWrap.addEventListener(
+        "wheel",
+        (event) => {
+          if (!modal.classList.contains("is-open")) return;
+          event.preventDefault();
+          zoomModalImage(event.deltaY > 0 ? -0.12 : 0.12);
+        },
+        { passive: false },
+      );
+
+      modalImgWrap.addEventListener("dblclick", () => resetModalZoom());
+
+      modalImgWrap.addEventListener("pointerdown", (event) => {
+        if (!modal.classList.contains("is-open")) return;
+        isDraggingImage = true;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        startScrollLeft = modalImgWrap.scrollLeft;
+        startScrollTop = modalImgWrap.scrollTop;
+        modalImgWrap.classList.add("is-dragging");
+        modalImgWrap.setPointerCapture(event.pointerId);
+      });
+
+      modalImgWrap.addEventListener("pointermove", (event) => {
+        if (!isDraggingImage) return;
+        modalImgWrap.scrollLeft =
+          startScrollLeft - (event.clientX - dragStartX);
+        modalImgWrap.scrollTop = startScrollTop - (event.clientY - dragStartY);
+      });
+
+      modalImgWrap.addEventListener("pointerup", endImageDrag);
+      modalImgWrap.addEventListener("pointercancel", endImageDrag);
+
+      function endImageDrag() {
+        isDraggingImage = false;
+        modalImgWrap.classList.remove("is-dragging");
+      }
+
+      window.addEventListener("resize", () => {
+        if (modal.classList.contains("is-open")) fitImageToModal();
+      });
 
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && modal.classList.contains("is-open")) {
