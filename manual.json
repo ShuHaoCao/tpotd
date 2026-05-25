@@ -3,72 +3,86 @@
     {
       "id": "card001",
       "title": "安全上車三步驟",
-      "thumb": "manual001_s.png",
-      "fullImage": "manual001_b.png",
+      "thumb": "manual001_s.webp",
+      "fullImage": "manual001_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card002",
       "title": "安全下車五步驟",
-      "thumb": "manual002_s.png",
-      "fullImage": "manual002_b.png",
+      "thumb": "manual002_s.webp",
+      "fullImage": "manual002_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card003",
       "title": "安全帶使用要點",
-      "thumb": "manual003_s.png",
-      "fullImage": "manual003_b.png",
+      "thumb": "manual003_s.webp",
+      "fullImage": "manual003_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card004",
       "title": "駕駛姿勢與調整要點",
-      "thumb": "manual004_s.png",
-      "fullImage": "manual004_b.png",
+      "thumb": "manual004_s.webp",
+      "fullImage": "manual004_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card005",
       "title": "儀表識別與實用指南",
-      "thumb": "manual005_s.png",
-      "fullImage": "manual005_b.png",
+      "thumb": "manual005_s.webp",
+      "fullImage": "manual005_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card006",
       "title": "儀表板燈號全攻略",
-      "thumb": "manual006_s.png",
-      "fullImage": "manual006_b.png",
+      "thumb": "manual006_s.webp",
+      "fullImage": "manual006_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card007",
       "title": "方向盤操作全攻略",
-      "thumb": "manual007_s.png",
-      "fullImage": "manual007_b.png",
+      "thumb": "manual007_s.webp",
+      "fullImage": "manual007_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card008",
       "title": "離合器踏板操作要領",
-      "thumb": "manual008_s.png",
-      "fullImage": "manual008_b.png",
+      "thumb": "manual008_s.webp",
+      "fullImage": "manual008_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card009",
       "title": "剎車踏板操作要點",
-      "thumb": "manual009_s.png",
-      "fullImage": "manual009_b.png",
+      "thumb": "manual009_s.webp",
+      "fullImage": "manual009_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card010",
       "title": "加速踏板正確操作要點",
-      "thumb": "manual010_s.png",
-      "fullImage": "manual010_b.png",
+      "thumb": "manual010_s.webp",
+      "fullImage": "manual010_b.webp",
       "date": "2026-05-24"
+    },
+    {
+      "id": "card011",
+      "title": "排檔桿正確操作要點",
+      "thumb": "manual011_s.webp",
+      "fullImage": "manual011_b.webp",
+      "date": "2026-05-25"
+    },
+    {
+      "id": "card012",
+      "title": "手煞車操作與保養指南",
+      "thumb": "manual012_s.webp",
+      "fullImage": "manual012_b.webp",
+      "date": "2026-05-26"
     }
   ]
 }
