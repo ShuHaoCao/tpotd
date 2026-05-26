@@ -114,7 +114,7 @@
       }
 
       .hero::after {
-        content: "郵務作戰中";
+        content: "運輸股";
         position: absolute;
         right: -34px;
         bottom: 18px;
@@ -750,37 +750,36 @@
         // 您可以根據需求繼續往下增加其他班別
       };
 
-      // 1. 建立 Tooltip 元素 (修正縮排樣式)
+      // 1. 建立 Tooltip 元素 (維持新版高級感外觀)
       const tooltip = document.createElement("div");
       tooltip.style.cssText = `
-  position: fixed;
-  display: none;
-  background: rgba(9, 22, 34, 0.96);
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 14px;
-  font-size: 14px;
-  z-index: 2000;
-  pointer-events: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  white-space: normal;       /* 核心修改：允許自動換行 */
-  word-wrap: break-word;     /* 核心修改：強制長字斷行 */
-  max-width: 250px;          /* 核心修改：限制寬度，超過則自動縮排 */
-  line-height: 1.6;
-`;
+        position: fixed;
+        display: none;
+        background: rgba(9, 22, 34, 0.98);
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 14px;
+        font-size: 14px;
+        z-index: 9999;             /* 確保不被毛玻璃面板遮擋 */
+        pointer-events: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border: 1px solid rgba(255,255,255,0.15);
+        white-space: normal;       
+        word-wrap: break-word;     
+        max-width: 280px;          
+        line-height: 1.6;
+      `;
       document.body.appendChild(tooltip);
 
-      // 2. 座標更新函數 (核心修改：解決手機邊緣遮擋問題)
+      // 2. 座標更新函數 (支援 RWD 手機邊緣防遮擋)
       function updateTooltipPosition(e) {
         if (tooltip.style.display === "block") {
           let posX = e.clientX + 15;
           let posY = e.clientY + 15;
 
-          // 如果右邊空間不夠，改向左顯示
           if (posX + tooltip.offsetWidth > window.innerWidth) {
             posX = e.clientX - tooltip.offsetWidth - 15;
           }
-          // 如果下面空間不夠，改向上顯示
           if (posY + tooltip.offsetHeight > window.innerHeight) {
             posY = e.clientY - tooltip.offsetHeight - 15;
           }
@@ -790,50 +789,58 @@
         }
       }
 
-      // 3. 滑鼠移入：區分左右色塊內容
+      // 3. 滑鼠移入：不論左右，統一搜尋 data-label 並只抓取工作任務
       document.addEventListener("mouseover", function (e) {
+        const targetRow = e.target.closest(".shift-label, .staff-name");
         let note = "";
 
-        // 判斷左側 (深色班別標籤)
-        if (e.target.classList.contains("shift-label")) {
-          const labelText = e.target.textContent.trim();
-          const time = shiftTimeNotes[labelText];
-          if (time) note = "🕒 上班時間：\n" + time;
-        }
-        // 判斷右側 (淺色人名色塊)
-        else if (e.target.classList.contains("staff-name")) {
-          const row = e.target.closest(".shift-row");
-          if (row) {
-            const shiftLabel = row
-              .querySelector(".shift-label")
-              .textContent.trim();
-            const task = shiftTaskNotes[shiftLabel];
-            if (task) note = "📝 工作任務：\n" + task;
-          }
+        if (targetRow) {
+          const labelText =
+            targetRow.getAttribute("data-label") ||
+            targetRow.textContent
+              .split("0")[0]
+              .split("1")[0]
+              .split("2")[0]
+              .split("3")[0]
+              .split("4")[0]
+              .split("5")[0]
+              .split("6")[0]
+              .split("7")[0]
+              .split("8")[0]
+              .split("9")[0]
+              .trim();
+
+          // 如果有設定 data-label 就用 data-label，沒有就抓文字（相容舊寫法）
+          const finalKey = targetRow.getAttribute("data-label") || labelText;
+          const task = shiftTaskNotes[finalKey];
+          if (task) note = "📝 工作任務：\n" + task;
         }
 
         if (note) {
-          tooltip.innerText = note; // 使用 innerText 才能解析 \n 換行
+          tooltip.innerText = note;
           tooltip.style.display = "block";
         }
       });
 
-      // 4. 移動與點擊：更新位置 (包含手機點擊支援)
+      // 4. 行動裝置點擊與移動支援
       document.addEventListener("mousemove", updateTooltipPosition);
       document.addEventListener("click", function (e) {
         if (
-          e.target.classList.contains("shift-label") ||
-          e.target.classList.contains("staff-name")
+          e.target.closest(".shift-label") ||
+          e.target.closest(".staff-name")
         ) {
           updateTooltipPosition(e);
+        } else {
+          tooltip.style.display = "none";
         }
       });
 
       // 5. 滑鼠移出：隱藏
       document.addEventListener("mouseout", function (e) {
         if (
-          e.target.classList.contains("shift-label") ||
-          e.target.classList.contains("staff-name")
+          !e.relatedTarget ||
+          (!e.relatedTarget.closest(".shift-label") &&
+            !e.relatedTarget.closest(".staff-name"))
         ) {
           tooltip.style.display = "none";
         }
@@ -992,7 +999,19 @@
         const hasStaff = isAssigned(name);
         const displayName = hasStaff ? name : "－";
         const time = shiftTimeNotes[shift.label] || "時間待建檔";
-        return `<div class="shift-row ${hasStaff ? "assigned" : ""}"><div class="shift-label ${shift.color}">${shift.label}<span class="shift-time">${time}</span></div><div class="staff-name"><span class="name-text">${displayName}</span><span class="status-dot"></span></div></div>`;
+        // 核心微調：在 shift-label 與 staff-name 加上 data-label 屬性
+        return `
+    <div class="shift-row ${hasStaff ? "assigned" : ""}">
+      <div class="shift-label ${shift.color}" data-label="${shift.label}">
+        ${shift.label}
+        <span class="shift-time">${time}</span>
+      </div>
+      <div class="staff-name" data-label="${shift.label}">
+        <span class="name-text">${displayName}</span>
+        <span class="status-dot"></span>
+      </div>
+    </div>
+  `;
       }
 
       function renderSchedule() {
