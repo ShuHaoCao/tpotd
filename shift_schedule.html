@@ -494,6 +494,106 @@
         --shift-color: #827717;
       }
 
+      .task-popover {
+        position: fixed;
+        display: none;
+        z-index: 3000;
+        width: min(420px, calc(100vw - 28px));
+        max-height: min(62vh, 520px);
+        overflow: auto;
+        padding: 16px 17px 15px;
+        border-radius: 22px;
+        color: #f8fbff;
+        background:
+          radial-gradient(
+            circle at 18% 0%,
+            rgba(255, 255, 255, 0.16),
+            transparent 34%
+          ),
+          linear-gradient(135deg, rgba(8, 25, 39, 0.98), rgba(10, 55, 48, 0.96));
+        border: 1px solid rgba(255, 255, 255, 0.24);
+        box-shadow:
+          0 26px 70px rgba(0, 0, 0, 0.42),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(22px) saturate(150%);
+        -webkit-backdrop-filter: blur(22px) saturate(150%);
+      }
+
+      .task-popover.show {
+        display: block;
+        animation: taskFloatIn 0.18s ease-out both;
+      }
+
+      @keyframes taskFloatIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .task-popover-title {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+        font-weight: 950;
+        font-size: 1.05rem;
+        line-height: 1.35;
+      }
+
+      .task-popover-title span {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .task-popover-close {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.14);
+        box-shadow: none;
+        line-height: 1;
+        font-size: 1.15rem;
+      }
+
+      .task-popover-close:hover {
+        transform: none;
+        background: rgba(255, 255, 255, 0.22);
+        box-shadow: none;
+      }
+
+      .task-popover-time {
+        display: inline-flex;
+        margin: 0 0 10px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.86);
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .task-popover-body {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.75;
+        font-size: 0.95rem;
+        white-space: pre-line;
+      }
+
+      .shift-row {
+        cursor: pointer;
+      }
+
       footer,
       #update-time {
         text-align: center;
@@ -556,6 +656,11 @@
 
         .shift-time {
           font-size: 0.66rem;
+        }
+
+        .task-popover {
+          border-radius: 20px;
+          max-height: 56vh;
         }
       }
     </style>
@@ -750,100 +855,102 @@
         // 您可以根據需求繼續往下增加其他班別
       };
 
-      // 1. 建立 Tooltip 元素 (維持新版高級感外觀)
-      const tooltip = document.createElement("div");
-      tooltip.style.cssText = `
-        position: fixed;
-        display: none;
-        background: rgba(9, 22, 34, 0.98);
-        color: #fff;
-        padding: 12px 16px;
-        border-radius: 14px;
-        font-size: 14px;
-        z-index: 9999;             /* 確保不被毛玻璃面板遮擋 */
-        pointer-events: none;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        border: 1px solid rgba(255,255,255,0.15);
-        white-space: normal;       
-        word-wrap: break-word;     
-        max-width: 280px;          
-        line-height: 1.6;
-      `;
-      document.body.appendChild(tooltip);
+      // 建立工作任務浮動視窗：保留新版外觀，補回舊版班別工作內容查詢功能
+      const taskPopover = document.createElement("div");
+      taskPopover.className = "task-popover";
+      taskPopover.setAttribute("role", "dialog");
+      taskPopover.setAttribute("aria-live", "polite");
+      document.body.appendChild(taskPopover);
 
-      // 2. 座標更新函數 (支援 RWD 手機邊緣防遮擋)
-      function updateTooltipPosition(e) {
-        if (tooltip.style.display === "block") {
-          let posX = e.clientX + 15;
-          let posY = e.clientY + 15;
-
-          if (posX + tooltip.offsetWidth > window.innerWidth) {
-            posX = e.clientX - tooltip.offsetWidth - 15;
-          }
-          if (posY + tooltip.offsetHeight > window.innerHeight) {
-            posY = e.clientY - tooltip.offsetHeight - 15;
-          }
-
-          tooltip.style.left = posX + "px";
-          tooltip.style.top = posY + "px";
-        }
+      function escapeHTML(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
       }
 
-      // 3. 滑鼠移入：不論左右，統一搜尋 data-label 並只抓取工作任務
-      document.addEventListener("mouseover", function (e) {
-        const targetRow = e.target.closest(".shift-label, .staff-name");
-        let note = "";
+      function placeTaskPopover(anchor) {
+        const rect = anchor.getBoundingClientRect();
+        taskPopover.classList.add("show");
 
-        if (targetRow) {
-          const labelText =
-            targetRow.getAttribute("data-label") ||
-            targetRow.textContent
-              .split("0")[0]
-              .split("1")[0]
-              .split("2")[0]
-              .split("3")[0]
-              .split("4")[0]
-              .split("5")[0]
-              .split("6")[0]
-              .split("7")[0]
-              .split("8")[0]
-              .split("9")[0]
-              .trim();
+        const gap = 12;
+        const popoverWidth = taskPopover.offsetWidth;
+        const popoverHeight = taskPopover.offsetHeight;
 
-          // 如果有設定 data-label 就用 data-label，沒有就抓文字（相容舊寫法）
-          const finalKey = targetRow.getAttribute("data-label") || labelText;
-          const task = shiftTaskNotes[finalKey];
-          if (task) note = "📝 工作任務：\n" + task;
+        let left = rect.left + rect.width / 2 - popoverWidth / 2;
+        let top = rect.bottom + gap;
+
+        left = Math.max(
+          14,
+          Math.min(left, window.innerWidth - popoverWidth - 14),
+        );
+
+        if (top + popoverHeight > window.innerHeight - 14) {
+          top = rect.top - popoverHeight - gap;
         }
 
-        if (note) {
-          tooltip.innerText = note;
-          tooltip.style.display = "block";
+        if (top < 14 || window.innerWidth <= 520) {
+          left = 14;
+          top = Math.max(14, window.innerHeight - popoverHeight - 14);
         }
-      });
 
-      // 4. 行動裝置點擊與移動支援
-      document.addEventListener("mousemove", updateTooltipPosition);
+        taskPopover.style.left = `${left}px`;
+        taskPopover.style.top = `${top}px`;
+      }
+
+      function showTaskPopover(anchor) {
+        const row = anchor.closest(".shift-row");
+        if (!row) return;
+
+        const shiftLabel =
+          row.dataset.shift ||
+          row
+            .querySelector(".shift-label")
+            ?.childNodes[0]?.textContent?.trim() ||
+          "";
+        const task = shiftTaskNotes[shiftLabel] || "此班別工作內容尚未建檔。";
+        const time = shiftTimeNotes[shiftLabel] || "時間待建檔";
+
+        taskPopover.innerHTML = `
+          <div class="task-popover-title">
+            <span>📝 ${escapeHTML(shiftLabel)}｜工作任務</span>
+            <button type="button" class="task-popover-close" aria-label="關閉工作任務視窗">×</button>
+          </div>
+          <div class="task-popover-time">🕒 上班時間：${escapeHTML(time)}</div>
+          <p class="task-popover-body">${escapeHTML(task)}</p>
+        `;
+
+        placeTaskPopover(row);
+      }
+
+      function hideTaskPopover() {
+        taskPopover.classList.remove("show");
+      }
+
       document.addEventListener("click", function (e) {
-        if (
-          e.target.closest(".shift-label") ||
-          e.target.closest(".staff-name")
-        ) {
-          updateTooltipPosition(e);
-        } else {
-          tooltip.style.display = "none";
+        const closeBtn = e.target.closest(".task-popover-close");
+        if (closeBtn) {
+          hideTaskPopover();
+          return;
+        }
+
+        const targetRow = e.target.closest(".shift-row");
+        if (targetRow) {
+          showTaskPopover(targetRow);
+          return;
+        }
+
+        if (!e.target.closest(".task-popover")) {
+          hideTaskPopover();
         }
       });
 
-      // 5. 滑鼠移出：隱藏
-      document.addEventListener("mouseout", function (e) {
-        if (
-          !e.relatedTarget ||
-          (!e.relatedTarget.closest(".shift-label") &&
-            !e.relatedTarget.closest(".staff-name"))
-        ) {
-          tooltip.style.display = "none";
-        }
+      window.addEventListener("resize", hideTaskPopover);
+      window.addEventListener("scroll", hideTaskPopover, true);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") hideTaskPopover();
       });
 
       let currentScheduleData = {};
@@ -999,19 +1106,10 @@
         const hasStaff = isAssigned(name);
         const displayName = hasStaff ? name : "－";
         const time = shiftTimeNotes[shift.label] || "時間待建檔";
-        // 核心微調：在 shift-label 與 staff-name 加上 data-label 屬性
-        return `
-    <div class="shift-row ${hasStaff ? "assigned" : ""}">
-      <div class="shift-label ${shift.color}" data-label="${shift.label}">
-        ${shift.label}
-        <span class="shift-time">${time}</span>
-      </div>
-      <div class="staff-name" data-label="${shift.label}">
-        <span class="name-text">${displayName}</span>
-        <span class="status-dot"></span>
-      </div>
-    </div>
-  `;
+        const safeLabel = escapeHTML(shift.label);
+        const safeTime = escapeHTML(time);
+        const safeName = escapeHTML(displayName);
+        return `<div class="shift-row ${hasStaff ? "assigned" : ""}" data-shift="${safeLabel}" title="點擊查看工作任務"><div class="shift-label ${shift.color}">${safeLabel}<span class="shift-time">${safeTime}</span></div><div class="staff-name"><span class="name-text">${safeName}</span><span class="status-dot"></span></div></div>`;
       }
 
       function renderSchedule() {
