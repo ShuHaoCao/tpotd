@@ -1322,13 +1322,21 @@
       function getVisibleShifts(list) {
         return list.filter((shift) => {
           const hasStaff = isAssigned(currentScheduleData[shift.label]);
+
+          // 非「顯示全部」時，一律只顯示有排班
           if (currentFilterGroup !== "all") {
             return (
-              filterGroups[currentFilterGroup].includes(shift.label) &&
-              (!showOnlyAssigned || hasStaff)
+              filterGroups[currentFilterGroup].includes(shift.label) && hasStaff
             );
           }
-          return !showOnlyAssigned || hasStaff;
+
+          // 顯示全部
+          if (!showOnlyAssigned) {
+            return true;
+          }
+
+          // 顯示排班
+          return hasStaff;
         });
       }
 
