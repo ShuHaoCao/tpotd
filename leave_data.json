@@ -1,0 +1,682 @@
+﻿[
+  {
+    "name": "王昭文",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [0,0,0,0,0,0,0,0,0,0,0,0],
+      "used": 0,
+      "remaining": 30
+    },
+    "mental_leave": ["3/23","3/24"],
+    "official_leave": {
+      "debt": 0.25
+    },
+    "statistics": {
+      "rate": 0,
+      "rank_string": "31",
+      "beat_string": "已超越 8.8% 的人"
+    }
+  },
+  {
+    "name": "謝勝勳",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [0,0,0,0,0,0,0,0,0,0,0,0],
+      "used": 0,
+      "remaining": 30
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 0,
+      "rank_string": "31",
+      "beat_string": "已超越 8.8% 的人"
+    }
+  },
+  {
+    "name": "曹書豪",
+    "wheel_leave": {
+      "quota": 24,
+      "extend_114": 0,
+      "total": 24,
+      "monthly": [1,2,0,3,0,4,0,0,0,0,0,0],
+      "used": 10,
+      "remaining": 14
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 41.7,
+      "rank_string": "11",
+      "beat_string": "已超越 67.6% 的人"
+    }
+  },
+  {
+    "name": "吳家偉",
+    "wheel_leave": {
+      "quota": 14.5,
+      "extend_114": 5,
+      "total": 19.5,
+      "monthly": [1,2,2,1,1,0,0,0,0,0,0,0],
+      "used": 7,
+      "remaining": 12.5
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 48.3,
+      "rank_string": "6",
+      "beat_string": "已超越 82.4% 的人"
+    }
+  },
+  {
+    "name": "邱學士",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [0,0,0,3,1,0,0,0,0,0,0,0],
+      "used": 4,
+      "remaining": 26
+    },
+    "mental_leave": ["2/5","2/6","5/21"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 13.3,
+      "rank_string": "24",
+      "beat_string": "已超越 29.4% 的人"
+    }
+  },
+  {
+    "name": "周耀宗",
+    "wheel_leave": {
+      "quota": 29,
+      "extend_114": 14,
+      "total": 43,
+      "monthly": [1,1,1,0,0,0,0,0,0,0,0,0],
+      "used": 3,
+      "remaining": 40
+    },
+    "mental_leave": ["3/17","3/19"],
+    "official_leave": {
+      "debt": 1
+    },
+    "statistics": {
+      "rate": 10.3,
+      "rank_string": "25",
+      "beat_string": "已超越 26.5% 的人"
+    }
+  },
+  {
+    "name": "李翊宏",
+    "wheel_leave": {
+      "quota": 13,
+      "extend_114": 5.75,
+      "total": 18.75,
+      "monthly": [0,1,6,0,0,0,0,0,0,0,0,0],
+      "used": 7,
+      "remaining": 11.75
+    },
+    "mental_leave": ["4/22"],
+    "official_leave": {
+      "debt": 1
+    },
+    "statistics": {
+      "rate": 53.8,
+      "rank_string": "4",
+      "beat_string": "已超越 88.2% 的人"
+    }
+  },
+  {
+    "name": "簡慶富",
+    "wheel_leave": {
+      "quota": 12,
+      "extend_114": 0,
+      "total": 12,
+      "monthly": [1,0,1,1,0,0,0,0,0,0,0,0],
+      "used": 3,
+      "remaining": 9
+    },
+    "mental_leave": ["4/14"],
+    "official_leave": {
+      "debt": 2
+    },
+    "statistics": {
+      "rate": 25,
+      "rank_string": "19",
+      "beat_string": "已超越 44.1% 的人"
+    }
+  },
+  {
+    "name": "陳俊瑋",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [0,1,3,1,0,0,0,0,0,0,0,0],
+      "used": 5,
+      "remaining": 25
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 16.7,
+      "rank_string": "21",
+      "beat_string": "已超越 38.2% 的人"
+    }
+  },
+  {
+    "name": "連志維",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 0,
+      "total": 15,
+      "monthly": [0,0,0,0,2,5,0,0,0,0,0,0],
+      "used": 7,
+      "remaining": 8
+    },
+    "mental_leave": ["3/27","3/30","4/20"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 46.7,
+      "rank_string": "5",
+      "beat_string": "已超越 85.3% 的人"
+    }
+  },
+  {
+    "name": "張智雄",
+    "wheel_leave": {
+      "quota": 20.5,
+      "extend_114": 3.5,
+      "total": 24,
+      "monthly": [1,3,2,1,1,0,0,0,0,0,0,0],
+      "used": 8,
+      "remaining": 16
+    },
+    "mental_leave": ["4/17","4/27","6/22"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 39,
+      "rank_string": "9",
+      "beat_string": "已超越 73.5% 的人"
+    }
+  },
+  {
+    "name": "吳秉修",
+    "wheel_leave": {
+      "quota": 27,
+      "extend_114": 0,
+      "total": 27,
+      "monthly": [4,0,1,1,0,0,0,0,0,0,0,0],
+      "used": 6,
+      "remaining": 21
+    },
+    "mental_leave": ["1/7","1/8","1/9"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 22.2,
+      "rank_string": "18",
+      "beat_string": "已超越 47.1% 的人"
+    }
+  },
+  {
+    "name": "邱俊融",
+    "wheel_leave": {
+      "quota": 25.5,
+      "extend_114": 0,
+      "total": 25.5,
+      "monthly": [2,2,1,0,2,4,0,0,0,0,0,0],
+      "used": 11,
+      "remaining": 14.5
+    },
+    "mental_leave": ["4/9","5/22","5/25"],
+    "official_leave": {
+      "debt": 0.55
+    },
+    "statistics": {
+      "rate": 43.1,
+      "rank_string": "6",
+      "beat_string": "已超越 82.4% 的人"
+    }
+  },
+  {
+    "name": "程世桓",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 6.125,
+      "total": 21.125,
+      "monthly": [1,0,4,2,2,0,0,0,0,0,0,0],
+      "used": 9,
+      "remaining": 12.125
+    },
+    "mental_leave": ["6/8"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 60,
+      "rank_string": "3",
+      "beat_string": "已超越 91.2% 的人"
+    }
+  },
+  {
+    "name": "吳佳錚",
+    "wheel_leave": {
+      "quota": 13,
+      "extend_114": 0,
+      "total": 13,
+      "monthly": [0,1,1,0,2,0,0,0,0,0,0,0],
+      "used": 4,
+      "remaining": 9
+    },
+    "mental_leave": ["3/27","4/22","5/27"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 30.8,
+      "rank_string": "12",
+      "beat_string": "已超越 64.7% 的人"
+    }
+  },
+  {
+    "name": "沈銘展",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 0,
+      "total": 15,
+      "monthly": [1,2,0,1,0,0,0,0,0,0,0,0],
+      "used": 4.5,
+      "remaining": 10.5
+    },
+    "mental_leave": ["6/24"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 30,
+      "rank_string": "12",
+      "beat_string": "已超越 64.7% 的人"
+    }
+  },
+  {
+    "name": "許瑞廷",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [4,5,1,0,0,5,0,0,0,0,0,0],
+      "used": 15,
+      "remaining": 15
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 1
+    },
+    "statistics": {
+      "rate": 50,
+      "rank_string": "3",
+      "beat_string": "已超越 91.2% 的人"
+    }
+  },
+  {
+    "name": "鄭憲鴻",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [0,0,5,1,1,0,0,0,0,0,0,0],
+      "used": 7.5,
+      "remaining": 22.5
+    },
+    "mental_leave": ["4/28","4/29","4/30"],
+    "official_leave": {
+      "debt": 0.5
+    },
+    "statistics": {
+      "rate": 25,
+      "rank_string": "12",
+      "beat_string": "已超越 64.7% 的人"
+    }
+  },
+  {
+    "name": "陳柏宇",
+    "wheel_leave": {
+      "quota": 16.5,
+      "extend_114": 0,
+      "total": 16.5,
+      "monthly": [0,0,0,0,1,0,0,0,0,0,0,0],
+      "used": 1,
+      "remaining": 15.5
+    },
+    "mental_leave": ["1/14","1/15","1/16"],
+    "official_leave": {
+      "debt": 2
+    },
+    "statistics": {
+      "rate": 6.1,
+      "rank_string": "13",
+      "beat_string": "已超越 61.8% 的人"
+    }
+  },
+  {
+    "name": "王寶生",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 7,
+      "total": 22,
+      "monthly": [6,0,3,4,0,0,0,0,0,0,0,0],
+      "used": 13,
+      "remaining": 9
+    },
+    "mental_leave": ["3/11","3/12","3/13"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 86.7,
+      "rank_string": "1",
+      "beat_string": "已超越 97.1% 的人"
+    }
+  },
+  {
+    "name": "陳緯謙",
+    "wheel_leave": {
+      "quota": 24,
+      "extend_114": 7,
+      "total": 31,
+      "monthly": [0,3,5,0,0,0,0,0,0,0,0,0],
+      "used": 8,
+      "remaining": 23
+    },
+    "mental_leave": ["5/14"],
+    "official_leave": {
+      "debt": 0.5
+    },
+    "statistics": {
+      "rate": 33.3,
+      "rank_string": "6",
+      "beat_string": "已超越 82.4% 的人"
+    }
+  },
+  {
+    "name": "翁志峰",
+    "wheel_leave": {
+      "quota": 18.5,
+      "extend_114": 0,
+      "total": 18.5,
+      "monthly": [0,0,3,1,1,0,0,0,0,0,0,0],
+      "used": 5,
+      "remaining": 13.5
+    },
+    "mental_leave": ["6/2","6/10","6/11"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 27,
+      "rank_string": "9",
+      "beat_string": "已超越 73.5% 的人"
+    }
+  },
+  {
+    "name": "葉育宏",
+    "wheel_leave": {
+      "quota": 14,
+      "extend_114": 2,
+      "total": 16,
+      "monthly": [0,1,2,1,1,1,0,0,0,0,0,0],
+      "used": 6,
+      "remaining": 10
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 1
+    },
+    "statistics": {
+      "rate": 42.9,
+      "rank_string": "3",
+      "beat_string": "已超越 91.2% 的人"
+    }
+  },
+  {
+    "name": "莊景宇",
+    "wheel_leave": {
+      "quota": 29,
+      "extend_114": 3,
+      "total": 32,
+      "monthly": [1,4,2,3,0,0,0,0,0,0,0,0],
+      "used": 10,
+      "remaining": 22
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 34.5,
+      "rank_string": "4",
+      "beat_string": "已超越 88.2% 的人"
+    }
+  },
+  {
+    "name": "葉吉順",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 0,
+      "total": 30,
+      "monthly": [0,0,1,0,0,0,0,0,0,0,0,0],
+      "used": 1,
+      "remaining": 29
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0.375
+    },
+    "statistics": {
+      "rate": 3.3,
+      "rank_string": "8",
+      "beat_string": "已超越 76.5% 的人"
+    }
+  },
+  {
+    "name": "周恆毅",
+    "wheel_leave": {
+      "quota": 18,
+      "extend_114": 0,
+      "total": 18,
+      "monthly": [0,0,3,0,3,0,0,0,0,0,0,0],
+      "used": 6,
+      "remaining": 12
+    },
+    "mental_leave": ["3/9","3/10","3/16"],
+    "official_leave": {
+      "debt": 2
+    },
+    "statistics": {
+      "rate": 33.3,
+      "rank_string": "4",
+      "beat_string": "已超越 88.2% 的人"
+    }
+  },
+  {
+    "name": "陳柏林",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 4,
+      "total": 19,
+      "monthly": [0,0,4,0,1,1,0,0,0,0,0,0],
+      "used": 6,
+      "remaining": 13
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 3
+    },
+    "statistics": {
+      "rate": 40,
+      "rank_string": "3",
+      "beat_string": "已超越 91.2% 的人"
+    }
+  },
+  {
+    "name": "黃憲章",
+    "wheel_leave": {
+      "quota": 30,
+      "extend_114": 7,
+      "total": 37,
+      "monthly": [1,4,1,6,1,0,0,0,0,0,0,0],
+      "used": 13.5,
+      "remaining": 23.5
+    },
+    "mental_leave": ["3/30","3/31"],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 45,
+      "rank_string": "2",
+      "beat_string": "已超越 94.1% 的人"
+    }
+  },
+  {
+    "name": "金哲駿",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 0,
+      "total": 15,
+      "monthly": [0,0,0,0,0,2,0,0,0,0,0,0],
+      "used": 2,
+      "remaining": 13
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 1
+    },
+    "statistics": {
+      "rate": 13.3,
+      "rank_string": "4",
+      "beat_string": "已超越 88.2% 的人"
+    }
+  },
+  {
+    "name": "莊世明",
+    "wheel_leave": {
+      "quota": 15,
+      "extend_114": 0,
+      "total": 15,
+      "monthly": [0,0,0,0,5,0,0,0,0,0,0,0],
+      "used": 5,
+      "remaining": 10
+    },
+    "mental_leave": ["3/6"],
+    "official_leave": {
+      "debt": 1
+    },
+    "statistics": {
+      "rate": 33.3,
+      "rank_string": "2",
+      "beat_string": "已超越 94.1% 的人"
+    }
+  },
+  {
+    "name": "張正德",
+    "wheel_leave": {
+      "quota": 0,
+      "extend_114": 0,
+      "total": 0,
+      "monthly": [0,0,0,0,0,0,0,0,0,0,0,0],
+      "used": 0,
+      "remaining": 0
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 2
+    },
+    "statistics": {
+      "rate": 0,
+      "rank_string": "31/34",
+      "beat_string": "已超越 0% 的人"
+    }
+  },
+  {
+    "name": "施以平",
+    "wheel_leave": {
+      "quota": 0,
+      "extend_114": 0,
+      "total": 0,
+      "monthly": [0,0,0,0,0,0,0,0,0,0,0,0],
+      "used": 0,
+      "remaining": 0
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 0,
+      "rank_string": "32/34",
+      "beat_string": "已超越 0% 的人"
+    }
+  },
+  {
+    "name": "蔡綜哲",
+    "wheel_leave": {
+      "quota": 18.5,
+      "extend_114": 0,
+      "total": 18.5,
+      "monthly": [0,0,1,1,3,1,0,0,0,0,0,0],
+      "used": 6,
+      "remaining": 12.5
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 0
+    },
+    "statistics": {
+      "rate": 32.4,
+      "rank_string": "2",
+      "beat_string": "已超越 94.1% 的人"
+    }
+  },
+  {
+    "name": "吳政謙",
+    "wheel_leave": {
+      "quota": 12.5,
+      "extend_114": 0,
+      "total": 12.5,
+      "monthly": [4,2,1,0,1,0,0,0,0,0,0,0],
+      "used": 8,
+      "remaining": 1900
+    },
+    "mental_leave": [],
+    "official_leave": {
+      "debt": 7
+    },
+    "statistics": {
+      "rate": 64,
+      "rank_string": "1",
+      "beat_string": "已超越 97.1% 的人"
+    }
+  }
+]

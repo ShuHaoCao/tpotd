@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>郵局運輸股 - 115年同仁休假統計查詢</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #14b8a6;
+        --primary-2: #34d399;
+        --gold: #fbbf24;
+        --rose: #fb7185;
+        --violet: #a78bfa;
+        --sky: #38bdf8;
+        --bg-1: #06140f;
+        --bg-2: #0f172a;
+        --bg-3: #11251f;
+        --card: rgba(8, 24, 20, 0.72);
+        --card-2: rgba(15, 23, 42, 0.72);
+        --line: rgba(255, 255, 255, 0.12);
+        --line-strong: rgba(52, 211, 153, 0.32);
+        --text: #f8fafc;
+        --muted: #9ca3af;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Noto Sans TC", sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100vh;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 8% 8%,
+            rgba(52, 211, 153, 0.24),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 92% 10%,
+            rgba(56, 189, 248, 0.16),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 50% 92%,
+            rgba(167, 139, 250, 0.13),
+            transparent 36%
+          ),
+          linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        padding: clamp(1rem, 3vw, 2.5rem);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 44px 44px;
+        mask-image: linear-gradient(to bottom, black, transparent 78%);
+      }
+
+      .container {
+        position: relative;
+        width: min(1180px, 100%);
+        margin: 0 auto;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 34px;
+        padding: clamp(1.35rem, 4vw, 3rem);
+        margin-bottom: 1.35rem;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.035)
+          ),
+          rgba(8, 18, 16, 0.66);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(22px);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        right: -110px;
+        top: -150px;
+        width: 380px;
+        height: 380px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle,
+          rgba(52, 211, 153, 0.34),
+          transparent 66%
+        );
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.42rem 0.8rem;
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        border-radius: 999px;
+        background: rgba(20, 184, 166, 0.12);
+        color: #bbf7d0;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero h1 {
+        max-width: 820px;
+        font-size: clamp(2rem, 6vw, 4.1rem);
+        line-height: 1.06;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+      }
+
+      .hero h1 span {
+        background: linear-gradient(90deg, #ecfdf5, #34d399 42%, #38bdf8 86%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        max-width: 760px;
+        color: #cbd5e1;
+        line-height: 1.8;
+        font-size: clamp(0.95rem, 2vw, 1.08rem);
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.62rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--line);
+        color: #e2e8f0;
+        font-size: 0.92rem;
+      }
+
+      .search-box {
+        display: grid;
+        grid-template-columns: 1fr minmax(240px, 420px);
+        gap: 1rem;
+        align-items: center;
+        padding: clamp(1rem, 3vw, 1.4rem);
+        margin-bottom: 1.25rem;
+        border-radius: 28px;
+        border: 1px solid var(--line-strong);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(20, 184, 166, 0.18),
+            rgba(15, 23, 42, 0.74)
+          ),
+          rgba(15, 23, 42, 0.7);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(18px);
+      }
+
+      .search-title {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .search-title label {
+        font-size: 1.22rem;
+        font-weight: 800;
+      }
+
+      .search-title small {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .select-wrap {
+        position: relative;
+      }
+
+      .select-wrap::after {
+        content: "⌄";
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-55%);
+        color: #86efac;
+        pointer-events: none;
+        font-size: 1.25rem;
+      }
+
+      select {
+        width: 100%;
+        appearance: none;
+        padding: 1rem 2.8rem 1rem 1rem;
+        border: 1px solid rgba(52, 211, 153, 0.36);
+        border-radius: 18px;
+        color: var(--text);
+        background: rgba(2, 6, 23, 0.74);
+        outline: none;
+        cursor: pointer;
+        font-size: 1.02rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      select:focus {
+        border-color: #5eead4;
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.16);
+      }
+
+      .error-msg,
+      .empty-state {
+        border-radius: 24px;
+        padding: 1.2rem;
+        line-height: 1.75;
+        text-align: center;
+        backdrop-filter: blur(14px);
+      }
+
+      .error-msg {
+        margin-bottom: 1.25rem;
+        border: 1px solid rgba(251, 113, 133, 0.45);
+        background: rgba(127, 29, 29, 0.26);
+        color: #fecdd3;
+      }
+
+      .empty-state {
+        margin-top: 1.1rem;
+        border: 1px dashed rgba(148, 163, 184, 0.34);
+        background: rgba(15, 23, 42, 0.46);
+        color: #cbd5e1;
+      }
+
+      .dashboard-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+        grid-template-areas:
+          "profile profile"
+          "leave stats"
+          "mental official";
+        gap: 1.1rem;
+        animation: fadeUp 0.45s ease both;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .full-width,
+      .section-box {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.105),
+            rgba(255, 255, 255, 0.032)
+          ),
+          var(--card);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(20px);
+      }
+
+      .full-width::before,
+      .section-box::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.13),
+          transparent 28%,
+          transparent 70%,
+          rgba(52, 211, 153, 0.08)
+        );
+      }
+
+      .full-width {
+        grid-area: profile;
+        border-radius: 30px;
+        padding: clamp(1.1rem, 3vw, 1.55rem);
+      }
+
+      .name-title {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .person-block {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .avatar {
+        width: clamp(58px, 10vw, 78px);
+        height: clamp(58px, 10vw, 78px);
+        display: grid;
+        place-items: center;
+        border-radius: 24px;
+        color: #022c22;
+        font-weight: 900;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        background: linear-gradient(135deg, #ecfdf5, #34d399 65%, #0f766e);
+        box-shadow: 0 18px 36px rgba(20, 184, 166, 0.24);
+      }
+
+      .person-name {
+        font-size: clamp(1.65rem, 5vw, 2.5rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+      }
+
+      .person-subtitle {
+        margin-top: 0.2rem;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+
+      .year-badge {
+        justify-self: end;
+        padding: 0.75rem 1rem;
+        border-radius: 18px;
+        background: rgba(52, 211, 153, 0.12);
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        color: #bbf7d0;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .section-box {
+        min-height: 100%;
+        border-radius: 30px;
+        padding: clamp(1.1rem, 3vw, 1.5rem);
+      }
+
+      .leave-card {
+        grid-area: leave;
+      }
+
+      .stats-card {
+        grid-area: stats;
+      }
+
+      .mental-card {
+        grid-area: mental;
+      }
+
+      .official-card {
+        grid-area: official;
+      }
+
+      .section-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: #d1fae5;
+        font-size: 1.12rem;
+        font-weight: 900;
+      }
+
+      .section-title span:first-child {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+
+      .section-chip {
+        padding: 0.32rem 0.66rem;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        color: #cbd5e1;
+        font-size: 0.76rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .grid-data {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.72rem;
+      }
+
+      .data-item {
+        min-height: 108px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 1.15rem;
+        padding: 1.05rem 1rem 1rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(2, 6, 23, 0.36);
+      }
+
+      .data-label {
+        color: var(--muted);
+        font-size: clamp(0.76rem, 1.4vw, 0.88rem);
+        line-height: 1.2;
+      }
+
+      .data-value {
+        color: #f8fafc;
+        font-size: clamp(1.7rem, 4vw, 2.25rem);
+        font-weight: 900;
+        line-height: 0.95;
+      }
+
+      .highlight {
+        color: var(--gold) !important;
+      }
+
+      .used {
+        color: var(--rose) !important;
+      }
+
+      .remain {
+        color: #34d399 !important;
+      }
+
+      .month-area {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(72px, 1fr));
+        gap: 0.58rem;
+        margin-top: 0.7rem;
+      }
+
+      .month-item {
+        min-height: 66px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.34rem;
+        border-radius: 17px;
+        border: 1px solid rgba(52, 211, 153, 0.13);
+        background: linear-gradient(
+          180deg,
+          rgba(20, 184, 166, 0.13),
+          rgba(2, 6, 23, 0.35)
+        );
+        text-align: center;
+      }
+
+      .month-name {
+        color: #a7f3d0;
+        font-size: 0.76rem;
+      }
+
+      .month-days {
+        font-weight: 900;
+        font-size: 1.05rem;
+      }
+
+      .stat-badge-group {
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .stat-badge {
+        padding: 1.15rem;
+        border-radius: 26px;
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(167, 139, 250, 0.22),
+            transparent 44%
+          ),
+          rgba(15, 23, 42, 0.62);
+        text-align: center;
+      }
+
+      .stat-badge.rank {
+        border-color: rgba(251, 191, 36, 0.2);
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(251, 191, 36, 0.18),
+            transparent 42%
+          ),
+          rgba(15, 23, 42, 0.62);
+      }
+
+      .stat-num {
+        margin-bottom: 0.12rem;
+        color: var(--violet);
+        font-size: clamp(2.7rem, 8.2vw, 4.15rem);
+        font-weight: 900;
+        line-height: 0.92;
+      }
+
+      .rank .stat-num {
+        color: var(--gold);
+      }
+
+      .stat-desc {
+        color: #cbd5e1;
+        font-size: clamp(0.72rem, 1.5vw, 0.84rem);
+        letter-spacing: 0.04em;
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 12px;
+        margin-top: 0.9rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.22);
+      }
+
+      .progress-bar {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #14b8a6, #34d399, #bef264);
+        box-shadow: 0 0 22px rgba(52, 211, 153, 0.32);
+        transition: width 0.7s ease;
+      }
+
+      .beat-text {
+        margin-top: 0.62rem;
+        color: #fde68a;
+        font-size: clamp(0.72rem, 1.5vw, 0.84rem);
+        font-weight: 800;
+      }
+
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 0.65rem;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.46rem 0.78rem;
+        border-radius: 999px;
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        color: #bbf7d0;
+        background: rgba(20, 184, 166, 0.12);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .note-box {
+        margin-top: 1rem;
+        padding: 0.9rem 1rem;
+        border-radius: 20px;
+        border: 1px solid rgba(52, 211, 153, 0.2);
+        color: #a7f3d0;
+        background: rgba(20, 184, 166, 0.08);
+        line-height: 1.7;
+      }
+
+      .muted-text {
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .official-note {
+        margin-top: 1rem;
+        color: var(--muted);
+        line-height: 1.45;
+        font-size: clamp(0.72rem, 1.35vw, 0.9rem);
+        text-wrap: balance;
+      }
+
+      .official-number {
+        display: flex;
+        align-items: end;
+        gap: 0.35rem;
+        margin-top: 0.8rem;
+      }
+
+      .official-number strong {
+        font-size: clamp(3rem, 10vw, 5rem);
+        line-height: 0.9;
+      }
+
+      .official-number span {
+        margin-bottom: 0.35rem;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      @media (max-width: 980px) {
+        .dashboard-card {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "profile"
+            "stats"
+            "leave"
+            "mental"
+            "official";
+        }
+
+        .grid-data {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .month-grid {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        body {
+          padding: 0.85rem;
+        }
+
+        .hero,
+        .search-box,
+        .full-width,
+        .section-box {
+          border-radius: 24px;
+        }
+
+        .search-box {
+          grid-template-columns: 1fr;
+        }
+
+        .name-title {
+          grid-template-columns: 1fr;
+        }
+
+        .year-badge {
+          justify-self: start;
+        }
+
+        /* 手機版：只調整輪休假指標區，桌面版完全維持原樣 */
+        .leave-card {
+          padding: 1.15rem;
+        }
+
+        .leave-card .section-title {
+          margin-bottom: 1.05rem;
+        }
+
+        .leave-card .grid-data {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.9rem;
+        }
+
+        .leave-card .grid-data .data-item:nth-child(5) {
+          grid-column: 1 / -1;
+          min-height: 176px;
+        }
+
+        .leave-card .data-item {
+          position: relative;
+          min-height: 158px;
+          gap: 0.45rem;
+          justify-content: space-between;
+          padding: 1.25rem 1.1rem 1.05rem;
+          border-radius: 26px;
+          background:
+            radial-gradient(
+              circle at 18% 16%,
+              rgba(52, 211, 153, 0.12),
+              transparent 34%
+            ),
+            linear-gradient(
+              145deg,
+              rgba(30, 41, 59, 0.78),
+              rgba(2, 6, 23, 0.56)
+            );
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 14px 30px rgba(0, 0, 0, 0.22);
+        }
+
+        .leave-card .data-item::after {
+          content: "";
+          position: absolute;
+          left: 0.8rem;
+          right: 0.8rem;
+          bottom: 0;
+          height: 4px;
+          border-radius: 999px 999px 0 0;
+          background: linear-gradient(90deg, #38bdf8, #14b8a6);
+          box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(2)::after {
+          background: linear-gradient(90deg, #14b8a6, #34d399);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(3)::after {
+          background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(4)::after {
+          background: linear-gradient(90deg, #fb7185, #f43f5e);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(5)::after {
+          background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .leave-card .data-label {
+          font-size: clamp(1.05rem, 4vw, 1.42rem);
+          font-weight: 900;
+          color: #e5e7eb;
+          line-height: 1.15;
+        }
+
+        .leave-card .data-value {
+          font-size: clamp(3.4rem, 19vw, 6rem);
+          letter-spacing: -0.08em;
+          line-height: 0.9;
+        }
+
+        .leave-card .grid-data .data-item:nth-child(5) .data-value {
+          font-size: clamp(4.4rem, 24vw, 7.8rem);
+          text-align: center;
+        }
+
+        .leave-card .data-value::after {
+          content: "天";
+          margin-left: 0.32rem;
+          color: #cbd5e1;
+          font-size: clamp(1.15rem, 5vw, 1.75rem);
+          letter-spacing: 0;
+          vertical-align: 0.12em;
+        }
+
+        .month-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <header class="hero">
+        <div class="eyebrow">中華郵政・運輸股休假儀表板</div>
+        <h1><span>115年度同仁休假狀況</span>查詢</h1>
+        <p>
+          將輪休假、身心假、公休積欠與休假率排名整合成一張清楚的管理看板。資訊要準，畫面也要帥；制度像老派鐘錶，介面就讓它發光。
+        </p>
+        <div class="hero-meta">
+          <span class="meta-pill">📅 年度統計</span>
+          <span class="meta-pill">📊 休假率進度</span>
+          <span class="meta-pill">🧘 身心假追蹤</span>
+          <span class="meta-pill">⏳ 公休積欠提醒</span>
+        </div>
+      </header>
+
+      <div v-if="loadError" class="error-msg">
+        ⚠️ <strong>資料載入失敗！</strong> 原因可能是瀏覽器本機安全性限制
+        (CORS)。<br />
+        請將網頁與 JSON 檔案上傳至 GitHub 空間，或在本機使用伺服器環境（如 VS
+        Code Live Server）開啟。
+      </div>
+
+      <div class="search-box">
+        <div class="search-title">
+          <label for="empSelect">選擇查詢同仁</label>
+          <small>選定人員後，系統會即時呈現休假明細、進度與排名。</small>
+        </div>
+        <div class="select-wrap">
+          <select
+            id="empSelect"
+            v-model="selectedName"
+            :disabled="leaveData.length === 0"
+          >
+            <option value="">-- 請選擇人員 --</option>
+            <option v-for="emp in leaveData" :key="emp.name" :value="emp.name">
+              {{ emp.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div v-if="!selectedEmp" class="empty-state">
+        💡 請由上方下拉選單選擇同仁，休假資料就會像開燈一樣全部亮起來。
+      </div>
+
+      <div v-if="selectedEmp" class="dashboard-card">
+        <div class="full-width">
+          <div class="name-title">
+            <div class="person-block">
+              <div class="avatar">{{ selectedEmp.name.slice(0, 1) }}</div>
+              <div>
+                <div class="person-name">{{ selectedEmp.name }}</div>
+                <div class="person-subtitle">同仁休假簡報・排班調度參考</div>
+              </div>
+            </div>
+            <div class="year-badge">統計基準：115年度</div>
+          </div>
+        </div>
+
+        <section class="section-box leave-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>📅 輪休假詳細指標</span>
+              <span class="section-chip">年度總覽</span>
+            </div>
+            <div class="grid-data">
+              <div class="data-item">
+                <span class="data-label">可休天數</span>
+                <span class="data-value"
+                  >{{ selectedEmp.wheel_leave.quota }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">展延天數</span>
+                <span class="data-value"
+                  >{{ selectedEmp.wheel_leave.extend_114 }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">總天數</span>
+                <span class="data-value highlight"
+                  >{{ selectedEmp.wheel_leave.total }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">已休天數</span>
+                <span class="data-value used"
+                  >{{ selectedEmp.wheel_leave.used }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">剩餘天數</span>
+                <span class="data-value remain"
+                  >{{ selectedEmp.wheel_leave.remaining }}</span
+                >
+              </div>
+            </div>
+
+            <div class="month-area">
+              <span class="data-label">1-12月排休情形</span>
+              <div class="month-grid">
+                <div
+                  class="month-item"
+                  v-for="(days, index) in selectedEmp.wheel_leave.monthly"
+                  :key="'month-' + index"
+                >
+                  <div class="month-name">{{ index + 1 }}月</div>
+                  <div class="month-days">{{ days }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-box stats-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>📊 綜合休假率指標</span>
+              <span class="section-chip">進度看板</span>
+            </div>
+            <div class="stat-badge-group">
+              <div class="stat-badge">
+                <div class="stat-num">{{ selectedEmp.statistics.rate }}%</div>
+                <div class="stat-desc">目前休假率</div>
+                <div class="progress-container">
+                  <div
+                    class="progress-bar"
+                    :style="{ width: Math.min(selectedEmp.statistics.rate, 100) + '%' }"
+                  ></div>
+                </div>
+              </div>
+              <div class="stat-badge rank">
+                <div class="stat-num">
+                  {{ selectedEmp.statistics.rank_string }}
+                </div>
+                <div class="stat-desc">單位休假率排名</div>
+                <div class="beat-text">
+                  {{ selectedEmp.statistics.beat_string }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-box mental-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>🧘 身心假實施情形</span>
+              <span class="section-chip">正常 3 天</span>
+            </div>
+            <div class="data-label">請休日期</div>
+            <div
+              class="tag-list"
+              v-if="selectedEmp.mental_leave && selectedEmp.mental_leave.length > 0"
+            >
+              <span
+                class="tag"
+                v-for="(date, dIdx) in selectedEmp.mental_leave"
+                :key="'mental-' + dIdx"
+              >
+                ✓ {{ date }}
+              </span>
+            </div>
+            <div v-else class="muted-text" style="margin-top: 0.6rem">
+              ⚠️ 本年度尚未有身心假請休紀錄
+            </div>
+            <div class="note-box">
+              💡 已請休 {{ selectedEmp.mental_leave.length }} 天，剩餘 {{ 3 -
+              selectedEmp.mental_leave.length }} 天身心假。
+            </div>
+          </div>
+        </section>
+
+        <section class="section-box official-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>⏳ 公休積欠留存</span>
+              <span class="section-chip">補休提醒</span>
+            </div>
+            <div class="data-label">單位目前積欠公休</div>
+            <div class="official-number">
+              <strong
+                :class="{ 'highlight': selectedEmp.official_leave.debt > 0 }"
+              >
+                {{ selectedEmp.official_leave.debt }}
+              </strong>
+              <span>天</span>
+            </div>
+            <p class="official-note">* 積欠公休將會盡快排休。</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref, computed, onMounted } = Vue;
+      createApp({
+        setup() {
+          const leaveData = ref([]);
+          const selectedName = ref("");
+          const loadError = ref(false);
+
+          onMounted(async () => {
+            try {
+              const response = await fetch("leave_data.json");
+              if (!response.ok) throw new Error("檔案讀取失敗");
+              leaveData.value = await response.json();
+            } catch (error) {
+              console.error(error);
+              loadError.value = true;
+            }
+          });
+
+          const selectedEmp = computed(() => {
+            if (!selectedName.value) return null;
+            return (
+              leaveData.value.find((emp) => emp.name === selectedName.value) ||
+              null
+            );
+          });
+
+          return { leaveData, selectedName, selectedEmp, loadError };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
