@@ -287,6 +287,8 @@
       }
 
       .schedule-panel {
+        display: flex;
+        justify-content: center;
         margin-top: 24px;
         padding: clamp(14px, 2vw, 22px);
         border-radius: var(--radius-xl);
@@ -306,20 +308,23 @@
       }
 
       .schedule-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(220px, 0.26fr);
-        align-items: start;
-        gap: 14px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
       }
 
       .column {
+        width: 100%;
         min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 10px;
       }
 
-      .column:empty {
+      .column:empty,
+      #right-column {
         display: none;
       }
 
@@ -1412,15 +1417,15 @@
       }
 
       function renderSchedule() {
-        const leftVisible = getVisibleShifts(shiftListLeft);
-        const rightVisible = getVisibleShifts(shiftListRight);
-        document.getElementById("left-column").innerHTML = leftVisible
+        const visibleShifts = [
+          ...getVisibleShifts(shiftListLeft),
+          ...getVisibleShifts(shiftListRight),
+        ];
+        document.getElementById("left-column").innerHTML = visibleShifts
           .map((s) => createRow(s, currentScheduleData[s.label]))
           .join("");
-        document.getElementById("right-column").innerHTML = rightVisible
-          .map((s) => createRow(s, currentScheduleData[s.label]))
-          .join("");
-        const visibleCount = leftVisible.length + rightVisible.length;
+        document.getElementById("right-column").innerHTML = "";
+        const visibleCount = visibleShifts.length;
 
         const grid = document.querySelector(".schedule-grid");
         const oldEmpty = document.querySelector(".empty-state");
