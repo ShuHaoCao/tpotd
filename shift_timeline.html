@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>班別值勤時間軸</title>
+    <style>
+      :root {
+        --bg0: #07111f;
+        --bg1: #0c1b32;
+        --card: rgba(255, 255, 255, 0.085);
+        --card2: rgba(255, 255, 255, 0.125);
+        --text: #eef6ff;
+        --muted: #94a9c5;
+        --line: rgba(255, 255, 255, 0.12);
+        --glow: rgba(77, 213, 255, 0.28);
+        --left: 260px;
+        --hour: 70px;
+        --row: 48px;
+        --radius: 22px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 18% 10%,
+            rgba(72, 187, 255, 0.28),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 88% 12%,
+            rgba(176, 83, 255, 0.22),
+            transparent 30%
+          ),
+          linear-gradient(135deg, var(--bg0), var(--bg1) 55%, #09101d);
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 34px 34px;
+        mask-image: linear-gradient(to bottom, #000, transparent 82%);
+      }
+      .page {
+        width: min(1480px, calc(100% - 28px));
+        margin: 0 auto;
+        padding: 24px 0 34px;
+      }
+      .hero {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-end;
+        margin-bottom: 18px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.045)
+        );
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.25),
+          inset 0 1px rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(18px);
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(1.5rem, 3vw, 2.45rem);
+        letter-spacing: 0.04em;
+      }
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .badge {
+        white-space: nowrap;
+        padding: 12px 16px;
+        border-radius: 999px;
+        background: rgba(91, 219, 255, 0.13);
+        border: 1px solid rgba(91, 219, 255, 0.32);
+        box-shadow: 0 0 38px var(--glow);
+        font-weight: 700;
+        color: #caf5ff;
+      }
+      .toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .search,
+      .select {
+        background: rgba(255, 255, 255, 0.09);
+        border: 1px solid var(--line);
+        color: var(--text);
+        border-radius: 16px;
+        padding: 12px 14px;
+        outline: none;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.12);
+      }
+      .search {
+        min-width: min(420px, 100%);
+        flex: 1;
+      }
+      .select option {
+        color: #111;
+      }
+      .board {
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background: rgba(4, 12, 24, 0.62);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        backdrop-filter: blur(16px);
+      }
+      .scroll {
+        overflow: auto;
+        max-height: calc(100vh - 220px);
+      }
+      .timeline {
+        min-width: calc(var(--left) + var(--hour) * 32);
+      }
+      .header,
+      .row {
+        display: grid;
+        grid-template-columns: var(--left) calc(var(--hour) * 32);
+      }
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: rgba(8, 18, 34, 0.94);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(12px);
+      }
+      .leftHead {
+        position: sticky;
+        left: 0;
+        z-index: 12;
+        background: rgba(8, 18, 34, 0.98);
+        padding: 16px 18px;
+        border-right: 1px solid var(--line);
+        font-weight: 800;
+        color: #dff8ff;
+      }
+      .hours {
+        display: grid;
+        grid-template-columns: repeat(32, var(--hour));
+      }
+      .hour {
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+        color: #a9b9d0;
+        font-size: 0.86rem;
+        position: relative;
+      }
+      .hour.day2 {
+        color: #ffdca8;
+      }
+      .hour.day2::before {
+        content: "次日";
+        position: absolute;
+        top: 6px;
+        font-size: 0.68rem;
+        color: #f8bd63;
+      }
+      .row {
+        min-height: var(--row);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.065);
+      }
+      .shiftInfo {
+        position: sticky;
+        left: 0;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(
+          90deg,
+          rgba(12, 26, 48, 0.98),
+          rgba(12, 26, 48, 0.9)
+        );
+        border-right: 1px solid var(--line);
+        padding: 8px 14px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--c);
+        box-shadow: 0 0 18px var(--c);
+      }
+      .name {
+        font-weight: 800;
+        line-height: 1.2;
+      }
+      .time {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .track {
+        position: relative;
+        background-image: repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.12) 0 1px,
+          transparent 1px var(--hour)
+        );
+      }
+      .bar {
+        position: absolute;
+        top: 9px;
+        height: 30px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          var(--c),
+          color-mix(in srgb, var(--c) 45%, #fff)
+        );
+        box-shadow:
+          0 0 26px color-mix(in srgb, var(--c) 50%, transparent),
+          inset 0 1px rgba(255, 255, 255, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 22px;
+        color: #06111f;
+        font-weight: 900;
+        font-size: 0.75rem;
+        text-shadow: 0 1px rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .nowLine {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #ffefff;
+        box-shadow: 0 0 16px #fff;
+        opacity: 0.85;
+      }
+      .empty {
+        padding: 34px;
+        text-align: center;
+        color: var(--muted);
+      }
+      .mobileBoard {
+        display: none;
+      }
+      .mobileCard {
+        position: relative;
+        margin: 10px 0;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 20px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.105),
+          rgba(255, 255, 255, 0.045)
+        );
+        box-shadow:
+          0 16px 42px rgba(0, 0, 0, 0.24),
+          inset 0 1px rgba(255, 255, 255, 0.12);
+        overflow: hidden;
+      }
+      .mobileCard::before {
+        content: "";
+        position: absolute;
+        inset: auto 14px 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--c), transparent);
+        opacity: 0.75;
+      }
+      .mobileTop {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+      .mobileName {
+        font-weight: 900;
+        font-size: 1.03rem;
+        letter-spacing: 0.02em;
+      }
+      .mobileMeta {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.78rem;
+      }
+      .mobileHours {
+        padding: 6px 9px;
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--c) 16%, transparent);
+        border: 1px solid color-mix(in srgb, var(--c) 38%, transparent);
+        color: #eafcff;
+        font-weight: 900;
+        font-size: 0.78rem;
+        white-space: nowrap;
+      }
+      .miniScale {
+        position: relative;
+        height: 44px;
+        margin-top: 8px;
+        border-radius: 14px;
+        background: rgba(2, 8, 18, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        overflow: hidden;
+      }
+      .miniScale::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.18) 0 1px,
+          transparent 1px 12.5%
+        );
+      }
+      .miniBar {
+        position: absolute;
+        top: 11px;
+        height: 20px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          var(--c),
+          color-mix(in srgb, var(--c) 40%, #fff)
+        );
+        box-shadow: 0 0 20px color-mix(in srgb, var(--c) 55%, transparent);
+        border: 1px solid rgba(255, 255, 255, 0.36);
+      }
+      .miniLabels {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 7px;
+        color: #9fb1c9;
+        font-size: 0.68rem;
+        letter-spacing: 0.02em;
+      }
+      .mobileHint {
+        display: none;
+        color: #8ea5c4;
+        font-size: 0.78rem;
+        margin: 8px 3px 0;
+        line-height: 1.5;
+      }
+      @media (max-width: 760px) {
+        :root {
+          --left: 124px;
+          --hour: 42px;
+          --row: 50px;
+          --radius: 18px;
+        }
+        body {
+          background:
+            radial-gradient(
+              circle at 50% -10%,
+              rgba(72, 187, 255, 0.24),
+              transparent 38%
+            ),
+            linear-gradient(160deg, #07111f, #0b182d 58%, #060b14);
+        }
+        .page {
+          width: calc(100% - 14px);
+          padding: 8px 0 18px;
+        }
+        .hero {
+          display: block;
+          padding: 15px 14px;
+          border-radius: 20px;
+          margin-bottom: 10px;
+        }
+        h1 {
+          font-size: 1.42rem;
+          margin-bottom: 6px;
+        }
+        .subtitle {
+          font-size: 0.86rem;
+          line-height: 1.55;
+        }
+        .badge {
+          display: inline-block;
+          margin-top: 10px;
+          padding: 9px 12px;
+          font-size: 0.78rem;
+        }
+        .toolbar {
+          gap: 8px;
+          margin-bottom: 10px;
+        }
+        .search,
+        .select {
+          width: 100%;
+          min-width: 0;
+          border-radius: 14px;
+          padding: 11px 12px;
+          font-size: 0.9rem;
+        }
+        .select {
+          height: 42px;
+        }
+        .board {
+          display: none;
+        }
+        .mobileBoard {
+          display: block;
+        }
+        .mobileHint {
+          display: block;
+        }
+        .mobileCard {
+          margin: 9px 0;
+          padding: 13px 12px;
+          border-radius: 18px;
+        }
+        .mobileName {
+          font-size: 1rem;
+        }
+        .mobileMeta {
+          font-size: 0.76rem;
+        }
+        .miniLabels {
+          font-size: 0.64rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div>
+          <h1>班別值勤時間軸</h1>
+          <p class="subtitle">
+            當多數城市的人已經熄燈沉睡，仍有人在凌晨的風裡啟程。
+            守著車輛，等待交接，在黎明前穿越空蕩的街道。
+          </p>
+        </div>
+        <div class="badge" id="countBadge">載入中</div>
+      </section>
+      <div class="toolbar">
+        <input
+          class="search"
+          id="search"
+          placeholder="搜尋班別，例如：大夜、中班、嘉義…"
+        />
+        <select class="select" id="groupFilter">
+          <option value="all">全部類別</option>
+        </select>
+      </div>
+      <section class="board">
+        <div class="scroll"><div class="timeline" id="timeline"></div></div>
+      </section>
+      <p class="mobileHint">
+        手機版改用壓縮時間卡片：每張卡代表 32 小時，從第 1 天 00:00 到第 2 天
+        08:00。
+      </p>
+      <section class="mobileBoard" id="mobileBoard"></section>
+    </main>
+    <script>
+      const FALLBACK_SHIFTS = [
+        { name: "股長", time: "07:00-15:30", group: "管理/專員" },
+        { name: "早班專員", time: "06:00-14:30", group: "管理/專員" },
+        { name: "中班專員", time: "14:30-23:00", group: "管理/專員" },
+        { name: "夜班專員", time: "22:00-07:00", group: "管理/專員" },
+        { name: "內檯", time: "08:30-17:00", group: "櫃檯作業" },
+        { name: "空袋檯", time: "06:00-14:30", group: "櫃檯作業" },
+        { name: "早班1", time: "04:00-13:00", group: "早班線" },
+        { name: "早班1(六日)", time: "06:00-15:00", group: "早班線" },
+        { name: "早班2", time: "04:00-13:00", group: "早班線" },
+        { name: "早班3", time: "04:00-13:00", group: "早班線" },
+        { name: "早班3(六日)", time: "07:00-16:00", group: "早班線" },
+        { name: "早班4(花班)", time: "04:30-08:30", group: "早班線" },
+        { name: "早班5", time: "03:00-14:00", group: "早班線" },
+        { name: "新營1線(花班)", time: "04:00-08:00", group: "早班線" },
+        { name: "新營2線(花班)", time: "04:00-08:00", group: "早班線" },
+        { name: "自運甲線", time: "10:30-19:00", group: "自運/嘉義" },
+        { name: "自運乙線", time: "10:30-19:00", group: "自運/嘉義" },
+        { name: "中班1", time: "17:00-02:00", group: "中班線" },
+        { name: "中班1(六日)", time: "12:00-21:00", group: "中班線" },
+        { name: "中班2", time: "12:30-21:30", group: "中班線" },
+        { name: "中班3", time: "12:00-20:30", group: "中班線" },
+        { name: "中班4", time: "13:30-22:00", group: "中班線" },
+        { name: "中班5", time: "13:30-22:00", group: "中班線" },
+        { name: "中班6", time: "12:30-21:00", group: "中班線" },
+        {
+          name: "771/772車次(幹線)(六日)",
+          time: "12:00-21:00",
+          group: "中班線",
+        },
+        { name: "771/772車次(幹線)", time: "14:30-23:00", group: "中班線" },
+        { name: "中班7", time: "14:30-23:00", group: "中班線" },
+        { name: "中班8", time: "16:30-01:00", group: "中班線" },
+        { name: "嘉義4(原中班9)", time: "13:30-22:00", group: "自運/嘉義" },
+        { name: "中班10-13", time: "17:00-02:00", group: "中班線" },
+        { name: "嘉義2(原嘉義B)", time: "14:30-23:30", group: "自運/嘉義" },
+        { name: "大夜班1(花班)", time: "20:00-01:00", group: "夜班線" },
+        { name: "大夜班1(六日)", time: "21:00-06:00", group: "夜班線" },
+        { name: "大夜班2", time: "22:00-07:00", group: "夜班線" },
+        { name: "大夜班3", time: "21:00-06:00", group: "夜班線" },
+        { name: "大夜班4", time: "22:00-07:00", group: "夜班線" },
+        { name: "127/128車次(幹線)", time: "22:00-07:00", group: "夜班線" },
+        { name: "進口接送", time: "21:00-06:00", group: "夜班線" },
+        { name: "出口接送", time: "21:00-06:00", group: "夜班線" },
+      ];
+      const COLORS = {
+        "管理/專員": "#58d9ff",
+        櫃檯作業: "#77f2b2",
+        早班線: "#ffd166",
+        "自運/嘉義": "#f79d65",
+        中班線: "#a78bfa",
+        夜班線: "#7dd3fc",
+        其他: "#cbd5e1",
+      };
+      const HOUR_WIDTH = () =>
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue("--hour"),
+        ) || 70;
+      let shifts = [];
+      function toMinutes(t) {
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+      }
+      function parseRange(str) {
+        const m = String(str).match(/(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})/);
+        if (!m) return null;
+        let start = toMinutes(m[1]),
+          end = toMinutes(m[2]);
+        if (end <= start) end += 1440;
+        return {
+          start,
+          end,
+          label: `${m[1]}-${m[2]}`,
+          hours: Math.round(((end - start) / 60) * 10) / 10,
+        };
+      }
+      function buildHeader() {
+        let hours = "";
+        for (let i = 0; i < 32; i++) {
+          let h = i % 24;
+          hours += `<div class="hour ${i >= 24 ? "day2" : ""}">${String(h).padStart(2, "0")}:00</div>`;
+        }
+        return `<div class="header"><div class="leftHead">班別 / 值勤時間</div><div class="hours">${hours}</div></div>`;
+      }
+      function render() {
+        const q = document.getElementById("search").value.trim().toLowerCase();
+        const g = document.getElementById("groupFilter").value;
+        const data = shifts.filter(
+          (s) =>
+            (g === "all" || s.group === g) &&
+            `${s.name} ${s.time}`.toLowerCase().includes(q),
+        );
+        const rows = data
+          .map((s) => {
+            const r = parseRange(s.time);
+            if (!r) return "";
+            const color = COLORS[s.group] || COLORS["其他"];
+            const left = (r.start / 60) * HOUR_WIDTH();
+            const width = ((r.end - r.start) / 60) * HOUR_WIDTH();
+            return `<div class="row"><div class="shiftInfo"><span class="dot" style="--c:${color}"></span><div><div class="name">${s.name}</div><div class="time">${s.time} · ${s.group}</div></div></div><div class="track"><div class="bar" style="--c:${color};left:${left}px;width:${width}px" title="${s.name} ${s.time}">${r.hours}h</div></div></div>`;
+          })
+          .join("");
+        const mobileRows = data
+          .map((s) => {
+            const r = parseRange(s.time);
+            if (!r) return "";
+            const color = COLORS[s.group] || COLORS["其他"];
+            const left = (r.start / 1920) * 100;
+            const width = ((r.end - r.start) / 1920) * 100;
+            return `<article class="mobileCard" style="--c:${color}"><div class="mobileTop"><div><div class="mobileName">${s.name}</div><div class="mobileMeta">${s.time} · ${s.group}</div></div><div class="mobileHours">${r.hours}h</div></div><div class="miniScale" aria-label="${s.name} ${s.time}"><div class="miniBar" style="left:${left}%;width:${width}%"></div></div><div class="miniLabels"><span>D1 00</span><span>08</span><span>16</span><span>D2 00</span><span>08</span></div></article>`;
+          })
+          .join("");
+        const empty =
+          '<div class="empty">找不到符合的班別。是不是關鍵字太兇了？</div>';
+        document.getElementById("timeline").innerHTML =
+          buildHeader() + (rows || empty);
+        document.getElementById("mobileBoard").innerHTML = mobileRows || empty;
+        document.getElementById("countBadge").textContent =
+          `${data.length} / ${shifts.length} 個班別`;
+      }
+      function initFilters() {
+        const sel = document.getElementById("groupFilter");
+        [...new Set(shifts.map((s) => s.group || "其他"))].forEach((g) => {
+          const op = document.createElement("option");
+          op.value = g;
+          op.textContent = g;
+          sel.appendChild(op);
+        });
+        document.getElementById("search").addEventListener("input", render);
+        sel.addEventListener("change", render);
+        window.addEventListener("resize", render);
+      }
+      async function loadData() {
+        try {
+          const res = await fetch("shifts.json", { cache: "no-store" });
+          if (!res.ok) throw new Error("no json");
+          const json = await res.json();
+          shifts = json.shifts || json;
+        } catch (e) {
+          shifts = FALLBACK_SHIFTS;
+        }
+        initFilters();
+        render();
+      }
+      loadData();
+    </script>
+  </body>
+</html>
