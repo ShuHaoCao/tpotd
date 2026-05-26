@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>高階智慧物聯｜北上車次調度總覽</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-main: #0b0f19;
+        --sidebar-bg: rgba(17, 24, 39, 0.7);
+        --card-bg: rgba(22, 30, 49, 0.6);
+        --card-border: rgba(99, 102, 241, 0.15);
+        --card-border-hover: rgba(168, 85, 247, 0.4);
+
+        /* 霓虹燈號 */
+        --neon-blue: #00f2fe;
+        --neon-purple: #9d4edd;
+        --neon-green: #059669;
+        --neon-orange: #f97316;
+        --text-light: #f8fafc;
+        --text-muted: #64748b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Noto Sans TC", sans-serif;
+        background: radial-gradient(
+          circle at 50% 0%,
+          #1e1b4b 0%,
+          var(--bg-main) 70%
+        );
+        color: var(--text-light);
+        min-height: 100vh;
+      }
+
+      /* 網頁主佈局 (預設桌機版：左右分割) */
+      .app-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        min-height: 100vh;
+      }
+
+      /* --- 1. 左側控制側邊欄 (Sidebar) --- */
+      .sidebar {
+        background: var(--sidebar-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-icon {
+        background: linear-gradient(
+          135deg,
+          var(--neon-blue),
+          var(--neon-purple)
+        );
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #000;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      }
+
+      .brand-text h2 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        background: linear-gradient(to right, #fff, var(--text-muted));
+
+        /* 修正相容性：同時加上標準屬性與 Webkit 前綴 */
+        background-clip: text;
+        -webkit-background-clip: text;
+
+        /* 讓文字表面透明以透出漸層 */
+        -webkit-text-fill-color: transparent;
+        color: transparent; /* 針對不支援 text-fill-color 的瀏覽器作為安全備用 */
+      }
+
+      .brand-text p {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      /* 篩選按鈕群組 */
+      .filter-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .filter-btn {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 14px 18px;
+        border-radius: 12px;
+        color: var(--text-muted);
+        text-align: left;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: var(--neon-blue);
+        color: var(--text-light);
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+      }
+
+      /* --- 2. 右側主內容區 (Main Content) --- */
+      .main-content {
+        padding: 40px;
+        overflow-y: auto;
+      }
+
+      .content-header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+      }
+
+      .cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* --- 3. 桌機版車次卡片與橫向光軌 --- */
+      .train-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .train-card:hover {
+        border-color: var(--card-border-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(157, 77, 221, 0.15);
+      }
+
+      .card-badge-area {
+        flex-shrink: 0;
+        text-align: center;
+        min-width: 100px;
+      }
+
+      .card-train-no {
+        font-family: "Orbitron", sans-serif;
+        font-size: 28px;
+        font-weight: 900;
+        background: linear-gradient(45deg, #fff, var(--neon-blue));
+
+        /* 修正相容性問題 */
+        background-clip: text;
+        -webkit-background-clip: text;
+
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        margin-bottom: 6px;
+      }
+
+      .card-type-tag {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-weight: 700;
+      }
+      .tag-weekday {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-muted);
+      }
+      .tag-weekend {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+      }
+
+      /* 桌機橫向光軌軌道 */
+      .route-track {
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 10px 0;
+      }
+
+      .route-track::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 3px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 2px;
+        z-index: 1;
+      }
+
+      .track-progress {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--neon-green),
+          var(--neon-orange)
+        );
+        z-index: 2;
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+      }
+
+      .station-node {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .node-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #1e293b;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .station-node.active .node-dot {
+        background: var(--neon-green);
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--neon-green);
+      }
+
+      .station-node.is-terminal .node-dot {
+        background: var(--neon-orange);
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--neon-orange);
+        transform: scale(1.2);
+      }
+
+      .node-name {
+        font-size: 12px;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+      .station-node.active .node-name {
+        color: var(--text-light);
+      }
+
+      .node-time {
+        font-family: "Orbitron", sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--neon-green);
+        background: rgba(5, 150, 105, 0.08);
+        padding: 2px 6px;
+        border-radius: 4px;
+        display: block;
+      }
+      /* 桌機隱藏未停靠站的時間，但保留節點位置 */
+      .station-node:not(.active) .node-time {
+        visibility: hidden;
+      }
+      .station-node:not(.active) .node-dot {
+        opacity: 0.3;
+      }
+      .station-node.is-terminal .node-time {
+        color: var(--neon-orange);
+        background: rgba(249, 115, 22, 0.12);
+      }
+
+      /* ==========================================================================
+           完美 RWD 修改：依照您的建議調整手機版（上控制、下長條卡片）
+           ========================================================================== */
+      @media (max-width: 992px) {
+        /* 1. 改為上下排布的長條型 */
+        .app-layout {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+
+        /* 2. 左半部改到上半部 */
+        .sidebar {
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 20px;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          gap: 15px;
+        }
+
+        .filter-menu {
+          flex-direction: row;
+          gap: 8px;
+        }
+
+        .filter-btn {
+          padding: 10px 16px;
+          border-radius: 8px;
+          font-size: 13px;
+        }
+
+        .filter-btn i:last-child {
+          display: none; /* 隱藏右箭頭 */
+        }
+
+        .main-content {
+          padding: 24px 16px;
+        }
+
+        /* 3. 卡片外觀調整 */
+        .train-card {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          padding: 20px;
+        }
+
+        .card-badge-area {
+          text-align: left;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding-bottom: 12px;
+        }
+
+        .card-train-no {
+          font-size: 24px;
+          margin-bottom: 0;
+        }
+
+        /* 4. 手機版縱向密緻型時間軸 */
+        .route-track {
+          width: 100%;
+          flex-direction: column;
+          gap: 18px; /* 站點上下間距 */
+          padding: 5px 0 5px 16px;
+        }
+
+        /* 隱藏桌機的橫向進度條 */
+        .track-progress {
+          display: none !important;
+        }
+
+        /* 手機版縱向基底線 */
+        .route-track::before {
+          left: 4px;
+          top: 10px;
+          bottom: 10px;
+          width: 2px;
+          height: auto;
+          transform: none;
+          background: linear-gradient(
+            to bottom,
+            var(--neon-green),
+            var(--neon-orange)
+          );
+          opacity: 0.4;
+        }
+
+        /* 讓站點橫向左對齊緊湊排列 */
+        .station-node {
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 14px;
+          width: 100%;
+        }
+
+        /* 如果在 JavaScript 中判定為非 active 站點，會在手機版直接加上 display:none */
+        .station-node.mobile-hidden {
+          display: none !important;
+        }
+
+        .node-dot {
+          position: absolute;
+          left: -16px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 5;
+        }
+        .station-node.is-terminal .node-dot {
+          transform: translateY(-50%) scale(1.2);
+        }
+
+        .node-time {
+          order: 1;
+          font-size: 12px;
+          padding: 4px 8px;
+          min-width: 58px;
+          text-align: center;
+          visibility: visible !important; /* 強制亮起 */
+          background: rgba(16, 185, 129, 0.1);
+          border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .station-node.is-terminal .node-time {
+          background: rgba(249, 115, 22, 0.15);
+          border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .node-name {
+          order: 2;
+          font-size: 15px;
+          color: #f8fafc !important;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .sidebar {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .filter-menu {
+          width: 100%;
+          justify-content: space-between;
+        }
+        .filter-btn {
+          flex-grow: 1;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="brand-text">
+            <h2>FLEET OS</h2>
+            <p>北上調度中心</p>
+          </div>
+        </div>
+
+        <div class="filter-menu">
+          <button class="filter-btn active" onclick="filterTrains('all', this)">
+            <span
+              ><i class="fa-solid fa-list-ul" style="margin-right: 8px"></i
+              >全部班次</span
+            >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <button class="filter-btn" onclick="filterTrains('weekday', this)">
+            <span
+              ><i
+                class="fa-solid fa-calendar-days"
+                style="margin-right: 8px"
+              ></i
+              >平日行駛</span
+            >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <button class="filter-btn" onclick="filterTrains('weekend', this)">
+            <span
+              ><i
+                class="fa-solid fa-calendar-star"
+                style="margin-right: 8px; color: #eab308"
+              ></i
+              >六日班次</span
+            >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1>動態軌跡運行圖</h1>
+        </div>
+
+        <div id="cards-container" class="cards-container"></div>
+      </main>
+    </div>
+
+    <script>
+      const stationsConfig = [
+        "高雄",
+        "台南",
+        "嘉義",
+        "雲林",
+        "彰化",
+        "台中",
+        "苗栗",
+        "新竹",
+        "桃園",
+        "台北",
+        "台北中心",
+      ];
+
+      const scheduleData = [
+        {
+          no: "20",
+          isWeekend: false,
+          stops: {
+            台南: "22:20",
+            嘉義: "23:10",
+            台中: "01:10",
+            台北中心: { time: "04:00", isTerminal: true },
+          },
+        },
+        {
+          no: "24",
+          isWeekend: false,
+          stops: {
+            台南: "20:00",
+            台北中心: { time: "04:30", isTerminal: true },
+          },
+        },
+        {
+          no: "26",
+          isWeekend: false,
+          stops: {
+            高雄: "22:30",
+            台南: "23:30",
+            雲林: "01:20",
+            台中: "02:30",
+            台北中心: { time: "05:00", isTerminal: true },
+          },
+        },
+        {
+          no: "30",
+          isWeekend: false,
+          stops: {
+            台南: "23:30",
+            台中: "01:30",
+            新竹: "03:20",
+            桃園: "04:20",
+            台北中心: { time: "05:30", isTerminal: true },
+          },
+        },
+        {
+          no: "54",
+          isWeekend: false,
+          stops: {
+            高雄: "23:10",
+            台南: "00:00",
+            彰化: "01:50",
+            苗栗: "03:20",
+            桃園: "04:20",
+            台北中心: { time: "05:30", isTerminal: true },
+          },
+        },
+        {
+          no: "88",
+          isWeekend: false,
+          stops: {
+            高雄: "22:10",
+            台南: "23:00",
+            台中: { time: "01:20", isTerminal: true },
+          },
+        },
+        {
+          no: "120",
+          isWeekend: false,
+          stops: {
+            高雄: "02:00",
+            台南: "02:50",
+            台中: { time: "05:10", isTerminal: true },
+          },
+        },
+        {
+          no: "204",
+          isWeekend: true,
+          stops: {
+            高雄: "22:30",
+            台南: "23:05",
+            嘉義: "00:00",
+            雲林: "00:40",
+            彰化: "01:25",
+            台中: { time: "01:55", isTerminal: true },
+          },
+        },
+      ];
+
+      function renderCards(filterType = "all") {
+        const container = document.getElementById("cards-container");
+        container.innerHTML = "";
+
+        scheduleData.forEach((train) => {
+          if (filterType === "weekday" && train.isWeekend) return;
+          if (filterType === "weekend" && !train.isWeekend) return;
+
+          const card = document.createElement("div");
+          card.className = "train-card";
+
+          // 計算桌機版進度條百分比
+          let firstIndex = -1,
+            lastIndex = -1;
+          stationsConfig.forEach((station, idx) => {
+            if (train.stops[station]) {
+              if (firstIndex === -1) firstIndex = idx;
+              lastIndex = idx;
+            }
+          });
+          const leftPercent = (firstIndex / (stationsConfig.length - 1)) * 100;
+          const widthPercent =
+            ((lastIndex - firstIndex) / (stationsConfig.length - 1)) * 100;
+
+          let cardHtml = `
+                <div class="card-badge-area">
+                    <div class="card-train-no">${train.no}</div>
+                    <span class="card-type-tag ${train.isWeekend ? "tag-weekend" : "tag-weekday"}">
+                        ${train.isWeekend ? "六日行駛" : "平日固定"}
+                    </span>
+                </div>
+                <div class="route-track">
+                    <div class="track-progress" style="left: ${leftPercent}%; width: ${widthPercent}%;"></div>
+            `;
+
+          stationsConfig.forEach((station) => {
+            const stopInfo = train.stops[station];
+            let nodeClass = "station-node";
+            let timeStr = "";
+
+            if (stopInfo) {
+              nodeClass += " active";
+              if (typeof stopInfo === "object") {
+                nodeClass += " is-terminal";
+                timeStr = stopInfo.time;
+              } else {
+                timeStr = stopInfo;
+              }
+            } else {
+              // 核心關鍵修正：如果沒有停靠，在手機版加上 mobile-hidden 類別，直接隱藏空方塊！
+              nodeClass += " mobile-hidden";
+            }
+
+            cardHtml += `
+                    <div class="${nodeClass}">
+                        <div class="node-time">${timeStr}</div>
+                        <div class="node-dot"></div>
+                        <div class="node-name">${station}</div>
+                    </div>
+                `;
+          });
+
+          cardHtml += `</div>`;
+          card.innerHTML = cardHtml;
+          container.appendChild(card);
+        });
+      }
+
+      function filterTrains(type, element) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((btn) => btn.classList.remove("active"));
+        element.classList.add("active");
+        renderCards(type);
+      }
+
+      renderCards();
+    </script>
+  </body>
+</html>

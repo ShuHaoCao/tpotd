@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>高階智慧物聯｜全線雙向車次調度總覽</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-main: #0b0f19;
+        --sidebar-bg: rgba(17, 24, 39, 0.7);
+        --card-bg: rgba(22, 30, 49, 0.6);
+        --card-border: rgba(99, 102, 241, 0.15);
+        --card-border-hover: rgba(168, 85, 247, 0.4);
+
+        /* 霓虹燈號 */
+        --neon-blue: #00f2fe;
+        --neon-purple: #9d4edd;
+        --neon-green: #059669;
+        --neon-orange: #f97316;
+        --text-light: #f8fafc;
+        --text-muted: #64748b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Noto Sans TC", sans-serif;
+        background: radial-gradient(
+          circle at 50% 0%,
+          #1e1b4b 0%,
+          var(--bg-main) 70%
+        );
+        color: var(--text-light);
+        min-height: 100vh;
+      }
+
+      /* 網頁主佈局 (預設桌機版：左右分割) */
+      .app-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        min-height: 100vh;
+      }
+
+      /* --- 左側控制側邊欄 --- */
+      .sidebar {
+        background: var(--sidebar-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .brand-icon {
+        background: linear-gradient(
+          135deg,
+          var(--neon-blue),
+          var(--neon-purple)
+        );
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        color: #000;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      }
+
+      .brand-text h2 {
+        font-family: "Orbitron", sans-serif;
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 1px;
+        background: linear-gradient(to right, #fff, var(--text-muted));
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+
+      .brand-text p {
+        font-size: 11px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      /* 方向切換頁籤 (Tabs) */
+      .direction-tabs {
+        display: flex;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 4px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .tab-btn {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .tab-btn.active {
+        background: linear-gradient(135deg, #312e81, #1e1b4b);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+      }
+
+      .filter-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .filter-btn {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 14px 18px;
+        border-radius: 12px;
+        color: var(--text-muted);
+        text-align: left;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s;
+      }
+
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: var(--neon-blue);
+        color: var(--text-light);
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+      }
+
+      /* --- 右側主內容區 --- */
+      .main-content {
+        padding: 40px;
+        overflow-y: auto;
+      }
+
+      .content-header h1 {
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+      }
+
+      .cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* --- 桌機版車次卡片與橫向光軌 --- */
+      .train-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .train-card:hover {
+        border-color: var(--card-border-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(157, 77, 221, 0.15);
+      }
+
+      .card-badge-area {
+        flex-shrink: 0;
+        text-align: center;
+        min-width: 140px;
+      }
+
+      .card-train-no {
+        font-family: "Orbitron", sans-serif;
+        font-size: 20px;
+        font-weight: 900;
+        background: linear-gradient(45deg, #fff, var(--neon-blue));
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        margin-bottom: 6px;
+        letter-spacing: -0.5px;
+      }
+
+      .card-type-tag {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 20px;
+        font-weight: 700;
+        display: inline-block;
+      }
+      .tag-weekday {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-muted);
+      }
+      .tag-weekend {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+      }
+
+      .route-track {
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 10px 0;
+      }
+
+      .route-track::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 3px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 2px;
+        z-index: 1;
+      }
+
+      .track-progress {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--neon-green),
+          var(--neon-orange)
+        );
+        z-index: 2;
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+      }
+
+      .station-node {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .node-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #1e293b;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .station-node.active .node-dot {
+        background: var(--neon-green);
+        border-color: #fff;
+        box-shadow: 0 0 10px var(--neon-green);
+      }
+
+      .station-node.is-terminal .node-dot {
+        background: var(--neon-orange);
+        border-color: #fff;
+        box-shadow: 0 0 12px var(--neon-orange);
+        transform: scale(1.2);
+      }
+
+      .node-name {
+        font-size: 11px;
+        color: var(--text-muted);
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .station-node.active .node-name {
+        color: var(--text-light);
+      }
+
+      .node-time {
+        font-family: "Orbitron", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--neon-green);
+        background: rgba(5, 150, 105, 0.08);
+        padding: 2px 5px;
+        border-radius: 4px;
+        display: block;
+      }
+      .station-node:not(.active) .node-time {
+        visibility: hidden;
+      }
+      .station-node:not(.active) .node-dot {
+        opacity: 0.3;
+      }
+      .station-node.is-terminal .node-time {
+        color: var(--neon-orange);
+        background: rgba(249, 115, 22, 0.12);
+      }
+
+      /* 附加註記小標籤（例如銜接車次說明） */
+      .node-note {
+        position: absolute;
+        bottom: -22px;
+        font-size: 10px;
+        color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+        padding: 1px 4px;
+        border-radius: 3px;
+        white-space: nowrap;
+        border: 1px solid rgba(168, 85, 247, 0.2);
+      }
+
+      /* ==========================================================================
+           手機響應式排版 (上控制面板與頁籤、下長條卡片)
+           ========================================================================== */
+      @media (max-width: 1024px) {
+        .app-layout {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+        }
+
+        .sidebar {
+          border-right: none;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 20px;
+          flex-direction: column;
+          align-items: stretch;
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          gap: 15px;
+        }
+
+        .brand {
+          justify-content: center;
+          margin-bottom: 0;
+        }
+
+        .filter-menu {
+          flex-direction: row;
+          gap: 8px;
+        }
+
+        .filter-btn {
+          padding: 10px 12px;
+          border-radius: 8px;
+          font-size: 13px;
+          flex: 1;
+          justify-content: center;
+        }
+
+        .filter-btn i:last-child {
+          display: none;
+        }
+
+        .main-content {
+          padding: 24px 16px;
+        }
+
+        .train-card {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 20px;
+          padding: 20px;
+        }
+
+        .card-badge-area {
+          text-align: left;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          padding-bottom: 12px;
+        }
+
+        .card-train-no {
+          font-size: 20px;
+          margin-bottom: 0;
+        }
+
+        .route-track {
+          width: 100%;
+          flex-direction: column;
+          gap: 18px;
+          padding: 5px 0 5px 16px;
+        }
+
+        .track-progress {
+          display: none !important;
+        }
+
+        .route-track::before {
+          left: 4px;
+          top: 10px;
+          bottom: 10px;
+          width: 2px;
+          height: auto;
+          transform: none;
+          background: linear-gradient(
+            to bottom,
+            var(--neon-green),
+            var(--neon-orange)
+          );
+          opacity: 0.4;
+        }
+
+        .station-node {
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 14px;
+          width: 100%;
+        }
+
+        .station-node.mobile-hidden {
+          display: none !important;
+        }
+
+        .node-dot {
+          position: absolute;
+          left: -16px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 5;
+        }
+        .station-node.is-terminal .node-dot {
+          transform: translateY(-50%) scale(1.2);
+        }
+
+        .node-time {
+          order: 1;
+          font-size: 12px;
+          padding: 4px 8px;
+          min-width: 58px;
+          text-align: center;
+          visibility: visible !important;
+          background: rgba(16, 185, 129, 0.1);
+          border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .station-node.is-terminal .node-time {
+          background: rgba(249, 115, 22, 0.15);
+          border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .node-name {
+          order: 2;
+          font-size: 15px;
+          color: #f8fafc !important;
+        }
+
+        .node-note {
+          position: relative;
+          bottom: 0;
+          margin-left: auto;
+          order: 3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="brand-text">
+            <h2>FLEET OS</h2>
+            <p>雙向動態控制台</p>
+          </div>
+        </div>
+
+        <div class="direction-tabs">
+          <button
+            class="tab-btn active"
+            id="tab-north"
+            onclick="switchDirection('north')"
+          >
+            <i class="fa-solid fa-arrow-up"></i> 北上車次
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-south"
+            onclick="switchDirection('south')"
+          >
+            <i class="fa-solid fa-arrow-down"></i> 南下車次
+          </button>
+        </div>
+
+        <div class="filter-menu">
+          <button
+            class="filter-btn active"
+            id="filter-all"
+            onclick="filterTrains('all')"
+          >
+            <span
+              ><i class="fa-solid fa-list-ul" style="margin-right: 8px"></i
+              >全部班次</span
+            >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <button
+            class="filter-btn"
+            id="filter-weekday"
+            onclick="filterTrains('weekday')"
+          >
+            <span
+              ><i
+                class="fa-solid fa-calendar-days"
+                style="margin-right: 8px"
+              ></i
+              >平日固定</span
+            >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+          <button
+            class="filter-btn"
+            id="filter-weekend"
+            onclick="filterTrains('weekend')"
+          >
+            <span
+              ><i
+                class="fa-solid fa-calendar-star"
+                style="margin-right: 8px; color: #eab308"
+              ></i
+              >六日班次</span
+            >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <div class="content-header">
+          <h1 id="panel-title">動態軌跡運行圖 (北上)</h1>
+        </div>
+        <div id="cards-container" class="cards-container"></div>
+      </main>
+    </div>
+
+    <script>
+      // 1. 定義兩邊不同的站點序列配置
+      const stationsConfig = {
+        north: [
+          "高雄中心",
+          "左營",
+          "台南中心",
+          "新營",
+          "嘉義",
+          "雲林",
+          "彰化",
+          "台中中心",
+          "台中英才",
+          "苗栗",
+          "新竹",
+          "桃園中心",
+          "台北局",
+          "台北中心",
+        ],
+        south: [
+          "台北中心",
+          "台北局",
+          "桃園中心",
+          "新竹",
+          "苗栗",
+          "台中英才",
+          "台中中心",
+          "彰化",
+          "雲林",
+          "嘉義",
+          "新營",
+          "台南中心",
+          "左營",
+          "高雄中心",
+        ],
+      };
+
+      // 2. 完整重現新圖檔結構化數據
+      const scheduleData = {
+        north: [
+          {
+            no: "高鐵642車次",
+            isWeekend: false,
+            stops: {
+              左營: "13:00",
+              台南中心: "13:13",
+              嘉義: "13:32",
+              台中英才: "14:00",
+              新竹: "14:25",
+              桃園中心: "14:38",
+              台北局: { time: "15:02", isTerminal: true },
+            },
+          },
+          {
+            no: "高鐵660車次",
+            isWeekend: false,
+            stops: {
+              左營: "16:00",
+              台南中心: "16:13",
+              嘉義: "16:32",
+              台中英才: "17:00",
+              新竹: "17:25",
+              桃園中心: "17:38",
+              台北局: { time: "18:02", isTerminal: true },
+            },
+          },
+          {
+            no: "772車次",
+            isWeekend: false,
+            stops: {
+              台南中心: "15:30",
+              嘉義: { time: "16:45", isTerminal: true },
+            },
+          },
+          {
+            no: "778(快8)車次",
+            isWeekend: false,
+            stops: {
+              高雄中心: "13:30",
+              台南中心: "14:10",
+              新營: "14:50",
+              嘉義: "15:15",
+              雲林: "15:55",
+              彰化: "16:35",
+              台中中心: { time: "17:20", isTerminal: true },
+            },
+          },
+          {
+            no: "796車次",
+            isWeekend: false,
+            stops: {
+              高雄中心: "11:50",
+              台南中心: "12:45",
+              新營: "13:15",
+              嘉義: "13:40",
+              雲林: "14:05",
+              台中中心: "14:55",
+              新竹: "16:25",
+              桃園中心: "17:05",
+              台北局: "18:10",
+              台北中心: { time: "18:30", isTerminal: true },
+            },
+          },
+          {
+            no: "798車次",
+            isWeekend: false,
+            stops: {
+              高雄中心: "14:50",
+              台南中心: "15:30",
+              新營: "16:10",
+              嘉義: "16:50",
+              雲林: "17:25",
+              彰化: "18:05",
+              台中中心: { time: "19:00", isTerminal: true },
+              台中英才: "18:35",
+            },
+          },
+          {
+            no: "778(快8)車次(六日)",
+            isWeekend: true,
+            stops: {
+              高雄中心: "13:30",
+              台南中心: "14:10",
+              新營: "14:50",
+              嘉義: {
+                time: "15:15",
+                isTerminal: true,
+                note: "→回程南下變777(快7)車次",
+              },
+            },
+          },
+          {
+            no: "796車次(六日)",
+            isWeekend: true,
+            stops: {
+              高雄中心: "11:10",
+              台南中心: "12:05",
+              嘉義: "12:55",
+              雲林: "13:20",
+              彰化: "14:05",
+              台中中心: "14:35",
+              新竹: "16:10",
+              桃園中心: "16:50",
+              台北局: "18:00",
+              台北中心: { time: "18:20", isTerminal: true },
+            },
+          },
+          {
+            no: "798車次(六日)",
+            isWeekend: true,
+            stops: {
+              高雄中心: "14:20",
+              台南中心: "15:00",
+              嘉義: "16:10",
+              彰化: "17:25",
+              台中中心: { time: "18:30", isTerminal: true },
+              台中英才: "18:00",
+            },
+          },
+        ],
+        south: [
+          {
+            no: "高鐵657車次",
+            isWeekend: false,
+            stops: {
+              台北局: "15:46",
+              桃園中心: "16:10",
+              新竹: "16:22",
+              台中英才: "16:48",
+              嘉義: "17:14",
+              台南中心: "17:33",
+              左營: { time: "17:45", isTerminal: true },
+            },
+          },
+          {
+            no: "高鐵829車次",
+            isWeekend: false,
+            stops: {
+              台北局: "13:11",
+              桃園中心: "13:34",
+              新竹: "13:47",
+              台中英才: "14:17",
+              嘉義: "14:55",
+              台南中心: "15:13",
+              左營: { time: "15:25", isTerminal: true },
+            },
+          },
+          {
+            no: "757(快7)車次",
+            isWeekend: false,
+            stops: {
+              台中中心: "13:30",
+              彰化: "14:10",
+              雲林: "14:50",
+              嘉義: "15:10",
+              新營: "15:40",
+              台南中心: "16:15",
+              高雄中心: { time: "17:25", isTerminal: true },
+            },
+          },
+          {
+            no: "771車次",
+            isWeekend: false,
+            stops: {
+              嘉義: "16:55",
+              新營: "17:20",
+              台南中心: { time: "18:30", isTerminal: true, note: "←接771" },
+            },
+          },
+          {
+            no: "791車次",
+            isWeekend: false,
+            stops: {
+              台北中心: "12:15",
+              台北局: "12:25",
+              桃園中心: "13:20",
+              新竹: "14:00",
+              彰化: "15:10",
+              雲林: "15:50",
+              嘉義: "16:45",
+              新營: "17:15",
+              台南中心: "17:50",
+              高雄中心: { time: "18:50", isTerminal: true },
+            },
+          },
+          {
+            no: "793車次",
+            isWeekend: false,
+            stops: {
+              台中英才: "11:10",
+              雲林: "11:55",
+              嘉義: "12:20",
+              台南中心: "13:05",
+              高雄中心: { time: "13:55", isTerminal: true },
+            },
+          },
+          {
+            no: "777(快7)車次(六日)",
+            isWeekend: true,
+            stops: {
+              嘉義: "15:20",
+              新營: "15:40",
+              台南中心: "16:15",
+              高雄中心: { time: "17:25", isTerminal: true },
+              彰化: {
+                time: "",
+                isTerminal: false,
+                note: "←接778(快7)車次北上車次",
+              },
+            },
+          },
+          {
+            no: "791車次(六日)",
+            isWeekend: true,
+            stops: {
+              台北中心: "11:45",
+              台北局: "11:55",
+              桃園中心: "12:45",
+              新竹: "13:25",
+              台中英才: "14:50",
+              彰化: "15:30",
+              嘉義: "16:35",
+              台南中心: "17:35",
+              高雄中心: { time: "18:30", isTerminal: true },
+            },
+          },
+          {
+            no: "793車次(六日)",
+            isWeekend: true,
+            stops: {
+              台中英才: "11:10",
+              嘉義: "12:15",
+              台南中心: "13:00",
+              高雄中心: { time: "13:50", isTerminal: true },
+            },
+          },
+        ],
+      };
+
+      // 全域調度狀態控制
+      let currentDirection = "north";
+      let currentFilter = "all";
+
+      function renderPanel() {
+        // 更新標題與控制項
+        document.getElementById("panel-title").innerText =
+          `動態軌跡運行圖 (${currentDirection === "north" ? "北上" : "南下"})`;
+
+        const container = document.getElementById("cards-container");
+        container.innerHTML = "";
+
+        const currentStations = stationsConfig[currentDirection];
+        const currentList = scheduleData[currentDirection];
+
+        currentList.forEach((train) => {
+          // 過濾篩選
+          if (currentFilter === "weekday" && train.isWeekend) return;
+          if (currentFilter === "weekend" && !train.isWeekend) return;
+
+          const card = document.createElement("div");
+          card.className = "train-card";
+
+          // 計算桌機橫向進度條
+          let firstIndex = -1,
+            lastIndex = -1;
+          currentStations.forEach((station, idx) => {
+            if (train.stops[station]) {
+              if (firstIndex === -1) firstIndex = idx;
+              lastIndex = idx;
+            }
+          });
+          const leftPercent = (firstIndex / (currentStations.length - 1)) * 100;
+          const widthPercent =
+            ((lastIndex - firstIndex) / (currentStations.length - 1)) * 100;
+
+          let cardHtml = `
+                <div class="card-badge-area">
+                    <div class="card-train-no">${train.no}</div>
+                    <span class="card-type-tag ${train.isWeekend ? "tag-weekend" : "tag-weekday"}">
+                        ${train.isWeekend ? "六日行駛" : "平日固定"}
+                    </span>
+                </div>
+                <div class="route-track">
+                    <div class="track-progress" style="left: ${leftPercent}%; width: ${widthPercent}%;"></div>
+            `;
+
+          // 走查所有站點
+          currentStations.forEach((station) => {
+            const stopInfo = train.stops[station];
+            let nodeClass = "station-node";
+            let timeStr = "";
+            let noteHtml = "";
+
+            if (stopInfo) {
+              nodeClass += " active";
+              if (typeof stopInfo === "object") {
+                if (stopInfo.isTerminal) nodeClass += " is-terminal";
+                timeStr = stopInfo.time;
+                if (stopInfo.note)
+                  noteHtml = `<div class="node-note">${stopInfo.note}</div>`;
+              } else {
+                timeStr = stopInfo;
+              }
+            } else {
+              nodeClass += " mobile-hidden";
+            }
+
+            cardHtml += `
+                    <div class="${nodeClass}">
+                        <div class="node-time">${timeStr}</div>
+                        <div class="node-dot"></div>
+                        <div class="node-name">${station}</div>
+                        ${noteHtml}
+                    </div>
+                `;
+          });
+
+          cardHtml += `</div>`;
+          card.innerHTML = cardHtml;
+          container.appendChild(card);
+        });
+      }
+
+      // 切換北上/南下頁籤
+      function switchDirection(dir) {
+        currentDirection = dir;
+        document
+          .getElementById("tab-north")
+          .classList.toggle("active", dir === "north");
+        document
+          .getElementById("tab-south")
+          .classList.toggle("active", dir === "south");
+        renderPanel();
+      }
+
+      // 篩選過濾器
+      function filterTrains(filter) {
+        currentFilter = filter;
+        document
+          .getElementById("filter-all")
+          .classList.toggle("active", filter === "all");
+        document
+          .getElementById("filter-weekday")
+          .classList.toggle("active", filter === "weekday");
+        document
+          .getElementById("filter-weekend")
+          .classList.toggle("active", filter === "weekend");
+        renderPanel();
+      }
+
+      // 初始化渲染
+      renderPanel();
+    </script>
+  </body>
+</html>
