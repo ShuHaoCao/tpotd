@@ -630,15 +630,27 @@
         box-shadow: none;
       }
 
-      .task-popover-time {
+      .task-popover-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 0 0 12px;
+      }
+
+      .task-popover-tag {
         display: inline-flex;
-        margin: 0 0 10px;
-        padding: 6px 10px;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 11px;
         border-radius: 999px;
-        color: rgba(255, 255, 255, 0.86);
-        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.92);
+        background: rgba(255, 255, 255, 0.13);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
         font-size: 0.86rem;
-        font-weight: 800;
+        font-weight: 900;
+        line-height: 1;
+        white-space: nowrap;
       }
 
       .task-popover-body {
@@ -983,14 +995,19 @@
             ?.childNodes[0]?.textContent?.trim() ||
           "";
         const task = shiftTaskNotes[shiftLabel] || "此班別工作內容尚未建檔。";
-        const time = shiftTimeNotes[shiftLabel] || "時間待建檔";
+        const tags = getShiftTags(shiftLabel);
+        const tagChips = (tags.length ? tags : ["尚未標示"])
+          .map(
+            (tag) => `<span class="task-popover-tag">${escapeHTML(tag)}</span>`,
+          )
+          .join("");
 
         taskPopover.innerHTML = `
           <div class="task-popover-title">
             <span>📝 ${escapeHTML(shiftLabel)}｜工作任務</span>
             <button type="button" class="task-popover-close" aria-label="關閉工作任務視窗">×</button>
           </div>
-          <div class="task-popover-time">🕒 上班時間：${escapeHTML(time)}</div>
+          <div class="task-popover-tags" aria-label="班別標籤">${tagChips}</div>
           <p class="task-popover-body">${escapeHTML(task)}</p>
         `;
 
@@ -1028,6 +1045,26 @@
       let currentScheduleData = {};
       let showOnlyAssigned = false;
       let currentFilterGroup = "all";
+
+      const filterGroupNames = {
+        supervisor: "主管",
+        internal: "內勤",
+        external: "外勤",
+        morning: "早班",
+        afternoon: "中班",
+        night: "大夜班",
+        momo: "MOMO",
+        line: "幹線運輸",
+        two: "花班",
+        branch: "支局",
+        fhsr: "高工局/高鐵",
+        taichung: "台中",
+        kaohsiung: "高雄",
+        chiayi: "嘉義",
+        ops: "作業股",
+        express: "快捷股",
+        other: "支援/見習/借調",
+      };
 
       const filterGroups = {
         supervisor: ["股　長", "早班專員", "中班專員", "夜班專員"],
@@ -1338,6 +1375,12 @@
           // 顯示排班
           return hasStaff;
         });
+      }
+
+      function getShiftTags(shiftLabel) {
+        return Object.entries(filterGroups)
+          .filter(([, labels]) => labels.includes(shiftLabel))
+          .map(([group]) => filterGroupNames[group] || group);
       }
 
       function createRow(shift, name) {
