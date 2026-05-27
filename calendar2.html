@@ -261,25 +261,51 @@
         renderCalendar();
       }
 
+      function getStaffName(value) {
+        // 舊版 JSON：班別值是「人名」字串
+        if (typeof value === "string") return value.trim();
+
+        // 新版 JSON：班別值可能變成 { name: "人名", status: {...} }
+        if (value && typeof value === "object") {
+          if (typeof value.name === "string") return value.name.trim();
+          if (typeof value.staff === "string") return value.staff.trim();
+          if (typeof value.person === "string") return value.person.trim();
+        }
+
+        return "";
+      }
+
+      function isValidStaffName(name) {
+        if (!name) return false;
+        if (["-", "#溢出!", "#SPILL!", "undefined", "null"].includes(name))
+          return false;
+
+        // 避免新版資料中的狀態、數字或其他非人名資料混入下拉清單
+        if (/^\d+$/.test(name)) return false;
+        if (name.includes("[object Object]")) return false;
+        if (["台中", "嘉義", "高雄", "違規", "正常"].includes(name))
+          return false;
+
+        return true;
+      }
+
       function populateStaff(data) {
         let names = new Set();
-        Object.keys(data).forEach((k) => {
-          if (k === "lastUpdated") return;
-          Object.values(data[k]).forEach((v) => {
-            if (
-              v &&
-              v !== "-" &&
-              v !== "" &&
-              v !== "#溢出!" &&
-              v !== "#SPILL!"
-            ) {
-              names.add(v);
-            }
+
+        Object.keys(data).forEach((dateKey) => {
+          if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey)) return;
+          const dayData = data[dateKey];
+          if (!dayData || typeof dayData !== "object") return;
+
+          Object.values(dayData).forEach((value) => {
+            const name = getStaffName(value);
+            if (isValidStaffName(name)) names.add(name);
           });
         });
+
         staffSelect.innerHTML = '<option value="">-- 請選擇 --</option>';
         Array.from(names)
-          .sort()
+          .sort((a, b) => a.localeCompare(b, "zh-Hant"))
           .forEach((n) => staffSelect.options.add(new Option(n, n)));
       }
 
@@ -317,7 +343,7 @@
           if (selStaff && scheduleData[dateStr]) {
             const dayShifts = scheduleData[dateStr];
             const myShifts = Object.keys(dayShifts).filter(
-              (s) => dayShifts[s] === selStaff,
+              (s) => getStaffName(dayShifts[s]) === selStaff,
             );
             dutyHtml = myShifts
               .map((s) => `<div class="duty-tag">${s}</div>`)
