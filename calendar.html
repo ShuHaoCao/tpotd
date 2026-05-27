@@ -490,6 +490,7 @@
 
         try {
           const response = await fetch("schedule_data.json");
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
           scheduleData = await response.json();
           populateStaff(scheduleData);
         } catch (err) {
@@ -504,28 +505,67 @@
         startClock();
       }
 
+      function extractStaffName(value) {
+        if (value == null) return "";
+
+        if (typeof value === "string" || typeof value === "number") {
+          return String(value).trim();
+        }
+
+        // 新版 schedule_data.json 的班別資料可能長這樣：
+        // { name: "王昭文", status: { 台中: "", 嘉義: "", 高雄: "" } }
+        // 這裡只取真正的人名，不把整個物件轉成 [object Object]。
+        if (typeof value === "object" && !Array.isArray(value)) {
+          const possibleNameKeys = [
+            "name",
+            "姓名",
+            "staff",
+            "person",
+            "employee",
+            "人員",
+            "value",
+          ];
+
+          for (const key of possibleNameKeys) {
+            if (
+              typeof value[key] === "string" ||
+              typeof value[key] === "number"
+            ) {
+              return String(value[key]).trim();
+            }
+          }
+        }
+
+        return "";
+      }
+
+      function isValidStaffName(name) {
+        const cleanName = String(name || "").trim();
+
+        return (
+          cleanName &&
+          cleanName !== "-" &&
+          cleanName !== "#SPILL!" &&
+          cleanName !== "#溢出!" &&
+          cleanName !== "null" &&
+          cleanName !== "undefined" &&
+          cleanName !== "[object Object]" &&
+          !/^\d+$/.test(cleanName) &&
+          !/^[：:]+$/.test(cleanName)
+        );
+      }
+
       function populateStaff(data) {
         const names = new Set();
 
-        Object.keys(data).forEach((date) => {
+        Object.entries(data).forEach(([date, shifts]) => {
           if (date === "lastUpdated") return;
-
-          const shifts = data[date];
           if (!shifts || typeof shifts !== "object" || Array.isArray(shifts))
             return;
 
-          Object.values(shifts).forEach((name) => {
-            const cleanName = String(name || "").trim();
-
-            const isValidName =
-              cleanName &&
-              cleanName !== "-" &&
-              cleanName !== "#SPILL!" &&
-              cleanName !== "#溢出!" &&
-              !/^\d+$/.test(cleanName) &&
-              !/^[：:]+$/.test(cleanName);
-
-            if (isValidName) {
+          Object.values(shifts).forEach((shiftValue) => {
+            const cleanName = extractStaffName(shiftValue);
+            if (isValidStaffName(cleanName)) {
               names.add(cleanName);
             }
           });
@@ -580,9 +620,10 @@
           if (selectedStaff && scheduleData[dateStr]) {
             const dayShifts = scheduleData[dateStr];
 
-            const myShifts = Object.keys(dayShifts).filter(
-              (key) => dayShifts[key] === selectedStaff,
-            );
+            const myShifts = Object.keys(dayShifts).filter((key) => {
+              const staffName = extractStaffName(dayShifts[key]);
+              return staffName === selectedStaff;
+            });
 
             if (myShifts.length > 0) {
               shiftsHtml = `
