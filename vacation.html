@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>郵局運輸股 - 115年同仁休假統計查詢</title>
+    <title>個人休假動態</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
@@ -799,11 +799,9 @@
   <body>
     <div id="app" class="container">
       <header class="hero">
-        <div class="eyebrow">中華郵政・運輸股休假儀表板</div>
-        <h1><span>115年度同仁休假狀況</span>查詢</h1>
-        <p>
-          將輪休假、身心假、公休積欠與休假率排名整合成一張清楚的管理看板。資訊要準，畫面也要帥；制度像老派鐘錶，介面就讓它發光。
-        </p>
+        <div class="eyebrow">台南郵局運輸股</div>
+        <h1><span>115年個人休假動態</span></h1>
+        <p>輪休假、身心假、公休積欠</p>
         <div class="hero-meta">
           <span class="meta-pill">📅 年度統計</span>
           <span class="meta-pill">📊 休假率進度</span>
@@ -821,8 +819,8 @@
 
       <div class="search-box">
         <div class="search-title">
-          <label for="empSelect">選擇查詢同仁</label>
-          <small>選定人員後，系統會即時呈現休假明細、進度與排名。</small>
+          <label for="empSelect">選擇人員</label>
+          <small>選定後，即會顯示休假相關資訊</small>
         </div>
         <div class="select-wrap">
           <select
@@ -839,7 +837,7 @@
       </div>
 
       <div v-if="!selectedEmp" class="empty-state">
-        💡 請由上方下拉選單選擇同仁，休假資料就會像開燈一樣全部亮起來。
+        💡 請由上方下拉選單選擇人員。
       </div>
 
       <div v-if="selectedEmp" class="dashboard-card">
@@ -849,10 +847,9 @@
               <div class="avatar">{{ selectedEmp.name.slice(0, 1) }}</div>
               <div>
                 <div class="person-name">{{ selectedEmp.name }}</div>
-                <div class="person-subtitle">同仁休假簡報・排班調度參考</div>
+                <div class="person-subtitle">休假・排班調度參考</div>
               </div>
             </div>
-            <div class="year-badge">統計基準：115年度</div>
           </div>
         </div>
 
@@ -866,31 +863,31 @@
               <div class="data-item">
                 <span class="data-label">可休天數</span>
                 <span class="data-value"
-                  >{{ selectedEmp.wheel_leave.quota }}</span
+                  >{{ parseInt(selectedEmp.wheel_leave.quota) }}</span
                 >
               </div>
               <div class="data-item">
                 <span class="data-label">展延天數</span>
                 <span class="data-value"
-                  >{{ selectedEmp.wheel_leave.extend_114 }}</span
+                  >{{ parseInt(selectedEmp.wheel_leave.extend_114) }}</span
                 >
               </div>
               <div class="data-item">
                 <span class="data-label">總天數</span>
                 <span class="data-value highlight"
-                  >{{ selectedEmp.wheel_leave.total }}</span
+                  >{{ parseInt(selectedEmp.wheel_leave.total) }}</span
                 >
               </div>
               <div class="data-item">
                 <span class="data-label">已休天數</span>
                 <span class="data-value used"
-                  >{{ selectedEmp.wheel_leave.used }}</span
+                  >{{ parseInt(selectedEmp.wheel_leave.used) }}</span
                 >
               </div>
               <div class="data-item">
                 <span class="data-label">剩餘天數</span>
                 <span class="data-value remain"
-                  >{{ selectedEmp.wheel_leave.remaining }}</span
+                  >{{ parseInt(selectedEmp.wheel_leave.remaining) }}</span
                 >
               </div>
             </div>
@@ -904,7 +901,7 @@
                   :key="'month-' + index"
                 >
                   <div class="month-name">{{ index + 1 }}月</div>
-                  <div class="month-days">{{ days }}</div>
+                  <div class="month-days">{{ parseInt(days) }}</div>
                 </div>
               </div>
             </div>
@@ -914,7 +911,7 @@
         <section class="section-box stats-card">
           <div class="section-inner">
             <div class="section-title">
-              <span>📊 綜合休假率指標</span>
+              <span>📊 綜合休假指標</span>
               <span class="section-chip">進度看板</span>
             </div>
             <div class="stat-badge-group">
@@ -981,7 +978,7 @@
               <strong
                 :class="{ 'highlight': selectedEmp.official_leave.debt > 0 }"
               >
-                {{ selectedEmp.official_leave.debt }}
+                {{ parseInt(selectedEmp.official_leave.debt) }}
               </strong>
               <span>天</span>
             </div>
