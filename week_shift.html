@@ -629,6 +629,11 @@
           `${shortDate(today)} ~ ${shortDate(end)}`;
       }
 
+      // 用於標準化班別鍵名（例如把全形 "早　班 1" 轉換為方便呈現的 "早班1" 或是保持原樣）
+      function cleanShiftName(shift) {
+        return shift.replace(/[\s　]/g, "");
+      }
+
       async function loadSchedule() {
         updateDateRange();
 
@@ -639,9 +644,16 @@
 
         const nameSet = new Set();
 
+        // 遍歷所有日期與職缺
         for (const day of Object.values(data)) {
-          for (const person of Object.values(day)) {
-            const name = person?.trim();
+          for (const item of Object.values(day)) {
+            // 判斷是否為新版結構物件 { name: "...", status: ... } 或是舊版字串
+            let name = "";
+            if (item && typeof item === "object" && item.name !== undefined) {
+              name = item.name?.trim();
+            } else if (typeof item === "string") {
+              name = item?.trim();
+            }
 
             if (
               name &&
@@ -693,9 +705,19 @@
           const shiftData = data[key];
 
           if (shiftData) {
-            for (const [shift, person] of Object.entries(shiftData)) {
-              if (person?.trim() === name) {
-                found = shift;
+            for (const [shift, item] of Object.entries(shiftData)) {
+              let pName = "";
+              // 新版結構處理
+              if (item && typeof item === "object" && item.name !== undefined) {
+                pName = item.name?.trim();
+              } else if (typeof item === "string") {
+                // 舊版結構處理
+                pName = item?.trim();
+              }
+
+              if (pName === name) {
+                // 將班別名稱做美化處理（例如去掉新舊版中混用的空格，讓前端顯示更乾淨，如 "早 班 1" -> "早班1"）
+                found = cleanShiftName(shift);
                 break;
               }
             }
