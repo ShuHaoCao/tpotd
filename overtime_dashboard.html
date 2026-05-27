@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#08111f" />
+    <title>臺南運輸股｜加班戰情室</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=IqY5Hyqsm1-46ftrxZc8JI9cxQXK6wR4ck6ke20mZGH5a0uK8Izxo1ytamjNzqRZoa6u9JQuu27I8Vhz0aLA4T_K2bgkf0vgXf6Bd4cocMySG0IB2A6LIVBjS2FZY7aFUk0Pw8GM7Vi0y3EwZc3XqWlfzfuU_yPXP8dmXXiFkqrlC5ljSyF2PaIbUHNuTE26LqhtdZjNQ5h7vDFIX5E0uwlhwByLZiOU-569fHDjgVzQLkZaQYWHCXXGkttz3GFltqizB8rW90E11R7buO4Rkq6BVjw1NA-AbCvHKinVcRtoy_98IJWlyvN_yPAdHhClrg8hVFu-KqLT9zT4YyF51mK3M-_xmE4tFNzn9kjBmj4"
+      charset="UTF-8"
+    ></script>
+    <style>
+      :root {
+        --bg: #08111f;
+        --panel: rgba(255, 255, 255, 0.08);
+        --panel2: rgba(255, 255, 255, 0.12);
+        --text: #eef6ff;
+        --muted: #9fb0c7;
+        --gold: #f6d47b;
+        --red: #ff5b6e;
+        --line: rgba(255, 255, 255, 0.14);
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Microsoft JhengHei", system-ui, sans-serif;
+        color: var(--text);
+        background: radial-gradient(
+          circle at top left,
+          #244469 0,
+          #08111f 42%,
+          #030711 100%
+        );
+        min-height: 100vh;
+      }
+      .wrap {
+        width: min(1180px, calc(100% - 28px));
+        margin: auto;
+        padding: 28px 0 48px;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 26px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.14),
+          rgba(255, 255, 255, 0.04)
+        );
+        box-shadow: var(--shadow);
+      }
+      .hero:after {
+        content: "";
+        position: absolute;
+        inset: auto -10% -70% 35%;
+        height: 220px;
+        background: radial-gradient(
+          circle,
+          rgba(246, 212, 123, 0.28),
+          transparent 68%
+        );
+        pointer-events: none;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(1.55rem, 5vw, 2.8rem);
+        letter-spacing: 0.06em;
+      }
+      .sub {
+        margin-top: 8px;
+        color: var(--muted);
+      }
+      .toolbar {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 20px 0 0;
+        flex-wrap: wrap;
+      }
+      select {
+        appearance: none;
+        border: 1px solid var(--line);
+        color: var(--text);
+        background: #101b2d;
+        padding: 13px 42px 13px 16px;
+        border-radius: 16px;
+        font-size: 1rem;
+        min-width: min(100%, 300px);
+      }
+      .file-btn {
+        cursor: pointer;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 13px 16px;
+        border-radius: 16px;
+        color: var(--text);
+        font-weight: 700;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .kpis {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin: 18px 0;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        background: var(--panel);
+        box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18);
+        backdrop-filter: blur(14px);
+        padding: 18px;
+      }
+      .label {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .value {
+        font-size: clamp(1.5rem, 4vw, 2.25rem);
+        font-weight: 900;
+        margin-top: 6px;
+      }
+      .unit {
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-left: 4px;
+      }
+      .section-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 12px;
+        margin: 24px 2px 12px;
+      }
+      .section-title h2 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+      .hint {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .bars {
+        display: grid;
+        gap: 12px;
+      }
+      .bar {
+        display: grid;
+        grid-template-columns: 100px 1fr 62px;
+        align-items: center;
+        gap: 12px;
+      }
+      .track {
+        height: 14px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, #7cc8ff, #f6d47b);
+      }
+
+      .heatmap-card {
+        overflow: hidden;
+      }
+      .heatmap-wrap {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(34px, 1fr));
+        gap: 8px;
+      }
+      .heat-cell {
+        position: relative;
+        min-height: 44px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 6px 4px;
+        color: #eaf5ff;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+      .heat-cell:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 10px 24px rgba(0, 0, 0, 0.24),
+          0 0 20px rgba(112, 214, 255, 0.18);
+      }
+      .heat-cell .d {
+        position: absolute;
+        top: 5px;
+        right: 6px;
+        font-size: 0.66rem;
+        color: rgba(238, 246, 255, 0.58);
+      }
+      .heat-cell .h {
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+      .heat-empty {
+        opacity: 0.28;
+      }
+      .heat-lv0 {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .heat-lv1 {
+        background: rgba(112, 214, 255, 0.16);
+      }
+      .heat-lv2 {
+        background: rgba(112, 214, 255, 0.3);
+      }
+      .heat-lv3 {
+        background: rgba(246, 212, 123, 0.38);
+        color: #fff7d8;
+      }
+      .heat-lv4 {
+        background: rgba(255, 91, 110, 0.52);
+        color: #fff;
+      }
+      .heat-lv5 {
+        background: rgba(255, 91, 110, 0.78);
+        color: #fff;
+        box-shadow:
+          0 0 24px rgba(255, 91, 110, 0.22),
+          inset 0 0 16px rgba(255, 255, 255, 0.08);
+      }
+      .heat-legend {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: flex-end;
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-top: 12px;
+      }
+      .heat-sample {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .risk-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 12px;
+      }
+      .risk-card {
+        position: relative;
+        overflow: hidden;
+      }
+      .risk-card:before {
+        content: "";
+        position: absolute;
+        inset: -40% -70% auto auto;
+        width: 180px;
+        height: 180px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 91, 110, 0.22),
+          transparent 62%
+        );
+        pointer-events: none;
+      }
+      .risk-card h3 {
+        margin: 0 0 12px;
+        font-size: 1rem;
+        color: #dfefff;
+      }
+      .rank-list {
+        display: grid;
+        gap: 9px;
+      }
+      .rank-item {
+        display: grid;
+        grid-template-columns: 28px minmax(52px, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+        padding: 8px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .rank-no {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(246, 212, 123, 0.18);
+        color: var(--gold);
+        font-weight: 900;
+        font-size: 0.78rem;
+      }
+      .rank-name {
+        font-weight: 800;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .rank-val {
+        font-weight: 950;
+        color: #fff;
+      }
+      .risk-note {
+        font-size: 0.76rem;
+        color: var(--muted);
+        margin-top: 8px;
+        line-height: 1.45;
+      }
+      .avg-row {
+        display: grid;
+        grid-template-columns: 70px 1fr 52px;
+        gap: 8px;
+        align-items: center;
+        margin: 8px 0;
+      }
+      .avg-name {
+        font-weight: 900;
+      }
+      .avg-track {
+        height: 10px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .avg-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, #70d6ff, #f6d47b, #ff5b6e);
+      }
+      .groups {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        align-items: start;
+      }
+      .group h3 {
+        margin: 0 0 12px;
+      }
+      .person-row {
+        display: grid;
+        grid-template-columns: minmax(72px, 1fr) 2fr 54px;
+        gap: 10px;
+        align-items: center;
+        padding: 9px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      }
+      .mini-track {
+        height: 9px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.12);
+        overflow: hidden;
+      }
+      .mini-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: var(--gold);
+      }
+      .dashboard {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+      .speed-card {
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .speed-card:before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        background: linear-gradient(
+          115deg,
+          transparent 0 35%,
+          rgba(124, 200, 255, 0.13) 46%,
+          transparent 58%
+        );
+        transform: translateX(-120%);
+        animation: hudScan 3.8s ease-in-out infinite;
+        pointer-events: none;
+      }
+      .speed-card:after {
+        content: "";
+        position: absolute;
+        inset: 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(112, 214, 255, 0.16);
+        box-shadow: inset 0 0 26px rgba(112, 214, 255, 0.08);
+        pointer-events: none;
+      }
+      .speed-card.danger {
+        animation: dangerShake 0.34s linear 3;
+      }
+      .gauge {
+        width: 300px;
+        max-width: 100%;
+        aspect-ratio: 1.45;
+        margin: 10px auto 0;
+        position: relative;
+        filter: drop-shadow(0 0 18px rgba(112, 214, 255, 0.2));
+      }
+      .gauge:before {
+        content: "";
+        position: absolute;
+        inset: 16% 6% -9%;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(112, 214, 255, 0.18),
+          transparent 62%
+        );
+        animation: hudPulse 2.2s ease-in-out infinite;
+      }
+      .gauge svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        position: relative;
+        z-index: 1;
+      }
+      .needle {
+        transform-origin: 100px 100px;
+        transition: transform 1.15s cubic-bezier(0.18, 1.45, 0.28, 1);
+      }
+      .needle-glow {
+        filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.85))
+          drop-shadow(0 0 13px rgba(246, 212, 123, 0.6));
+      }
+      .gauge-num {
+        font-size: 2.6rem;
+        font-weight: 900;
+        text-shadow: 0 0 18px rgba(112, 214, 255, 0.35);
+      }
+      .warning {
+        min-height: 28px;
+        color: var(--red);
+        font-weight: 900;
+        margin-top: 8px;
+      }
+      .warning.alert {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 99px;
+        background: rgba(255, 91, 110, 0.12);
+        border: 1px solid rgba(255, 91, 110, 0.45);
+        box-shadow: 0 0 24px rgba(255, 91, 110, 0.28);
+        animation: warningBlink 0.82s steps(2, end) infinite;
+      }
+      .days {
+        font-size: 1.1rem;
+        color: var(--muted);
+      }
+      .red-zone {
+        animation: redZoneBlink 0.72s ease-in-out infinite;
+      }
+      .arc-main {
+        transition: stroke-dashoffset 1.15s cubic-bezier(0.18, 1.45, 0.28, 1);
+      }
+      .tick {
+        opacity: 0.55;
+      }
+      .tick.hot {
+        opacity: 0.9;
+        filter: drop-shadow(0 0 4px rgba(255, 91, 110, 0.55));
+      }
+      .hud-ring {
+        animation: ringGlow 2s ease-in-out infinite;
+      }
+      .speed-caption {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-top: -3px;
+        letter-spacing: 0.12em;
+      }
+      .status-line {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+      .status-chip {
+        font-size: 0.78rem;
+        padding: 5px 9px;
+        border-radius: 99px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .gauge-info {
+        position: relative;
+        z-index: 2;
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .gauge-info .speed-caption {
+        margin-top: 0;
+      }
+      .gauge-info .days {
+        margin-top: 0;
+      }
+      @keyframes hudScan {
+        0%,
+        45% {
+          transform: translateX(-130%);
+        }
+        75%,
+        100% {
+          transform: translateX(130%);
+        }
+      }
+      @keyframes hudPulse {
+        0%,
+        100% {
+          opacity: 0.45;
+          transform: scale(0.98);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.03);
+        }
+      }
+      @keyframes ringGlow {
+        0%,
+        100% {
+          opacity: 0.45;
+        }
+        50% {
+          opacity: 0.9;
+        }
+      }
+      @keyframes warningBlink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.35;
+        }
+      }
+      @keyframes redZoneBlink {
+        0%,
+        100% {
+          opacity: 0.75;
+          stroke-width: 20;
+        }
+        50% {
+          opacity: 1;
+          stroke-width: 24;
+        }
+      }
+      @keyframes dangerShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-3px);
+        }
+        40% {
+          transform: translateX(3px);
+        }
+        60% {
+          transform: translateX(-2px);
+        }
+        80% {
+          transform: translateX(2px);
+        }
+      }
+      .records {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 12px;
+      }
+      .record {
+        position: relative;
+        min-height: 82px;
+        color: #172033;
+        border-radius: 18px;
+        padding: 18px 12px 12px;
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      .record .date {
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        font-size: 0.78rem;
+        opacity: 0.68;
+      }
+      .record .hours {
+        font-size: 2rem;
+        font-weight: 950;
+      }
+      .record .type {
+        font-size: 0.78rem;
+        opacity: 0.8;
+      }
+      .legend {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .pill {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        padding: 8px 10px;
+        border: 1px solid var(--line);
+        border-radius: 99px;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+      /* ===== Responsive Layout: Desktop / Tablet / Mobile Portrait ===== */
+      @media (min-width: 901px) {
+        .desktop-only {
+          display: block;
+        }
+        .mobile-only {
+          display: none;
+        }
+      }
+      @media (max-width: 900px) {
+        .desktop-only {
+          display: none;
+        }
+        .mobile-only {
+          display: block;
+        }
+        body {
+          background: radial-gradient(
+            circle at 20% 0,
+            #1d3a5f 0,
+            #07101d 46%,
+            #02050b 100%
+          );
+        }
+        .wrap {
+          width: min(100% - 20px, 1180px);
+          padding: 14px 0 34px;
+        }
+        .hero {
+          padding: 20px;
+          border-radius: 22px;
+        }
+        .toolbar {
+          gap: 10px;
+          margin-top: 16px;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+          margin: 14px 0;
+        }
+        .groups,
+        .dashboard,
+        .risk-grid {
+          grid-template-columns: 1fr;
+        }
+        .bar {
+          grid-template-columns: 78px 1fr 50px;
+          gap: 9px;
+          font-size: 0.9rem;
+        }
+        .card {
+          padding: 15px;
+          border-radius: 20px;
+        }
+        .records {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 10px;
+        }
+        .dashboard {
+          gap: 12px;
+        }
+        .speed-card {
+          position: relative;
+        }
+        .gauge {
+          width: min(300px, 92vw);
+        }
+      }
+      @media (max-width: 640px) {
+        html {
+          font-size: 15px;
+        }
+        body {
+          overflow-x: hidden;
+        }
+        .wrap {
+          width: 100%;
+          padding: 0 10px 28px;
+        }
+        .hero {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          margin: 0 -10px;
+          border-radius: 0 0 24px 24px;
+          padding: 16px 14px 14px;
+          backdrop-filter: blur(18px);
+          background: linear-gradient(
+            145deg,
+            rgba(10, 24, 43, 0.94),
+            rgba(7, 14, 27, 0.88)
+          );
+          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.32);
+        }
+        h1 {
+          font-size: clamp(1.25rem, 7vw, 1.75rem);
+          line-height: 1.22;
+          letter-spacing: 0.04em;
+        }
+        .sub {
+          font-size: 0.82rem;
+          line-height: 1.45;
+          margin-top: 6px;
+        }
+        .toolbar {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 9px;
+        }
+        select {
+          width: 100%;
+          min-width: 0;
+          border-radius: 14px;
+          padding: 12px 14px;
+          font-size: 1rem;
+        }
+        .legend {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 6px;
+          max-height: 74px;
+          overflow: auto;
+          padding-right: 2px;
+        }
+        .pill {
+          justify-content: flex-start;
+          padding: 6px 8px;
+          font-size: 0.78rem;
+          min-width: 0;
+          white-space: nowrap;
+        }
+        .dot {
+          width: 10px;
+          height: 10px;
+          flex: 0 0 auto;
+        }
+        .section-title {
+          margin: 18px 2px 9px;
+          align-items: start;
+        }
+        .section-title h2 {
+          font-size: 1.08rem;
+          line-height: 1.35;
+        }
+        .hint {
+          font-size: 0.78rem;
+          line-height: 1.35;
+        }
+        .grid {
+          gap: 10px;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+          margin: 12px 0;
+        }
+        .kpis .card {
+          padding: 12px 10px;
+          min-height: 86px;
+        }
+        .label {
+          font-size: 0.78rem;
+        }
+        .value {
+          font-size: clamp(1.25rem, 8vw, 1.85rem);
+          margin-top: 4px;
+        }
+        .unit {
+          display: inline;
+          font-size: 0.76rem;
+        }
+        .bars {
+          gap: 10px;
+        }
+        .bar {
+          grid-template-columns: 64px 1fr 42px;
+          gap: 8px;
+          font-size: 0.82rem;
+        }
+        .track {
+          height: 12px;
+        }
+        .groups,
+        .risk-grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .group h3 {
+          font-size: 1rem;
+          margin-bottom: 8px;
+        }
+        .person-row {
+          grid-template-columns: minmax(58px, 0.9fr) 1.5fr 46px;
+          gap: 8px;
+          padding: 8px 0;
+          font-size: 0.88rem;
+        }
+        .dashboard {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .speed-card {
+          padding: 12px 12px 14px;
+          border-radius: 22px;
+        }
+        .speed-card:after {
+          inset: 9px;
+          border-radius: 16px;
+        }
+        .gauge {
+          width: min(238px, 76vw);
+          margin: 0 auto 0;
+          aspect-ratio: 1.48;
+        }
+        .gauge-num {
+          font-size: clamp(1.9rem, 11vw, 2.45rem);
+          line-height: 1;
+          margin-top: -4px;
+          position: relative;
+          z-index: 2;
+        }
+        .gauge-info {
+          margin-top: 12px;
+          gap: 3px;
+        }
+        .speed-caption {
+          font-size: 0.72rem;
+          margin-top: 0;
+        }
+        .days {
+          font-size: 0.95rem;
+          margin-top: 0;
+        }
+        .warning {
+          min-height: 22px;
+          margin-top: 4px;
+          font-size: 0.95rem;
+        }
+        .warning.alert {
+          padding: 5px 10px;
+        }
+        .status-line {
+          gap: 6px;
+          margin-top: 6px;
+        }
+        .status-chip {
+          font-size: 0.7rem;
+          padding: 4px 7px;
+        }
+        .records {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+        }
+        .record {
+          min-height: 76px;
+          border-radius: 15px;
+          padding: 18px 10px 10px;
+        }
+        .record .date {
+          font-size: 0.72rem;
+          right: 8px;
+          top: 7px;
+        }
+        .record .hours {
+          font-size: 1.55rem;
+        }
+        .record .type {
+          font-size: 0.72rem;
+        }
+        .rank-item {
+          grid-template-columns: 24px minmax(48px, 1fr) auto;
+          padding: 7px;
+        }
+        .avg-row {
+          grid-template-columns: 58px 1fr 46px;
+        }
+        .heatmap-wrap {
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+          gap: 6px;
+        }
+        .heat-cell {
+          min-height: 42px;
+          border-radius: 9px;
+        }
+        .heat-cell .h {
+          font-size: 0.72rem;
+        }
+        .heat-legend {
+          justify-content: flex-start;
+          overflow: auto;
+        }
+      }
+      @media (max-width: 380px) {
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .legend {
+          grid-template-columns: 1fr 1fr;
+        }
+        .records {
+          grid-template-columns: 1fr 1fr;
+        }
+        .bar {
+          grid-template-columns: 58px 1fr 38px;
+        }
+        .person-row {
+          grid-template-columns: 54px 1fr 42px;
+        }
+        .gauge {
+          width: min(245px, 88vw);
+        }
+        .record .hours {
+          font-size: 1.42rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="hero">
+        <h1 id="title">臺南運輸股｜加班戰情室</h1>
+        <div class="sub" id="subtitle">讀取 overtime_data.json 中……</div>
+        <div class="toolbar">
+          <select id="personSelect">
+            <option>載入中</option>
+          </select>
+          <div class="legend" id="legend"></div>
+        </div>
+      </section>
+      <section id="app"></section>
+    </main>
+    <script>
+      const FALLBACK = null; // 若要離線測試，可把 JSON 物件貼在這裡
+      const groupColors = {
+        內勤: "#8ec5ff",
+        早班: "#ffe08a",
+        中班: "#9af0cb",
+        大夜班: "#c7a5ff",
+      };
+      let DATA;
+
+      fetch("overtime_data.json", { cache: "no-store" })
+        .then((r) => {
+          if (!r.ok) throw new Error("no json");
+          return r.json();
+        })
+        .then(init)
+        .catch(() => {
+          document.getElementById("subtitle").textContent =
+            "自動讀取不到 overtime_data.json，請確認網頁與 JSON 檔放在同一資料夾，並建議透過本機伺服器或網站空間開啟。";
+          if (FALLBACK) init(FALLBACK);
+        });
+
+      function init(data) {
+        DATA = normalizeData(data);
+        document.getElementById("title").textContent = "臺南運輸股｜加班戰情室";
+        const badSheet =
+          DATA.meta?.sheetName && !/^加班統計表-\d+$/.test(DATA.meta.sheetName);
+        const badNames = (DATA.people || []).filter(
+          (p) => !p.name || /^\d+(\.\d+)?$/.test(String(p.name)),
+        ).length;
+        document.getElementById("subtitle").textContent =
+          `${DATA.meta?.sheetName || ""}　資料匯出：${DATA.meta?.exportedAt || ""}${badSheet || badNames > 5 ? "　⚠ 這份 JSON 可能匯出到錯誤工作表，請用新版 VBA 重新匯出。" : ""}`;
+        const sel = document.getElementById("personSelect");
+        sel.innerHTML =
+          '<option value="__overview">總覽</option>' +
+          DATA.people
+            .map(
+              (p, i) => `<option value="${i}">${p.group}｜${p.name}</option>`,
+            )
+            .join("");
+        sel.onchange = () => render(sel.value);
+        renderLegend();
+        render("__overview");
+      }
+      function normalizeData(data) {
+        data.people = Array.isArray(data.people)
+          ? data.people.filter((p) => p && String(p.name || "").trim() !== "")
+          : [];
+        data.overview = data.overview || {};
+        data.colors = data.colors || {};
+        return data;
+      }
+      function cleanTitle(t) {
+        return (t || "").replace(/\s+/g, " ").trim();
+      }
+      function renderLegend() {
+        const colors = DATA.colors || {};
+        document.getElementById("legend").innerHTML = Object.entries(colors)
+          .map(
+            ([k, v]) =>
+              `<span class="pill"><span class="dot" style="background:${v}"></span>${k}</span>`,
+          )
+          .join("");
+      }
+      function n(v, d = 1) {
+        return Number(v || 0).toLocaleString("zh-TW", {
+          maximumFractionDigits: d,
+        });
+      }
+      function pct(v) {
+        return `${(Number(v || 0) * 100).toFixed(2)}%`;
+      }
+      function render(value) {
+        value === "__overview"
+          ? renderOverview()
+          : renderPerson(DATA.people[Number(value)]);
+      }
+      function renderOverview() {
+        const o = DATA.overview,
+          people = DATA.people;
+        document.getElementById("app").innerHTML = `
+  <div class="grid kpis">
+    ${kpi("加班使用率", pct(o.usageRate), "")}${kpi("總加班時數", n(o.totalHours), "小時")}${kpi("全體可加班時數", n(o.availableHours, 0), "小時")}${kpi("登錄人數", people.length, "人")}
+  </div>
+  <div class="section-title"><h2>依地區分布</h2><span class="hint">哪裡在發熱，數字不會說謊</span></div>
+  <div class="card bars">${bars(o.areaStats)}</div>
+  ${riskBoard(people)}
+  <div class="section-title"><h2>日期熱力圖</h2><span class="hint">顏色愈深，代表那天愈忙；星期一若發紅，別問，問就是人生在燃燒。</span></div>
+  ${heatmap(o.dailyTotals)}
+  <div class="section-title"><h2>人員總覽</h2><span class="hint">依內勤、早班、中班、大夜班分組</span></div>
+  <div class="grid groups">${["內勤", "早班", "中班", "大夜班"]
+    .map((g) =>
+      groupCard(
+        g,
+        people.filter((p) => p.group === g),
+      ),
+    )
+    .join("")}</div>`;
+      }
+
+      function heatmap(items) {
+        const list = (items || []).filter((x) => x && x.date);
+        if (!list.length)
+          return '<div class="card heatmap-card"><div class="hint">尚無每日加班總時數資料。</div></div>';
+        const max = Math.max(...list.map((x) => Number(x.hours) || 0), 1);
+        const cells = list
+          .map((x) => {
+            const h = Number(x.hours) || 0;
+            const lv =
+              h <= 0 ? 0 : Math.min(5, Math.max(1, Math.ceil((h / max) * 5)));
+            const date = new Date(x.date + "T00:00:00");
+            const weekCode = date.getDay() === 0 ? 7 : date.getDay();
+            const dayCode = String(date.getDate()).padStart(2, "0");
+            const heatDateLabel = `${dayCode}-${weekCode}`;
+            return `<div class="heat-cell heat-lv${lv} ${h <= 0 ? "heat-empty" : ""}" title="${x.date}｜星期${weekCode}｜${n(h)} 小時"><span class="d">${heatDateLabel}</span><span class="h">${h > 0 ? n(h) + "h" : "—"}</span></div>`;
+          })
+          .join("");
+        return `<div class="card heatmap-card"><div class="heatmap-wrap">${cells}</div><div class="heat-legend"><span>少</span><span class="heat-sample heat-lv0"></span><span class="heat-sample heat-lv1"></span><span class="heat-sample heat-lv2"></span><span class="heat-sample heat-lv3"></span><span class="heat-sample heat-lv4"></span><span class="heat-sample heat-lv5"></span><span>多</span></div></div>`;
+      }
+
+      function riskBoard(people) {
+        const valid = people.filter((p) => String(p.name || "").trim());
+        const topHours = [...valid]
+          .sort((a, b) => Number(b.usedHours || 0) - Number(a.usedHours || 0))
+          .slice(0, 5);
+        const nearLimit = [...valid]
+          .map((p) => ({
+            p,
+            remain: Math.max(
+              Number(p.maxHours || 0) - Number(p.usedHours || 0),
+              0,
+            ),
+            ratio:
+              Number(p.usedHours || 0) / Math.max(Number(p.maxHours || 1), 1),
+          }))
+          .sort((a, b) => a.remain - b.remain || b.ratio - a.ratio)
+          .slice(0, 5);
+        const surge = [...valid]
+          .map((p) => ({ p, ...weekSurge(p) }))
+          .sort((a, b) => b.growth - a.growth || b.thisWeek - a.thisWeek)
+          .slice(0, 5);
+        const groupAvg = ["內勤", "早班", "中班", "大夜班"].map((g) => {
+          const list = valid.filter((p) => p.group === g);
+          const avg = list.length
+            ? list.reduce((s, p) => s + Number(p.usedHours || 0), 0) /
+              list.length
+            : 0;
+          return { group: g, avg, count: list.length };
+        });
+        const maxAvg = Math.max(...groupAvg.map((x) => x.avg), 1);
+        return `<div class="section-title"><h2>加班危險排行</h2><span class="hint">BI 戰情雷達：先看風險，再談調度</span></div>
+  <div class="risk-grid">
+    <div class="card risk-card"><h3>本月最高加班</h3><div class="rank-list">${rankList(topHours, (p) => `${n(p.usedHours)}h`)}</div><div class="risk-note">依已加時數由高至低排序。</div></div>
+    <div class="card risk-card"><h3>最接近超時</h3><div class="rank-list">${nearLimit.map((x, i) => rankItem(i, x.p, `${n(x.remain)}h`)).join("")}</div><div class="risk-note">顯示距離上限剩餘時數，數字越小越危險。</div></div>
+    <div class="card risk-card"><h3>本週暴增排行</h3><div class="rank-list">${surge.map((x, i) => rankItem(i, x.p, `+${n(x.growth)}h`)).join("")}</div><div class="risk-note">以最新加班日期往前 7 天，對比前 7 天增幅。</div></div>
+    <div class="card risk-card"><h3>部門平均比較</h3>${groupAvg.map((x) => `<div class="avg-row"><span class="avg-name">${x.group}</span><div class="avg-track"><div class="avg-fill" style="width:${((x.avg / maxAvg) * 100).toFixed(1)}%"></div></div><b>${n(x.avg)}h</b></div>`).join("")}<div class="risk-note">各班別平均已加時數，避免只盯個人、忘了整體水位。</div></div>
+  </div>`;
+      }
+      function rankList(list, fmt) {
+        return list.length
+          ? list.map((p, i) => rankItem(i, p, fmt(p))).join("")
+          : '<div class="hint">無資料</div>';
+      }
+      function rankItem(i, p, val) {
+        return `<div class="rank-item"><span class="rank-no">${i + 1}</span><span class="rank-name">${p.name}</span><span class="rank-val">${val}</span></div>`;
+      }
+      function weekSurge(p) {
+        const rec = (p.records || [])
+          .filter((r) => r.date && Number(r.hours) > 0)
+          .map((r) => ({
+            t: new Date(r.date).getTime(),
+            h: Number(r.hours) || 0,
+          }));
+        if (!rec.length) return { thisWeek: 0, prevWeek: 0, growth: 0 };
+        const latest = Math.max(...rec.map((r) => r.t));
+        const day = 86400000;
+        const thisWeek = rec
+          .filter((r) => r.t >= latest - 6 * day && r.t <= latest)
+          .reduce((s, r) => s + r.h, 0);
+        const prevWeek = rec
+          .filter((r) => r.t >= latest - 13 * day && r.t < latest - 6 * day)
+          .reduce((s, r) => s + r.h, 0);
+        return { thisWeek, prevWeek, growth: Math.max(thisWeek - prevWeek, 0) };
+      }
+      function kpi(label, value, unit) {
+        return `<div class="card"><div class="label">${label}</div><div class="value">${value}<span class="unit">${unit}</span></div></div>`;
+      }
+      function bars(items) {
+        const max = Math.max(...items.map((x) => Number(x.hours) || 0), 1);
+        return items
+          .map(
+            (x) =>
+              `<div class="bar"><b>${x.label}</b><div class="track"><div class="fill" style="width:${((Number(x.hours) / max) * 100).toFixed(1)}%"></div></div><span>${n(x.hours)}h</span></div>`,
+          )
+          .join("");
+      }
+      function groupCard(g, list) {
+        return `<div class="card group" style="border-top:4px solid ${groupColors[g]}"><h3>${g}</h3>${list.map((p) => personMini(p)).join("")}</div>`;
+      }
+      function personMini(p) {
+        const ratio =
+          Math.min(
+            Number(p.usedHours || 0) / Math.max(Number(p.maxHours || 1), 1),
+            1,
+          ) * 100;
+        return `<div class="person-row"><b>${p.name}</b><div class="mini-track"><div class="mini-fill" style="width:${ratio}%"></div></div><span>${n(p.usedHours)}h</span></div>`;
+      }
+      function renderPerson(p) {
+        const used = Number(p.usedHours || 0),
+          max = Math.max(Number(p.maxHours || 0), 1);
+        const ratio = used / max;
+        const alertText = String(p.warning || "").trim();
+        const danger = ratio >= 0.9 || /超時|注意/.test(alertText);
+        document.getElementById("app").innerHTML = `
+  <div class="section-title"><h2>${p.group}｜${p.name}</h2><span class="hint">目前時速＝已加時數；最高時速＝剩餘時數</span></div>
+  <div class="dashboard">
+    <div class="card speed-card ${danger ? "danger" : ""}">${gauge(p)}<div class="gauge-info"><div class="speed-caption">OVERTIME SPEED LIMIT</div><div class="days">加班天數：${n(p.overtimeDays, 0)} 天</div></div><div class="warning ${alertText ? "alert" : ""}">${alertText}</div><div class="status-line"><span class="status-chip">HUD MODE</span><span class="status-chip">慣性指針</span><span class="status-chip">紅區預警</span></div></div>
+    <div class="card"><div class="section-title" style="margin-top:0"><h2>加班日期</h2><span class="hint">由左至右依日期排列</span></div><div class="records">${records(p.records)}</div></div>
+  </div>`;
+        requestAnimationFrame(() => {
+          const needle = document.querySelector(".needle");
+          const arc = document.querySelector(".arc-main");
+          if (needle)
+            needle.style.transform = `rotate(${needle.dataset.angle}deg)`;
+          if (arc) arc.style.strokeDashoffset = arc.dataset.offset;
+        });
+      }
+      function gauge(p) {
+        const used = Number(p.usedHours || 0),
+          max = Math.max(Number(p.maxHours || 0), 1);
+        const ratio = Math.min(used / max, 1.08);
+        const safeRatio = Math.min(ratio, 1);
+        const angle = -140 + safeRatio * 280;
+        const dash = 220,
+          offset = (dash - dash * safeRatio).toFixed(1);
+        const redActive =
+          ratio >= 0.85 || /超時|注意/.test(String(p.warning || ""));
+        const ticks = Array.from({ length: 9 }, (_, i) => {
+          const a = ((-140 + i * 35) * Math.PI) / 180;
+          const r1 = i % 2 === 0 ? 68 : 72,
+            r2 = 78;
+          const x1 = 100 + Math.cos(a) * r1,
+            y1 = 100 + Math.sin(a) * r1;
+          const x2 = 100 + Math.cos(a) * r2,
+            y2 = 100 + Math.sin(a) * r2;
+          return `<line class="tick ${i >= 7 ? "hot" : ""}" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${i >= 7 ? "#ff5b6e" : "rgba(255,255,255,.75)"}" stroke-width="${i % 2 === 0 ? 2.2 : 1.3}" stroke-linecap="round"/>`;
+        }).join("");
+        return `<div class="gauge"><svg viewBox="0 0 200 125">
+    <defs><linearGradient id="g"><stop offset="0" stop-color="#70d6ff"/><stop offset=".62" stop-color="#f6d47b"/><stop offset="1" stop-color="#ff5b6e"/></linearGradient><filter id="softGlow"><feGaussianBlur stdDeviation="2.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <path class="hud-ring" d="M22 100 A78 78 0 0 1 178 100" fill="none" stroke="rgba(112,214,255,.18)" stroke-width="2" stroke-linecap="round"/>
+    <path d="M30 100 A70 70 0 0 1 170 100" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="18" stroke-linecap="round"/>
+    <path class="red-zone ${redActive ? "red-zone" : ""}" d="M137 43 A70 70 0 0 1 170 100" fill="none" stroke="#ff5b6e" stroke-width="20" stroke-linecap="round" opacity=".72"/>
+    <path class="arc-main" d="M30 100 A70 70 0 0 1 170 100" fill="none" stroke="url(#g)" stroke-width="18" stroke-linecap="round" stroke-dasharray="${dash}" stroke-dashoffset="${dash}" data-offset="${offset}" filter="url(#softGlow)"/>
+    ${ticks}
+    <line class="needle needle-glow" x1="100" y1="100" x2="100" y2="38" stroke="#fff" stroke-width="4" stroke-linecap="round" style="transform:rotate(-140deg)" data-angle="${angle.toFixed(1)}"/>
+    <line class="needle" x1="100" y1="104" x2="100" y2="115" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round" style="transform:rotate(-140deg)" data-angle="${angle.toFixed(1)}"/>
+    <circle cx="100" cy="100" r="9" fill="rgba(255,255,255,.2)"/><circle cx="100" cy="100" r="5.5" fill="#fff"/>
+    </svg></div><div class="gauge-num">${n(used)}<span class="unit">/ ${n(max)}h</span></div>`;
+      }
+      function records(list) {
+        if (!list || !list.length)
+          return '<div class="hint">本月尚無加班登錄。</div>';
+        return list
+          .map(
+            (r) =>
+              `<div class="record" style="background:${r.color || "#fff"}"><div class="date">${(r.date || "").slice(5)}</div><div class="hours">${n(r.hours)}h</div><div class="type">${r.type || ""}</div></div>`,
+          )
+          .join("");
+      }
+    </script>
+  </body>
+</html>
