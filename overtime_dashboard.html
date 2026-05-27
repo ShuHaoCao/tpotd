@@ -959,7 +959,7 @@
     <main class="wrap">
       <section class="hero">
         <h1 id="title">臺南運輸股｜加班戰情室</h1>
-        <div class="sub" id="subtitle">讀取 overtime_data.json 中……</div>
+        <div class="sub" id="subtitle">讀取資料中……</div>
         <div class="toolbar">
           <select id="personSelect">
             <option>載入中</option>
@@ -987,7 +987,7 @@
         .then(init)
         .catch(() => {
           document.getElementById("subtitle").textContent =
-            "自動讀取不到 overtime_data.json，請確認網頁與 JSON 檔放在同一資料夾，並建議透過本機伺服器或網站空間開啟。";
+            "自動讀取不到json，請檔案存在，並建議透過本機伺服器或網站空間開啟。";
           if (FALLBACK) init(FALLBACK);
         });
 
@@ -1003,7 +1003,7 @@
           `${DATA.meta?.sheetName || ""}　資料匯出：${DATA.meta?.exportedAt || ""}${badSheet || badNames > 5 ? "　⚠ 這份 JSON 可能匯出到錯誤工作表，請用新版 VBA 重新匯出。" : ""}`;
         const sel = document.getElementById("personSelect");
         sel.innerHTML =
-          '<option value="__overview">總覽</option>' +
+          '<option value="__overview">戰況總覽</option>' +
           DATA.people
             .map(
               (p, i) => `<option value="${i}">${p.group}｜${p.name}</option>`,
@@ -1056,7 +1056,7 @@
   <div class="section-title"><h2>依地區分布</h2><span class="hint">哪裡在發熱，數字不會說謊</span></div>
   <div class="card bars">${bars(o.areaStats)}</div>
   ${riskBoard(people)}
-  <div class="section-title"><h2>日期熱力圖</h2><span class="hint">顏色愈深，代表那天愈忙；星期一若發紅，別問，問就是人生在燃燒。</span></div>
+  <div class="section-title"><h2>日期熱力圖</h2><span class="hint">顏色愈深，代表那天愈忙</span></div>
   ${heatmap(o.dailyTotals)}
   <div class="section-title"><h2>人員總覽</h2><span class="hint">依內勤、早班、中班、大夜班分組</span></div>
   <div class="grid groups">${["內勤", "早班", "中班", "大夜班"]
@@ -1183,7 +1183,7 @@
         const alertText = String(p.warning || "").trim();
         const danger = ratio >= 0.9 || /超時|注意/.test(alertText);
         document.getElementById("app").innerHTML = `
-  <div class="section-title"><h2>${p.group}｜${p.name}</h2><span class="hint">目前時速＝已加時數；最高時速＝剩餘時數</span></div>
+  <div class="section-title"><h2>${p.group}｜${p.name}</h2><span class="hint">累積加班時數/剩餘可加班時數</span></div>
   <div class="dashboard">
     <div class="card speed-card ${danger ? "danger" : ""}">${gauge(p)}<div class="gauge-info"><div class="speed-caption">OVERTIME SPEED LIMIT</div><div class="days">加班天數：${n(p.overtimeDays, 0)} 天</div></div><div class="warning ${alertText ? "alert" : ""}">${alertText}</div><div class="status-line"><span class="status-chip">HUD MODE</span><span class="status-chip">慣性指針</span><span class="status-chip">紅區預警</span></div></div>
     <div class="card"><div class="section-title" style="margin-top:0"><h2>加班日期</h2><span class="hint">由左至右依日期排列</span></div><div class="records">${records(p.records)}</div></div>
