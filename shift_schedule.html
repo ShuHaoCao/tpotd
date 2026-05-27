@@ -716,7 +716,7 @@
         }
 
         .shift-row {
-          grid-template-columns: 55% 45%;
+          grid-template-columns: 45% 55%;
           border-radius: 16px;
         }
 
@@ -737,6 +737,69 @@
         .task-popover {
           border-radius: 20px;
           max-height: 56vh;
+        }
+      }
+      .violation-lights {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-left: auto;
+        margin-right: 14px;
+        font-size: 0.82rem;
+        color: #6a7585;
+        font-weight: 800;
+      }
+
+      .light-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .light-item span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      /* =========================
+   手機版優化
+========================= */
+      @media (max-width: 520px) {
+        .staff-name {
+          align-items: center;
+          gap: 8px;
+        }
+
+        .name-text {
+          flex: 1;
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .violation-lights {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 4px;
+          margin-right: 8px;
+          font-size: 0.68rem;
+          line-height: 1;
+        }
+
+        .light-item {
+          gap: 4px;
+        }
+
+        .light-item span {
+          width: 7px;
+          height: 7px;
+        }
+
+        .status-dot {
+          width: 8px !important;
+          height: 8px !important;
         }
       }
     </style>
@@ -1440,10 +1503,10 @@
 
         // 💡 關鍵優化：加上 margin-left: auto; 與 flex 容器特性，強制將整個燈號區塊推到最右邊，並與右側狀態點保持距離 (margin-right)
         const lightsHtml = `
-    <div class="violation-lights" style="display: inline-flex; align-items: center; gap: 14px; font-size: 0.82rem; color: #6a7585; margin-left: auto; margin-right: 16px; font-weight: 800;">
-      <span style="display: inline-flex; align-items: center; gap: 5px;"><span style="width:10px; height:10px; border-radius:50%; display:inline-block; background-color:${getLightColor(status["台中"])}; box-shadow: ${status["台中"] ? "0 0 6px " + getLightColor(status["台中"]) : "none"}"></span>台中</span>
-      <span style="display: inline-flex; align-items: center; gap: 5px;"><span style="width:10px; height:10px; border-radius:50%; display:inline-block; background-color:${getLightColor(status["嘉義"])}; box-shadow: ${status["嘉義"] ? "0 0 6px " + getLightColor(status["嘉義"]) : "none"}"></span>嘉義</span>
-      <span style="display: inline-flex; align-items: center; gap: 5px;"><span style="width:10px; height:10px; border-radius:50%; display:inline-block; background-color:${getLightColor(status["高雄"])}; box-shadow: ${status["高雄"] ? "0 0 6px " + getLightColor(status["高雄"]) : "none"}"></span>高雄</span>
+    <div class="violation-lights">
+      <span class="light-item"><span style="width:10px; height:10px; border-radius:50%; display:inline-block; background-color:${getLightColor(status["台中"])}; box-shadow: ${status["台中"] ? "0 0 6px " + getLightColor(status["台中"]) : "none"}"></span>台中</span>
+      <span class="light-item"><span style="width:10px; height:10px; border-radius:50%; display:inline-block; background-color:${getLightColor(status["嘉義"])}; box-shadow: ${status["嘉義"] ? "0 0 6px " + getLightColor(status["嘉義"]) : "none"}"></span>嘉義</span>
+      <span class="light-item"><span style="width:10px; height:10px; border-radius:50%; display:inline-block; background-color:${getLightColor(status["高雄"])}; box-shadow: ${status["高雄"] ? "0 0 6px " + getLightColor(status["高雄"]) : "none"}"></span>高雄</span>
     </div>
   `;
 
