@@ -7,7 +7,6 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>幸運連鎖：賓果之星</title>
-
     <style>
       :root {
         --bg-0: #080b1d;
@@ -270,6 +269,112 @@
         color: var(--muted);
         text-align: center;
         font-size: 0.84rem;
+      }
+
+      .settings-panel {
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.075);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+        display: grid;
+        grid-template-columns: minmax(220px, 320px) 1fr;
+        gap: 12px;
+        align-items: end;
+      }
+      .setting-note {
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.55;
+        font-weight: 800;
+      }
+      .turn-timer {
+        display: none;
+        margin: -6px 0 18px;
+        padding: 12px 14px;
+        border: 1px solid rgba(77, 238, 234, 0.26);
+        border-radius: 18px;
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      }
+      .turn-timer.show {
+        display: block;
+      }
+      .turn-timer.warning {
+        border-color: rgba(255, 77, 109, 0.7);
+        animation: timerShake 0.55s ease-in-out infinite alternate;
+      }
+      .turn-timer-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--text);
+        font-weight: 950;
+        font-size: 0.92rem;
+        margin-bottom: 8px;
+      }
+      .turn-timer-track {
+        height: 10px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .turn-timer-fill {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(
+          90deg,
+          var(--green),
+          var(--cyan),
+          var(--gold)
+        );
+        transition:
+          width 0.2s linear,
+          background 0.2s ease;
+      }
+      .turn-timer.warning .turn-timer-fill {
+        background: linear-gradient(
+          90deg,
+          var(--gold),
+          var(--pink),
+          var(--danger)
+        );
+      }
+      .board-wrapper.turn-warning {
+        border-color: rgba(255, 77, 109, 0.82) !important;
+        box-shadow:
+          0 0 34px rgba(255, 77, 109, 0.22),
+          0 22px 56px rgba(0, 0, 0, 0.34);
+        animation: urgentPulse 0.65s ease-in-out infinite alternate;
+      }
+      #message-box.warning {
+        border-color: rgba(255, 77, 109, 0.75);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 77, 109, 0.22),
+            rgba(255, 209, 102, 0.16)
+          ),
+          rgba(255, 255, 255, 0.08);
+      }
+      @keyframes urgentPulse {
+        from {
+          transform: translateY(-7px) scale(1);
+        }
+        to {
+          transform: translateY(-7px) scale(1.014);
+        }
+      }
+      @keyframes timerShake {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(2px);
+        }
       }
 
       .mode-panel,
@@ -850,7 +955,8 @@
         .online-grid {
           grid-template-columns: 1fr;
         }
-        .mode-panel {
+        .mode-panel,
+        .settings-panel {
           grid-template-columns: 1fr;
         }
       }
@@ -939,7 +1045,9 @@
           <button class="btn-secondary" type="button" onclick="leaveRoom()">
             🚪 離開房間
           </button>
-          <div class="rules-chip">勝利條件：率先完成 5 條連線</div>
+          <div id="rulesChip" class="rules-chip">
+            勝利條件：經典模式｜率先完成 5 條連線
+          </div>
         </div>
       </section>
 
@@ -959,6 +1067,38 @@
         >
           <strong>線上對戰模式</strong>
           <span>建立房間或輸入房號加入，同時對抗多位玩家或電腦。</span>
+        </div>
+      </section>
+
+      <section class="settings-panel" aria-label="遊戲設定">
+        <div>
+          <label for="cpuDifficultySelect">電腦難度</label>
+          <select
+            id="cpuDifficultySelect"
+            onchange="changeCpuDifficulty(this.value)"
+          >
+            <option value="easy">簡單：隨機選號</option>
+            <option value="medium" selected>中等：優先連成線</option>
+            <option value="hard">困難：搶線並阻擋對手</option>
+          </select>
+        </div>
+        <div>
+          <label for="victoryModeSelect">勝利條件</label>
+          <select
+            id="victoryModeSelect"
+            onchange="changeVictoryMode(this.value)"
+          >
+            <option value="classic">模式A｜經典模式：先 5 連線</option>
+            <option value="king">
+              模式B｜國王模式：限時 3 分鐘，最多連線者勝
+            </option>
+            <option value="wealth">模式C｜財富模式：5 連線後比較總分</option>
+          </select>
+        </div>
+        <div id="difficultyTimeNote" class="setting-note">
+          回合倒數會依電腦難度自動調整：簡單 30 秒、中等 15 秒、困難 5
+          秒。超過時間未選號，系統會自動隨機喊號；國王模式限時 3
+          分鐘，時間到以連線數決勝負。
         </div>
       </section>
 
@@ -1013,6 +1153,16 @@
       </section>
 
       <div id="message-box">幸運連鎖：賓果之星</div>
+
+      <section id="turnTimer" class="turn-timer" aria-label="回合倒數">
+        <div class="turn-timer-head">
+          <span id="turnTimerLabel">回合倒數</span>
+          <span id="turnTimerText">15 秒</span>
+        </div>
+        <div class="turn-timer-track">
+          <div id="turnTimerFill" class="turn-timer-fill"></div>
+        </div>
+      </section>
 
       <section class="game-container" aria-label="賓果遊戲區">
         <article id="wrapper-0" class="board-wrapper player-card active">
@@ -1112,6 +1262,15 @@
       const WIN_LINES = 5;
       const BOARD_SIZE = 25;
       const MAX_SEATS = 4;
+      const TURN_LIMIT_SECONDS_BY_DIFFICULTY = {
+        easy: 30,
+        medium: 15,
+        hard: 5,
+      };
+      const DEFAULT_TURN_LIMIT_SECONDS =
+        TURN_LIMIT_SECONDS_BY_DIFFICULTY.medium;
+      const TURN_WARNING_SECONDS = 3;
+      const KING_MODE_SECONDS = 180;
 
       let db = null;
       let firebaseReady = false;
@@ -1134,6 +1293,15 @@
       let roomUnsubscribe = null;
       let lastRoomCalledCount = 0;
       let hostCpuTimer = null;
+      let turnTimeoutTimer = null;
+      let turnCountdownTimer = null;
+      let turnTimerToken = 0;
+      let autoPickInProgress = false;
+      let cpuDifficulty =
+        localStorage.getItem("bingo_cpu_difficulty") || "medium";
+      let victoryMode = localStorage.getItem("bingo_victory_mode") || "classic";
+      let localGameStartedAt = Date.now();
+      let kingModeTimer = null;
       let remoteApplying = false;
       let currentRoomData = null;
 
@@ -1675,10 +1843,13 @@
 
       function resetSingleGame() {
         clearHostCpuTimer();
+        clearTurnTimers();
+        clearKingModeTimer();
         gameOver = false;
         calledNumbers.clear();
         turn = 0;
         gameStartAt = Date.now();
+        localGameStartedAt = Date.now();
         recordSavedThisGame = false;
         document.getElementById("called-numbers").innerHTML = "";
         document.getElementById("roomCodeText").innerText = "尚未開房";
@@ -1699,13 +1870,15 @@
         ];
         setTurn(0);
         setMessage(
-          `🎮 單機模式開始！目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
+          `🎮 單機模式開始！目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝｜${getVictoryModeText(victoryMode)}`,
           false,
         );
+        startLocalKingModeTimer();
       }
 
       function renderEmptyOnlineBoards() {
         clearHostCpuTimer();
+        clearTurnTimers();
         gameOver = false;
         calledNumbers.clear();
         turn = 0;
@@ -1739,6 +1912,7 @@
 
       async function handleSingleTurn(num) {
         if (gameOver || calledNumbers.has(num) || turn !== 0) return;
+        clearTurnTimers();
         await playLocal(num, 0);
         if (gameOver) return;
         for (let i = 1; i <= 2; i++) {
@@ -1748,10 +1922,20 @@
             (n) => !calledNumbers.has(n),
           );
           if (available.length === 0) return;
-          const npcChoice =
-            available[Math.floor(Math.random() * available.length)];
-          await playLocal(npcChoice, i);
+          const npcChoice = chooseCpuNumber(
+            participants[i].nums,
+            Array.from(calledNumbers),
+            i,
+            participants.map((p, idx) => ({ seat: idx, board: p?.nums || [] })),
+            cpuDifficulty,
+          );
+          await playLocal(npcChoice || randomFrom(available), i);
           if (gameOver) return;
+        }
+        if (!gameOver && calledNumbers.size >= BOARD_SIZE) {
+          const result = evaluateLocalResult(true);
+          finishLocalGame(result.winners, result.extraText);
+          return;
         }
         setTurn(0);
       }
@@ -1762,35 +1946,106 @@
         addCalledNumber(num);
         const speaker = participants[speakerSeat].displayName.split("(")[0];
         setMessage(`${speaker} 喊了：${num}`, false);
-        let winners = [];
-        participants.forEach((p) => {
-          if (p.mark(num) >= WIN_LINES) winners.push(p.displayName);
-        });
-        if (winners.length > 0) {
-          gameOver = true;
-          setMessage(`🏆 贏家：${winners.join("、")}`, true);
-          participants.forEach((_, i) =>
-            document.getElementById(`wrapper-${i}`).classList.remove("active"),
-          );
-          const playerWon = winners.some((name) => name.includes(playerName));
-          if (playerWon) {
-            currentStreak += 1;
-            bestStreak = Math.max(bestStreak, currentStreak);
-            saveLocalStreak();
-            setMessage(
-              `🏆 贏家：${winners.join("、")}｜🔥 目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
-              true,
-            );
-            saveStreakRecord();
-          } else {
-            currentStreak = 0;
-            saveLocalStreak();
-            setMessage(
-              `🏆 贏家：${winners.join("、")}｜連勝中斷，再開一局把場子找回來。`,
-              true,
-            );
-          }
+        participants.forEach((p) => p && p.mark(num));
+        const result = evaluateLocalResult();
+        if (result.ended) {
+          finishLocalGame(result.winners, result.extraText);
         }
+      }
+
+      function evaluateLocalResult(forceKingEnd = false) {
+        const active = participants.filter(Boolean);
+        if (victoryMode === "king") {
+          const elapsed = Date.now() - localGameStartedAt;
+          const allCalled = calledNumbers.size >= BOARD_SIZE;
+          if (
+            !forceKingEnd &&
+            elapsed < KING_MODE_SECONDS * 1000 &&
+            !allCalled
+          ) {
+            return { ended: false, winners: [], extraText: "" };
+          }
+          const scores = active.map((p) => ({
+            name: p.displayName,
+            lines: p.calcLines(),
+          }));
+          const best = Math.max(...scores.map((x) => x.lines));
+          const winners = scores
+            .filter((x) => x.lines === best)
+            .map((x) => x.name);
+          return {
+            ended: true,
+            winners,
+            extraText: `｜國王模式：最高 ${best} 條連線`,
+          };
+        }
+
+        if (victoryMode === "wealth") {
+          const hasFiveLines = active.some((p) => p.calcLines() >= WIN_LINES);
+          if (!hasFiveLines)
+            return { ended: false, winners: [], extraText: "" };
+          const scores = active.map((p) => ({
+            name: p.displayName,
+            score: calcCompletedLineScore(p.nums, Array.from(calledNumbers)),
+          }));
+          const best = Math.max(...scores.map((x) => x.score));
+          const winners = scores
+            .filter((x) => x.score === best)
+            .map((x) => x.name);
+          return {
+            ended: true,
+            winners,
+            extraText: `｜財富模式：最高 ${best} 分`,
+          };
+        }
+
+        const winners = active
+          .filter((p) => p.calcLines() >= WIN_LINES)
+          .map((p) => p.displayName);
+        return { ended: winners.length > 0, winners, extraText: "" };
+      }
+
+      function finishLocalGame(winners, extraText = "") {
+        clearTurnTimers();
+        clearKingModeTimer();
+        gameOver = true;
+        setMessage(`🏆 贏家：${winners.join("、")}${extraText}`, true);
+        participants.forEach((_, i) =>
+          document.getElementById(`wrapper-${i}`).classList.remove("active"),
+        );
+        const playerWon = winners.some((name) => name.includes(playerName));
+        if (playerWon) {
+          currentStreak += 1;
+          bestStreak = Math.max(bestStreak, currentStreak);
+          saveLocalStreak();
+          setMessage(
+            `🏆 贏家：${winners.join("、")}${extraText}｜🔥 目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
+            true,
+          );
+          saveStreakRecord();
+        } else {
+          currentStreak = 0;
+          saveLocalStreak();
+          setMessage(
+            `🏆 贏家：${winners.join("、")}${extraText}｜連勝中斷，再開一局把場子找回來。`,
+            true,
+          );
+        }
+      }
+
+      function startLocalKingModeTimer() {
+        clearKingModeTimer();
+        if (victoryMode !== "king" || appMode !== "single") return;
+        kingModeTimer = setTimeout(() => {
+          if (appMode !== "single" || gameOver) return;
+          const result = evaluateLocalResult(true);
+          finishLocalGame(result.winners, result.extraText);
+        }, KING_MODE_SECONDS * 1000);
+      }
+
+      function clearKingModeTimer() {
+        if (kingModeTimer) clearTimeout(kingModeTimer);
+        kingModeTimer = null;
       }
 
       async function createOnlineRoom() {
@@ -1813,6 +2068,11 @@
           calledNumbers: [],
           lastMove: null,
           winnerSeats: [],
+          cpuDifficulty,
+          turnLimitSeconds: getTurnLimitSeconds(cpuDifficulty),
+          victoryMode,
+          gameStartedAtMs: null,
+          turnStartedAt: null,
           seats,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -1937,6 +2197,11 @@
               calledNumbers: [],
               lastMove: null,
               winnerSeats: [],
+              cpuDifficulty,
+              turnLimitSeconds: getTurnLimitSeconds(cpuDifficulty),
+              victoryMode,
+              gameStartedAtMs: Date.now(),
+              turnStartedAt: Date.now(),
               startedAt: firebase.firestore.FieldValue.serverTimestamp(),
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
@@ -1955,16 +2220,24 @@
           board: generateBoardNumbers(),
         }));
         try {
-          await db.collection(ROOM_COLLECTION).doc(currentRoomId).update({
-            mode,
-            status: "waiting",
-            turn: 0,
-            calledNumbers: [],
-            lastMove: null,
-            winnerSeats: [],
-            seats,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          });
+          await db
+            .collection(ROOM_COLLECTION)
+            .doc(currentRoomId)
+            .update({
+              mode,
+              status: "waiting",
+              turn: 0,
+              calledNumbers: [],
+              lastMove: null,
+              winnerSeats: [],
+              cpuDifficulty,
+              turnLimitSeconds: getTurnLimitSeconds(cpuDifficulty),
+              victoryMode,
+              gameStartedAtMs: null,
+              turnStartedAt: null,
+              seats,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
           setMessage("房間已重置，等待房主再次開始。", false);
         } catch (error) {
           setMessage("重開房間失敗。", false);
@@ -2045,10 +2318,34 @@
         setTurn(turn);
         updateCellAvailability();
         updateRoomStatusMessage(room);
+        if (room.cpuDifficulty) {
+          cpuDifficulty = room.cpuDifficulty;
+          const difficultySelect = document.getElementById(
+            "cpuDifficultySelect",
+          );
+          if (difficultySelect) difficultySelect.value = cpuDifficulty;
+          updateDifficultyTimeNote();
+        }
+        if (room.victoryMode) {
+          victoryMode = room.victoryMode;
+          const victorySelect = document.getElementById("victoryModeSelect");
+          if (victorySelect) victorySelect.value = victoryMode;
+          updateVictoryModeNote();
+        }
         checkOnlineWinnerLocally(room);
         remoteApplying = false;
 
-        if (isHost && room.status === "playing") maybeHostPlayCpu(room);
+        if (room.status === "playing") {
+          if (isHost) maybeHostEndKingMode(room);
+
+          startOnlineTurnTimers(room);
+          if (isHost) {
+            maybeHostPlayCpu(room);
+            maybeHostAutoPickHuman(room);
+          }
+        } else {
+          clearTurnTimers();
+        }
         lastRoomCalledCount = (room.calledNumbers || []).length;
       }
 
@@ -2074,7 +2371,10 @@
           if (seat.type === "cpu")
             setMessage(`🤖 輪到 ${seat.name}，由房主裝置計算出手...`, false);
           else if (seat.playerId === playerId)
-            setMessage("🎮 輪到你了，請選一個號碼！", false);
+            setMessage(
+              `🎮 輪到你了，請在 ${getTurnLimitSeconds()} 秒內選號！`,
+              false,
+            );
           else setMessage(`等待 ${seat.name || "其他玩家"} 出手...`, false);
           if (room.lastMove)
             setMessage(
@@ -2085,8 +2385,40 @@
           const names = (room.winnerSeats || []).map(
             (idx) => seats[idx]?.name || `P${idx + 1}`,
           );
-          setMessage(`🏆 贏家：${names.join("、")}`, true);
+          setMessage(
+            `🏆 贏家：${names.join("、")}${getOnlineResultExtraText(room)}`,
+            true,
+          );
         }
+      }
+
+      function getOnlineResultExtraText(room) {
+        const mode = room.victoryMode || "classic";
+        if (mode === "king") {
+          const best = Math.max(
+            ...(room.winnerSeats || []).map((idx) =>
+              calcLinesForBoard(
+                room.seats?.[idx]?.board || [],
+                room.calledNumbers || [],
+              ),
+            ),
+            0,
+          );
+          return `｜國王模式：最高 ${best} 條連線`;
+        }
+        if (mode === "wealth") {
+          const best = Math.max(
+            ...(room.winnerSeats || []).map((idx) =>
+              calcCompletedLineScore(
+                room.seats?.[idx]?.board || [],
+                room.calledNumbers || [],
+              ),
+            ),
+            0,
+          );
+          return `｜財富模式：最高 ${best} 分`;
+        }
+        return "";
       }
 
       async function handleOnlineTurn(num) {
@@ -2104,6 +2436,7 @@
       }
 
       async function submitOnlineMove(num, speakerSeat) {
+        clearTurnTimers();
         if (!currentRoomId) return;
         const roomRef = db.collection(ROOM_COLLECTION).doc(currentRoomId);
         try {
@@ -2117,11 +2450,14 @@
             const called = room.calledNumbers || [];
             if (called.includes(num)) throw new Error("這個號碼已經喊過");
             const nextCalled = [...called, num];
-            const winnerSeats = calculateWinnerSeats(
+            const result = evaluateOnlineResult(
               room.seats || [],
               nextCalled,
+              room.victoryMode || "classic",
+              room.gameStartedAtMs,
             );
-            const nextTurn = winnerSeats.length
+            const winnerSeats = result.ended ? result.winnerSeats : [];
+            const nextTurn = result.ended
               ? room.turn
               : getNextTurn(room.seats || [], room.turn);
             tx.update(roomRef, {
@@ -2135,6 +2471,7 @@
               turn: nextTurn,
               status: winnerSeats.length ? "ended" : "playing",
               winnerSeats,
+              turnStartedAt: winnerSeats.length ? null : Date.now(),
               updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
             });
           });
@@ -2142,6 +2479,46 @@
           console.warn("出手失敗：", error.message);
           setMessage(`出手失敗：${error.message}`, false);
         }
+      }
+
+      async function maybeHostEndKingMode(room) {
+        if (!isHost || !currentRoomId || room.status !== "playing") return;
+        if ((room.victoryMode || "classic") !== "king") return;
+        const startedAt = Number(room.gameStartedAtMs || Date.now());
+        const delay = Math.max(
+          0,
+          KING_MODE_SECONDS * 1000 - (Date.now() - startedAt),
+        );
+        setTimeout(async () => {
+          const latest = currentRoomData;
+          if (
+            !latest ||
+            latest.status !== "playing" ||
+            (latest.victoryMode || "classic") !== "king"
+          )
+            return;
+          const elapsed =
+            Date.now() - Number(latest.gameStartedAtMs || Date.now());
+          if (
+            elapsed < KING_MODE_SECONDS * 1000 &&
+            (latest.calledNumbers || []).length < BOARD_SIZE
+          )
+            return;
+          const winners = getKingModeWinners(
+            latest.seats || [],
+            latest.calledNumbers || [],
+          );
+          try {
+            await db.collection(ROOM_COLLECTION).doc(currentRoomId).update({
+              status: "ended",
+              winnerSeats: winners,
+              turnStartedAt: null,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          } catch (error) {
+            console.warn("國王模式結算失敗：", error.message);
+          }
+        }, delay + 80);
       }
 
       function maybeHostPlayCpu(room) {
@@ -2157,29 +2534,149 @@
           const board = cpuSeat.board || [];
           const available = board.filter((n) => !called.includes(n));
           if (!available.length) return;
-          const choice = chooseCpuNumber(cpuSeat.board, called);
+          const choice = chooseCpuNumber(
+            cpuSeat.board,
+            called,
+            latest.turn,
+            latest.seats || [],
+            latest.cpuDifficulty || cpuDifficulty,
+          );
           await submitOnlineMove(choice, latest.turn);
         }, 900);
       }
 
-      function chooseCpuNumber(board, called) {
+      function chooseCpuNumber(
+        board,
+        called,
+        seatIndex = -1,
+        seats = [],
+        difficulty = cpuDifficulty,
+      ) {
         const calledSet = new Set(called);
         const available = board.filter((n) => !calledSet.has(n));
-        // 簡易 AI：優先選可讓自己接近連線的格子，沒有就隨機。
-        let best = available[0];
-        let bestScore = -1;
-        for (const num of available) {
+        if (!available.length) return null;
+
+        if (difficulty === "easy") {
+          return randomFrom(available);
+        }
+
+        if (difficulty === "hard") {
+          const winningMove = findImmediateLineMove(
+            board,
+            calledSet,
+            available,
+          );
+          if (winningMove !== null) return winningMove;
+
+          const blockMove = findBestBlockMove(seatIndex, seats, calledSet);
+          if (blockMove !== null && available.includes(blockMove))
+            return blockMove;
+
+          return chooseByScore(available, board, calledSet, (num) => {
+            const idx = board.indexOf(num);
+            const selfGain =
+              calcLinesForBoard(board, [...called, num]) -
+              calcLinesForBoard(board, called);
+            const selfPotential = linePotentialScore(idx, board, calledSet);
+            const opponentRisk = maxOpponentBenefit(
+              num,
+              seatIndex,
+              seats,
+              called,
+            );
+            return (
+              selfGain * 80 +
+              selfPotential * 12 -
+              opponentRisk * 22 +
+              Math.random()
+            );
+          });
+        }
+
+        // 中等：優先選擇最能幫自己連成線、接近連線的號碼。
+        return chooseByScore(available, board, calledSet, (num) => {
           const idx = board.indexOf(num);
-          const score = linePotentialScore(idx, board, calledSet);
-          if (
-            score > bestScore ||
-            (score === bestScore && Math.random() > 0.5)
-          ) {
+          const selfGain =
+            calcLinesForBoard(board, [...called, num]) -
+            calcLinesForBoard(board, called);
+          return (
+            selfGain * 60 +
+            linePotentialScore(idx, board, calledSet) * 10 +
+            Math.random()
+          );
+        });
+      }
+
+      function randomFrom(items) {
+        return items[Math.floor(Math.random() * items.length)];
+      }
+
+      function chooseByScore(available, board, calledSet, scorer) {
+        let best = available[0];
+        let bestScore = -Infinity;
+        for (const num of available) {
+          const score = scorer(num);
+          if (score > bestScore) {
             best = num;
             bestScore = score;
           }
         }
-        return best || available[Math.floor(Math.random() * available.length)];
+        return best || randomFrom(available);
+      }
+
+      function findImmediateLineMove(board, calledSet, available) {
+        for (const num of available) {
+          const nextCalled = new Set(calledSet);
+          nextCalled.add(num);
+          if (
+            calcLinesForBoard(board, Array.from(nextCalled)) >
+            calcLinesForBoard(board, Array.from(calledSet))
+          ) {
+            return num;
+          }
+        }
+        return null;
+      }
+
+      function findBestBlockMove(seatIndex, seats, calledSet) {
+        let bestNum = null;
+        let bestThreat = 0;
+        const called = Array.from(calledSet);
+        for (const seat of seats || []) {
+          if (!seat || seat.seat === seatIndex || !seat.board) continue;
+          const available = seat.board.filter((n) => !calledSet.has(n));
+          for (const num of available) {
+            const gain =
+              calcLinesForBoard(seat.board, [...called, num]) -
+              calcLinesForBoard(seat.board, called);
+            const idx = seat.board.indexOf(num);
+            const threat =
+              gain * 10 + linePotentialScore(idx, seat.board, calledSet);
+            if (threat > bestThreat) {
+              bestThreat = threat;
+              bestNum = num;
+            }
+          }
+        }
+        return bestThreat >= 10 ? bestNum : null;
+      }
+
+      function maxOpponentBenefit(num, seatIndex, seats, called) {
+        let risk = 0;
+        for (const seat of seats || []) {
+          if (
+            !seat ||
+            seat.seat === seatIndex ||
+            !seat.board ||
+            !seat.board.includes(num)
+          )
+            continue;
+          const gain =
+            calcLinesForBoard(seat.board, [...called, num]) -
+            calcLinesForBoard(seat.board, called);
+          risk = Math.max(risk, gain);
+        }
+        return risk;
       }
 
       function linePotentialScore(idx, board, calledSet) {
@@ -2195,6 +2692,87 @@
             sum + group.filter((i) => calledSet.has(board[i])).length,
           0,
         );
+      }
+
+      function evaluateOnlineResult(
+        seats,
+        called,
+        mode = "classic",
+        gameStartedAtMs = null,
+      ) {
+        if (mode === "king") {
+          const elapsed = gameStartedAtMs
+            ? Date.now() - Number(gameStartedAtMs)
+            : 0;
+          if (
+            elapsed >= KING_MODE_SECONDS * 1000 ||
+            called.length >= BOARD_SIZE
+          ) {
+            return {
+              ended: true,
+              winnerSeats: getKingModeWinners(seats, called),
+            };
+          }
+          return { ended: false, winnerSeats: [] };
+        }
+
+        if (mode === "wealth") {
+          const hasFiveLines = seats.some(
+            (seat) => calcLinesForBoard(seat.board || [], called) >= WIN_LINES,
+          );
+          if (!hasFiveLines) return { ended: false, winnerSeats: [] };
+          return {
+            ended: true,
+            winnerSeats: getWealthModeWinners(seats, called),
+          };
+        }
+
+        const winnerSeats = calculateWinnerSeats(seats, called);
+        return { ended: winnerSeats.length > 0, winnerSeats };
+      }
+
+      function getKingModeWinners(seats, called) {
+        const scores = seats.map((seat, idx) => ({
+          idx,
+          lines: calcLinesForBoard(seat.board || [], called),
+        }));
+        const best = Math.max(...scores.map((x) => x.lines));
+        return scores.filter((x) => x.lines === best).map((x) => x.idx);
+      }
+
+      function getWealthModeWinners(seats, called) {
+        const scores = seats.map((seat, idx) => ({
+          idx,
+          score: calcCompletedLineScore(seat.board || [], called),
+          lines: calcLinesForBoard(seat.board || [], called),
+        }));
+        const best = Math.max(...scores.map((x) => x.score));
+        return scores.filter((x) => x.score === best).map((x) => x.idx);
+      }
+
+      function calcCompletedLineScore(board, called) {
+        const calledSet = new Set(called);
+        const completedNums = new Set();
+        getLineIndexGroups().forEach((group) => {
+          if (group.every((idx) => calledSet.has(board[idx]))) {
+            group.forEach((idx) => completedNums.add(board[idx]));
+          }
+        });
+        return Array.from(completedNums).reduce(
+          (sum, n) => sum + Number(n || 0),
+          0,
+        );
+      }
+
+      function getLineIndexGroups() {
+        const groups = [];
+        for (let i = 0; i < 5; i++) {
+          groups.push([0, 1, 2, 3, 4].map((j) => i * 5 + j));
+          groups.push([0, 1, 2, 3, 4].map((j) => j * 5 + i));
+        }
+        groups.push([0, 6, 12, 18, 24]);
+        groups.push([4, 8, 12, 16, 20]);
+        return groups;
       }
 
       function calculateWinnerSeats(seats, called) {
@@ -2245,12 +2823,19 @@
         });
         updateCellAvailability();
         if (appMode === "single" && !gameOver) {
-          if (turn === 0) setMessage("🎮 輪到你了，請選一個號碼！", false);
-          else
+          if (turn === 0) {
+            setMessage(
+              `🎮 輪到你了，請在 ${getTurnLimitSeconds()} 秒內選號！`,
+              false,
+            );
+            startLocalHumanTimer();
+          } else {
+            clearTurnTimers();
             setMessage(
               `🤖 ${participants[turn].displayName.split("(")[0]} 思考中...`,
               false,
             );
+          }
         }
       }
 
@@ -2271,6 +2856,243 @@
             if (calledNumbers.has(num)) cell.classList.add("marked");
           });
         });
+      }
+
+      function changeCpuDifficulty(value) {
+        cpuDifficulty = value || "medium";
+        localStorage.setItem("bingo_cpu_difficulty", cpuDifficulty);
+        updateDifficultyTimeNote();
+        if (currentRoomId && isHost && currentRoomData && firebaseReady && db) {
+          db.collection(ROOM_COLLECTION)
+            .doc(currentRoomId)
+            .update({
+              cpuDifficulty,
+              turnLimitSeconds: getTurnLimitSeconds(cpuDifficulty),
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .catch((error) =>
+              console.warn("同步電腦難度失敗：", error.message),
+            );
+        }
+        setMessage(
+          `電腦難度已設定為：${getDifficultyText(cpuDifficulty)}｜每回合 ${getTurnLimitSeconds()} 秒`,
+          false,
+        );
+      }
+
+      function changeVictoryMode(value) {
+        victoryMode = value || "classic";
+        localStorage.setItem("bingo_victory_mode", victoryMode);
+        updateVictoryModeNote();
+        if (
+          currentRoomId &&
+          isHost &&
+          currentRoomData &&
+          firebaseReady &&
+          db &&
+          currentRoomData.status === "waiting"
+        ) {
+          db.collection(ROOM_COLLECTION)
+            .doc(currentRoomId)
+            .update({
+              victoryMode,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .catch((error) =>
+              console.warn("同步勝利條件失敗：", error.message),
+            );
+        }
+        setMessage(
+          `勝利條件已設定為：${getVictoryModeText(victoryMode)}`,
+          false,
+        );
+      }
+
+      function getVictoryModeText(value) {
+        if (value === "king") return "國王模式（限時 3 分鐘，最多連線者勝）";
+        if (value === "wealth") return "財富模式（5 連線後比較連線號碼總分）";
+        return "經典模式（先 5 連線）";
+      }
+
+      function updateVictoryModeNote() {
+        const chip = document.getElementById("rulesChip");
+        if (chip)
+          chip.innerText = `勝利條件：${getVictoryModeText(victoryMode)}`;
+      }
+
+      function getTurnLimitSeconds(difficulty = null) {
+        const key =
+          difficulty ||
+          currentRoomData?.cpuDifficulty ||
+          cpuDifficulty ||
+          "medium";
+        return (
+          TURN_LIMIT_SECONDS_BY_DIFFICULTY[key] || DEFAULT_TURN_LIMIT_SECONDS
+        );
+      }
+
+      function getTurnWarningSeconds(limit = getTurnLimitSeconds()) {
+        return Math.min(
+          TURN_WARNING_SECONDS,
+          Math.max(1, Math.floor(limit / 3)),
+        );
+      }
+
+      function updateDifficultyTimeNote() {
+        const note = document.getElementById("difficultyTimeNote");
+        if (!note) return;
+        note.innerText = `目前電腦難度：${getDifficultyText(cpuDifficulty)}｜每回合倒數 ${getTurnLimitSeconds()} 秒。簡單 30 秒、中等 15 秒、困難 5 秒；逾時會自動隨機喊號。國王模式仍為 3 分鐘。`;
+      }
+
+      function getDifficultyText(value) {
+        if (value === "easy") return "簡單（隨機選號）";
+        if (value === "hard") return "困難（搶線並阻擋對手）";
+        return "中等（優先連成線）";
+      }
+
+      function clearTurnTimers() {
+        if (turnTimeoutTimer) clearTimeout(turnTimeoutTimer);
+        if (turnCountdownTimer) clearInterval(turnCountdownTimer);
+        turnTimeoutTimer = null;
+        turnCountdownTimer = null;
+        turnTimerToken += 1;
+        hideTurnTimer();
+      }
+
+      function startLocalHumanTimer() {
+        clearTurnTimers();
+        const token = ++turnTimerToken;
+        const startedAt = Date.now();
+        const limit = getTurnLimitSeconds();
+        showTurnTimer("你的回合倒數", limit);
+        turnCountdownTimer = setInterval(() => {
+          const remaining = Math.max(
+            0,
+            limit - Math.floor((Date.now() - startedAt) / 1000),
+          );
+          updateTurnTimer(remaining, limit);
+        }, 250);
+        turnTimeoutTimer = setTimeout(() => {
+          if (
+            token !== turnTimerToken ||
+            appMode !== "single" ||
+            gameOver ||
+            turn !== 0
+          )
+            return;
+          autoPickSingleHuman();
+        }, getTurnLimitSeconds() * 1000);
+      }
+
+      async function autoPickSingleHuman() {
+        if (
+          autoPickInProgress ||
+          gameOver ||
+          appMode !== "single" ||
+          turn !== 0
+        )
+          return;
+        const available =
+          participants[0]?.nums.filter((n) => !calledNumbers.has(n)) || [];
+        if (!available.length) return;
+        autoPickInProgress = true;
+        setMessage("⏰ 時間到！系統已替你隨機選號。", false);
+        await handleSingleTurn(randomFrom(available));
+        autoPickInProgress = false;
+      }
+
+      function startOnlineTurnTimers(room) {
+        clearTurnTimers();
+        const seat = room.seats?.[room.turn];
+        if (!seat || room.status !== "playing") return;
+        const startedAt = Number(room.turnStartedAt || Date.now());
+        const label =
+          seat.type === "cpu"
+            ? `${seat.name} 思考倒數`
+            : seat.playerId === playerId
+              ? "你的回合倒數"
+              : `${seat.name || "其他玩家"} 回合倒數`;
+        const limit = getTurnLimitSeconds(room.cpuDifficulty);
+        showTurnTimer(label, getRemainingSeconds(startedAt, limit), limit);
+        turnCountdownTimer = setInterval(() => {
+          updateTurnTimer(getRemainingSeconds(startedAt, limit), limit);
+        }, 250);
+      }
+
+      function maybeHostAutoPickHuman(room) {
+        const seat = room.seats?.[room.turn];
+        if (!seat || seat.type !== "human" || !seat.playerId) return;
+        const startedAt = Number(room.turnStartedAt || Date.now());
+        const limit = getTurnLimitSeconds(room.cpuDifficulty);
+        const delay = Math.max(0, limit * 1000 - (Date.now() - startedAt));
+        const token = ++turnTimerToken;
+        turnTimeoutTimer = setTimeout(async () => {
+          if (token !== turnTimerToken) return;
+          const latest = currentRoomData;
+          if (
+            !latest ||
+            latest.status !== "playing" ||
+            Number(latest.turn) !== Number(room.turn)
+          )
+            return;
+          const latestSeat = latest.seats?.[latest.turn];
+          if (!latestSeat || latestSeat.type !== "human") return;
+          const called = latest.calledNumbers || [];
+          const available = (latestSeat.board || []).filter(
+            (n) => !called.includes(n),
+          );
+          if (!available.length) return;
+          setMessage(
+            `⏰ ${latestSeat.name || "玩家"} 逾時，系統自動隨機喊號。`,
+            false,
+          );
+          await submitOnlineMove(randomFrom(available), latest.turn);
+        }, delay);
+      }
+
+      function getRemainingSeconds(startedAt, limit = getTurnLimitSeconds()) {
+        return Math.max(0, limit - Math.floor((Date.now() - startedAt) / 1000));
+      }
+
+      function showTurnTimer(label, remaining, limit = getTurnLimitSeconds()) {
+        const timer = document.getElementById("turnTimer");
+        document.getElementById("turnTimerLabel").innerText = label;
+        timer.classList.add("show");
+        updateTurnTimer(remaining, limit);
+      }
+
+      function updateTurnTimer(remaining, limit = getTurnLimitSeconds()) {
+        const timer = document.getElementById("turnTimer");
+        const seconds = Math.max(0, Number(remaining || 0));
+        const safeLimit = Math.max(
+          1,
+          Number(limit || DEFAULT_TURN_LIMIT_SECONDS),
+        );
+        const percent = Math.max(0, Math.min(100, (seconds / safeLimit) * 100));
+        document.getElementById("turnTimerText").innerText = `${seconds} 秒`;
+        document.getElementById("turnTimerFill").style.width = `${percent}%`;
+        const warning =
+          seconds <= getTurnWarningSeconds(safeLimit) && seconds > 0;
+        timer.classList.toggle("warning", warning);
+        document
+          .getElementById("message-box")
+          .classList.toggle("warning", warning);
+        document.querySelectorAll(".board-wrapper").forEach((el, idx) => {
+          el.classList.toggle(
+            "turn-warning",
+            warning && idx === turn && !gameOver,
+          );
+        });
+      }
+
+      function hideTurnTimer() {
+        const timer = document.getElementById("turnTimer");
+        if (timer) timer.classList.remove("show", "warning");
+        const msg = document.getElementById("message-box");
+        if (msg) msg.classList.remove("warning");
+        document
+          .querySelectorAll(".board-wrapper")
+          .forEach((el) => el.classList.remove("turn-warning"));
       }
 
       function addCalledNumber(num, append = false) {
@@ -2296,6 +3118,8 @@
       }
       function clearRoomListener() {
         clearHostCpuTimer();
+        clearTurnTimers();
+        clearKingModeTimer();
         if (roomUnsubscribe) roomUnsubscribe();
         roomUnsubscribe = null;
       }
@@ -2373,6 +3197,9 @@
       playerName = getPlayerName();
       playerId = getPlayerId();
       loadLocalStreak();
+      const difficultySelect = document.getElementById("cpuDifficultySelect");
+      if (difficultySelect) difficultySelect.value = cpuDifficulty;
+      updateDifficultyTimeNote();
       initFirebase();
       resetSingleGame();
 
