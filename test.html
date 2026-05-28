@@ -1,0 +1,2224 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=oGmmD2y7DwdWIqtfZ8PpZ5Iqr6ncixVruzEGH9us4RJF2lAyBFuWtVZWGRH5IDEpGVqxz_nQQ-OAk2mqYSMxGnZDedkH_KnnVWOsdvuU4YK5vM3ALViAgwzdP1-uufNx3oXfm2Vh9jg18uMuQbrZbs5RoY5gZq_XxeT4iyIY-jAzbFml_GbO25MIcf99C_YttSrdGhHm16GxbIF2gaE-aaQ36AjTN96mq-C4dPAmpNly7PBZ3t4PFplZ5Vf7Y0Rt4G3qPD_I0tI_c_C1AWhGlVhi7A6FUQ4gS2IG07cqiHNWnxgUfO5A0OuDZClQx0NoB11PI3A9P5dGCnfcCDTljQ"
+      charset="UTF-8"
+    ></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-0VSMGFF0E6");
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>幸運連鎖：賓果之星｜線上房間版</title>
+
+    <style>
+      :root {
+        --bg-0: #080b1d;
+        --bg-1: #121735;
+        --panel: rgba(255, 255, 255, 0.1);
+        --panel-strong: rgba(255, 255, 255, 0.16);
+        --line: rgba(255, 255, 255, 0.18);
+        --text: #f8fbff;
+        --muted: rgba(248, 251, 255, 0.68);
+        --gold: #ffd166;
+        --pink: #ff4d8d;
+        --cyan: #4deeea;
+        --violet: #9b5cff;
+        --green: #5cffb1;
+        --danger: #ff4d6d;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
+        --cell-size: clamp(44px, 4.35vw, 78px);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        min-height: 100%;
+        background: var(--bg-0);
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 22px;
+        overflow-x: hidden;
+        font-family:
+          "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui,
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 15% 15%,
+            rgba(77, 238, 234, 0.22),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 85% 12%,
+            rgba(255, 77, 141, 0.22),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 50% 95%,
+            rgba(155, 92, 255, 0.25),
+            transparent 35%
+          ),
+          linear-gradient(135deg, #070918 0%, #101635 45%, #22123b 100%);
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.3;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: radial-gradient(circle at center, black, transparent 74%);
+      }
+      body::after {
+        content: "";
+        position: fixed;
+        inset: -120px;
+        pointer-events: none;
+        background:
+          radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.13) 1px,
+            transparent 2px
+          ),
+          radial-gradient(circle, rgba(77, 238, 234, 0.16) 1px, transparent 2px);
+        background-size:
+          90px 90px,
+          140px 140px;
+        animation: starFloat 20s linear infinite;
+        opacity: 0.42;
+      }
+      @keyframes starFloat {
+        from {
+          transform: translate3d(0, 0, 0);
+        }
+        to {
+          transform: translate3d(70px, 90px, 0);
+        }
+      }
+      .app-shell {
+        position: relative;
+        z-index: 1;
+        width: min(1280px, 100%);
+        margin: 0 auto;
+      }
+      .hero {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        align-items: stretch;
+        padding: 22px;
+        margin-bottom: 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.06)
+          ),
+          radial-gradient(
+            circle at 20% 10%,
+            rgba(255, 209, 102, 0.22),
+            transparent 36%
+          );
+        backdrop-filter: blur(18px);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          115deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.18) 35%,
+          transparent 58%
+        );
+        transform: translateX(-120%);
+        animation: sheen 6s ease-in-out infinite;
+      }
+      @keyframes sheen {
+        0%,
+        60% {
+          transform: translateX(-120%);
+        }
+        100% {
+          transform: translateX(120%);
+        }
+      }
+      .brand {
+        position: relative;
+        display: flex;
+        gap: 16px;
+        align-items: center;
+      }
+      .logo-orb {
+        width: 66px;
+        height: 66px;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        border-radius: 24px;
+        background:
+          radial-gradient(circle at 35% 30%, #fff9d6, transparent 20%),
+          linear-gradient(135deg, var(--gold), var(--pink), var(--violet));
+        box-shadow:
+          0 0 28px rgba(255, 209, 102, 0.38),
+          inset 0 0 18px rgba(255, 255, 255, 0.22);
+        font-size: 2rem;
+        animation: pulseOrb 2.4s ease-in-out infinite;
+      }
+      @keyframes pulseOrb {
+        0%,
+        100% {
+          transform: scale(1);
+          filter: saturate(1);
+        }
+        50% {
+          transform: scale(1.04);
+          filter: saturate(1.35);
+        }
+      }
+      .eyebrow {
+        margin: 0 0 4px;
+        color: var(--cyan);
+        font-size: 0.78rem;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 5vw, 4rem);
+        line-height: 1;
+        letter-spacing: -0.05em;
+        text-shadow: 0 0 28px rgba(77, 238, 234, 0.26);
+      }
+      .subtitle {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: clamp(0.92rem, 2.2vw, 1.02rem);
+        line-height: 1.65;
+      }
+      .hero-actions {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        min-width: 220px;
+      }
+      .btn-reset,
+      .btn-secondary {
+        position: relative;
+        min-height: 54px;
+        padding: 13px 22px;
+        border: 0;
+        border-radius: 999px;
+        cursor: pointer;
+        color: #17121f;
+        font-size: 1rem;
+        font-weight: 950;
+        letter-spacing: 0.04em;
+        background: linear-gradient(135deg, var(--gold), #ff9f1c 45%, #ff4d8d);
+        box-shadow:
+          0 12px 0 rgba(106, 51, 0, 0.55),
+          0 24px 34px rgba(255, 77, 141, 0.18);
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          filter 0.18s ease;
+      }
+      .btn-reset:hover,
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+      }
+      .btn-reset:active,
+      .btn-secondary:active {
+        transform: translateY(8px);
+        box-shadow:
+          0 4px 0 rgba(106, 51, 0, 0.6),
+          0 10px 18px rgba(255, 77, 141, 0.2);
+      }
+      .btn-secondary {
+        color: #f8fbff;
+        background: linear-gradient(
+          135deg,
+          rgba(77, 238, 234, 0.28),
+          rgba(155, 92, 255, 0.42)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow:
+          0 10px 0 rgba(10, 13, 35, 0.45),
+          0 18px 32px rgba(77, 238, 234, 0.12);
+      }
+      .rules-chip {
+        padding: 10px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.16);
+        color: var(--muted);
+        text-align: center;
+        font-size: 0.84rem;
+      }
+
+      .mode-panel,
+      .online-panel {
+        margin-bottom: 18px;
+        padding: 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.075);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      }
+      .mode-panel {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .mode-card {
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.13);
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.18);
+        cursor: pointer;
+        transition:
+          transform 0.16s ease,
+          border-color 0.16s ease,
+          background 0.16s ease;
+      }
+      .mode-card:hover,
+      .mode-card.active {
+        transform: translateY(-3px);
+        border-color: rgba(255, 209, 102, 0.7);
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .mode-card strong {
+        display: block;
+        font-size: 1.02rem;
+        margin-bottom: 4px;
+      }
+      .mode-card span {
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.5;
+      }
+      .online-panel {
+        display: none;
+      }
+      .online-panel.show {
+        display: block;
+      }
+      .online-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr 1fr;
+        gap: 12px;
+        align-items: end;
+      }
+      label {
+        display: block;
+        color: var(--muted);
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        margin-bottom: 7px;
+      }
+      input,
+      select {
+        width: 100%;
+        min-height: 46px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 15px;
+        padding: 0 13px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.22);
+        outline: none;
+        font-weight: 900;
+      }
+      select option {
+        color: #111;
+      }
+      .room-info {
+        margin-top: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 900;
+      }
+      .room-code {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        color: #120b20;
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        font-weight: 950;
+        letter-spacing: 0.12em;
+      }
+      .small-btn {
+        min-height: 36px;
+        padding: 6px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        cursor: pointer;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.11);
+        font-weight: 900;
+      }
+      #message-box {
+        position: relative;
+        width: 100%;
+        min-height: 74px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 17px 20px;
+        border: 1px solid rgba(77, 238, 234, 0.24);
+        border-radius: var(--radius-lg);
+        background:
+          linear-gradient(
+            135deg,
+            rgba(77, 238, 234, 0.16),
+            rgba(155, 92, 255, 0.14)
+          ),
+          rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+        color: #fff;
+        font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+        font-weight: 900;
+        text-align: center;
+        box-shadow:
+          0 20px 54px rgba(0, 0, 0, 0.22),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s ease;
+      }
+      #message-box::before,
+      #message-box::after {
+        content: "";
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--cyan);
+        box-shadow: 0 0 14px var(--cyan);
+      }
+      #message-box::before {
+        left: 18px;
+        top: 18px;
+      }
+      #message-box::after {
+        right: 18px;
+        bottom: 18px;
+        background: var(--pink);
+        box-shadow: 0 0 14px var(--pink);
+      }
+      #message-box.win {
+        border-color: rgba(92, 255, 177, 0.45);
+        background:
+          radial-gradient(
+            circle at 50% 0%,
+            rgba(255, 209, 102, 0.22),
+            transparent 42%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(92, 255, 177, 0.22),
+            rgba(77, 238, 234, 0.16)
+          );
+        animation: winFlash 1s ease-in-out infinite alternate;
+      }
+      @keyframes winFlash {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.012);
+        }
+      }
+      .game-container {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        align-items: start;
+      }
+      .board-wrapper {
+        min-width: 0;
+        position: relative;
+        padding: 16px;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.13),
+            rgba(255, 255, 255, 0.055)
+          ),
+          rgba(10, 13, 35, 0.58);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.25);
+        transition:
+          transform 0.22s ease,
+          border-color 0.22s ease,
+          box-shadow 0.22s ease,
+          opacity 0.22s ease;
+        overflow: hidden;
+      }
+      .board-wrapper.hidden {
+        display: none;
+      }
+      .board-wrapper::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(255, 255, 255, 0.12),
+          transparent 48%
+        );
+        pointer-events: none;
+      }
+      .board-wrapper.active {
+        border-color: rgba(255, 209, 102, 0.75);
+        transform: translateY(-7px);
+        box-shadow:
+          0 0 0 1px rgba(255, 209, 102, 0.2),
+          0 0 38px rgba(255, 209, 102, 0.18),
+          0 28px 72px rgba(0, 0, 0, 0.38);
+      }
+      .board-wrapper.active::after {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        pointer-events: none;
+        background: conic-gradient(
+          from 0deg,
+          transparent,
+          rgba(255, 209, 102, 0.62),
+          transparent,
+          rgba(77, 238, 234, 0.52),
+          transparent
+        );
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        padding: 2px;
+        animation: spinBorder 3.2s linear infinite;
+      }
+      @keyframes spinBorder {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .player-card {
+        background:
+          radial-gradient(
+            circle at 30% 0%,
+            rgba(255, 209, 102, 0.16),
+            transparent 38%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.065)
+          ),
+          rgba(10, 13, 35, 0.62);
+      }
+      .npc-card {
+        opacity: 0.9;
+      }
+      .board-header {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      h2 {
+        margin: 0;
+        min-width: 0;
+        color: var(--text);
+        font-size: clamp(0.86rem, 1.55vw, 1.02rem);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0.02em;
+      }
+      .tag {
+        flex: 0 0 auto;
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #08111d;
+        background: var(--cyan);
+        font-size: 0.72rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+      }
+      .npc-card .tag,
+      .remote-card .tag {
+        background: rgba(255, 255, 255, 0.16);
+        color: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .board {
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(5, var(--cell-size));
+        gap: 7px;
+        width: max-content;
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      .cell {
+        width: var(--cell-size);
+        height: var(--cell-size);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 17px;
+        cursor: pointer;
+        color: #f9fbff;
+        font-size: clamp(0.9rem, 2.2vw, 1.12rem);
+        font-weight: 950;
+        background:
+          radial-gradient(
+            circle at 35% 25%,
+            rgba(255, 255, 255, 0.28),
+            transparent 28%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.16),
+            rgba(255, 255, 255, 0.055)
+          );
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.18),
+          0 12px 24px rgba(0, 0, 0, 0.22);
+        transition:
+          transform 0.16s ease,
+          border-color 0.16s ease,
+          background 0.16s ease,
+          box-shadow 0.16s ease,
+          opacity 0.16s ease;
+      }
+      .cell:not(.marked):not(:disabled):hover {
+        transform: translateY(-5px) scale(1.04);
+        border-color: rgba(77, 238, 234, 0.7);
+        box-shadow:
+          0 0 22px rgba(77, 238, 234, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          0 18px 32px rgba(0, 0, 0, 0.3);
+      }
+      .cell:disabled:not(.marked) {
+        opacity: 0.58;
+        cursor: default;
+      }
+      .cell.marked {
+        position: relative;
+        color: #150715;
+        border-color: rgba(255, 255, 255, 0.32);
+        background:
+          radial-gradient(
+            circle at 35% 22%,
+            rgba(255, 255, 255, 0.72),
+            transparent 24%
+          ),
+          linear-gradient(135deg, var(--gold), var(--pink) 48%, var(--violet));
+        box-shadow:
+          0 0 0 2px rgba(255, 255, 255, 0.08),
+          0 0 26px rgba(255, 77, 141, 0.38),
+          0 14px 26px rgba(0, 0, 0, 0.32);
+        animation: pop 0.33s cubic-bezier(0.2, 1.65, 0.35, 1);
+      }
+      .cell.marked::after {
+        content: "✦";
+        position: absolute;
+        top: 3px;
+        right: 6px;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 0.72rem;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      }
+      @keyframes pop {
+        0% {
+          transform: scale(0.75) rotate(-5deg);
+        }
+        65% {
+          transform: scale(1.16) rotate(3deg);
+        }
+        100% {
+          transform: scale(1) rotate(0);
+        }
+      }
+      .status {
+        position: relative;
+        z-index: 1;
+        margin-top: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.18);
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 900;
+      }
+      .status::before {
+        content: "BINGO";
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+      }
+      .called-strip,
+      .rank-panel {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.075);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+      }
+      .called-title {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+      }
+      #called-numbers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        min-height: 31px;
+      }
+      .called-pill {
+        min-width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #130b20;
+        background: linear-gradient(135deg, var(--cyan), var(--green));
+        font-size: 0.82rem;
+        font-weight: 950;
+        box-shadow: 0 8px 18px rgba(77, 238, 234, 0.16);
+      }
+      footer {
+        position: relative;
+        z-index: 1;
+        margin: 22px 0 4px;
+        text-align: center;
+      }
+      footer .copyright {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.48);
+      }
+      .rank-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .rank-title {
+        margin: 0;
+        color: var(--text);
+        font-size: 1.02rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+      }
+      .rank-note {
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-align: right;
+      }
+      .rank-list {
+        display: grid;
+        gap: 8px;
+      }
+      .rank-row {
+        display: grid;
+        grid-template-columns: 42px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.18);
+      }
+      .rank-place {
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #130b20;
+        background: linear-gradient(135deg, var(--gold), var(--pink));
+        font-weight: 950;
+      }
+      .rank-name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 950;
+      }
+      .rank-meta {
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin-top: 2px;
+      }
+      .rank-score {
+        color: var(--cyan);
+        font-weight: 950;
+        white-space: nowrap;
+      }
+      @media (max-width: 1180px) {
+        .game-container {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 980px) {
+        body {
+          padding: 16px;
+        }
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-actions {
+          min-width: 0;
+          flex-direction: row;
+          flex-wrap: wrap;
+        }
+        .btn-reset,
+        .btn-secondary {
+          flex: 1 1 230px;
+        }
+        .rules-chip {
+          flex: 1 1 220px;
+        }
+        .online-grid {
+          grid-template-columns: 1fr;
+        }
+        .mode-panel {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        :root {
+          --cell-size: clamp(40px, 15vw, 52px);
+        }
+        body {
+          padding: 12px;
+        }
+        .hero {
+          padding: 16px;
+          border-radius: 24px;
+        }
+        .brand {
+          align-items: flex-start;
+        }
+        .logo-orb {
+          width: 54px;
+          height: 54px;
+          border-radius: 18px;
+          font-size: 1.6rem;
+        }
+        .subtitle {
+          font-size: 0.88rem;
+        }
+        #message-box {
+          min-height: 66px;
+          padding-inline: 38px;
+        }
+        .game-container {
+          grid-template-columns: 1fr;
+        }
+        .board-wrapper {
+          width: min(100%, 430px);
+          margin: 0 auto;
+          padding: 12px;
+          border-radius: 22px;
+        }
+        .board {
+          gap: 6px;
+        }
+        .cell {
+          border-radius: 14px;
+        }
+        .rank-row {
+          grid-template-columns: 36px 1fr;
+        }
+        .rank-score {
+          grid-column: 2;
+        }
+        .rank-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .rank-note {
+          text-align: left;
+        }
+      }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore-compat.js"></script>
+  </head>
+
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="brand">
+          <div class="logo-orb" aria-hidden="true">✦</div>
+          <div>
+            <p class="eyebrow">Lucky Link Bingo Arena</p>
+            <h1>幸運連鎖：賓果之星</h1>
+            <p class="subtitle">
+              單機可戰 NPC，線上可開房邀友。五條連線即勝利；命運亮燈時，別讓 NPC
+              偷偷囂張。
+            </p>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-reset" type="button" onclick="resetCurrentGame()">
+            ♻️ 重新開始 / 重開房
+          </button>
+          <button class="btn-secondary" type="button" onclick="leaveRoom()">
+            🚪 離開房間
+          </button>
+          <div class="rules-chip">勝利條件：率先完成 5 條連線</div>
+        </div>
+      </section>
+
+      <section class="mode-panel" aria-label="模式選擇">
+        <div
+          id="singleModeCard"
+          class="mode-card active"
+          onclick="switchMode('single')"
+        >
+          <strong>單機模式</strong>
+          <span>玩家 vs 2 電腦。全部在你的裝置運算，適合自己練手感。</span>
+        </div>
+        <div
+          id="onlineModeCard"
+          class="mode-card"
+          onclick="switchMode('online')"
+        >
+          <strong>線上房間模式</strong>
+          <span>建立房間或輸入房號加入。電腦玩家由房主裝置負責出手。</span>
+        </div>
+      </section>
+
+      <section id="onlinePanel" class="online-panel" aria-label="線上房間設定">
+        <div class="online-grid">
+          <div>
+            <label for="onlineRoomType">建立房間：選擇另外 3 席配置</label>
+            <select id="onlineRoomType">
+              <option value="3cpu">你 vs 3 電腦</option>
+              <option value="1p2cpu">你 + 1 玩家 + 2 電腦</option>
+              <option value="2p1cpu">你 + 2 玩家 + 1 電腦</option>
+              <option value="3p">你 + 3 玩家</option>
+            </select>
+          </div>
+          <div>
+            <label for="joinRoomCode">加入房間：輸入房號</label>
+            <input id="joinRoomCode" maxlength="6" placeholder="例如 A7X9Q2" />
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <button
+              class="btn-secondary"
+              type="button"
+              onclick="createOnlineRoom()"
+            >
+              建立房間
+            </button>
+            <button
+              class="btn-secondary"
+              type="button"
+              onclick="joinOnlineRoom()"
+            >
+              加入房間
+            </button>
+          </div>
+        </div>
+        <div class="room-info">
+          <span>目前房號：</span
+          ><span id="roomCodeText" class="room-code">尚未開房</span>
+          <button class="small-btn" type="button" onclick="copyRoomCode()">
+            複製房號
+          </button>
+          <button
+            id="startOnlineBtn"
+            class="small-btn"
+            type="button"
+            onclick="startOnlineGame()"
+            style="display: none"
+          >
+            房主開始遊戲
+          </button>
+          <span id="roomStatusText">請建立或加入房間。</span>
+        </div>
+      </section>
+
+      <div id="message-box">幸運連鎖：賓果之星</div>
+
+      <section class="game-container" aria-label="賓果遊戲區">
+        <article id="wrapper-0" class="board-wrapper player-card active">
+          <div class="board-header">
+            <h2 id="title-0">玩家:你(使用者)</h2>
+            <span id="tag-0" class="tag">YOU</span>
+          </div>
+          <div id="board-0" class="board"></div>
+          <div id="status-0" class="status">連線數: 0</div>
+        </article>
+        <article id="wrapper-1" class="board-wrapper npc-card">
+          <div class="board-header">
+            <h2 id="title-1">玩家:載入中(NPC)</h2>
+            <span id="tag-1" class="tag">NPC</span>
+          </div>
+          <div id="board-1" class="board npc-board"></div>
+          <div id="status-1" class="status">連線數: 0</div>
+        </article>
+        <article id="wrapper-2" class="board-wrapper npc-card">
+          <div class="board-header">
+            <h2 id="title-2">玩家:載入中(NPC)</h2>
+            <span id="tag-2" class="tag">NPC</span>
+          </div>
+          <div id="board-2" class="board npc-board"></div>
+          <div id="status-2" class="status">連線數: 0</div>
+        </article>
+        <article id="wrapper-3" class="board-wrapper npc-card hidden">
+          <div class="board-header">
+            <h2 id="title-3">玩家:載入中</h2>
+            <span id="tag-3" class="tag">P4</span>
+          </div>
+          <div id="board-3" class="board npc-board"></div>
+          <div id="status-3" class="status">連線數: 0</div>
+        </article>
+      </section>
+
+      <section class="called-strip" aria-label="已喊號碼">
+        <p class="called-title">已喊號碼</p>
+        <div id="called-numbers"></div>
+      </section>
+
+      <section class="rank-panel" aria-label="雲端排行榜">
+        <div class="rank-head">
+          <h2 class="rank-title">🔥 最高連勝排行榜</h2>
+          <span id="rank-sync-status" class="rank-note">Firebase 尚未設定</span>
+        </div>
+        <div id="rank-list" class="rank-list">
+          <div class="rank-row">
+            <div class="rank-place">?</div>
+            <div>
+              <div class="rank-name">等待 Firebase 設定完成</div>
+              <div class="rank-meta">
+                填入 firebaseConfig 後，所有電腦與手機會共用最高連勝排行榜
+              </div>
+            </div>
+            <div class="rank-score">--</div>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+      </footer>
+    </main>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
+        authDomain: "fir-game-64891.firebaseapp.com",
+        databaseURL:
+          "https://fir-game-64891-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "fir-game-64891",
+        storageBucket: "fir-game-64891.firebasestorage.app",
+        messagingSenderId: "357308899829",
+        appId: "1:357308899829:web:a6adcc43ad8751b520c0bc",
+        measurementId: "G-8CZBB9L8MH",
+      };
+
+      const FIRESTORE_COLLECTION = "bingo_streak_rankings";
+      const ROOM_COLLECTION = "bingo_online_rooms";
+      const RANK_LIMIT = 10;
+      const WIN_LINES = 5;
+      const BOARD_SIZE = 25;
+      const MAX_SEATS = 4;
+
+      let db = null;
+      let firebaseReady = false;
+      let playerName = "你";
+      let playerId = "";
+      let currentStreak = 0;
+      let bestStreak = 0;
+      let gameStartAt = Date.now();
+      let recordSavedThisGame = false;
+
+      let appMode = "single";
+      let gameOver = false;
+      let calledNumbers = new Set();
+      let turn = 0;
+      let participants = [];
+
+      let currentRoomId = "";
+      let mySeat = 0;
+      let isHost = false;
+      let roomUnsubscribe = null;
+      let lastRoomCalledCount = 0;
+      let hostCpuTimer = null;
+      let remoteApplying = false;
+      let currentRoomData = null;
+
+      const funnyNames = [
+        "馬斯克拉",
+        "黃仁勳到家",
+        "賈伯斯斯",
+        "蔡依林時抱佛腳",
+        "周杰倫流轉",
+        "無法顯示人物名稱",
+        "銅鑼灣扛報紙",
+        "汗味戰警",
+        "左青龍右胖虎",
+        "靈車甩尾棺材飛",
+        "媽你看爸在飛",
+        "頭蚊子叮",
+        "紅衣小男孩",
+        "九頭龍閃到腰",
+        "善解人衣",
+        "剛好五個字",
+        "打死我也不",
+        "我很會射",
+        "媽媽來了快關電腦",
+        "怪很強我先走",
+        "差一元買多多",
+        "說好不打臉",
+        "不要問你會怕",
+        "拉鍊裡的猛獸",
+        "你看不見我",
+        "轉角遇到怪",
+        "你點到我了",
+        "網路連線中斷",
+        "AI人工智障",
+        "悲傷滷肉飯",
+        "憂鬱肉燥飯",
+        "抒情控肉飯",
+        "被冰塊燙傷",
+        "麻辣白開水",
+        "涼麵趁熱吃",
+        "搖滾觀世音",
+        "三重劉德華",
+        "打我啊笨蛋",
+        "要你命三千",
+        "誠實豆沙包",
+        "太陽能手電筒",
+        "秋山曉",
+      ];
+
+      class BingoGame {
+        constructor(id, displayName, options = {}) {
+          this.id = id;
+          this.displayName = displayName;
+          this.isLocalHuman = Boolean(options.isLocalHuman);
+          this.isCPU = Boolean(options.isCPU);
+          this.isRemote = Boolean(options.isRemote);
+          this.nums = options.nums ? [...options.nums] : generateBoardNumbers();
+          this.marked = Array(25).fill(false);
+          this.render();
+        }
+
+        render() {
+          document.getElementById(`title-${this.id}`).innerText =
+            this.displayName;
+          const wrapper = document.getElementById(`wrapper-${this.id}`);
+          const tag = document.getElementById(`tag-${this.id}`);
+          wrapper.classList.remove(
+            "hidden",
+            "player-card",
+            "npc-card",
+            "remote-card",
+          );
+          wrapper.classList.add(
+            this.isLocalHuman
+              ? "player-card"
+              : this.isCPU
+                ? "npc-card"
+                : "remote-card",
+          );
+          tag.innerText = this.isLocalHuman
+            ? "YOU"
+            : this.isCPU
+              ? "CPU"
+              : `P${this.id + 1}`;
+
+          const boardEl = document.getElementById(`board-${this.id}`);
+          boardEl.innerHTML = "";
+          boardEl.classList.toggle("npc-board", !this.isLocalHuman);
+
+          this.nums.forEach((num) => {
+            const cell = document.createElement("button");
+            cell.type = "button";
+            cell.className = "cell";
+            cell.innerText = num;
+            cell.setAttribute("aria-label", `號碼 ${num}`);
+            cell.onclick = () => handleCellClick(num);
+            boardEl.appendChild(cell);
+          });
+        }
+
+        resetMarks() {
+          this.marked = Array(25).fill(false);
+          const boardEl = document.getElementById(`board-${this.id}`);
+          Array.from(boardEl.children).forEach((cell) => {
+            cell.classList.remove("marked");
+            cell.disabled = false;
+          });
+          this.calcLines();
+        }
+
+        mark(num) {
+          const idx = this.nums.indexOf(num);
+          if (idx !== -1) {
+            this.marked[idx] = true;
+            const targetCell = document.getElementById(`board-${this.id}`)
+              .children[idx];
+            if (targetCell) {
+              targetCell.classList.add("marked");
+              targetCell.disabled = true;
+            }
+          }
+          return this.calcLines();
+        }
+
+        calcLines() {
+          let lines = 0;
+          const m = this.marked;
+          for (let i = 0; i < 5; i++) {
+            if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
+            if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
+          }
+          if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
+          if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
+          document.getElementById(`status-${this.id}`).innerText =
+            `連線數: ${lines}`;
+          return lines;
+        }
+      }
+
+      function isFirebaseConfigured() {
+        return Boolean(
+          firebaseConfig.apiKey &&
+          firebaseConfig.projectId &&
+          !firebaseConfig.apiKey.includes("請貼上") &&
+          !firebaseConfig.projectId.includes("請貼上"),
+        );
+      }
+
+      function initFirebase() {
+        const status = document.getElementById("rank-sync-status");
+        if (!isFirebaseConfigured()) {
+          status.innerText = "Firebase 尚未設定";
+          return;
+        }
+        try {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          db = firebase.firestore();
+          firebaseReady = true;
+          status.innerText = "雲端同步已啟用";
+          loadLeaderboard();
+        } catch (error) {
+          console.error("Firebase 初始化失敗：", error);
+          status.innerText = "Firebase 初始化失敗";
+        }
+      }
+
+      function getPlayerName() {
+        const savedName = localStorage.getItem("bingo_player_name");
+        if (savedName) return savedName;
+        const input = prompt(
+          "請輸入玩家暱稱（排行榜與線上房間會顯示此名稱）：",
+          "賓果旅人",
+        );
+        const cleaned = sanitizeName(input || "賓果旅人");
+        localStorage.setItem("bingo_player_name", cleaned);
+        return cleaned;
+      }
+      function sanitizeName(name) {
+        return (
+          String(name)
+            .replace(/[<>\{\}\[\]`]/g, "")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 20) || "賓果旅人"
+        );
+      }
+      function getPlayerId() {
+        const savedId = localStorage.getItem("bingo_player_id");
+        if (savedId) return savedId;
+        const randomId =
+          crypto && crypto.randomUUID
+            ? crypto.randomUUID()
+            : `player_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+        localStorage.setItem("bingo_player_id", randomId);
+        return randomId;
+      }
+      function loadLocalStreak() {
+        currentStreak = Number(
+          localStorage.getItem("bingo_current_streak") || 0,
+        );
+        bestStreak = Number(localStorage.getItem("bingo_best_streak") || 0);
+      }
+      function saveLocalStreak() {
+        localStorage.setItem("bingo_current_streak", String(currentStreak));
+        localStorage.setItem("bingo_best_streak", String(bestStreak));
+      }
+
+      async function saveStreakRecord() {
+        if (!firebaseReady || !db || recordSavedThisGame) return;
+        recordSavedThisGame = true;
+        const player =
+          participants.find((p) => p && p.isLocalHuman) || participants[0];
+        const lines = player.calcLines();
+        const calledCount = calledNumbers.size;
+        const durationSeconds = Math.max(
+          1,
+          Math.round((Date.now() - gameStartAt) / 1000),
+        );
+        try {
+          await db
+            .collection(FIRESTORE_COLLECTION)
+            .doc(playerId)
+            .set(
+              {
+                playerId,
+                name: playerName,
+                currentStreak,
+                bestStreak,
+                lastWinLines: lines,
+                lastCalledCount: calledCount,
+                lastDurationSeconds: durationSeconds,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                dateText: new Date().toLocaleString("zh-TW", { hour12: false }),
+              },
+              { merge: true },
+            );
+          document.getElementById("rank-sync-status").innerText =
+            `連勝已同步：${currentStreak} 連勝`;
+          await loadLeaderboard();
+        } catch (error) {
+          console.error("連勝排行榜寫入失敗：", error);
+          document.getElementById("rank-sync-status").innerText =
+            "連勝排行榜寫入失敗";
+        }
+      }
+
+      async function loadLeaderboard() {
+        if (!firebaseReady || !db) return;
+        try {
+          const snapshot = await db
+            .collection(FIRESTORE_COLLECTION)
+            .orderBy("bestStreak", "desc")
+            .orderBy("updatedAt", "asc")
+            .limit(RANK_LIMIT)
+            .get();
+          const records = [];
+          snapshot.forEach((doc) => records.push(doc.data()));
+          renderLeaderboard(records);
+          document.getElementById("rank-sync-status").innerText =
+            "排行榜已讀取（非即時）";
+        } catch (error) {
+          console.error("連勝排行榜讀取失敗：", error);
+          document.getElementById("rank-sync-status").innerText =
+            "連勝排行榜讀取失敗";
+        }
+      }
+      function renderLeaderboard(records) {
+        const list = document.getElementById("rank-list");
+        list.innerHTML = "";
+        if (!records.length) {
+          list.innerHTML = `<div class="rank-row"><div class="rank-place">1</div><div><div class="rank-name">尚無連勝紀錄</div><div class="rank-meta">第一個連勝王，可能就是你。NPC 先別太囂張。</div></div><div class="rank-score">0 連勝</div></div>`;
+          return;
+        }
+        records.forEach((item, index) => {
+          const row = document.createElement("div");
+          row.className = "rank-row";
+          row.innerHTML = `<div class="rank-place">${index + 1}</div><div><div class="rank-name"></div><div class="rank-meta">目前 ${Number(item.currentStreak || 0)} 連勝｜最後勝利 ${item.lastCalledCount || "?"} 次喊號｜${item.dateText || ""}</div></div><div class="rank-score">${Number(item.bestStreak || 0).toLocaleString()} 連勝</div>`;
+          row.querySelector(".rank-name").innerText = item.name || "匿名玩家";
+          list.appendChild(row);
+        });
+      }
+
+      function generateBoardNumbers() {
+        return Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).sort(
+          () => Math.random() - 0.5,
+        );
+      }
+      function generateRoomCode() {
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        return Array.from(
+          { length: 6 },
+          () => chars[Math.floor(Math.random() * chars.length)],
+        ).join("");
+      }
+      function getModeSeats(mode) {
+        const names = [...funnyNames].sort(() => Math.random() - 0.5);
+        const base = [
+          {
+            seat: 0,
+            playerId,
+            name: playerName,
+            type: "human",
+            isHost: true,
+            board: generateBoardNumbers(),
+            joinedAt: Date.now(),
+          },
+        ];
+        if (mode === "3cpu") {
+          base.push({
+            seat: 1,
+            playerId: "CPU_1",
+            name: names[0],
+            type: "cpu",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 2,
+            playerId: "CPU_2",
+            name: names[1],
+            type: "cpu",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 3,
+            playerId: "CPU_3",
+            name: names[2],
+            type: "cpu",
+            board: generateBoardNumbers(),
+          });
+        } else if (mode === "1p2cpu") {
+          base.push({
+            seat: 1,
+            playerId: "",
+            name: "等待玩家加入",
+            type: "human",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 2,
+            playerId: "CPU_1",
+            name: names[0],
+            type: "cpu",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 3,
+            playerId: "CPU_2",
+            name: names[1],
+            type: "cpu",
+            board: generateBoardNumbers(),
+          });
+        } else if (mode === "2p1cpu") {
+          base.push({
+            seat: 1,
+            playerId: "",
+            name: "等待玩家加入",
+            type: "human",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 2,
+            playerId: "",
+            name: "等待玩家加入",
+            type: "human",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 3,
+            playerId: "CPU_1",
+            name: names[0],
+            type: "cpu",
+            board: generateBoardNumbers(),
+          });
+        } else {
+          base.push({
+            seat: 1,
+            playerId: "",
+            name: "等待玩家加入",
+            type: "human",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 2,
+            playerId: "",
+            name: "等待玩家加入",
+            type: "human",
+            board: generateBoardNumbers(),
+          });
+          base.push({
+            seat: 3,
+            playerId: "",
+            name: "等待玩家加入",
+            type: "human",
+            board: generateBoardNumbers(),
+          });
+        }
+        return base;
+      }
+
+      function switchMode(mode) {
+        appMode = mode;
+        document
+          .getElementById("singleModeCard")
+          .classList.toggle("active", mode === "single");
+        document
+          .getElementById("onlineModeCard")
+          .classList.toggle("active", mode === "online");
+        document
+          .getElementById("onlinePanel")
+          .classList.toggle("show", mode === "online");
+        if (mode === "single") {
+          leaveRoom(false);
+          resetSingleGame();
+        } else {
+          renderEmptyOnlineBoards();
+          setMessage(
+            "🌐 線上房間模式：建立房間或輸入房號加入。房主負責電腦玩家出手。",
+            false,
+          );
+        }
+      }
+
+      function resetCurrentGame() {
+        if (appMode === "online" && currentRoomId && isHost) {
+          restartOnlineRoom();
+        } else if (appMode === "online") {
+          setMessage(
+            "線上房間由房主重新開始。你現在是玩家，先別搶方向盤。",
+            false,
+          );
+        } else {
+          resetSingleGame();
+        }
+      }
+
+      function resetSingleGame() {
+        clearHostCpuTimer();
+        gameOver = false;
+        calledNumbers.clear();
+        turn = 0;
+        gameStartAt = Date.now();
+        recordSavedThisGame = false;
+        document.getElementById("called-numbers").innerHTML = "";
+        document.getElementById("roomCodeText").innerText = "尚未開房";
+        document.getElementById("roomStatusText").innerText =
+          "目前為單機模式。";
+        document.getElementById("startOnlineBtn").style.display = "none";
+        for (let i = 0; i < MAX_SEATS; i++)
+          document
+            .getElementById(`wrapper-${i}`)
+            .classList.toggle("hidden", i === 3);
+        const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
+        participants = [
+          new BingoGame(0, `玩家:${playerName}(使用者)`, {
+            isLocalHuman: true,
+          }),
+          new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`, { isCPU: true }),
+          new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`, { isCPU: true }),
+        ];
+        setTurn(0);
+        setMessage(
+          `🎮 單機模式開始！目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
+          false,
+        );
+      }
+
+      function renderEmptyOnlineBoards() {
+        clearHostCpuTimer();
+        gameOver = false;
+        calledNumbers.clear();
+        turn = 0;
+        document.getElementById("called-numbers").innerHTML = "";
+        for (let i = 0; i < MAX_SEATS; i++)
+          document.getElementById(`wrapper-${i}`).classList.remove("hidden");
+        participants = Array.from(
+          { length: MAX_SEATS },
+          (_, i) =>
+            new BingoGame(
+              i,
+              i === 0
+                ? `玩家:${playerName}(尚未入房)`
+                : `座位${i + 1}:等待房間資料`,
+              { isLocalHuman: i === 0 },
+            ),
+        );
+        updateCellAvailability();
+      }
+
+      function setMessage(text, win = false) {
+        const messageBox = document.getElementById("message-box");
+        messageBox.innerText = text;
+        messageBox.classList.toggle("win", Boolean(win));
+      }
+
+      async function handleCellClick(num) {
+        if (appMode === "online") return handleOnlineTurn(num);
+        return handleSingleTurn(num);
+      }
+
+      async function handleSingleTurn(num) {
+        if (gameOver || calledNumbers.has(num) || turn !== 0) return;
+        await playLocal(num, 0);
+        if (gameOver) return;
+        for (let i = 1; i <= 2; i++) {
+          setTurn(i);
+          await sleep(850);
+          const available = participants[i].nums.filter(
+            (n) => !calledNumbers.has(n),
+          );
+          if (available.length === 0) return;
+          const npcChoice =
+            available[Math.floor(Math.random() * available.length)];
+          await playLocal(npcChoice, i);
+          if (gameOver) return;
+        }
+        setTurn(0);
+      }
+
+      async function playLocal(num, speakerSeat) {
+        turn = speakerSeat;
+        calledNumbers.add(num);
+        addCalledNumber(num);
+        const speaker = participants[speakerSeat].displayName.split("(")[0];
+        setMessage(`${speaker} 喊了：${num}`, false);
+        let winners = [];
+        participants.forEach((p) => {
+          if (p.mark(num) >= WIN_LINES) winners.push(p.displayName);
+        });
+        if (winners.length > 0) {
+          gameOver = true;
+          setMessage(`🏆 贏家：${winners.join("、")}`, true);
+          participants.forEach((_, i) =>
+            document.getElementById(`wrapper-${i}`).classList.remove("active"),
+          );
+          const playerWon = winners.some((name) => name.includes(playerName));
+          if (playerWon) {
+            currentStreak += 1;
+            bestStreak = Math.max(bestStreak, currentStreak);
+            saveLocalStreak();
+            setMessage(
+              `🏆 贏家：${winners.join("、")}｜🔥 目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
+              true,
+            );
+            saveStreakRecord();
+          } else {
+            currentStreak = 0;
+            saveLocalStreak();
+            setMessage(
+              `🏆 贏家：${winners.join("、")}｜連勝中斷，再開一局把場子找回來。`,
+              true,
+            );
+          }
+        }
+      }
+
+      async function createOnlineRoom() {
+        if (!firebaseReady || !db) {
+          setMessage("Firebase 尚未啟用，無法建立線上房間。", false);
+          return;
+        }
+        appMode = "online";
+        switchMode("online");
+        clearRoomListener();
+        const mode = document.getElementById("onlineRoomType").value;
+        const roomId = generateRoomCode();
+        const seats = getModeSeats(mode);
+        const room = {
+          roomId,
+          mode,
+          hostId: playerId,
+          status: "waiting",
+          turn: 0,
+          calledNumbers: [],
+          lastMove: null,
+          winnerSeats: [],
+          seats,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+        try {
+          await db.collection(ROOM_COLLECTION).doc(roomId).set(room);
+          currentRoomId = roomId;
+          mySeat = 0;
+          isHost = true;
+          document.getElementById("roomCodeText").innerText = roomId;
+          document.getElementById("roomStatusText").innerText =
+            "房間已建立，把房號給朋友加入。";
+          document.getElementById("startOnlineBtn").style.display =
+            "inline-flex";
+          listenRoom(roomId);
+        } catch (error) {
+          console.error("建立房間失敗：", error);
+          setMessage("建立房間失敗，請檢查 Firestore 權限。", false);
+        }
+      }
+
+      async function joinOnlineRoom() {
+        if (!firebaseReady || !db) {
+          setMessage("Firebase 尚未啟用，無法加入線上房間。", false);
+          return;
+        }
+        const roomId = document
+          .getElementById("joinRoomCode")
+          .value.trim()
+          .toUpperCase();
+        if (!roomId) {
+          setMessage("請先輸入房號。", false);
+          return;
+        }
+        appMode = "online";
+        switchMode("online");
+        clearRoomListener();
+        const roomRef = db.collection(ROOM_COLLECTION).doc(roomId);
+        try {
+          await db.runTransaction(async (tx) => {
+            const snap = await tx.get(roomRef);
+            if (!snap.exists) throw new Error("找不到房間");
+            const room = snap.data();
+            if (room.status !== "waiting")
+              throw new Error("遊戲已開始，暫不支援中途加入");
+            const seats = room.seats || [];
+            let existingSeat = seats.findIndex(
+              (s) => s.type === "human" && s.playerId === playerId,
+            );
+            let openSeat = seats.findIndex(
+              (s) => s.type === "human" && !s.playerId,
+            );
+            if (existingSeat === -1 && openSeat === -1)
+              throw new Error("房間真人座位已滿");
+            const seatIndex = existingSeat >= 0 ? existingSeat : openSeat;
+            seats[seatIndex] = {
+              ...seats[seatIndex],
+              playerId,
+              name: playerName,
+              joinedAt: Date.now(),
+            };
+            tx.update(roomRef, {
+              seats,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+            mySeat = seatIndex;
+            isHost = room.hostId === playerId;
+          });
+          currentRoomId = roomId;
+          document.getElementById("roomCodeText").innerText = roomId;
+          document.getElementById("roomStatusText").innerText =
+            `已加入房間，座位：P${mySeat + 1}`;
+          document.getElementById("startOnlineBtn").style.display = isHost
+            ? "inline-flex"
+            : "none";
+          listenRoom(roomId);
+        } catch (error) {
+          console.error("加入房間失敗：", error);
+          setMessage(`加入房間失敗：${error.message}`, false);
+        }
+      }
+
+      async function startOnlineGame() {
+        if (!currentRoomId || !isHost) return;
+        const roomRef = db.collection(ROOM_COLLECTION).doc(currentRoomId);
+        try {
+          await db.runTransaction(async (tx) => {
+            const snap = await tx.get(roomRef);
+            if (!snap.exists) throw new Error("房間不存在");
+            const room = snap.data();
+            const missing = (room.seats || []).filter(
+              (s) => s.type === "human" && !s.playerId,
+            );
+            if (missing.length > 0) throw new Error("還有玩家座位尚未加入");
+            tx.update(roomRef, {
+              status: "playing",
+              turn: 0,
+              calledNumbers: [],
+              lastMove: null,
+              winnerSeats: [],
+              startedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          });
+        } catch (error) {
+          setMessage(`無法開始：${error.message}`, false);
+        }
+      }
+
+      async function restartOnlineRoom() {
+        if (!currentRoomId || !isHost || !currentRoomData) return;
+        const mode = currentRoomData.mode;
+        let seats = currentRoomData.seats.map((s) => ({
+          ...s,
+          board: generateBoardNumbers(),
+        }));
+        try {
+          await db.collection(ROOM_COLLECTION).doc(currentRoomId).update({
+            mode,
+            status: "waiting",
+            turn: 0,
+            calledNumbers: [],
+            lastMove: null,
+            winnerSeats: [],
+            seats,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          });
+          setMessage("房間已重置，等待房主再次開始。", false);
+        } catch (error) {
+          setMessage("重開房間失敗。", false);
+        }
+      }
+
+      function listenRoom(roomId) {
+        clearRoomListener();
+        roomUnsubscribe = db
+          .collection(ROOM_COLLECTION)
+          .doc(roomId)
+          .onSnapshot(
+            (snap) => {
+              if (!snap.exists) {
+                setMessage("房間已不存在。", false);
+                leaveRoom(false);
+                return;
+              }
+              applyRoomData(snap.data());
+            },
+            (error) => {
+              console.error("房間監聽失敗：", error);
+              setMessage("房間同步失敗，請檢查網路或 Firebase 規則。", false);
+            },
+          );
+      }
+
+      function applyRoomData(room) {
+        remoteApplying = true;
+        currentRoomData = room;
+        currentRoomId = room.roomId;
+        isHost = room.hostId === playerId;
+        mySeat = (room.seats || []).findIndex(
+          (s) => s.playerId === playerId && s.type === "human",
+        );
+        if (mySeat < 0 && isHost) mySeat = 0;
+        gameOver = room.status === "ended";
+        turn = Number(room.turn || 0);
+        calledNumbers = new Set(room.calledNumbers || []);
+        document.getElementById("roomCodeText").innerText =
+          room.roomId || "尚未開房";
+        document.getElementById("startOnlineBtn").style.display = isHost
+          ? "inline-flex"
+          : "none";
+
+        participants = [];
+        for (let i = 0; i < MAX_SEATS; i++) {
+          const seat = (room.seats || [])[i];
+          if (!seat) {
+            document.getElementById(`wrapper-${i}`).classList.add("hidden");
+            continue;
+          }
+          document.getElementById(`wrapper-${i}`).classList.remove("hidden");
+          const isLocalHuman =
+            seat.type === "human" && seat.playerId === playerId;
+          const isCPU = seat.type === "cpu";
+          const titleName =
+            seat.type === "cpu"
+              ? `玩家:${seat.name}(CPU)`
+              : seat.playerId
+                ? `玩家:${seat.name}${isLocalHuman ? "(你)" : ""}`
+                : `座位${i + 1}:等待玩家加入`;
+          const p = new BingoGame(i, titleName, {
+            isLocalHuman,
+            isCPU,
+            isRemote: !isLocalHuman && !isCPU,
+            nums: seat.board || generateBoardNumbers(),
+          });
+          participants[i] = p;
+          p.resetMarks();
+        }
+
+        document.getElementById("called-numbers").innerHTML = "";
+        Array.from(calledNumbers).forEach((num) => addCalledNumber(num, true));
+        Array.from(calledNumbers).forEach((num) =>
+          participants.forEach((p) => p && p.mark(num)),
+        );
+        setTurn(turn);
+        updateCellAvailability();
+        updateRoomStatusMessage(room);
+        checkOnlineWinnerLocally(room);
+        remoteApplying = false;
+
+        if (isHost && room.status === "playing") maybeHostPlayCpu(room);
+        lastRoomCalledCount = (room.calledNumbers || []).length;
+      }
+
+      function updateRoomStatusMessage(room) {
+        const seats = room.seats || [];
+        const humanTotal = seats.filter((s) => s.type === "human").length;
+        const humanJoined = seats.filter(
+          (s) => s.type === "human" && s.playerId,
+        ).length;
+        const cpuTotal = seats.filter((s) => s.type === "cpu").length;
+        document.getElementById("roomStatusText").innerText =
+          `狀態：${room.status === "waiting" ? "等待中" : room.status === "playing" ? "遊戲中" : "已結束"}｜真人 ${humanJoined}/${humanTotal}｜電腦 ${cpuTotal}`;
+        if (room.status === "waiting") {
+          setMessage(
+            isHost ? "房主可在玩家到齊後開始遊戲。" : "等待房主開始遊戲。",
+            false,
+          );
+        } else if (room.status === "playing") {
+          const seat = seats[room.turn];
+          if (!seat) return;
+          if (seat.type === "cpu")
+            setMessage(`🤖 輪到 ${seat.name}，由房主裝置計算出手...`, false);
+          else if (seat.playerId === playerId)
+            setMessage("🎮 輪到你了，請選一個號碼！", false);
+          else setMessage(`等待 ${seat.name || "其他玩家"} 出手...`, false);
+          if (room.lastMove)
+            setMessage(
+              `${room.lastMove.name} 喊了：${room.lastMove.num}`,
+              false,
+            );
+        } else if (room.status === "ended") {
+          const names = (room.winnerSeats || []).map(
+            (idx) => seats[idx]?.name || `P${idx + 1}`,
+          );
+          setMessage(`🏆 贏家：${names.join("、")}`, true);
+        }
+      }
+
+      async function handleOnlineTurn(num) {
+        if (!currentRoomId || !currentRoomData || gameOver) return;
+        const room = currentRoomData;
+        if (room.status !== "playing") {
+          setMessage("房間尚未開始。", false);
+          return;
+        }
+        const seat = room.seats[room.turn];
+        if (!seat || seat.type !== "human" || seat.playerId !== playerId)
+          return;
+        if ((room.calledNumbers || []).includes(num)) return;
+        await submitOnlineMove(num, mySeat);
+      }
+
+      async function submitOnlineMove(num, speakerSeat) {
+        if (!currentRoomId) return;
+        const roomRef = db.collection(ROOM_COLLECTION).doc(currentRoomId);
+        try {
+          await db.runTransaction(async (tx) => {
+            const snap = await tx.get(roomRef);
+            if (!snap.exists) throw new Error("房間不存在");
+            const room = snap.data();
+            if (room.status !== "playing") throw new Error("遊戲尚未進行中");
+            if (Number(room.turn) !== Number(speakerSeat))
+              throw new Error("還沒輪到這個座位");
+            const called = room.calledNumbers || [];
+            if (called.includes(num)) throw new Error("這個號碼已經喊過");
+            const nextCalled = [...called, num];
+            const winnerSeats = calculateWinnerSeats(
+              room.seats || [],
+              nextCalled,
+            );
+            const nextTurn = winnerSeats.length
+              ? room.turn
+              : getNextTurn(room.seats || [], room.turn);
+            tx.update(roomRef, {
+              calledNumbers: nextCalled,
+              lastMove: {
+                seat: speakerSeat,
+                name: room.seats[speakerSeat]?.name || `P${speakerSeat + 1}`,
+                num,
+                at: Date.now(),
+              },
+              turn: nextTurn,
+              status: winnerSeats.length ? "ended" : "playing",
+              winnerSeats,
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          });
+        } catch (error) {
+          console.warn("出手失敗：", error.message);
+          setMessage(`出手失敗：${error.message}`, false);
+        }
+      }
+
+      function maybeHostPlayCpu(room) {
+        clearHostCpuTimer();
+        const seat = room.seats?.[room.turn];
+        if (!seat || seat.type !== "cpu") return;
+        hostCpuTimer = setTimeout(async () => {
+          const latest = currentRoomData;
+          if (!latest || latest.status !== "playing") return;
+          const cpuSeat = latest.seats?.[latest.turn];
+          if (!cpuSeat || cpuSeat.type !== "cpu") return;
+          const called = latest.calledNumbers || [];
+          const board = cpuSeat.board || [];
+          const available = board.filter((n) => !called.includes(n));
+          if (!available.length) return;
+          const choice = chooseCpuNumber(cpuSeat.board, called);
+          await submitOnlineMove(choice, latest.turn);
+        }, 900);
+      }
+
+      function chooseCpuNumber(board, called) {
+        const calledSet = new Set(called);
+        const available = board.filter((n) => !calledSet.has(n));
+        // 簡易 AI：優先選可讓自己接近連線的格子，沒有就隨機。
+        let best = available[0];
+        let bestScore = -1;
+        for (const num of available) {
+          const idx = board.indexOf(num);
+          const score = linePotentialScore(idx, board, calledSet);
+          if (
+            score > bestScore ||
+            (score === bestScore && Math.random() > 0.5)
+          ) {
+            best = num;
+            bestScore = score;
+          }
+        }
+        return best || available[Math.floor(Math.random() * available.length)];
+      }
+
+      function linePotentialScore(idx, board, calledSet) {
+        const groups = [];
+        const row = Math.floor(idx / 5),
+          col = idx % 5;
+        groups.push([0, 1, 2, 3, 4].map((j) => row * 5 + j));
+        groups.push([0, 1, 2, 3, 4].map((j) => j * 5 + col));
+        if ([0, 6, 12, 18, 24].includes(idx)) groups.push([0, 6, 12, 18, 24]);
+        if ([4, 8, 12, 16, 20].includes(idx)) groups.push([4, 8, 12, 16, 20]);
+        return groups.reduce(
+          (sum, group) =>
+            sum + group.filter((i) => calledSet.has(board[i])).length,
+          0,
+        );
+      }
+
+      function calculateWinnerSeats(seats, called) {
+        return seats
+          .map((seat, idx) => ({
+            idx,
+            lines: calcLinesForBoard(seat.board || [], called),
+          }))
+          .filter((x) => x.lines >= WIN_LINES)
+          .map((x) => x.idx);
+      }
+      function calcLinesForBoard(board, called) {
+        const calledSet = new Set(called);
+        const m = board.map((n) => calledSet.has(n));
+        let lines = 0;
+        for (let i = 0; i < 5; i++) {
+          if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
+          if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
+        }
+        if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
+        if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
+        return lines;
+      }
+      function getNextTurn(seats, current) {
+        let next = current;
+        for (let i = 0; i < seats.length; i++) {
+          next = (next + 1) % seats.length;
+          const seat = seats[next];
+          if (
+            seat &&
+            (seat.type === "cpu" || (seat.type === "human" && seat.playerId))
+          )
+            return next;
+        }
+        return current;
+      }
+      function checkOnlineWinnerLocally(room) {
+        if (room.status !== "ended") return;
+        const playerWon = (room.winnerSeats || []).some(
+          (idx) => room.seats?.[idx]?.playerId === playerId,
+        );
+        if (playerWon && !recordSavedThisGame) {
+          currentStreak += 1;
+          bestStreak = Math.max(bestStreak, currentStreak);
+          saveLocalStreak();
+          saveStreakRecord();
+        } else if (!playerWon && !recordSavedThisGame) {
+          currentStreak = 0;
+          saveLocalStreak();
+          recordSavedThisGame = true;
+        }
+      }
+
+      function setTurn(t) {
+        turn = t;
+        participants.forEach((_, i) => {
+          const wrapper = document.getElementById(`wrapper-${i}`);
+          if (wrapper)
+            wrapper.classList.toggle("active", i === turn && !gameOver);
+        });
+        updateCellAvailability();
+        if (appMode === "single" && !gameOver) {
+          if (turn === 0) setMessage("🎮 輪到你了，請選一個號碼！", false);
+          else
+            setMessage(
+              `🤖 ${participants[turn].displayName.split("(")[0]} 思考中...`,
+              false,
+            );
+        }
+      }
+
+      function updateCellAvailability() {
+        participants.forEach((p) => {
+          if (!p) return;
+          const canClick =
+            !gameOver &&
+            p.isLocalHuman &&
+            ((appMode === "single" && turn === 0) ||
+              (appMode === "online" &&
+                currentRoomData?.status === "playing" &&
+                turn === p.id));
+          const boardEl = document.getElementById(`board-${p.id}`);
+          Array.from(boardEl.children).forEach((cell) => {
+            const num = Number(cell.innerText);
+            cell.disabled = calledNumbers.has(num) || !canClick;
+            if (calledNumbers.has(num)) cell.classList.add("marked");
+          });
+        });
+      }
+
+      function addCalledNumber(num, append = false) {
+        const list = document.getElementById("called-numbers");
+        const pill = document.createElement("span");
+        pill.className = "called-pill";
+        pill.innerText = num;
+        if (append) list.appendChild(pill);
+        else list.prepend(pill);
+      }
+
+      function copyRoomCode() {
+        const code =
+          currentRoomId || document.getElementById("roomCodeText").innerText;
+        if (!code || code === "尚未開房") return;
+        navigator.clipboard?.writeText(code);
+        setMessage(`已複製房號：${code}`, false);
+      }
+
+      function clearHostCpuTimer() {
+        if (hostCpuTimer) clearTimeout(hostCpuTimer);
+        hostCpuTimer = null;
+      }
+      function clearRoomListener() {
+        clearHostCpuTimer();
+        if (roomUnsubscribe) roomUnsubscribe();
+        roomUnsubscribe = null;
+      }
+      function leaveRoom(resetToSingle = true) {
+        clearRoomListener();
+        currentRoomId = "";
+        currentRoomData = null;
+        isHost = false;
+        mySeat = 0;
+        document.getElementById("roomCodeText").innerText = "尚未開房";
+        document.getElementById("roomStatusText").innerText = resetToSingle
+          ? "已離開房間。"
+          : "目前為單機模式。";
+        document.getElementById("startOnlineBtn").style.display = "none";
+        if (resetToSingle) {
+          appMode = "single";
+          switchMode("single");
+        }
+      }
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      playerName = getPlayerName();
+      playerId = getPlayerId();
+      loadLocalStreak();
+      initFirebase();
+      resetSingleGame();
+
+      /*
+        Cloud Firestore 安全規則建議：
+        注意：這份規則偏向展示與輕量派對遊戲使用。若要公開大量玩家使用，建議改用 Firebase Auth + Cloud Functions 做更嚴謹驗證。
+
+        rules_version = '2';
+        service cloud.firestore {
+          match /databases/{database}/documents {
+            match /bingo_streak_rankings/{docId} {
+              allow read: if true;
+              allow create, update: if request.resource.data.keys().hasOnly([
+                "playerId", "name", "currentStreak", "bestStreak", "lastWinLines", "lastCalledCount", "lastDurationSeconds", "updatedAt", "dateText"
+              ]);
+              allow delete: if false;
+            }
+            match /bingo_online_rooms/{roomId} {
+              allow read: if true;
+              allow create: if request.resource.data.roomId == roomId;
+              allow update: if true;
+              allow delete: if false;
+            }
+          }
+        }
+      */
+
+      document.oncontextmenu = function () {
+        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
+        return false;
+      };
+    </script>
+  </body>
+</html>
