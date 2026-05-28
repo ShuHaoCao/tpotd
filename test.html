@@ -4,7 +4,7 @@
     <!-- Google tag (gtag.js) -->
     <script
       type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=oGmmD2y7DwdWIqtfZ8PpZ5Iqr6ncixVruzEGH9us4RJF2lAyBFuWtVZWGRH5IDEpGVqxz_nQQ-OAk2mqYSMxGnZDedkH_KnnVWOsdvuU4YK5vM3ALViAgwzdP1-uufNx3oXfm2Vh9jg18uMuQbrZbs5RoY5gZq_XxeT4iyIY-jAzbFml_GbO25MIcf99C_YttSrdGhHm16GxbIF2gaE-aaQ36AjTN96mq-C4dPAmpNly7PBZ3t4PFplZ5Vf7Y0Rt4G3qPD_I0tI_c_C1AWhGlVhi7A6FUQ4gS2IG07cqiHNWnxgUfO5A0OuDZClQx0NoB11PI3A9P5dGCnfcCDTljQ"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=bHdngCoFdjLllgYP5dGPqa3l3K71ArSPN5PvRtE6Z3ad9SseDlfL1qiDv-9_OlAkxd7tX6pevwTVzp1d9er22M6DP4H0AvsPMS4WqhJbKdsXVOshlEnO4tSV0bEaeJjB_N_PXLuQw3liop1lbpbH9Snaz1am26R6UcsiUctFYf71COqmLPL6MlrGbBbrDQrD5SxyEVyUUcGtIa0DhOnVfoEC4MP9EbzFehU0VaGqEKbJQbUowuXHJvegmco6w_QNskKgsW_S0bQbqQaCASjkfStqJt_6qAm1nNtChPHSeuxyOIFZehswyPPTBEibOsDJPuJ1T3ldG3igphRIBsWtig"
       charset="UTF-8"
     ></script>
     <script
@@ -43,7 +43,7 @@
         --green: #5cffb1;
         --danger: #ff4d6d;
         --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
-        --cell-size: clamp(44px, 4.35vw, 78px);
+        --cell-size: clamp(38px, 4.35vw, 78px);
         --radius-xl: 28px;
         --radius-lg: 22px;
         --radius-md: 16px;
@@ -124,7 +124,7 @@
       .app-shell {
         position: relative;
         z-index: 1;
-        width: min(1280px, 100%);
+        width: min(1500px, 100%);
         margin: 0 auto;
       }
       .hero {
@@ -475,14 +475,14 @@
       }
       .game-container {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 18px;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+        gap: clamp(12px, 1.4vw, 18px);
         align-items: start;
       }
       .board-wrapper {
         min-width: 0;
         position: relative;
-        padding: 16px;
+        padding: clamp(10px, 1.15vw, 16px);
         border-radius: var(--radius-xl);
         border: 1px solid var(--line);
         background:
@@ -602,29 +602,30 @@
         border: 1px solid rgba(255, 255, 255, 0.12);
       }
       .board {
-        justify-content: center;
         position: relative;
         z-index: 1;
         display: grid;
-        grid-template-columns: repeat(5, var(--cell-size));
-        gap: 7px;
-        width: max-content;
-        max-width: 100%;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: clamp(4px, 0.55vw, 7px);
+        width: 100%;
+        max-width: 390px;
         margin: 0 auto;
       }
       .cell {
-        width: var(--cell-size);
-        height: var(--cell-size);
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        min-width: 0;
+        height: auto;
         display: flex;
         align-items: center;
         justify-content: center;
         user-select: none;
         -webkit-tap-highlight-color: transparent;
         border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 17px;
+        border-radius: clamp(10px, 1.15vw, 17px);
         cursor: pointer;
         color: #f9fbff;
-        font-size: clamp(0.9rem, 2.2vw, 1.12rem);
+        font-size: clamp(0.78rem, 1.45vw, 1.12rem);
         font-weight: 950;
         background:
           radial-gradient(
@@ -787,6 +788,18 @@
         display: grid;
         gap: 8px;
       }
+      .rank-board-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .rank-subtitle {
+        margin: 2px 0 10px;
+        color: var(--cyan);
+        font-size: 0.92rem;
+        font-weight: 950;
+        letter-spacing: 0.08em;
+      }
       .rank-row {
         display: grid;
         grid-template-columns: 42px 1fr auto;
@@ -824,6 +837,11 @@
         font-weight: 950;
         white-space: nowrap;
       }
+      @media (min-width: 1181px) {
+        .game-container {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
       @media (max-width: 1180px) {
         .game-container {
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -857,7 +875,7 @@
       }
       @media (max-width: 620px) {
         :root {
-          --cell-size: clamp(40px, 15vw, 52px);
+          --cell-size: clamp(38px, 15vw, 52px);
         }
         body {
           padding: 12px;
@@ -909,6 +927,9 @@
         }
         .rank-note {
           text-align: left;
+        }
+        .rank-board-grid {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -1056,19 +1077,35 @@
 
       <section class="rank-panel" aria-label="雲端排行榜">
         <div class="rank-head">
-          <h2 class="rank-title">🔥 最高連勝排行榜</h2>
+          <h2 class="rank-title">🔥 雲端排行榜</h2>
           <span id="rank-sync-status" class="rank-note">Firebase 尚未設定</span>
         </div>
-        <div id="rank-list" class="rank-list">
-          <div class="rank-row">
-            <div class="rank-place">?</div>
-            <div>
-              <div class="rank-name">等待 Firebase 設定完成</div>
-              <div class="rank-meta">
-                填入 firebaseConfig 後，所有電腦與手機會共用最高連勝排行榜
+        <div class="rank-board-grid">
+          <div>
+            <h3 class="rank-subtitle">單機連勝排行榜</h3>
+            <div id="single-rank-list" class="rank-list">
+              <div class="rank-row">
+                <div class="rank-place">?</div>
+                <div>
+                  <div class="rank-name">等待 Firebase 設定完成</div>
+                  <div class="rank-meta">紀錄玩家 vs 電腦的最佳連勝</div>
+                </div>
+                <div class="rank-score">--</div>
               </div>
             </div>
-            <div class="rank-score">--</div>
+          </div>
+          <div>
+            <h3 class="rank-subtitle">線上勝場排行榜</h3>
+            <div id="online-rank-list" class="rank-list">
+              <div class="rank-row">
+                <div class="rank-place">?</div>
+                <div>
+                  <div class="rank-name">等待 Firebase 設定完成</div>
+                  <div class="rank-meta">紀錄線上房間的累積勝場</div>
+                </div>
+                <div class="rank-score">--</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -1080,18 +1117,17 @@
 
     <script>
       const firebaseConfig = {
-        apiKey: "AIzaSyCX5p1hll1sIjR4Gsp6o1_v1wQgvyXWUfo",
-        authDomain: "fir-game-64891.firebaseapp.com",
-        databaseURL:
-          "https://fir-game-64891-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "fir-game-64891",
-        storageBucket: "fir-game-64891.firebasestorage.app",
-        messagingSenderId: "357308899829",
-        appId: "1:357308899829:web:a6adcc43ad8751b520c0bc",
-        measurementId: "G-8CZBB9L8MH",
+        apiKey: "AIzaSyDSXRXOgX9p2QDF9UGHXvGJvcys8WUJl9s",
+        authDomain: "bingo-game-f49ca.firebaseapp.com",
+        projectId: "bingo-game-f49ca",
+        storageBucket: "bingo-game-f49ca.firebasestorage.app",
+        messagingSenderId: "944921049717",
+        appId: "1:944921049717:web:9574693476fc0bbd06163c",
+        measurementId: "G-YVPBD5F76P",
       };
 
-      const FIRESTORE_COLLECTION = "bingo_streak_rankings";
+      const SINGLE_RANK_COLLECTION = "bingo_single_rankings";
+      const ONLINE_RANK_COLLECTION = "bingo_online_rankings";
       const ROOM_COLLECTION = "bingo_online_rooms";
       const RANK_LIMIT = 10;
       const WIN_LINES = 5;
@@ -1338,7 +1374,7 @@
         );
         try {
           await db
-            .collection(FIRESTORE_COLLECTION)
+            .collection(SINGLE_RANK_COLLECTION)
             .doc(playerId)
             .set(
               {
@@ -1366,29 +1402,42 @@
 
       async function loadLeaderboard() {
         if (!firebaseReady || !db) return;
+        const status = document.getElementById("rank-sync-status");
         try {
-          const snapshot = await db
-            .collection(FIRESTORE_COLLECTION)
-            .orderBy("bestStreak", "desc")
-            .orderBy("updatedAt", "asc")
-            .limit(RANK_LIMIT)
-            .get();
-          const records = [];
-          snapshot.forEach((doc) => records.push(doc.data()));
-          renderLeaderboard(records);
-          document.getElementById("rank-sync-status").innerText =
-            "排行榜已讀取（非即時）";
+          const [singleSnapshot, onlineSnapshot] = await Promise.all([
+            db
+              .collection(SINGLE_RANK_COLLECTION)
+              .orderBy("bestStreak", "desc")
+              .orderBy("updatedAt", "asc")
+              .limit(RANK_LIMIT)
+              .get(),
+            db
+              .collection(ONLINE_RANK_COLLECTION)
+              .orderBy("onlineWins", "desc")
+              .orderBy("winRate", "desc")
+              .orderBy("updatedAt", "asc")
+              .limit(RANK_LIMIT)
+              .get(),
+          ]);
+
+          const singleRecords = [];
+          const onlineRecords = [];
+          singleSnapshot.forEach((doc) => singleRecords.push(doc.data()));
+          onlineSnapshot.forEach((doc) => onlineRecords.push(doc.data()));
+          renderSingleLeaderboard(singleRecords);
+          renderOnlineLeaderboard(onlineRecords);
+          status.innerText = "排行榜已讀取（單機連勝 / 線上勝場）";
         } catch (error) {
-          console.error("連勝排行榜讀取失敗：", error);
-          document.getElementById("rank-sync-status").innerText =
-            "連勝排行榜讀取失敗";
+          console.error("排行榜讀取失敗：", error);
+          status.innerText = "排行榜讀取失敗，請檢查 Firestore 規則與索引";
         }
       }
-      function renderLeaderboard(records) {
-        const list = document.getElementById("rank-list");
+
+      function renderSingleLeaderboard(records) {
+        const list = document.getElementById("single-rank-list");
         list.innerHTML = "";
         if (!records.length) {
-          list.innerHTML = `<div class="rank-row"><div class="rank-place">1</div><div><div class="rank-name">尚無連勝紀錄</div><div class="rank-meta">第一個連勝王，可能就是你。NPC 先別太囂張。</div></div><div class="rank-score">0 連勝</div></div>`;
+          list.innerHTML = `<div class="rank-row"><div class="rank-place">1</div><div><div class="rank-name">尚無單機連勝紀錄</div><div class="rank-meta">第一個連勝王，可能就是你。NPC 先別太囂張。</div></div><div class="rank-score">0 連勝</div></div>`;
           return;
         }
         records.forEach((item, index) => {
@@ -1398,6 +1447,78 @@
           row.querySelector(".rank-name").innerText = item.name || "匿名玩家";
           list.appendChild(row);
         });
+      }
+
+      function renderOnlineLeaderboard(records) {
+        const list = document.getElementById("online-rank-list");
+        list.innerHTML = "";
+        if (!records.length) {
+          list.innerHTML = `<div class="rank-row"><div class="rank-place">1</div><div><div class="rank-name">尚無線上勝場紀錄</div><div class="rank-meta">建立房間、擊敗朋友，戰績就會在這裡發光。</div></div><div class="rank-score">0 勝</div></div>`;
+          return;
+        }
+        records.forEach((item, index) => {
+          const wins = Number(item.onlineWins || 0);
+          const games = Number(item.onlineGames || 0);
+          const winRate = games ? Math.round((wins / games) * 100) : 0;
+          const row = document.createElement("div");
+          row.className = "rank-row";
+          row.innerHTML = `<div class="rank-place">${index + 1}</div><div><div class="rank-name"></div><div class="rank-meta">出賽 ${games.toLocaleString()} 場｜勝率 ${winRate}%｜${item.dateText || ""}</div></div><div class="rank-score">${wins.toLocaleString()} 勝</div>`;
+          row.querySelector(".rank-name").innerText = item.name || "匿名玩家";
+          list.appendChild(row);
+        });
+      }
+
+      async function saveOnlineRecord(room) {
+        if (!firebaseReady || !db || !room || room.status !== "ended") return;
+        const recordKey = `bingo_online_recorded_${room.roomId}_${playerId}`;
+        if (localStorage.getItem(recordKey) === "1") return;
+
+        const mySeatData = (room.seats || []).find(
+          (seat) => seat.type === "human" && seat.playerId === playerId,
+        );
+        if (!mySeatData) return;
+
+        const playerWon = (room.winnerSeats || []).some(
+          (idx) => room.seats?.[idx]?.playerId === playerId,
+        );
+
+        try {
+          await db.runTransaction(async (tx) => {
+            const ref = db.collection(ONLINE_RANK_COLLECTION).doc(playerId);
+            const snap = await tx.get(ref);
+            const old = snap.exists ? snap.data() : {};
+            const oldWins = Number(old.onlineWins || 0);
+            const oldGames = Number(old.onlineGames || 0);
+            const onlineWins = oldWins + (playerWon ? 1 : 0);
+            const onlineGames = oldGames + 1;
+            tx.set(
+              ref,
+              {
+                playerId,
+                name: playerName,
+                onlineWins,
+                onlineGames,
+                winRate: onlineGames ? onlineWins / onlineGames : 0,
+                lastResult: playerWon ? "win" : "lose",
+                lastRoomId: room.roomId,
+                lastCalledCount: (room.calledNumbers || []).length,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                dateText: new Date().toLocaleString("zh-TW", { hour12: false }),
+              },
+              { merge: true },
+            );
+          });
+          localStorage.setItem(recordKey, "1");
+          recordSavedThisGame = true;
+          document.getElementById("rank-sync-status").innerText = playerWon
+            ? "線上勝場已同步"
+            : "線上出賽紀錄已同步";
+          await loadLeaderboard();
+        } catch (error) {
+          console.error("線上排行榜寫入失敗：", error);
+          document.getElementById("rank-sync-status").innerText =
+            "線上排行榜寫入失敗";
+        }
       }
 
       function generateBoardNumbers() {
@@ -1777,6 +1898,7 @@
 
       async function startOnlineGame() {
         if (!currentRoomId || !isHost) return;
+        recordSavedThisGame = false;
         const roomRef = db.collection(ROOM_COLLECTION).doc(currentRoomId);
         try {
           await db.runTransaction(async (tx) => {
@@ -1804,6 +1926,7 @@
 
       async function restartOnlineRoom() {
         if (!currentRoomId || !isHost || !currentRoomData) return;
+        recordSavedThisGame = false;
         const mode = currentRoomData.mode;
         let seats = currentRoomData.seats.map((s) => ({
           ...s,
@@ -2086,19 +2209,7 @@
       }
       function checkOnlineWinnerLocally(room) {
         if (room.status !== "ended") return;
-        const playerWon = (room.winnerSeats || []).some(
-          (idx) => room.seats?.[idx]?.playerId === playerId,
-        );
-        if (playerWon && !recordSavedThisGame) {
-          currentStreak += 1;
-          bestStreak = Math.max(bestStreak, currentStreak);
-          saveLocalStreak();
-          saveStreakRecord();
-        } else if (!playerWon && !recordSavedThisGame) {
-          currentStreak = 0;
-          saveLocalStreak();
-          recordSavedThisGame = true;
-        }
+        saveOnlineRecord(room);
       }
 
       function setTurn(t) {
@@ -2164,7 +2275,57 @@
         if (roomUnsubscribe) roomUnsubscribe();
         roomUnsubscribe = null;
       }
-      function leaveRoom(resetToSingle = true) {
+      async function leaveRoom(resetToSingle = true) {
+        const roomIdToLeave = currentRoomId;
+        const seatToLeave = mySeat;
+        const roomBeforeLeave = currentRoomData;
+        const wasHost = isHost;
+
+        if (
+          firebaseReady &&
+          db &&
+          roomIdToLeave &&
+          roomBeforeLeave &&
+          seatToLeave >= 0
+        ) {
+          try {
+            const roomRef = db.collection(ROOM_COLLECTION).doc(roomIdToLeave);
+            await db.runTransaction(async (tx) => {
+              const snap = await tx.get(roomRef);
+              if (!snap.exists) return;
+              const room = snap.data();
+              const seats = [...(room.seats || [])];
+              const seat = seats[seatToLeave];
+              if (!seat || seat.type !== "human" || seat.playerId !== playerId)
+                return;
+
+              seats[seatToLeave] = {
+                ...seat,
+                playerId: "",
+                name: "等待玩家加入",
+                joinedAt: null,
+              };
+
+              const updateData = {
+                seats,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              };
+
+              if (room.status === "waiting") {
+                updateData.status = "waiting";
+              } else if (wasHost && room.status === "playing") {
+                updateData.status = "ended";
+                updateData.hostLeft = true;
+                updateData.winnerSeats = [];
+              }
+
+              tx.update(roomRef, updateData);
+            });
+          } catch (error) {
+            console.warn("離開房間同步失敗：", error.message);
+          }
+        }
+
         clearRoomListener();
         currentRoomId = "";
         currentRoomData = null;
@@ -2198,10 +2359,17 @@
         rules_version = '2';
         service cloud.firestore {
           match /databases/{database}/documents {
-            match /bingo_streak_rankings/{docId} {
+            match /bingo_single_rankings/{docId} {
               allow read: if true;
               allow create, update: if request.resource.data.keys().hasOnly([
                 "playerId", "name", "currentStreak", "bestStreak", "lastWinLines", "lastCalledCount", "lastDurationSeconds", "updatedAt", "dateText"
+              ]);
+              allow delete: if false;
+            }
+            match /bingo_online_rankings/{docId} {
+              allow read: if true;
+              allow create, update: if request.resource.data.keys().hasOnly([
+                "playerId", "name", "onlineWins", "onlineGames", "winRate", "lastResult", "lastRoomId", "lastCalledCount", "updatedAt", "dateText"
               ]);
               allow delete: if false;
             }
