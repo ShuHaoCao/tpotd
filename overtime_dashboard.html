@@ -8,11 +8,6 @@
     />
     <meta name="theme-color" content="#08111f" />
     <title>臺南運輸股｜加班戰情室</title>
-    <script
-      type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=IqY5Hyqsm1-46ftrxZc8JI9cxQXK6wR4ck6ke20mZGH5a0uK8Izxo1ytamjNzqRZoa6u9JQuu27I8Vhz0aLA4T_K2bgkf0vgXf6Bd4cocMySG0IB2A6LIVBjS2FZY7aFUk0Pw8GM7Vi0y3EwZc3XqWlfzfuU_yPXP8dmXXiFkqrlC5ljSyF2PaIbUHNuTE26LqhtdZjNQ5h7vDFIX5E0uwlhwByLZiOU-569fHDjgVzQLkZaQYWHCXXGkttz3GFltqizB8rW90E11R7buO4Rkq6BVjw1NA-AbCvHKinVcRtoy_98IJWlyvN_yPAdHhClrg8hVFu-KqLT9zT4YyF51mK3M-_xmE4tFNzn9kjBmj4"
-      charset="UTF-8"
-    ></script>
     <style>
       :root {
         --bg: #08111f;
@@ -637,7 +632,7 @@
         border-radius: 50%;
         border: 1px solid rgba(255, 255, 255, 0.5);
       }
-      /* ===== Responsive Layout: Desktop / Tablet / Mobile Portrait ===== */
+      /* ===== Responsive Layout ===== */
       @media (min-width: 901px) {
         .desktop-only {
           display: block;
@@ -884,7 +879,7 @@
           margin-top: 6px;
         }
         .status-chip {
-          font-size: 0.7rem;
+          font-size: 0.72rem;
           padding: 4px 7px;
         }
         .records {
@@ -970,7 +965,7 @@
       <section id="app"></section>
     </main>
     <script>
-      const FALLBACK = null; // 若要離線測試，可把 JSON 物件貼在這裡
+      const FALLBACK = null;
       const groupColors = {
         內勤: "#8ec5ff",
         早班: "#ffe08a",
@@ -985,9 +980,10 @@
           return r.json();
         })
         .then(init)
-        .catch(() => {
+        .catch((err) => {
+          console.error(err);
           document.getElementById("subtitle").textContent =
-            "自動讀取不到json，請檔案存在，並建議透過本機伺服器或網站空間開啟。";
+            "自動讀取不到 json，請確認檔案存在，並建議透過本機伺服器、網站空間開啟，或檢查手機端讀取權限。";
           if (FALLBACK) init(FALLBACK);
         });
 
@@ -1188,13 +1184,14 @@
     <div class="card speed-card ${danger ? "danger" : ""}">${gauge(p)}<div class="gauge-info"><div class="speed-caption">OVERTIME SPEED LIMIT</div><div class="days">加班天數：${n(p.overtimeDays, 0)} 天</div></div><div class="warning ${alertText ? "alert" : ""}">${alertText}</div><div class="status-line"><span class="status-chip">HUD MODE</span><span class="status-chip">慣性指針</span><span class="status-chip">紅區預警</span></div></div>
     <div class="card"><div class="section-title" style="margin-top:0"><h2>加班日期</h2><span class="hint">由左至右依日期排列</span></div><div class="records">${records(p.records)}</div></div>
   </div>`;
-        requestAnimationFrame(() => {
+
+        setTimeout(() => {
           const needle = document.querySelector(".needle");
           const arc = document.querySelector(".arc-main");
           if (needle)
             needle.style.transform = `rotate(${needle.dataset.angle}deg)`;
           if (arc) arc.style.strokeDashoffset = arc.dataset.offset;
-        });
+        }, 50);
       }
       function gauge(p) {
         const used = Number(p.usedHours || 0),
