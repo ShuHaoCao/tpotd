@@ -2,2417 +2,1842 @@
 <html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>個人休假動態</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Stuf1fnBqoSla_Ezz4W55SYln5m1njjz5myOpKZ0GJ47ZeWqkPp36N3Qk2uw39jm35sfVSIFLokysrPEsOtJNROqANkgeQleJFJ_dr2l38XH2HNtZiZHzKdUwL1O1cSGGCEhjdOkAIMmRTwfb-or76jjkch731qcuN3Nw8uIXXvyhvqyP8lgcQfQXwqKdGy__W8P0NChJjtQ4Looh7H8C8vs4J43ua-aj6F0WrcwbSxbq5u2mU96VWHB-HBYLml9o4wqx-CFfE3FoHhVeCWBGmw06bjhJJTv360UJNof9hFh5q18X6fmbrZccZL-01OhIZkiWL4IXItyhndjztqoNg"
+      charset="UTF-8"
+    ></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
     />
-    <title>幸運連鎖：賓果之星｜線上房間版</title>
-
     <style>
       :root {
-        --bg-0: #080b1d;
-        --bg-1: #121735;
-        --panel: rgba(255, 255, 255, 0.1);
-        --panel-strong: rgba(255, 255, 255, 0.16);
-        --line: rgba(255, 255, 255, 0.18);
-        --text: #f8fbff;
-        --muted: rgba(248, 251, 255, 0.68);
-        --gold: #ffd166;
-        --pink: #ff4d8d;
-        --cyan: #4deeea;
-        --violet: #9b5cff;
-        --green: #5cffb1;
-        --danger: #ff4d6d;
-        --shadow: 0 24px 70px rgba(0, 0, 0, 0.36);
-        --cell-size: clamp(38px, 4.35vw, 78px);
-        --radius-xl: 28px;
-        --radius-lg: 22px;
-        --radius-md: 16px;
+        --primary: #14b8a6;
+        --primary-2: #34d399;
+        --gold: #fbbf24;
+        --rose: #fb7185;
+        --violet: #a78bfa;
+        --sky: #38bdf8;
+        --bg-1: #06140f;
+        --bg-2: #0f172a;
+        --bg-3: #11251f;
+        --card: rgba(8, 24, 20, 0.72);
+        --card-2: rgba(15, 23, 42, 0.72);
+        --line: rgba(255, 255, 255, 0.12);
+        --line-strong: rgba(52, 211, 153, 0.32);
+        --text: #f8fafc;
+        --muted: #9ca3af;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
       }
 
       * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Noto Sans TC", sans-serif;
       }
+
       html {
-        min-height: 100%;
-        background: var(--bg-0);
+        scroll-behavior: smooth;
       }
+
       body {
         min-height: 100vh;
-        margin: 0;
-        padding: 22px;
-        overflow-x: hidden;
-        font-family:
-          "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui,
-          sans-serif;
         color: var(--text);
         background:
           radial-gradient(
-            circle at 15% 15%,
-            rgba(77, 238, 234, 0.22),
+            circle at 8% 8%,
+            rgba(52, 211, 153, 0.24),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 92% 10%,
+            rgba(56, 189, 248, 0.16),
             transparent 30%
           ),
           radial-gradient(
-            circle at 85% 12%,
-            rgba(255, 77, 141, 0.22),
-            transparent 30%
+            circle at 50% 92%,
+            rgba(167, 139, 250, 0.13),
+            transparent 36%
           ),
-          radial-gradient(
-            circle at 50% 95%,
-            rgba(155, 92, 255, 0.25),
-            transparent 35%
-          ),
-          linear-gradient(135deg, #070918 0%, #101635 45%, #22123b 100%);
+          linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+        padding: clamp(1rem, 3vw, 2.5rem);
+        overflow-x: hidden;
       }
+
       body::before {
         content: "";
         position: fixed;
         inset: 0;
         pointer-events: none;
-        opacity: 0.3;
         background-image:
-          linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-        background-size: 42px 42px;
-        mask-image: radial-gradient(circle at center, black, transparent 74%);
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 44px 44px;
+        mask-image: linear-gradient(to bottom, black, transparent 78%);
       }
-      body::after {
-        content: "";
-        position: fixed;
-        inset: -120px;
-        pointer-events: none;
-        background:
-          radial-gradient(
-            circle,
-            rgba(255, 255, 255, 0.13) 1px,
-            transparent 2px
-          ),
-          radial-gradient(circle, rgba(77, 238, 234, 0.16) 1px, transparent 2px);
-        background-size:
-          90px 90px,
-          140px 140px;
-        animation: starFloat 20s linear infinite;
-        opacity: 0.42;
-      }
-      @keyframes starFloat {
-        from {
-          transform: translate3d(0, 0, 0);
-        }
-        to {
-          transform: translate3d(70px, 90px, 0);
-        }
-      }
-      .app-shell {
+
+      .container {
         position: relative;
-        z-index: 1;
-        width: min(1500px, 100%);
+        width: min(1180px, 100%);
         margin: 0 auto;
       }
+
       .hero {
         position: relative;
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 18px;
-        align-items: stretch;
-        padding: 22px;
-        margin-bottom: 18px;
+        overflow: hidden;
         border: 1px solid var(--line);
-        border-radius: var(--radius-xl);
+        border-radius: 34px;
+        padding: clamp(1.35rem, 4vw, 3rem);
+        margin-bottom: 1.35rem;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.12),
+            rgba(255, 255, 255, 0.035)
+          ),
+          rgba(8, 18, 16, 0.66);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(22px);
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        right: -110px;
+        top: -150px;
+        width: 380px;
+        height: 380px;
+        border-radius: 999px;
+        background: radial-gradient(
+          circle,
+          rgba(52, 211, 153, 0.34),
+          transparent 66%
+        );
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.42rem 0.8rem;
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        border-radius: 999px;
+        background: rgba(20, 184, 166, 0.12);
+        color: #bbf7d0;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero h1 {
+        max-width: 820px;
+        font-size: clamp(2rem, 6vw, 4.1rem);
+        line-height: 1.06;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+      }
+
+      .hero h1 span {
+        background: linear-gradient(90deg, #ecfdf5, #34d399 42%, #38bdf8 86%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero p {
+        margin-top: 1rem;
+        max-width: 760px;
+        color: #cbd5e1;
+        line-height: 1.8;
+        font-size: clamp(0.95rem, 2vw, 1.08rem);
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.62rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid var(--line);
+        color: #e2e8f0;
+        font-size: 0.92rem;
+      }
+
+      .search-box {
+        display: grid;
+        grid-template-columns: 1fr minmax(240px, 420px);
+        gap: 1rem;
+        align-items: center;
+        padding: clamp(1rem, 3vw, 1.4rem);
+        margin-bottom: 1.25rem;
+        border-radius: 28px;
+        border: 1px solid var(--line-strong);
         background:
           linear-gradient(
             135deg,
-            rgba(255, 255, 255, 0.16),
-            rgba(255, 255, 255, 0.06)
+            rgba(20, 184, 166, 0.18),
+            rgba(15, 23, 42, 0.74)
           ),
-          radial-gradient(
-            circle at 20% 10%,
-            rgba(255, 209, 102, 0.22),
-            transparent 36%
-          );
+          rgba(15, 23, 42, 0.7);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
         backdrop-filter: blur(18px);
-        box-shadow: var(--shadow);
-        overflow: hidden;
       }
-      .hero::before {
+
+      .search-title {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .search-title label {
+        font-size: 1.22rem;
+        font-weight: 800;
+      }
+
+      .search-title small {
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .select-wrap {
+        position: relative;
+      }
+
+      .select-wrap::after {
+        content: "⌄";
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-55%);
+        color: #86efac;
+        pointer-events: none;
+        font-size: 1.25rem;
+      }
+
+      select {
+        width: 100%;
+        appearance: none;
+        padding: 1rem 2.8rem 1rem 1rem;
+        border: 1px solid rgba(52, 211, 153, 0.36);
+        border-radius: 18px;
+        color: var(--text);
+        background: rgba(2, 6, 23, 0.74);
+        outline: none;
+        cursor: pointer;
+        font-size: 1.02rem;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      select:focus {
+        border-color: #5eead4;
+        box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.16);
+      }
+
+      .error-msg,
+      .empty-state {
+        border-radius: 24px;
+        padding: 1.2rem;
+        line-height: 1.75;
+        text-align: center;
+        backdrop-filter: blur(14px);
+      }
+
+      .error-msg {
+        margin-bottom: 1.25rem;
+        border: 1px solid rgba(251, 113, 133, 0.45);
+        background: rgba(127, 29, 29, 0.26);
+        color: #fecdd3;
+      }
+
+      .empty-state {
+        margin-top: 1.1rem;
+        border: 1px dashed rgba(148, 163, 184, 0.34);
+        background: rgba(15, 23, 42, 0.46);
+        color: #cbd5e1;
+      }
+
+      .dashboard-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(320px, 0.82fr);
+        grid-template-areas:
+          "profile profile"
+          "leave stats"
+          "mental official";
+        gap: 1.1rem;
+        animation: fadeUp 0.45s ease both;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .full-width,
+      .section-box {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.105),
+            rgba(255, 255, 255, 0.032)
+          ),
+          var(--card);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(20px);
+      }
+
+      .full-width::before,
+      .section-box::before {
         content: "";
         position: absolute;
         inset: 0;
+        pointer-events: none;
         background: linear-gradient(
-          115deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.18) 35%,
-          transparent 58%
+          120deg,
+          rgba(255, 255, 255, 0.13),
+          transparent 28%,
+          transparent 70%,
+          rgba(52, 211, 153, 0.08)
         );
-        transform: translateX(-120%);
-        animation: sheen 6s ease-in-out infinite;
       }
-      @keyframes sheen {
-        0%,
-        60% {
-          transform: translateX(-120%);
-        }
-        100% {
-          transform: translateX(120%);
-        }
+
+      .full-width {
+        grid-area: profile;
+        border-radius: 30px;
+        padding: clamp(1.1rem, 3vw, 1.55rem);
       }
-      .brand {
+
+      .name-title {
         position: relative;
-        display: flex;
-        gap: 16px;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1rem;
         align-items: center;
       }
-      .logo-orb {
-        width: 66px;
-        height: 66px;
-        flex: 0 0 auto;
+
+      .person-block {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .avatar {
+        width: clamp(58px, 10vw, 78px);
+        height: clamp(58px, 10vw, 78px);
         display: grid;
         place-items: center;
         border-radius: 24px;
-        background:
-          radial-gradient(circle at 35% 30%, #fff9d6, transparent 20%),
-          linear-gradient(135deg, var(--gold), var(--pink), var(--violet));
-        box-shadow:
-          0 0 28px rgba(255, 209, 102, 0.38),
-          inset 0 0 18px rgba(255, 255, 255, 0.22);
-        font-size: 2rem;
-        animation: pulseOrb 2.4s ease-in-out infinite;
-      }
-      @keyframes pulseOrb {
-        0%,
-        100% {
-          transform: scale(1);
-          filter: saturate(1);
-        }
-        50% {
-          transform: scale(1.04);
-          filter: saturate(1.35);
-        }
-      }
-      .eyebrow {
-        margin: 0 0 4px;
-        color: var(--cyan);
-        font-size: 0.78rem;
+        color: #022c22;
         font-weight: 900;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-      h1 {
-        margin: 0;
-        font-size: clamp(2rem, 5vw, 4rem);
-        line-height: 1;
-        letter-spacing: -0.05em;
-        text-shadow: 0 0 28px rgba(77, 238, 234, 0.26);
-      }
-      .subtitle {
-        margin: 10px 0 0;
-        color: var(--muted);
-        font-size: clamp(0.92rem, 2.2vw, 1.02rem);
-        line-height: 1.65;
-      }
-      .hero-actions {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        gap: 12px;
-        min-width: 220px;
-      }
-      .btn-reset,
-      .btn-secondary {
-        position: relative;
-        min-height: 54px;
-        padding: 13px 22px;
-        border: 0;
-        border-radius: 999px;
-        cursor: pointer;
-        color: #17121f;
-        font-size: 1rem;
-        font-weight: 950;
-        letter-spacing: 0.04em;
-        background: linear-gradient(135deg, var(--gold), #ff9f1c 45%, #ff4d8d);
-        box-shadow:
-          0 12px 0 rgba(106, 51, 0, 0.55),
-          0 24px 34px rgba(255, 77, 141, 0.18);
-        transition:
-          transform 0.18s ease,
-          box-shadow 0.18s ease,
-          filter 0.18s ease;
-      }
-      .btn-reset:hover,
-      .btn-secondary:hover {
-        transform: translateY(-2px);
-        filter: brightness(1.08);
-      }
-      .btn-reset:active,
-      .btn-secondary:active {
-        transform: translateY(8px);
-        box-shadow:
-          0 4px 0 rgba(106, 51, 0, 0.6),
-          0 10px 18px rgba(255, 77, 141, 0.2);
-      }
-      .btn-secondary {
-        color: #f8fbff;
-        background: linear-gradient(
-          135deg,
-          rgba(77, 238, 234, 0.28),
-          rgba(155, 92, 255, 0.42)
-        );
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow:
-          0 10px 0 rgba(10, 13, 35, 0.45),
-          0 18px 32px rgba(77, 238, 234, 0.12);
-      }
-      .rules-chip {
-        padding: 10px 14px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 999px;
-        background: rgba(0, 0, 0, 0.16);
-        color: var(--muted);
-        text-align: center;
-        font-size: 0.84rem;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        background: linear-gradient(135deg, #ecfdf5, #34d399 65%, #0f766e);
+        box-shadow: 0 18px 36px rgba(20, 184, 166, 0.24);
       }
 
-      .mode-panel,
-      .online-panel {
-        margin-bottom: 18px;
-        padding: 16px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius-lg);
-        background: rgba(255, 255, 255, 0.075);
-        backdrop-filter: blur(14px);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-      }
-      .mode-panel {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-      .mode-card {
-        padding: 14px;
-        border: 1px solid rgba(255, 255, 255, 0.13);
-        border-radius: 20px;
-        background: rgba(0, 0, 0, 0.18);
-        cursor: pointer;
-        transition:
-          transform 0.16s ease,
-          border-color 0.16s ease,
-          background 0.16s ease;
-      }
-      .mode-card:hover,
-      .mode-card.active {
-        transform: translateY(-3px);
-        border-color: rgba(255, 209, 102, 0.7);
-        background: rgba(255, 255, 255, 0.12);
-      }
-      .mode-card strong {
-        display: block;
-        font-size: 1.02rem;
-        margin-bottom: 4px;
-      }
-      .mode-card span {
-        color: var(--muted);
-        font-size: 0.86rem;
-        line-height: 1.5;
-      }
-      .online-panel {
-        display: none;
-      }
-      .online-panel.show {
-        display: block;
-      }
-      .online-grid {
-        display: grid;
-        grid-template-columns: 1.1fr 1fr 1fr;
-        gap: 12px;
-        align-items: end;
-      }
-      label {
-        display: block;
-        color: var(--muted);
-        font-size: 0.82rem;
+      .person-name {
+        font-size: clamp(1.65rem, 5vw, 2.5rem);
         font-weight: 900;
-        letter-spacing: 0.08em;
-        margin-bottom: 7px;
+        letter-spacing: -0.03em;
       }
-      input,
-      select {
-        width: 100%;
-        min-height: 46px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 15px;
-        padding: 0 13px;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.22);
-        outline: none;
-        font-weight: 900;
+
+      .person-subtitle {
+        margin-top: 0.2rem;
+        color: var(--muted);
+        font-size: 0.98rem;
       }
-      select option {
-        color: #111;
+
+      .year-badge {
+        justify-self: end;
+        padding: 0.75rem 1rem;
+        border-radius: 18px;
+        background: rgba(52, 211, 153, 0.12);
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        color: #bbf7d0;
+        font-weight: 800;
+        white-space: nowrap;
       }
-      .room-info {
-        margin-top: 12px;
+
+      .section-box {
+        min-height: 100%;
+        border-radius: 30px;
+        padding: clamp(1.1rem, 3vw, 1.5rem);
+      }
+
+      .leave-card {
+        grid-area: leave;
+      }
+
+      .stats-card {
+        grid-area: stats;
+      }
+
+      .mental-card {
+        grid-area: mental;
+      }
+
+      .official-card {
+        grid-area: official;
+      }
+
+      .section-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      .section-title {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
         align-items: center;
-        color: var(--muted);
-        font-size: 0.9rem;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: #d1fae5;
+        font-size: 1.12rem;
         font-weight: 900;
       }
-      .room-code {
+
+      .section-title span:first-child {
         display: inline-flex;
         align-items: center;
-        min-height: 34px;
-        padding: 6px 12px;
+        gap: 0.55rem;
+      }
+
+      .section-chip {
+        padding: 0.32rem 0.66rem;
         border-radius: 999px;
-        color: #120b20;
-        background: linear-gradient(135deg, var(--cyan), var(--green));
-        font-weight: 950;
-        letter-spacing: 0.12em;
-      }
-      .small-btn {
-        min-height: 36px;
-        padding: 6px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 999px;
-        cursor: pointer;
-        color: #fff;
-        background: rgba(255, 255, 255, 0.11);
-        font-weight: 900;
-      }
-      #message-box {
-        position: relative;
-        width: 100%;
-        min-height: 74px;
-        margin-bottom: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 17px 20px;
-        border: 1px solid rgba(77, 238, 234, 0.24);
-        border-radius: var(--radius-lg);
-        background:
-          linear-gradient(
-            135deg,
-            rgba(77, 238, 234, 0.16),
-            rgba(155, 92, 255, 0.14)
-          ),
-          rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(16px);
-        color: #fff;
-        font-size: clamp(1.05rem, 2.6vw, 1.35rem);
-        font-weight: 900;
-        text-align: center;
-        box-shadow:
-          0 20px 54px rgba(0, 0, 0, 0.22),
-          inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-        transition:
-          background 0.25s ease,
-          border-color 0.25s ease,
-          transform 0.25s ease;
-      }
-      #message-box::before,
-      #message-box::after {
-        content: "";
-        position: absolute;
-        width: 9px;
-        height: 9px;
-        border-radius: 999px;
-        background: var(--cyan);
-        box-shadow: 0 0 14px var(--cyan);
-      }
-      #message-box::before {
-        left: 18px;
-        top: 18px;
-      }
-      #message-box::after {
-        right: 18px;
-        bottom: 18px;
-        background: var(--pink);
-        box-shadow: 0 0 14px var(--pink);
-      }
-      #message-box.win {
-        border-color: rgba(92, 255, 177, 0.45);
-        background:
-          radial-gradient(
-            circle at 50% 0%,
-            rgba(255, 209, 102, 0.22),
-            transparent 42%
-          ),
-          linear-gradient(
-            135deg,
-            rgba(92, 255, 177, 0.22),
-            rgba(77, 238, 234, 0.16)
-          );
-        animation: winFlash 1s ease-in-out infinite alternate;
-      }
-      @keyframes winFlash {
-        from {
-          transform: scale(1);
-        }
-        to {
-          transform: scale(1.012);
-        }
-      }
-      .game-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
-        gap: clamp(12px, 1.4vw, 18px);
-        align-items: start;
-      }
-      .board-wrapper {
-        min-width: 0;
-        position: relative;
-        padding: clamp(10px, 1.15vw, 16px);
-        border-radius: var(--radius-xl);
-        border: 1px solid var(--line);
-        background:
-          linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.13),
-            rgba(255, 255, 255, 0.055)
-          ),
-          rgba(10, 13, 35, 0.58);
-        backdrop-filter: blur(18px);
-        box-shadow: 0 18px 52px rgba(0, 0, 0, 0.25);
-        transition:
-          transform 0.22s ease,
-          border-color 0.22s ease,
-          box-shadow 0.22s ease,
-          opacity 0.22s ease;
-        overflow: hidden;
-      }
-      .board-wrapper.hidden {
-        display: none;
-      }
-      .board-wrapper::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(
-          circle at 50% 0%,
-          rgba(255, 255, 255, 0.12),
-          transparent 48%
-        );
-        pointer-events: none;
-      }
-      .board-wrapper.active {
-        border-color: rgba(255, 209, 102, 0.75);
-        transform: translateY(-7px);
-        box-shadow:
-          0 0 0 1px rgba(255, 209, 102, 0.2),
-          0 0 38px rgba(255, 209, 102, 0.18),
-          0 28px 72px rgba(0, 0, 0, 0.38);
-      }
-      .board-wrapper.active::after {
-        content: "";
-        position: absolute;
-        inset: -2px;
-        border-radius: inherit;
-        pointer-events: none;
-        background: conic-gradient(
-          from 0deg,
-          transparent,
-          rgba(255, 209, 102, 0.62),
-          transparent,
-          rgba(77, 238, 234, 0.52),
-          transparent
-        );
-        mask:
-          linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-        mask-composite: exclude;
-        padding: 2px;
-        animation: spinBorder 3.2s linear infinite;
-      }
-      @keyframes spinBorder {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      .player-card {
-        background:
-          radial-gradient(
-            circle at 30% 0%,
-            rgba(255, 209, 102, 0.16),
-            transparent 38%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.16),
-            rgba(255, 255, 255, 0.065)
-          ),
-          rgba(10, 13, 35, 0.62);
-      }
-      .npc-card {
-        opacity: 0.9;
-      }
-      .board-header {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        margin-bottom: 12px;
-      }
-      h2 {
-        margin: 0;
-        min-width: 0;
-        color: var(--text);
-        font-size: clamp(0.86rem, 1.55vw, 1.02rem);
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        color: #cbd5e1;
+        font-size: 0.76rem;
+        font-weight: 700;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        letter-spacing: 0.02em;
       }
-      .tag {
-        flex: 0 0 auto;
-        padding: 6px 10px;
-        border-radius: 999px;
-        color: #08111d;
-        background: var(--cyan);
-        font-size: 0.72rem;
-        font-weight: 950;
-        letter-spacing: 0.08em;
-      }
-      .npc-card .tag,
-      .remote-card .tag {
-        background: rgba(255, 255, 255, 0.16);
-        color: rgba(255, 255, 255, 0.76);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-      }
-      .board {
-        position: relative;
-        z-index: 1;
+
+      .grid-data {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: clamp(4px, 0.55vw, 7px);
-        width: 100%;
-        max-width: 390px;
-        margin: 0 auto;
+        gap: 0.72rem;
       }
-      .cell {
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        min-width: 0;
-        height: auto;
+
+      .data-item {
+        min-height: 108px;
         display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 1.15rem;
+        padding: 1.05rem 1rem 1rem;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(2, 6, 23, 0.36);
+      }
+
+      .data-label {
+        color: var(--muted);
+        font-size: clamp(0.76rem, 1.4vw, 0.88rem);
+        line-height: 1.2;
+      }
+
+      .data-value {
+        color: #f8fafc;
+        font-size: clamp(1.7rem, 4vw, 2.25rem);
+        font-weight: 900;
+        line-height: 0.95;
+      }
+
+      .highlight {
+        color: var(--gold) !important;
+      }
+
+      .used {
+        color: var(--rose) !important;
+      }
+
+      .remain {
+        color: #34d399 !important;
+      }
+
+      .month-area {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(72px, 1fr));
+        gap: 0.58rem;
+        margin-top: 0.7rem;
+      }
+
+      .month-item {
+        min-height: 66px;
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: clamp(10px, 1.15vw, 17px);
-        cursor: pointer;
-        color: #f9fbff;
-        font-size: clamp(0.78rem, 1.45vw, 1.12rem);
-        font-weight: 950;
-        background:
-          radial-gradient(
-            circle at 35% 25%,
-            rgba(255, 255, 255, 0.28),
-            transparent 28%
-          ),
-          linear-gradient(
-            145deg,
-            rgba(255, 255, 255, 0.16),
-            rgba(255, 255, 255, 0.055)
-          );
-        box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.18),
-          0 12px 24px rgba(0, 0, 0, 0.22);
-        transition:
-          transform 0.16s ease,
-          border-color 0.16s ease,
-          background 0.16s ease,
-          box-shadow 0.16s ease,
-          opacity 0.16s ease;
-      }
-      .cell:not(.marked):not(:disabled):hover {
-        transform: translateY(-5px) scale(1.04);
-        border-color: rgba(77, 238, 234, 0.7);
-        box-shadow:
-          0 0 22px rgba(77, 238, 234, 0.18),
-          inset 0 1px 0 rgba(255, 255, 255, 0.22),
-          0 18px 32px rgba(0, 0, 0, 0.3);
-      }
-      .cell:disabled:not(.marked) {
-        opacity: 0.58;
-        cursor: default;
-      }
-      .cell.marked {
-        position: relative;
-        color: #150715;
-        border-color: rgba(255, 255, 255, 0.32);
-        background:
-          radial-gradient(
-            circle at 35% 22%,
-            rgba(255, 255, 255, 0.72),
-            transparent 24%
-          ),
-          linear-gradient(135deg, var(--gold), var(--pink) 48%, var(--violet));
-        box-shadow:
-          0 0 0 2px rgba(255, 255, 255, 0.08),
-          0 0 26px rgba(255, 77, 141, 0.38),
-          0 14px 26px rgba(0, 0, 0, 0.32);
-        animation: pop 0.33s cubic-bezier(0.2, 1.65, 0.35, 1);
-      }
-      .cell.marked::after {
-        content: "✦";
-        position: absolute;
-        top: 3px;
-        right: 6px;
-        color: rgba(255, 255, 255, 0.86);
-        font-size: 0.72rem;
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-      }
-      @keyframes pop {
-        0% {
-          transform: scale(0.75) rotate(-5deg);
-        }
-        65% {
-          transform: scale(1.16) rotate(3deg);
-        }
-        100% {
-          transform: scale(1) rotate(0);
-        }
-      }
-      .status {
-        position: relative;
-        z-index: 1;
-        margin-top: 13px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        padding: 11px 13px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 16px;
-        background: rgba(0, 0, 0, 0.18);
-        color: var(--muted);
-        font-size: 0.92rem;
-        font-weight: 900;
-      }
-      .status::before {
-        content: "BINGO";
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
-      }
-      .called-strip,
-      .rank-panel {
-        margin-top: 18px;
-        padding: 14px 16px;
-        border: 1px solid var(--line);
-        border-radius: var(--radius-lg);
-        background: rgba(255, 255, 255, 0.075);
-        backdrop-filter: blur(14px);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
-      }
-      .called-title {
-        margin: 0 0 10px;
-        color: var(--muted);
-        font-size: 0.85rem;
-        font-weight: 900;
-        letter-spacing: 0.12em;
-      }
-      #called-numbers {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        min-height: 31px;
-      }
-      .called-pill {
-        min-width: 32px;
-        height: 32px;
-        display: grid;
-        place-items: center;
-        border-radius: 999px;
-        color: #130b20;
-        background: linear-gradient(135deg, var(--cyan), var(--green));
-        font-size: 0.82rem;
-        font-weight: 950;
-        box-shadow: 0 8px 18px rgba(77, 238, 234, 0.16);
-      }
-      footer {
-        position: relative;
-        z-index: 1;
-        margin: 22px 0 4px;
+        gap: 0.34rem;
+        border-radius: 17px;
+        border: 1px solid rgba(52, 211, 153, 0.13);
+        background: linear-gradient(
+          180deg,
+          rgba(20, 184, 166, 0.13),
+          rgba(2, 6, 23, 0.35)
+        );
         text-align: center;
       }
-      footer .copyright {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.48);
+
+      .month-name {
+        color: #a7f3d0;
+        font-size: 0.76rem;
       }
-      .rank-head {
+
+      .month-days {
+        font-weight: 900;
+        font-size: 1.05rem;
+      }
+
+      .stat-badge-group {
+        display: grid;
+        gap: 0.9rem;
+      }
+
+      .stat-badge {
+        padding: 1.15rem;
+        border-radius: 26px;
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(167, 139, 250, 0.22),
+            transparent 44%
+          ),
+          rgba(15, 23, 42, 0.62);
+        text-align: center;
+      }
+
+      .stat-badge.rank {
+        border-color: rgba(251, 191, 36, 0.2);
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(251, 191, 36, 0.18),
+            transparent 42%
+          ),
+          rgba(15, 23, 42, 0.62);
+      }
+
+      .stat-num {
+        margin-bottom: 0.12rem;
+        color: var(--violet);
+        font-size: clamp(2.7rem, 8.2vw, 4.15rem);
+        font-weight: 900;
+        line-height: 0.92;
+      }
+
+      .rank .stat-num {
+        color: var(--gold);
+      }
+
+      .stat-desc {
+        color: #cbd5e1;
+        font-size: clamp(0.72rem, 1.5vw, 0.84rem);
+        letter-spacing: 0.04em;
+      }
+
+      .progress-container {
+        width: 100%;
+        height: 12px;
+        margin-top: 0.9rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.22);
+      }
+
+      .progress-bar {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #14b8a6, #34d399, #bef264);
+        box-shadow: 0 0 22px rgba(52, 211, 153, 0.32);
+        transition: width 0.7s ease;
+      }
+
+      .beat-text {
+        margin-top: 0.62rem;
+        color: #fde68a;
+        font-size: clamp(0.72rem, 1.5vw, 0.84rem);
+        font-weight: 800;
+      }
+
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin-top: 0.65rem;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.46rem 0.78rem;
+        border-radius: 999px;
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        color: #bbf7d0;
+        background: rgba(20, 184, 166, 0.12);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .note-box {
+        margin-top: 1rem;
+        padding: 0.9rem 1rem;
+        border-radius: 20px;
+        border: 1px solid rgba(52, 211, 153, 0.2);
+        color: #a7f3d0;
+        background: rgba(20, 184, 166, 0.08);
+        line-height: 1.7;
+      }
+
+      .muted-text {
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      .official-note {
+        margin-top: 1rem;
+        color: var(--muted);
+        line-height: 1.45;
+        font-size: clamp(0.72rem, 1.35vw, 0.9rem);
+        text-wrap: balance;
+      }
+
+      .official-number {
+        display: flex;
+        align-items: end;
+        gap: 0.35rem;
+        margin-top: 0.8rem;
+      }
+
+      .official-number strong {
+        font-size: clamp(3rem, 10vw, 5rem);
+        line-height: 0.9;
+      }
+
+      .official-number span {
+        margin-bottom: 0.35rem;
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      /* ===== 休假總覽 Dashboard ===== */
+      .overview-panel {
+        display: grid;
+        gap: 1.1rem;
+        animation: fadeUp 0.45s ease both;
+      }
+
+      .overview-kpis {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .overview-kpi {
+        position: relative;
+        overflow: hidden;
+        min-height: 126px;
+        padding: 1rem;
+        border-radius: 26px;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(52, 211, 153, 0.16),
+            transparent 48%
+          ),
+          rgba(15, 23, 42, 0.66);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.26);
+        backdrop-filter: blur(18px);
+      }
+
+      .overview-kpi::after {
+        content: "";
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 0;
+        height: 4px;
+        border-radius: 999px 999px 0 0;
+        background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24);
+        opacity: 0.86;
+      }
+
+      .overview-kpi-label {
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .overview-kpi-value {
+        margin-top: 0.5rem;
+        font-size: clamp(2rem, 5vw, 3.15rem);
+        font-weight: 900;
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+      }
+
+      .overview-kpi-note {
+        margin-top: 0.55rem;
+        color: #cbd5e1;
+        font-size: 0.78rem;
+        line-height: 1.45;
+      }
+
+      .overview-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 1rem;
+        margin-top: 0.4rem;
+      }
+
+      .overview-title-row h2 {
+        font-size: clamp(1.25rem, 3vw, 1.65rem);
+        line-height: 1.25;
+      }
+
+      .overview-title-row small {
+        color: #93c5fd;
+        line-height: 1.7;
+        text-align: right;
+      }
+
+      .overview-groups {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.1rem;
+        align-items: start;
+      }
+
+      .overview-group-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-top: 4px solid rgba(52, 211, 153, 0.8);
+        border-radius: 28px;
+        padding: 1.1rem 1.05rem;
+        background: rgba(15, 23, 42, 0.7);
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(18px);
+      }
+
+      .overview-group-card.safe {
+        border-top-color: #93c5fd;
+      }
+      .overview-group-card.watch {
+        border-top-color: #fde68a;
+      }
+      .overview-group-card.steady {
+        border-top-color: #86efac;
+      }
+      .overview-group-card.hot {
+        border-top-color: #fda4af;
+      }
+
+      .overview-group-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 12px;
+        gap: 0.6rem;
+        margin-bottom: 0.85rem;
       }
-      .rank-title {
+
+      .overview-group-head h3 {
         margin: 0;
-        color: var(--text);
-        font-size: 1.02rem;
-        font-weight: 950;
-        letter-spacing: 0.08em;
+        font-size: 1.18rem;
       }
-      .rank-note {
+
+      .overview-group-head span {
         color: var(--muted);
         font-size: 0.8rem;
-        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .overview-person-row {
+        display: grid;
+        grid-template-columns: minmax(70px, 1fr) 1.18fr minmax(86px, auto);
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.62rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .overview-person-row:last-child {
+        border-bottom: 0;
+      }
+
+      .overview-person-name {
+        overflow: hidden;
+        color: #e5e7eb;
+        font-weight: 900;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .overview-track {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.24);
+      }
+
+      .overview-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24, #fb7185);
+      }
+
+      .overview-person-value {
+        min-width: 86px;
+        color: #f8fafc;
+        font-weight: 900;
         text-align: right;
       }
-      .rank-list {
-        display: grid;
-        gap: 8px;
+
+      .leave-fraction {
+        display: inline-flex;
+        align-items: baseline;
+        justify-content: flex-end;
+        gap: 0.16rem;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
       }
-      .rank-board-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-      }
-      .rank-subtitle {
-        margin: 2px 0 10px;
-        color: var(--cyan);
-        font-size: 0.92rem;
+
+      .leave-fraction .used-days {
+        color: #f8fafc;
+        font-size: clamp(1.18rem, 2.2vw, 1.46rem);
         font-weight: 950;
-        letter-spacing: 0.08em;
+        line-height: 1;
+        letter-spacing: -0.04em;
       }
-      .rank-row {
+
+      .leave-fraction .divider {
+        color: rgba(226, 232, 240, 0.72);
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      .leave-fraction .total-days {
+        color: rgba(203, 213, 225, 0.78);
+        font-size: 0.82rem;
+        font-weight: 900;
+      }
+
+      .leave-fraction .unit {
+        color: rgba(203, 213, 225, 0.64);
+        font-size: 0.68rem;
+        font-weight: 800;
+        margin-left: 0.05rem;
+      }
+
+      .overview-lower-grid {
         display: grid;
-        grid-template-columns: 42px 1fr auto;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border: 1px solid rgba(255, 255, 255, 0.11);
-        border-radius: 16px;
-        background: rgba(0, 0, 0, 0.18);
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 1.1rem;
       }
-      .rank-place {
-        width: 32px;
-        height: 32px;
+
+      .month-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 0.55rem;
+      }
+
+      .month-overview-item {
+        min-height: 82px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.45rem;
+        padding: 0.72rem 0.45rem;
+        border-radius: 18px;
+        border: 1px solid rgba(52, 211, 153, 0.14);
+        background: rgba(2, 6, 23, 0.38);
+        text-align: center;
+      }
+
+      .month-overview-item b {
+        font-size: 1.22rem;
+      }
+
+      .overview-rank-list {
+        display: grid;
+        gap: 0.7rem;
+      }
+
+      .overview-rank-item {
+        display: grid;
+        grid-template-columns: 28px minmax(80px, 1fr) auto;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.68rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.055);
+      }
+
+      .overview-rank-no {
+        width: 26px;
+        height: 26px;
         display: grid;
         place-items: center;
+        border-radius: 50%;
+        background: rgba(251, 191, 36, 0.16);
+        color: var(--gold);
+        font-weight: 900;
+        font-size: 0.78rem;
+      }
+
+      .overview-rank-name {
+        overflow: hidden;
+        font-weight: 900;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .overview-rank-value {
+        color: #f8fafc;
+        font-weight: 900;
+      }
+
+      .vacation-ranking-section {
+        margin-top: 1.1rem;
+      }
+
+      .rank-toggle-group {
+        display: inline-flex;
+        gap: 0.45rem;
+        padding: 0.25rem;
         border-radius: 999px;
-        color: #130b20;
-        background: linear-gradient(135deg, var(--gold), var(--pink));
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(2, 6, 23, 0.34);
+      }
+
+      .rank-toggle-btn {
+        border: 0;
+        cursor: pointer;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        color: #cbd5e1;
+        background: transparent;
+        font-weight: 900;
+        font-size: 0.82rem;
+      }
+
+      .rank-toggle-btn.active {
+        color: #042f2e;
+        background: linear-gradient(90deg, #67e8f9, #34d399, #fbbf24);
+        box-shadow: 0 10px 22px rgba(52, 211, 153, 0.18);
+      }
+
+      .vacation-rank-list {
+        display: grid;
+        gap: 0.72rem;
+      }
+
+      .vacation-rank-item {
+        display: grid;
+        grid-template-columns: 44px minmax(92px, 0.65fr) minmax(130px, 1fr) auto;
+        gap: 0.8rem;
+        align-items: center;
+        padding: 0.78rem 0.85rem;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(2, 6, 23, 0.34);
+      }
+
+      .vacation-rank-medal {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: rgba(251, 191, 36, 0.13);
+        color: var(--gold);
         font-weight: 950;
       }
-      .rank-name {
+
+      .vacation-rank-name {
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        font-size: 1.02rem;
         font-weight: 950;
       }
-      .rank-meta {
-        color: var(--muted);
-        font-size: 0.78rem;
-        margin-top: 2px;
+
+      .vacation-rank-mid {
+        display: grid;
+        gap: 0.42rem;
       }
-      .rank-score {
-        color: var(--cyan);
+
+      .vacation-rank-track {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.22);
+      }
+
+      .vacation-rank-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24, #fb7185);
+      }
+
+      .vacation-rank-days {
+        color: #cbd5e1;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .vacation-rank-days strong {
+        color: #f8fafc;
+        font-size: 1.05rem;
+      }
+
+      .vacation-rank-rate {
+        color: #f8fafc;
+        font-size: 1.16rem;
         font-weight: 950;
         white-space: nowrap;
       }
-      @media (min-width: 1181px) {
-        .game-container {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+
+      @media (max-width: 980px) {
+        .dashboard-card {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "profile"
+            "stats"
+            "leave"
+            "mental"
+            "official";
         }
-      }
-      @media (max-width: 1180px) {
-        .game-container {
+
+        .grid-data {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
-      }
-      @media (max-width: 980px) {
-        body {
-          padding: 16px;
+
+        .month-grid {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
         }
-        .hero {
+
+        .overview-kpis,
+        .overview-groups,
+        .overview-lower-grid {
           grid-template-columns: 1fr;
         }
-        .hero-actions {
-          min-width: 0;
-          flex-direction: row;
-          flex-wrap: wrap;
-        }
-        .btn-reset,
-        .btn-secondary {
-          flex: 1 1 230px;
-        }
-        .rules-chip {
-          flex: 1 1 220px;
-        }
-        .online-grid {
-          grid-template-columns: 1fr;
-        }
-        .mode-panel {
-          grid-template-columns: 1fr;
+
+        .month-overview-grid {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
         }
       }
-      @media (max-width: 620px) {
-        :root {
-          --cell-size: clamp(38px, 15vw, 52px);
-        }
+
+      @media (max-width: 720px) {
         body {
-          padding: 12px;
+          padding: 0.85rem;
         }
-        .hero {
-          padding: 16px;
+
+        .hero,
+        .search-box,
+        .full-width,
+        .section-box {
           border-radius: 24px;
         }
-        .brand {
-          align-items: flex-start;
-        }
-        .logo-orb {
-          width: 54px;
-          height: 54px;
-          border-radius: 18px;
-          font-size: 1.6rem;
-        }
-        .subtitle {
-          font-size: 0.88rem;
-        }
-        #message-box {
-          min-height: 66px;
-          padding-inline: 38px;
-        }
-        .game-container {
+
+        .search-box {
           grid-template-columns: 1fr;
         }
-        .board-wrapper {
-          width: min(100%, 430px);
-          margin: 0 auto;
-          padding: 12px;
-          border-radius: 22px;
+
+        .name-title {
+          grid-template-columns: 1fr;
         }
-        .board {
-          gap: 6px;
+
+        .year-badge {
+          justify-self: start;
         }
-        .cell {
-          border-radius: 14px;
+
+        /* 手機版：只調整輪休假指標區，桌面版完全維持原樣 */
+        .leave-card {
+          padding: 1.15rem;
         }
-        .rank-row {
-          grid-template-columns: 36px 1fr;
+
+        .leave-card .section-title {
+          margin-bottom: 1.05rem;
         }
-        .rank-score {
-          grid-column: 2;
+
+        .leave-card .grid-data {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.9rem;
         }
-        .rank-head {
-          align-items: flex-start;
+
+        .leave-card .grid-data .data-item:nth-child(5) {
+          grid-column: 1 / -1;
+          min-height: 176px;
+        }
+
+        .leave-card .data-item {
+          position: relative;
+          min-height: 158px;
+          gap: 0.45rem;
+          justify-content: space-between;
+          padding: 1.25rem 1.1rem 1.05rem;
+          border-radius: 26px;
+          background:
+            radial-gradient(
+              circle at 18% 16%,
+              rgba(52, 211, 153, 0.12),
+              transparent 34%
+            ),
+            linear-gradient(
+              145deg,
+              rgba(30, 41, 59, 0.78),
+              rgba(2, 6, 23, 0.56)
+            );
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 14px 30px rgba(0, 0, 0, 0.22);
+        }
+
+        .leave-card .data-item::after {
+          content: "";
+          position: absolute;
+          left: 0.8rem;
+          right: 0.8rem;
+          bottom: 0;
+          height: 4px;
+          border-radius: 999px 999px 0 0;
+          background: linear-gradient(90deg, #38bdf8, #14b8a6);
+          box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(2)::after {
+          background: linear-gradient(90deg, #14b8a6, #34d399);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(3)::after {
+          background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(4)::after {
+          background: linear-gradient(90deg, #fb7185, #f43f5e);
+        }
+
+        .leave-card .grid-data .data-item:nth-child(5)::after {
+          background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .leave-card .data-label {
+          font-size: clamp(1.05rem, 4vw, 1.42rem);
+          font-weight: 900;
+          color: #e5e7eb;
+          line-height: 1.15;
+        }
+
+        .leave-card .data-value {
+          font-size: clamp(3.4rem, 19vw, 6rem);
+          letter-spacing: -0.08em;
+          line-height: 0.9;
+        }
+
+        .leave-card .grid-data .data-item:nth-child(5) .data-value {
+          font-size: clamp(4.4rem, 24vw, 7.8rem);
+          text-align: center;
+        }
+
+        .leave-card .data-value::after {
+          content: "天";
+          margin-left: 0.32rem;
+          color: #cbd5e1;
+          font-size: clamp(1.15rem, 5vw, 1.75rem);
+          letter-spacing: 0;
+          vertical-align: 0.12em;
+        }
+
+        .month-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .overview-kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .overview-kpi {
+          min-height: 112px;
+        }
+
+        .overview-title-row {
+          align-items: start;
           flex-direction: column;
         }
-        .rank-note {
+
+        .overview-title-row small {
           text-align: left;
         }
-        .rank-board-grid {
-          grid-template-columns: 1fr;
+
+        .overview-person-row {
+          grid-template-columns: minmax(66px, 0.9fr) 0.9fr 78px;
+          gap: 0.55rem;
+        }
+
+        .month-overview-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .vacation-rank-item {
+          grid-template-columns: 34px minmax(68px, 0.72fr) minmax(
+              110px,
+              1fr
+            ) auto;
+          gap: 0.55rem;
+          padding: 0.68rem;
+        }
+
+        .vacation-rank-medal {
+          width: 30px;
+          height: 30px;
+          border-radius: 12px;
+          font-size: 0.8rem;
+        }
+
+        .vacation-rank-name {
+          font-size: 0.94rem;
+        }
+
+        .vacation-rank-rate {
+          font-size: 1rem;
+        }
+
+        .rank-toggle-group {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .rank-toggle-btn {
+          flex: 1;
         }
       }
     </style>
-
-    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore-compat.js"></script>
   </head>
-
   <body>
-    <main class="app-shell">
-      <section class="hero">
-        <div class="brand">
-          <div class="logo-orb" aria-hidden="true">✦</div>
-          <div>
-            <p class="eyebrow">Lucky Link Bingo Arena</p>
-            <h1>幸運連鎖：賓果之星</h1>
-            <p class="subtitle">
-              單機可戰 NPC，線上可開房邀友。五條連線即勝利；命運亮燈時，別讓 NPC
-              偷偷囂張。
-            </p>
-          </div>
+    <div id="app" class="container">
+      <header class="hero">
+        <div class="eyebrow">台南郵局運輸股</div>
+        <h1><span>115年個人休假動態</span></h1>
+        <p>輪休假、身心假、公休積欠</p>
+        <div class="hero-meta">
+          <span class="meta-pill">📅 年度統計</span>
+          <span class="meta-pill">📊 休假率進度</span>
+          <span class="meta-pill">🧘 身心假追蹤</span>
+          <span class="meta-pill">⏳ 公休積欠提醒</span>
         </div>
-        <div class="hero-actions">
-          <button class="btn-reset" type="button" onclick="resetCurrentGame()">
-            ♻️ 重新開始 / 重開房
-          </button>
-          <button class="btn-secondary" type="button" onclick="leaveRoom()">
-            🚪 離開房間
-          </button>
-          <div class="rules-chip">勝利條件：率先完成 5 條連線</div>
-        </div>
-      </section>
+      </header>
 
-      <section class="mode-panel" aria-label="模式選擇">
-        <div
-          id="singleModeCard"
-          class="mode-card active"
-          onclick="switchMode('single')"
-        >
-          <strong>單機模式</strong>
-          <span>玩家 vs 2 電腦。全部在你的裝置運算，適合自己練手感。</span>
-        </div>
-        <div
-          id="onlineModeCard"
-          class="mode-card"
-          onclick="switchMode('online')"
-        >
-          <strong>線上房間模式</strong>
-          <span>建立房間或輸入房號加入。電腦玩家由房主裝置負責出手。</span>
-        </div>
-      </section>
+      <div v-if="loadError" class="error-msg">
+        ⚠️ <strong>資料載入失敗！</strong> 原因可能是瀏覽器本機安全性限制
+        (CORS)。<br />
+        請將網頁與 JSON 檔案上傳至 GitHub 空間，或在本機使用伺服器環境（如 VS
+        Code Live Server）開啟。
+      </div>
 
-      <section id="onlinePanel" class="online-panel" aria-label="線上房間設定">
-        <div class="online-grid">
-          <div>
-            <label for="onlineRoomType">建立房間：選擇另外 3 席配置</label>
-            <select id="onlineRoomType">
-              <option value="3cpu">你 vs 3 電腦</option>
-              <option value="1p2cpu">你 + 1 玩家 + 2 電腦</option>
-              <option value="2p1cpu">你 + 2 玩家 + 1 電腦</option>
-              <option value="3p">你 + 3 玩家</option>
-            </select>
-          </div>
-          <div>
-            <label for="joinRoomCode">加入房間：輸入房號</label>
-            <input id="joinRoomCode" maxlength="6" placeholder="例如 A7X9Q2" />
-          </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap">
-            <button
-              class="btn-secondary"
-              type="button"
-              onclick="createOnlineRoom()"
-            >
-              建立房間
-            </button>
-            <button
-              class="btn-secondary"
-              type="button"
-              onclick="joinOnlineRoom()"
-            >
-              加入房間
-            </button>
-          </div>
+      <div class="search-box">
+        <div class="search-title">
+          <label for="empSelect">選擇人員</label>
+          <small>選定後，即會顯示休假相關資訊</small>
         </div>
-        <div class="room-info">
-          <span>目前房號：</span
-          ><span id="roomCodeText" class="room-code">尚未開房</span>
-          <button class="small-btn" type="button" onclick="copyRoomCode()">
-            複製房號
-          </button>
-          <button
-            id="startOnlineBtn"
-            class="small-btn"
-            type="button"
-            onclick="startOnlineGame()"
-            style="display: none"
+        <div class="select-wrap">
+          <select
+            id="empSelect"
+            v-model="selectedName"
+            :disabled="leaveData.length === 0"
           >
-            房主開始遊戲
-          </button>
-          <span id="roomStatusText">請建立或加入房間。</span>
+            <option value="__overview">📊 休假總覽</option>
+            <option v-for="emp in leaveData" :key="emp.name" :value="emp.name">
+              {{ emp.name }}
+            </option>
+          </select>
         </div>
-      </section>
+      </div>
 
-      <div id="message-box">幸運連鎖：賓果之星</div>
+      <div
+        v-if="!selectedEmp && selectedName !== '__overview'"
+        class="empty-state"
+      >
+        💡 請由上方下拉選單選擇人員。
+      </div>
 
-      <section class="game-container" aria-label="賓果遊戲區">
-        <article id="wrapper-0" class="board-wrapper player-card active">
-          <div class="board-header">
-            <h2 id="title-0">玩家:你(使用者)</h2>
-            <span id="tag-0" class="tag">YOU</span>
+      <div
+        v-if="selectedName === '__overview' && overviewData"
+        class="overview-panel"
+      >
+        <div class="overview-kpis">
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">整體休假率</div>
+            <div class="overview-kpi-value">
+              {{ fmt(overviewData.usageRate) }}%
+            </div>
+            <div class="overview-kpi-note">
+              已休 {{ fmt(overviewData.used) }} / 總 {{ fmt(overviewData.total)
+              }} 天
+            </div>
           </div>
-          <div id="board-0" class="board"></div>
-          <div id="status-0" class="status">連線數: 0</div>
-        </article>
-        <article id="wrapper-1" class="board-wrapper npc-card">
-          <div class="board-header">
-            <h2 id="title-1">玩家:載入中(NPC)</h2>
-            <span id="tag-1" class="tag">NPC</span>
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">平均每人積欠公休</div>
+            <div class="overview-kpi-value highlight">
+              {{ fmt(overviewData.avgOfficialDebt) }}
+            </div>
+            <div class="overview-kpi-note">
+              總積欠 {{ fmt(overviewData.officialDebt) }} 天 / {{
+              overviewData.totalPeople }} 人
+            </div>
           </div>
-          <div id="board-1" class="board npc-board"></div>
-          <div id="status-1" class="status">連線數: 0</div>
-        </article>
-        <article id="wrapper-2" class="board-wrapper npc-card">
-          <div class="board-header">
-            <h2 id="title-2">玩家:載入中(NPC)</h2>
-            <span id="tag-2" class="tag">NPC</span>
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">身心假休假率</div>
+            <div class="overview-kpi-value">
+              {{ fmt(overviewData.mentalRate) }}%
+            </div>
+            <div class="overview-kpi-note">
+              已休 {{ fmt(overviewData.mentalUsed) }} / 總 {{
+              fmt(overviewData.mentalTotal) }} 天
+            </div>
           </div>
-          <div id="board-2" class="board npc-board"></div>
-          <div id="status-2" class="status">連線數: 0</div>
-        </article>
-        <article id="wrapper-3" class="board-wrapper npc-card hidden">
-          <div class="board-header">
-            <h2 id="title-3">玩家:載入中</h2>
-            <span id="tag-3" class="tag">P4</span>
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">登錄人數</div>
+            <div class="overview-kpi-value">{{ overviewData.totalPeople }}</div>
+            <div class="overview-kpi-note">依 leave_data.json 即時計算</div>
           </div>
-          <div id="board-3" class="board npc-board"></div>
-          <div id="status-3" class="status">連線數: 0</div>
-        </article>
-      </section>
-
-      <section class="called-strip" aria-label="已喊號碼">
-        <p class="called-title">已喊號碼</p>
-        <div id="called-numbers"></div>
-      </section>
-
-      <section class="rank-panel" aria-label="雲端排行榜">
-        <div class="rank-head">
-          <h2 class="rank-title">🔥 雲端排行榜</h2>
-          <span id="rank-sync-status" class="rank-note">Firebase 尚未設定</span>
         </div>
-        <div class="rank-board-grid">
-          <div>
-            <h3 class="rank-subtitle">單機連勝排行榜</h3>
-            <div id="single-rank-list" class="rank-list">
-              <div class="rank-row">
-                <div class="rank-place">?</div>
-                <div>
-                  <div class="rank-name">等待 Firebase 設定完成</div>
-                  <div class="rank-meta">紀錄玩家 vs 電腦的最佳連勝</div>
+
+        <div class="overview-title-row">
+          <h2>人員總覽</h2>
+          <small
+            >依休假率分組，不複製加班邏輯；休假看的不是誰最操，是誰的假還在沉睡。</small
+          >
+        </div>
+
+        <div class="overview-groups">
+          <div
+            class="overview-group-card"
+            v-for="group in overviewGroups"
+            :key="group.key"
+            :class="group.key"
+          >
+            <div class="overview-group-head">
+              <h3>{{ group.title }}</h3>
+              <span>{{ group.people.length }} 人</span>
+            </div>
+            <div
+              class="overview-person-row"
+              v-for="emp in group.people"
+              :key="group.key + '-' + emp.name"
+            >
+              <span class="overview-person-name">{{ emp.name }}</span>
+              <div class="overview-track">
+                <div
+                  class="overview-fill"
+                  :style="{ width: Math.min(rateOf(emp), 100) + '%' }"
+                ></div>
+              </div>
+              <span class="overview-person-value leave-fraction">
+                <span class="used-days">{{ fmt(emp.wheel_leave.used) }}</span>
+                <span class="divider">/</span>
+                <span class="total-days">{{ fmt(leaveTotalOf(emp)) }}</span>
+                <span class="unit">天</span>
+              </span>
+            </div>
+            <div v-if="group.people.length === 0" class="muted-text">
+              目前無人落在此區間
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-lower-grid">
+          <section class="section-box">
+            <div class="section-inner">
+              <div class="section-title">
+                <span>📅 1-12月排休分布</span>
+                <span class="section-chip">全體合計</span>
+              </div>
+              <div class="month-overview-grid">
+                <div
+                  class="month-overview-item"
+                  v-for="(days, index) in overviewData.monthlyTotals"
+                  :key="'overview-month-' + index"
+                >
+                  <span class="month-name">{{ index + 1 }}月</span>
+                  <b>{{ fmt(days) }}</b>
+                  <span class="data-label">天</span>
                 </div>
-                <div class="rank-score">--</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-box">
+            <div class="section-inner">
+              <div class="section-title">
+                <span>⚠️ 休假提醒排行</span>
+                <span class="section-chip">優先關注</span>
+              </div>
+              <div class="overview-rank-list">
+                <div
+                  class="overview-rank-item"
+                  v-for="(emp, index) in overviewData.remainingTop"
+                  :key="'remain-top-' + emp.name"
+                >
+                  <span class="overview-rank-no">{{ index + 1 }}</span>
+                  <span class="overview-rank-name">{{ emp.name }}</span>
+                  <span class="overview-rank-value"
+                    >{{ fmt(emp.wheel_leave.remaining) }}天</span
+                  >
+                </div>
+              </div>
+              <p class="official-note">
+                剩餘天數越高，越適合優先納入後續排休調度。
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <section class="section-box vacation-ranking-section">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>🏆 個人休假率排行榜</span>
+              <div class="rank-toggle-group" aria-label="排行榜顯示切換">
+                <button
+                  type="button"
+                  class="rank-toggle-btn"
+                  :class="{ active: !showAllRanks }"
+                  @click="showAllRanks = false"
+                >
+                  前10名
+                </button>
+                <button
+                  type="button"
+                  class="rank-toggle-btn"
+                  :class="{ active: showAllRanks }"
+                  @click="showAllRanks = true"
+                >
+                  全部排名
+                </button>
+              </div>
+            </div>
+            <p
+              class="official-note"
+              style="margin-top: -0.25rem; margin-bottom: 0.9rem"
+            >
+              休假率＝已休天數 ÷（可休天數＋展延天數），排除總天數為 0
+              的人員；數字取至小數點後 1 位。
+            </p>
+            <div class="vacation-rank-list">
+              <div
+                class="vacation-rank-item"
+                v-for="(emp, index) in displayedVacationRanks"
+                :key="'vacation-rank-' + emp.name"
+              >
+                <span class="vacation-rank-medal">{{ rankLabel(index) }}</span>
+                <span class="vacation-rank-name">{{ emp.name }}</span>
+                <div class="vacation-rank-mid">
+                  <div class="vacation-rank-track">
+                    <div
+                      class="vacation-rank-fill"
+                      :style="{ width: Math.min(rateOf(emp), 100) + '%' }"
+                    ></div>
+                  </div>
+                  <div class="vacation-rank-days">
+                    <strong>{{ fmt(emp.wheel_leave.used) }}</strong>
+                    / {{ fmt(leaveTotalOf(emp)) }} 天
+                  </div>
+                </div>
+                <span class="vacation-rank-rate">{{ fmt(rateOf(emp)) }}%</span>
               </div>
             </div>
           </div>
-          <div>
-            <h3 class="rank-subtitle">線上勝場排行榜</h3>
-            <div id="online-rank-list" class="rank-list">
-              <div class="rank-row">
-                <div class="rank-place">?</div>
-                <div>
-                  <div class="rank-name">等待 Firebase 設定完成</div>
-                  <div class="rank-meta">紀錄線上房間的累積勝場</div>
-                </div>
-                <div class="rank-score">--</div>
+        </section>
+      </div>
+
+      <div
+        v-if="selectedEmp && selectedName !== '__overview'"
+        class="dashboard-card"
+      >
+        <div class="full-width">
+          <div class="name-title">
+            <div class="person-block">
+              <div class="avatar">{{ selectedEmp.name.slice(0, 1) }}</div>
+              <div>
+                <div class="person-name">{{ selectedEmp.name }}</div>
+                <div class="person-subtitle">休假・排班調度參考</div>
               </div>
             </div>
           </div>
         </div>
-      </section>
 
-      <footer>
-        <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
-      </footer>
-    </main>
+        <section class="section-box leave-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>📅 輪休假詳細指標</span>
+              <span class="section-chip">年度總覽</span>
+            </div>
+            <div class="grid-data">
+              <div class="data-item">
+                <span class="data-label">可休天數</span>
+                <span class="data-value"
+                  >{{ parseInt(selectedEmp.wheel_leave.quota) }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">展延天數</span>
+                <span class="data-value"
+                  >{{ parseInt(selectedEmp.wheel_leave.extend_114) }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">總天數</span>
+                <span class="data-value highlight"
+                  >{{ parseInt(selectedEmp.wheel_leave.total) }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">已休天數</span>
+                <span class="data-value used"
+                  >{{ parseInt(selectedEmp.wheel_leave.used) }}</span
+                >
+              </div>
+              <div class="data-item">
+                <span class="data-label">剩餘天數</span>
+                <span class="data-value remain"
+                  >{{ parseInt(selectedEmp.wheel_leave.remaining) }}</span
+                >
+              </div>
+            </div>
+
+            <div class="month-area">
+              <span class="data-label">1-12月排休情形</span>
+              <div class="month-grid">
+                <div
+                  class="month-item"
+                  v-for="(days, index) in selectedEmp.wheel_leave.monthly"
+                  :key="'month-' + index"
+                >
+                  <div class="month-name">{{ index + 1 }}月</div>
+                  <div class="month-days">{{ parseInt(days) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-box stats-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>📊 綜合休假指標</span>
+              <span class="section-chip">進度看板</span>
+            </div>
+            <div class="stat-badge-group">
+              <div class="stat-badge">
+                <div class="stat-num">{{ selectedEmp.statistics.rate }}%</div>
+                <div class="stat-desc">目前休假率</div>
+                <div class="progress-container">
+                  <div
+                    class="progress-bar"
+                    :style="{ width: Math.min(selectedEmp.statistics.rate, 100) + '%' }"
+                  ></div>
+                </div>
+              </div>
+              <div class="stat-badge rank">
+                <div class="stat-num">
+                  {{ selectedEmp.statistics.rank_string }}
+                </div>
+                <div class="stat-desc">單位休假率排名</div>
+                <div class="beat-text">
+                  {{ selectedEmp.statistics.beat_string }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-box mental-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>🧘 身心假實施情形</span>
+              <span class="section-chip">正常 3 天</span>
+            </div>
+            <div class="data-label">請休日期</div>
+            <div
+              class="tag-list"
+              v-if="selectedEmp.mental_leave && selectedEmp.mental_leave.length > 0"
+            >
+              <span
+                class="tag"
+                v-for="(date, dIdx) in selectedEmp.mental_leave"
+                :key="'mental-' + dIdx"
+              >
+                ✓ {{ date }}
+              </span>
+            </div>
+            <div v-else class="muted-text" style="margin-top: 0.6rem">
+              ⚠️ 本年度尚未有身心假請休紀錄
+            </div>
+            <div class="note-box">
+              💡 已請休 {{ selectedEmp.mental_leave.length }} 天，剩餘 {{ 3 -
+              selectedEmp.mental_leave.length }} 天身心假。
+            </div>
+          </div>
+        </section>
+
+        <section class="section-box official-card">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>⏳ 公休積欠留存</span>
+              <span class="section-chip">補休提醒</span>
+            </div>
+            <div class="data-label">單位目前積欠公休</div>
+            <div class="official-number">
+              <strong
+                :class="{ 'highlight': selectedEmp.official_leave.debt > 0 }"
+              >
+                {{ parseInt(selectedEmp.official_leave.debt) }}
+              </strong>
+              <span>天</span>
+            </div>
+            <p class="official-note">* 積欠公休將會盡快排休。</p>
+          </div>
+        </section>
+      </div>
+    </div>
 
     <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyDSXRXOgX9p2QDF9UGHXvGJvcys8WUJl9s",
-        authDomain: "bingo-game-f49ca.firebaseapp.com",
-        projectId: "bingo-game-f49ca",
-        storageBucket: "bingo-game-f49ca.firebasestorage.app",
-        messagingSenderId: "944921049717",
-        appId: "1:944921049717:web:9574693476fc0bbd06163c",
-        measurementId: "G-YVPBD5F76P",
-      };
+      const { createApp, ref, computed, onMounted } = Vue;
+      createApp({
+        setup() {
+          const leaveData = ref([]);
+          const selectedName = ref("__overview");
+          const loadError = ref(false);
+          const showAllRanks = ref(false);
 
-      const SINGLE_RANK_COLLECTION = "bingo_single_rankings";
-      const ONLINE_RANK_COLLECTION = "bingo_online_rankings";
-      const ROOM_COLLECTION = "bingo_online_rooms";
-      const RANK_LIMIT = 10;
-      const WIN_LINES = 5;
-      const BOARD_SIZE = 25;
-      const MAX_SEATS = 4;
-
-      let db = null;
-      let firebaseReady = false;
-      let playerName = "你";
-      let playerId = "";
-      let currentStreak = 0;
-      let bestStreak = 0;
-      let gameStartAt = Date.now();
-      let recordSavedThisGame = false;
-
-      let appMode = "single";
-      let gameOver = false;
-      let calledNumbers = new Set();
-      let turn = 0;
-      let participants = [];
-
-      let currentRoomId = "";
-      let mySeat = 0;
-      let isHost = false;
-      let roomUnsubscribe = null;
-      let lastRoomCalledCount = 0;
-      let hostCpuTimer = null;
-      let remoteApplying = false;
-      let currentRoomData = null;
-
-      const funnyNames = [
-        "馬斯克拉",
-        "黃仁勳到家",
-        "賈伯斯斯",
-        "蔡依林時抱佛腳",
-        "周杰倫流轉",
-        "無法顯示人物名稱",
-        "銅鑼灣扛報紙",
-        "汗味戰警",
-        "左青龍右胖虎",
-        "靈車甩尾棺材飛",
-        "媽你看爸在飛",
-        "頭蚊子叮",
-        "紅衣小男孩",
-        "九頭龍閃到腰",
-        "善解人衣",
-        "剛好五個字",
-        "打死我也不",
-        "我很會射",
-        "媽媽來了快關電腦",
-        "怪很強我先走",
-        "差一元買多多",
-        "說好不打臉",
-        "不要問你會怕",
-        "拉鍊裡的猛獸",
-        "你看不見我",
-        "轉角遇到怪",
-        "你點到我了",
-        "網路連線中斷",
-        "AI人工智障",
-        "悲傷滷肉飯",
-        "憂鬱肉燥飯",
-        "抒情控肉飯",
-        "被冰塊燙傷",
-        "麻辣白開水",
-        "涼麵趁熱吃",
-        "搖滾觀世音",
-        "三重劉德華",
-        "打我啊笨蛋",
-        "要你命三千",
-        "誠實豆沙包",
-        "太陽能手電筒",
-        "秋山曉",
-      ];
-
-      class BingoGame {
-        constructor(id, displayName, options = {}) {
-          this.id = id;
-          this.displayName = displayName;
-          this.isLocalHuman = Boolean(options.isLocalHuman);
-          this.isCPU = Boolean(options.isCPU);
-          this.isRemote = Boolean(options.isRemote);
-          this.nums = options.nums ? [...options.nums] : generateBoardNumbers();
-          this.marked = Array(25).fill(false);
-          this.render();
-        }
-
-        render() {
-          document.getElementById(`title-${this.id}`).innerText =
-            this.displayName;
-          const wrapper = document.getElementById(`wrapper-${this.id}`);
-          const tag = document.getElementById(`tag-${this.id}`);
-          wrapper.classList.remove(
-            "hidden",
-            "player-card",
-            "npc-card",
-            "remote-card",
-          );
-          wrapper.classList.add(
-            this.isLocalHuman
-              ? "player-card"
-              : this.isCPU
-                ? "npc-card"
-                : "remote-card",
-          );
-          tag.innerText = this.isLocalHuman
-            ? "YOU"
-            : this.isCPU
-              ? "CPU"
-              : `P${this.id + 1}`;
-
-          const boardEl = document.getElementById(`board-${this.id}`);
-          boardEl.innerHTML = "";
-          boardEl.classList.toggle("npc-board", !this.isLocalHuman);
-
-          this.nums.forEach((num) => {
-            const cell = document.createElement("button");
-            cell.type = "button";
-            cell.className = "cell";
-            cell.innerText = num;
-            cell.setAttribute("aria-label", `號碼 ${num}`);
-            cell.onclick = () => handleCellClick(num);
-            boardEl.appendChild(cell);
-          });
-        }
-
-        resetMarks() {
-          this.marked = Array(25).fill(false);
-          const boardEl = document.getElementById(`board-${this.id}`);
-          Array.from(boardEl.children).forEach((cell) => {
-            cell.classList.remove("marked");
-            cell.disabled = false;
-          });
-          this.calcLines();
-        }
-
-        mark(num) {
-          const idx = this.nums.indexOf(num);
-          if (idx !== -1) {
-            this.marked[idx] = true;
-            const targetCell = document.getElementById(`board-${this.id}`)
-              .children[idx];
-            if (targetCell) {
-              targetCell.classList.add("marked");
-              targetCell.disabled = true;
+          onMounted(async () => {
+            try {
+              const response = await fetch("leave_data.json");
+              if (!response.ok) throw new Error("檔案讀取失敗");
+              leaveData.value = await response.json();
+            } catch (error) {
+              console.error(error);
+              loadError.value = true;
             }
-          }
-          return this.calcLines();
-        }
-
-        calcLines() {
-          let lines = 0;
-          const m = this.marked;
-          for (let i = 0; i < 5; i++) {
-            if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
-            if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
-          }
-          if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
-          if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
-          document.getElementById(`status-${this.id}`).innerText =
-            `連線數: ${lines}`;
-          return lines;
-        }
-      }
-
-      function isFirebaseConfigured() {
-        return Boolean(
-          firebaseConfig.apiKey &&
-          firebaseConfig.projectId &&
-          !firebaseConfig.apiKey.includes("請貼上") &&
-          !firebaseConfig.projectId.includes("請貼上"),
-        );
-      }
-
-      function initFirebase() {
-        const status = document.getElementById("rank-sync-status");
-        if (!isFirebaseConfigured()) {
-          status.innerText = "Firebase 尚未設定";
-          return;
-        }
-        try {
-          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-          db = firebase.firestore();
-          firebaseReady = true;
-          status.innerText = "雲端同步已啟用";
-          loadLeaderboard();
-        } catch (error) {
-          console.error("Firebase 初始化失敗：", error);
-          status.innerText = "Firebase 初始化失敗";
-        }
-      }
-
-      function getPlayerName() {
-        const savedName = localStorage.getItem("bingo_player_name");
-        if (savedName) return savedName;
-        const input = prompt(
-          "請輸入玩家暱稱（排行榜與線上房間會顯示此名稱）：",
-          "賓果旅人",
-        );
-        const cleaned = sanitizeName(input || "賓果旅人");
-        localStorage.setItem("bingo_player_name", cleaned);
-        return cleaned;
-      }
-      function sanitizeName(name) {
-        return (
-          String(name)
-            .replace(/[<>\{\}\[\]`]/g, "")
-            .replace(/\s+/g, " ")
-            .trim()
-            .slice(0, 20) || "賓果旅人"
-        );
-      }
-      function getPlayerId() {
-        const savedId = localStorage.getItem("bingo_player_id");
-        if (savedId) return savedId;
-        const randomId =
-          crypto && crypto.randomUUID
-            ? crypto.randomUUID()
-            : `player_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
-        localStorage.setItem("bingo_player_id", randomId);
-        return randomId;
-      }
-      function loadLocalStreak() {
-        currentStreak = Number(
-          localStorage.getItem("bingo_current_streak") || 0,
-        );
-        bestStreak = Number(localStorage.getItem("bingo_best_streak") || 0);
-      }
-      function saveLocalStreak() {
-        localStorage.setItem("bingo_current_streak", String(currentStreak));
-        localStorage.setItem("bingo_best_streak", String(bestStreak));
-      }
-
-      async function saveStreakRecord() {
-        if (!firebaseReady || !db || recordSavedThisGame) return;
-        recordSavedThisGame = true;
-        const player =
-          participants.find((p) => p && p.isLocalHuman) || participants[0];
-        const lines = player.calcLines();
-        const calledCount = calledNumbers.size;
-        const durationSeconds = Math.max(
-          1,
-          Math.round((Date.now() - gameStartAt) / 1000),
-        );
-        try {
-          await db
-            .collection(SINGLE_RANK_COLLECTION)
-            .doc(playerId)
-            .set(
-              {
-                playerId,
-                name: playerName,
-                currentStreak,
-                bestStreak,
-                lastWinLines: lines,
-                lastCalledCount: calledCount,
-                lastDurationSeconds: durationSeconds,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                dateText: new Date().toLocaleString("zh-TW", { hour12: false }),
-              },
-              { merge: true },
-            );
-          document.getElementById("rank-sync-status").innerText =
-            `連勝已同步：${currentStreak} 連勝`;
-          await loadLeaderboard();
-        } catch (error) {
-          console.error("連勝排行榜寫入失敗：", error);
-          document.getElementById("rank-sync-status").innerText =
-            "連勝排行榜寫入失敗";
-        }
-      }
-
-      async function loadLeaderboard() {
-        if (!firebaseReady || !db) return;
-        const status = document.getElementById("rank-sync-status");
-
-        /*
-          重要修正：
-          原本使用多個 orderBy（bestStreak + updatedAt、onlineWins + winRate + updatedAt），
-          Firestore 會要求建立複合索引；如果索引尚未建立，排行榜讀取會失敗，
-          畫面看起來就像「Firebase 連接失敗」。
-
-          這裡改成只用單一欄位排序，避免新手設定時被索引卡住。
-          若要更細緻排序，先取較多筆，再在瀏覽器端排序。
-        */
-        try {
-          const singleSnapshot = await db
-            .collection(SINGLE_RANK_COLLECTION)
-            .orderBy("bestStreak", "desc")
-            .limit(RANK_LIMIT)
-            .get();
-
-          const singleRecords = [];
-          singleSnapshot.forEach((doc) => singleRecords.push(doc.data()));
-          renderSingleLeaderboard(singleRecords);
-        } catch (error) {
-          console.error("單機排行榜讀取失敗：", error);
-          renderSingleLeaderboard([]);
-          status.innerText = "單機排行榜讀取失敗，請檢查 Firestore 規則";
-        }
-
-        try {
-          const onlineSnapshot = await db
-            .collection(ONLINE_RANK_COLLECTION)
-            .orderBy("onlineWins", "desc")
-            .limit(Math.max(RANK_LIMIT, 20))
-            .get();
-
-          const onlineRecords = [];
-          onlineSnapshot.forEach((doc) => onlineRecords.push(doc.data()));
-          onlineRecords.sort((a, b) => {
-            const winDiff =
-              Number(b.onlineWins || 0) - Number(a.onlineWins || 0);
-            if (winDiff !== 0) return winDiff;
-            return Number(b.winRate || 0) - Number(a.winRate || 0);
           });
-          renderOnlineLeaderboard(onlineRecords.slice(0, RANK_LIMIT));
-          status.innerText = "排行榜已讀取（單機連勝 / 線上勝場）";
-        } catch (error) {
-          console.error("線上排行榜讀取失敗：", error);
-          renderOnlineLeaderboard([]);
-          status.innerText = "線上排行榜讀取失敗，請檢查 Firestore 規則";
-        }
-      }
 
-      function renderSingleLeaderboard(records) {
-        const list = document.getElementById("single-rank-list");
-        list.innerHTML = "";
-        if (!records.length) {
-          list.innerHTML = `<div class="rank-row"><div class="rank-place">1</div><div><div class="rank-name">尚無單機連勝紀錄</div><div class="rank-meta">第一個連勝王，可能就是你。NPC 先別太囂張。</div></div><div class="rank-score">0 連勝</div></div>`;
-          return;
-        }
-        records.forEach((item, index) => {
-          const row = document.createElement("div");
-          row.className = "rank-row";
-          row.innerHTML = `<div class="rank-place">${index + 1}</div><div><div class="rank-name"></div><div class="rank-meta">目前 ${Number(item.currentStreak || 0)} 連勝｜最後勝利 ${item.lastCalledCount || "?"} 次喊號｜${item.dateText || ""}</div></div><div class="rank-score">${Number(item.bestStreak || 0).toLocaleString()} 連勝</div>`;
-          row.querySelector(".rank-name").innerText = item.name || "匿名玩家";
-          list.appendChild(row);
-        });
-      }
+          const toNum = (value) => {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : 0;
+          };
 
-      function renderOnlineLeaderboard(records) {
-        const list = document.getElementById("online-rank-list");
-        list.innerHTML = "";
-        if (!records.length) {
-          list.innerHTML = `<div class="rank-row"><div class="rank-place">1</div><div><div class="rank-name">尚無線上勝場紀錄</div><div class="rank-meta">建立房間、擊敗朋友，戰績就會在這裡發光。</div></div><div class="rank-score">0 勝</div></div>`;
-          return;
-        }
-        records.forEach((item, index) => {
-          const wins = Number(item.onlineWins || 0);
-          const games = Number(item.onlineGames || 0);
-          const winRate = games ? Math.round((wins / games) * 100) : 0;
-          const row = document.createElement("div");
-          row.className = "rank-row";
-          row.innerHTML = `<div class="rank-place">${index + 1}</div><div><div class="rank-name"></div><div class="rank-meta">出賽 ${games.toLocaleString()} 場｜勝率 ${winRate}%｜${item.dateText || ""}</div></div><div class="rank-score">${wins.toLocaleString()} 勝</div>`;
-          row.querySelector(".rank-name").innerText = item.name || "匿名玩家";
-          list.appendChild(row);
-        });
-      }
+          const fmt = (value) => {
+            const n = toNum(value);
+            return Number.isInteger(n)
+              ? String(n)
+              : String(Math.round(n * 10) / 10);
+          };
 
-      async function saveOnlineRecord(room) {
-        if (!firebaseReady || !db || !room || room.status !== "ended") return;
-        const recordKey = `bingo_online_recorded_${room.roomId}_${playerId}`;
-        if (localStorage.getItem(recordKey) === "1") return;
+          const leaveTotalOf = (emp) => {
+            const wheel = emp?.wheel_leave || {};
+            return toNum(wheel.quota) + toNum(wheel.extend_114);
+          };
 
-        const mySeatData = (room.seats || []).find(
-          (seat) => seat.type === "human" && seat.playerId === playerId,
-        );
-        if (!mySeatData) return;
+          const rateOf = (emp) => {
+            const total = leaveTotalOf(emp);
+            const used = toNum(emp?.wheel_leave?.used);
+            return total > 0 ? Math.round((used / total) * 1000) / 10 : 0;
+          };
 
-        const playerWon = (room.winnerSeats || []).some(
-          (idx) => room.seats?.[idx]?.playerId === playerId,
-        );
+          const overviewData = computed(() => {
+            const people = leaveData.value.filter((emp) => emp && emp.name);
+            const monthlyTotals = Array.from({ length: 12 }, () => 0);
+            let quota = 0;
+            let extend = 0;
+            let total = 0;
+            let used = 0;
+            let remaining = 0;
+            let officialDebt = 0;
+            let officialDebtPeople = 0;
+            let mentalUsed = 0;
+            let noMentalPeople = 0;
 
-        try {
-          await db.runTransaction(async (tx) => {
-            const ref = db.collection(ONLINE_RANK_COLLECTION).doc(playerId);
-            const snap = await tx.get(ref);
-            const old = snap.exists ? snap.data() : {};
-            const oldWins = Number(old.onlineWins || 0);
-            const oldGames = Number(old.onlineGames || 0);
-            const onlineWins = oldWins + (playerWon ? 1 : 0);
-            const onlineGames = oldGames + 1;
-            tx.set(
-              ref,
-              {
-                playerId,
-                name: playerName,
-                onlineWins,
-                onlineGames,
-                winRate: onlineGames ? onlineWins / onlineGames : 0,
-                lastResult: playerWon ? "win" : "lose",
-                lastRoomId: room.roomId,
-                lastCalledCount: (room.calledNumbers || []).length,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                dateText: new Date().toLocaleString("zh-TW", { hour12: false }),
-              },
-              { merge: true },
-            );
-          });
-          localStorage.setItem(recordKey, "1");
-          recordSavedThisGame = true;
-          document.getElementById("rank-sync-status").innerText = playerWon
-            ? "線上勝場已同步"
-            : "線上出賽紀錄已同步";
-          await loadLeaderboard();
-        } catch (error) {
-          console.error("線上排行榜寫入失敗：", error);
-          document.getElementById("rank-sync-status").innerText =
-            "線上排行榜寫入失敗";
-        }
-      }
+            people.forEach((emp) => {
+              const wheel = emp.wheel_leave || {};
+              quota += toNum(wheel.quota);
+              extend += toNum(wheel.extend_114);
+              total += toNum(wheel.total);
+              used += toNum(wheel.used);
+              remaining += toNum(wheel.remaining);
 
-      function generateBoardNumbers() {
-        return Array.from({ length: BOARD_SIZE }, (_, i) => i + 1).sort(
-          () => Math.random() - 0.5,
-        );
-      }
-      function generateRoomCode() {
-        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-        return Array.from(
-          { length: 6 },
-          () => chars[Math.floor(Math.random() * chars.length)],
-        ).join("");
-      }
-      function getModeSeats(mode) {
-        const names = [...funnyNames].sort(() => Math.random() - 0.5);
-        const base = [
-          {
-            seat: 0,
-            playerId,
-            name: playerName,
-            type: "human",
-            isHost: true,
-            board: generateBoardNumbers(),
-            joinedAt: Date.now(),
-          },
-        ];
-        if (mode === "3cpu") {
-          base.push({
-            seat: 1,
-            playerId: "CPU_1",
-            name: names[0],
-            type: "cpu",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 2,
-            playerId: "CPU_2",
-            name: names[1],
-            type: "cpu",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 3,
-            playerId: "CPU_3",
-            name: names[2],
-            type: "cpu",
-            board: generateBoardNumbers(),
-          });
-        } else if (mode === "1p2cpu") {
-          base.push({
-            seat: 1,
-            playerId: "",
-            name: "等待玩家加入",
-            type: "human",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 2,
-            playerId: "CPU_1",
-            name: names[0],
-            type: "cpu",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 3,
-            playerId: "CPU_2",
-            name: names[1],
-            type: "cpu",
-            board: generateBoardNumbers(),
-          });
-        } else if (mode === "2p1cpu") {
-          base.push({
-            seat: 1,
-            playerId: "",
-            name: "等待玩家加入",
-            type: "human",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 2,
-            playerId: "",
-            name: "等待玩家加入",
-            type: "human",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 3,
-            playerId: "CPU_1",
-            name: names[0],
-            type: "cpu",
-            board: generateBoardNumbers(),
-          });
-        } else {
-          base.push({
-            seat: 1,
-            playerId: "",
-            name: "等待玩家加入",
-            type: "human",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 2,
-            playerId: "",
-            name: "等待玩家加入",
-            type: "human",
-            board: generateBoardNumbers(),
-          });
-          base.push({
-            seat: 3,
-            playerId: "",
-            name: "等待玩家加入",
-            type: "human",
-            board: generateBoardNumbers(),
-          });
-        }
-        return base;
-      }
+              (wheel.monthly || []).forEach((days, index) => {
+                if (index < 12) monthlyTotals[index] += toNum(days);
+              });
 
-      function switchMode(mode) {
-        appMode = mode;
-        document
-          .getElementById("singleModeCard")
-          .classList.toggle("active", mode === "single");
-        document
-          .getElementById("onlineModeCard")
-          .classList.toggle("active", mode === "online");
-        document
-          .getElementById("onlinePanel")
-          .classList.toggle("show", mode === "online");
-        if (mode === "single") {
-          leaveRoom(false);
-          resetSingleGame();
-        } else {
-          renderEmptyOnlineBoards();
-          setMessage(
-            "🌐 線上房間模式：建立房間或輸入房號加入。房主負責電腦玩家出手。",
-            false,
-          );
-        }
-      }
+              const debt = toNum(emp.official_leave?.debt);
+              officialDebt += debt;
+              if (debt > 0) officialDebtPeople += 1;
 
-      function resetCurrentGame() {
-        if (appMode === "online" && currentRoomId && isHost) {
-          restartOnlineRoom();
-        } else if (appMode === "online") {
-          setMessage(
-            "線上房間由房主重新開始。你現在是玩家，先別搶方向盤。",
-            false,
-          );
-        } else {
-          resetSingleGame();
-        }
-      }
+              const mentalCount = Array.isArray(emp.mental_leave)
+                ? emp.mental_leave.length
+                : 0;
+              mentalUsed += mentalCount;
+              if (mentalCount === 0) noMentalPeople += 1;
+            });
 
-      function resetSingleGame() {
-        clearHostCpuTimer();
-        gameOver = false;
-        calledNumbers.clear();
-        turn = 0;
-        gameStartAt = Date.now();
-        recordSavedThisGame = false;
-        document.getElementById("called-numbers").innerHTML = "";
-        document.getElementById("roomCodeText").innerText = "尚未開房";
-        document.getElementById("roomStatusText").innerText =
-          "目前為單機模式。";
-        document.getElementById("startOnlineBtn").style.display = "none";
-        for (let i = 0; i < MAX_SEATS; i++)
-          document
-            .getElementById(`wrapper-${i}`)
-            .classList.toggle("hidden", i === 3);
-        const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
-        participants = [
-          new BingoGame(0, `玩家:${playerName}(使用者)`, {
-            isLocalHuman: true,
-          }),
-          new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`, { isCPU: true }),
-          new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`, { isCPU: true }),
-        ];
-        setTurn(0);
-        setMessage(
-          `🎮 單機模式開始！目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
-          false,
-        );
-      }
+            const usageRate =
+              total > 0 ? Math.round((used / total) * 1000) / 10 : 0;
+            const avgOfficialDebt = people.length
+              ? Math.round((officialDebt / people.length) * 10) / 10
+              : 0;
+            const mentalTotal = people.length * 3;
+            const mentalRate =
+              mentalTotal > 0
+                ? Math.round((mentalUsed / mentalTotal) * 1000) / 10
+                : 0;
+            const remainingTop = [...people]
+              .sort(
+                (a, b) =>
+                  toNum(b.wheel_leave?.remaining) -
+                  toNum(a.wheel_leave?.remaining),
+              )
+              .slice(0, 6);
 
-      function renderEmptyOnlineBoards() {
-        clearHostCpuTimer();
-        gameOver = false;
-        calledNumbers.clear();
-        turn = 0;
-        document.getElementById("called-numbers").innerHTML = "";
-        for (let i = 0; i < MAX_SEATS; i++)
-          document.getElementById(`wrapper-${i}`).classList.remove("hidden");
-        participants = Array.from(
-          { length: MAX_SEATS },
-          (_, i) =>
-            new BingoGame(
-              i,
-              i === 0
-                ? `玩家:${playerName}(尚未入房)`
-                : `座位${i + 1}:等待房間資料`,
-              { isLocalHuman: i === 0 },
-            ),
-        );
-        updateCellAvailability();
-      }
-
-      function setMessage(text, win = false) {
-        const messageBox = document.getElementById("message-box");
-        messageBox.innerText = text;
-        messageBox.classList.toggle("win", Boolean(win));
-      }
-
-      async function handleCellClick(num) {
-        if (appMode === "online") return handleOnlineTurn(num);
-        return handleSingleTurn(num);
-      }
-
-      async function handleSingleTurn(num) {
-        if (gameOver || calledNumbers.has(num) || turn !== 0) return;
-        await playLocal(num, 0);
-        if (gameOver) return;
-        for (let i = 1; i <= 2; i++) {
-          setTurn(i);
-          await sleep(850);
-          const available = participants[i].nums.filter(
-            (n) => !calledNumbers.has(n),
-          );
-          if (available.length === 0) return;
-          const npcChoice =
-            available[Math.floor(Math.random() * available.length)];
-          await playLocal(npcChoice, i);
-          if (gameOver) return;
-        }
-        setTurn(0);
-      }
-
-      async function playLocal(num, speakerSeat) {
-        turn = speakerSeat;
-        calledNumbers.add(num);
-        addCalledNumber(num);
-        const speaker = participants[speakerSeat].displayName.split("(")[0];
-        setMessage(`${speaker} 喊了：${num}`, false);
-        let winners = [];
-        participants.forEach((p) => {
-          if (p.mark(num) >= WIN_LINES) winners.push(p.displayName);
-        });
-        if (winners.length > 0) {
-          gameOver = true;
-          setMessage(`🏆 贏家：${winners.join("、")}`, true);
-          participants.forEach((_, i) =>
-            document.getElementById(`wrapper-${i}`).classList.remove("active"),
-          );
-          const playerWon = winners.some((name) => name.includes(playerName));
-          if (playerWon) {
-            currentStreak += 1;
-            bestStreak = Math.max(bestStreak, currentStreak);
-            saveLocalStreak();
-            setMessage(
-              `🏆 贏家：${winners.join("、")}｜🔥 目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝`,
-              true,
-            );
-            saveStreakRecord();
-          } else {
-            currentStreak = 0;
-            saveLocalStreak();
-            setMessage(
-              `🏆 贏家：${winners.join("、")}｜連勝中斷，再開一局把場子找回來。`,
-              true,
-            );
-          }
-        }
-      }
-
-      async function createOnlineRoom() {
-        if (!firebaseReady || !db) {
-          setMessage("Firebase 尚未啟用，無法建立線上房間。", false);
-          return;
-        }
-        appMode = "online";
-        switchMode("online");
-        clearRoomListener();
-        const mode = document.getElementById("onlineRoomType").value;
-        const roomId = generateRoomCode();
-        const seats = getModeSeats(mode);
-        const room = {
-          roomId,
-          mode,
-          hostId: playerId,
-          status: "waiting",
-          turn: 0,
-          calledNumbers: [],
-          lastMove: null,
-          winnerSeats: [],
-          seats,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-        };
-        try {
-          await db.collection(ROOM_COLLECTION).doc(roomId).set(room);
-          currentRoomId = roomId;
-          mySeat = 0;
-          isHost = true;
-          document.getElementById("roomCodeText").innerText = roomId;
-          document.getElementById("roomStatusText").innerText =
-            "房間已建立，把房號給朋友加入。";
-          document.getElementById("startOnlineBtn").style.display =
-            "inline-flex";
-          listenRoom(roomId);
-        } catch (error) {
-          console.error("建立房間失敗：", error);
-          setMessage("建立房間失敗，請檢查 Firestore 權限。", false);
-        }
-      }
-
-      async function joinOnlineRoom() {
-        if (!firebaseReady || !db) {
-          setMessage("Firebase 尚未啟用，無法加入線上房間。", false);
-          return;
-        }
-        const roomId = document
-          .getElementById("joinRoomCode")
-          .value.trim()
-          .toUpperCase();
-        if (!roomId) {
-          setMessage("請先輸入房號。", false);
-          return;
-        }
-        appMode = "online";
-        switchMode("online");
-        clearRoomListener();
-        const roomRef = db.collection(ROOM_COLLECTION).doc(roomId);
-        try {
-          await db.runTransaction(async (tx) => {
-            const snap = await tx.get(roomRef);
-            if (!snap.exists) throw new Error("找不到房間");
-            const room = snap.data();
-            if (room.status !== "waiting")
-              throw new Error("遊戲已開始，暫不支援中途加入");
-            const seats = room.seats || [];
-            let existingSeat = seats.findIndex(
-              (s) => s.type === "human" && s.playerId === playerId,
-            );
-            let openSeat = seats.findIndex(
-              (s) => s.type === "human" && !s.playerId,
-            );
-            if (existingSeat === -1 && openSeat === -1)
-              throw new Error("房間真人座位已滿");
-            const seatIndex = existingSeat >= 0 ? existingSeat : openSeat;
-            seats[seatIndex] = {
-              ...seats[seatIndex],
-              playerId,
-              name: playerName,
-              joinedAt: Date.now(),
+            return {
+              totalPeople: people.length,
+              quota,
+              extend,
+              total,
+              used,
+              remaining,
+              usageRate,
+              officialDebt,
+              avgOfficialDebt,
+              officialDebtPeople,
+              mentalUsed,
+              mentalTotal,
+              mentalRate,
+              noMentalPeople,
+              monthlyTotals,
+              remainingTop,
             };
-            tx.update(roomRef, {
-              seats,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-            mySeat = seatIndex;
-            isHost = room.hostId === playerId;
           });
-          currentRoomId = roomId;
-          document.getElementById("roomCodeText").innerText = roomId;
-          document.getElementById("roomStatusText").innerText =
-            `已加入房間，座位：P${mySeat + 1}`;
-          document.getElementById("startOnlineBtn").style.display = isHost
-            ? "inline-flex"
-            : "none";
-          listenRoom(roomId);
-        } catch (error) {
-          console.error("加入房間失敗：", error);
-          setMessage(`加入房間失敗：${error.message}`, false);
-        }
-      }
 
-      async function startOnlineGame() {
-        if (!currentRoomId || !isHost) return;
-        recordSavedThisGame = false;
-        const roomRef = db.collection(ROOM_COLLECTION).doc(currentRoomId);
-        try {
-          await db.runTransaction(async (tx) => {
-            const snap = await tx.get(roomRef);
-            if (!snap.exists) throw new Error("房間不存在");
-            const room = snap.data();
-            if (room.status !== "waiting")
-              throw new Error("遊戲已開始或已結束");
+          const overviewGroups = computed(() => {
+            const people = [...leaveData.value]
+              .filter((emp) => emp && emp.name)
+              .sort((a, b) => rateOf(b) - rateOf(a));
 
-            /*
-              重要修正：
-              開房設定如果選了「你 + 2 玩家 + 1 電腦」，理論上要等兩位真人加入。
-              但測試時常只有另一台電腦加入，造成按開始卻無法啟動。
-              現在改成：房主按開始時，尚未加入的真人空位會自動補成 CPU。
-              這樣可以 1 人、2 人、3 人、4 人都順利開局，不會被空座位卡死。
-            */
-            const cpuNames = [...funnyNames].sort(() => Math.random() - 0.5);
-            let cpuIndex = 0;
-            const seats = (room.seats || []).map((seat) => {
-              if (seat.type === "human" && !seat.playerId) {
-                return {
-                  ...seat,
-                  type: "cpu",
-                  playerId: `CPU_FILL_${seat.seat}_${Date.now()}`,
-                  name: cpuNames[cpuIndex++] || `補位電腦${seat.seat + 1}`,
-                  board: seat.board || generateBoardNumbers(),
-                  filledByHost: true,
-                };
-              }
-              return seat;
-            });
-
-            tx.update(roomRef, {
-              seats,
-              status: "playing",
-              turn: 0,
-              calledNumbers: [],
-              lastMove: null,
-              winnerSeats: [],
-              startedAt: firebase.firestore.FieldValue.serverTimestamp(),
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-          });
-        } catch (error) {
-          setMessage(`無法開始：${error.message}`, false);
-        }
-      }
-
-      async function restartOnlineRoom() {
-        if (!currentRoomId || !isHost || !currentRoomData) return;
-        recordSavedThisGame = false;
-        const mode = currentRoomData.mode;
-        let seats = currentRoomData.seats.map((s) => ({
-          ...s,
-          board: generateBoardNumbers(),
-        }));
-        try {
-          await db.collection(ROOM_COLLECTION).doc(currentRoomId).update({
-            mode,
-            status: "waiting",
-            turn: 0,
-            calledNumbers: [],
-            lastMove: null,
-            winnerSeats: [],
-            seats,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-          });
-          setMessage("房間已重置，等待房主再次開始。", false);
-        } catch (error) {
-          setMessage("重開房間失敗。", false);
-        }
-      }
-
-      function listenRoom(roomId) {
-        clearRoomListener();
-        roomUnsubscribe = db
-          .collection(ROOM_COLLECTION)
-          .doc(roomId)
-          .onSnapshot(
-            (snap) => {
-              if (!snap.exists) {
-                setMessage("房間已不存在。", false);
-                leaveRoom(false);
-                return;
-              }
-              applyRoomData(snap.data());
-            },
-            (error) => {
-              console.error("房間監聽失敗：", error);
-              setMessage("房間同步失敗，請檢查網路或 Firebase 規則。", false);
-            },
-          );
-      }
-
-      function applyRoomData(room) {
-        remoteApplying = true;
-        currentRoomData = room;
-        currentRoomId = room.roomId;
-        isHost = room.hostId === playerId;
-        mySeat = (room.seats || []).findIndex(
-          (s) => s.playerId === playerId && s.type === "human",
-        );
-        if (mySeat < 0 && isHost) mySeat = 0;
-        gameOver = room.status === "ended";
-        turn = Number(room.turn || 0);
-        calledNumbers = new Set(room.calledNumbers || []);
-        document.getElementById("roomCodeText").innerText =
-          room.roomId || "尚未開房";
-        document.getElementById("startOnlineBtn").style.display = isHost
-          ? "inline-flex"
-          : "none";
-
-        participants = [];
-        for (let i = 0; i < MAX_SEATS; i++) {
-          const seat = (room.seats || [])[i];
-          if (!seat) {
-            document.getElementById(`wrapper-${i}`).classList.add("hidden");
-            continue;
-          }
-          document.getElementById(`wrapper-${i}`).classList.remove("hidden");
-          const isLocalHuman =
-            seat.type === "human" && seat.playerId === playerId;
-          const isCPU = seat.type === "cpu";
-          const titleName =
-            seat.type === "cpu"
-              ? `玩家:${seat.name}(CPU)`
-              : seat.playerId
-                ? `玩家:${seat.name}${isLocalHuman ? "(你)" : ""}`
-                : `座位${i + 1}:等待玩家加入`;
-          const p = new BingoGame(i, titleName, {
-            isLocalHuman,
-            isCPU,
-            isRemote: !isLocalHuman && !isCPU,
-            nums: seat.board || generateBoardNumbers(),
-          });
-          participants[i] = p;
-          p.resetMarks();
-        }
-
-        document.getElementById("called-numbers").innerHTML = "";
-        Array.from(calledNumbers).forEach((num) => addCalledNumber(num, true));
-        Array.from(calledNumbers).forEach((num) =>
-          participants.forEach((p) => p && p.mark(num)),
-        );
-        setTurn(turn);
-        updateCellAvailability();
-        updateRoomStatusMessage(room);
-        checkOnlineWinnerLocally(room);
-        remoteApplying = false;
-
-        if (isHost && room.status === "playing") maybeHostPlayCpu(room);
-        lastRoomCalledCount = (room.calledNumbers || []).length;
-      }
-
-      function updateRoomStatusMessage(room) {
-        const seats = room.seats || [];
-        const humanTotal = seats.filter((s) => s.type === "human").length;
-        const humanJoined = seats.filter(
-          (s) => s.type === "human" && s.playerId,
-        ).length;
-        const cpuTotal = seats.filter((s) => s.type === "cpu").length;
-        document.getElementById("roomStatusText").innerText =
-          `狀態：${room.status === "waiting" ? "等待中" : room.status === "playing" ? "遊戲中" : "已結束"}｜真人 ${humanJoined}/${humanTotal}｜電腦 ${cpuTotal}`;
-        if (room.status === "waiting") {
-          setMessage(
-            isHost
-              ? "房主可開始遊戲；未加入的真人空位會自動補成電腦。"
-              : "等待房主開始遊戲。",
-            false,
-          );
-        } else if (room.status === "playing") {
-          const seat = seats[room.turn];
-          if (!seat) return;
-          if (seat.type === "cpu")
-            setMessage(`🤖 輪到 ${seat.name}，由房主裝置計算出手...`, false);
-          else if (seat.playerId === playerId)
-            setMessage("🎮 輪到你了，請選一個號碼！", false);
-          else setMessage(`等待 ${seat.name || "其他玩家"} 出手...`, false);
-          if (room.lastMove)
-            setMessage(
-              `${room.lastMove.name} 喊了：${room.lastMove.num}`,
-              false,
-            );
-        } else if (room.status === "ended") {
-          const names = (room.winnerSeats || []).map(
-            (idx) => seats[idx]?.name || `P${idx + 1}`,
-          );
-          setMessage(`🏆 贏家：${names.join("、")}`, true);
-        }
-      }
-
-      async function handleOnlineTurn(num) {
-        if (!currentRoomId || !currentRoomData || gameOver) return;
-        const room = currentRoomData;
-        if (room.status !== "playing") {
-          setMessage("房間尚未開始。", false);
-          return;
-        }
-        const seat = room.seats[room.turn];
-        if (!seat || seat.type !== "human" || seat.playerId !== playerId)
-          return;
-        if ((room.calledNumbers || []).includes(num)) return;
-        await submitOnlineMove(num, mySeat);
-      }
-
-      async function submitOnlineMove(num, speakerSeat) {
-        if (!currentRoomId) return;
-        const roomRef = db.collection(ROOM_COLLECTION).doc(currentRoomId);
-        try {
-          await db.runTransaction(async (tx) => {
-            const snap = await tx.get(roomRef);
-            if (!snap.exists) throw new Error("房間不存在");
-            const room = snap.data();
-            if (room.status !== "playing") throw new Error("遊戲尚未進行中");
-            if (Number(room.turn) !== Number(speakerSeat))
-              throw new Error("還沒輪到這個座位");
-            const called = room.calledNumbers || [];
-            if (called.includes(num)) throw new Error("這個號碼已經喊過");
-            const nextCalled = [...called, num];
-            const winnerSeats = calculateWinnerSeats(
-              room.seats || [],
-              nextCalled,
-            );
-            const nextTurn = winnerSeats.length
-              ? room.turn
-              : getNextTurn(room.seats || [], room.turn);
-            tx.update(roomRef, {
-              calledNumbers: nextCalled,
-              lastMove: {
-                seat: speakerSeat,
-                name: room.seats[speakerSeat]?.name || `P${speakerSeat + 1}`,
-                num,
-                at: Date.now(),
+            return [
+              {
+                key: "safe",
+                title: "尚未啟動",
+                people: people.filter((emp) => rateOf(emp) === 0),
               },
-              turn: nextTurn,
-              status: winnerSeats.length ? "ended" : "playing",
-              winnerSeats,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
+              {
+                key: "watch",
+                title: "緩慢排休",
+                people: people.filter(
+                  (emp) => rateOf(emp) > 0 && rateOf(emp) < 30,
+                ),
+              },
+              {
+                key: "steady",
+                title: "穩定排休",
+                people: people.filter(
+                  (emp) => rateOf(emp) >= 30 && rateOf(emp) < 60,
+                ),
+              },
+              {
+                key: "hot",
+                title: "高度排休",
+                people: people.filter((emp) => rateOf(emp) >= 60),
+              },
+            ];
           });
-        } catch (error) {
-          console.warn("出手失敗：", error.message);
-          setMessage(`出手失敗：${error.message}`, false);
-        }
-      }
 
-      function maybeHostPlayCpu(room) {
-        clearHostCpuTimer();
-        const seat = room.seats?.[room.turn];
-        if (!seat || seat.type !== "cpu") return;
-        hostCpuTimer = setTimeout(async () => {
-          const latest = currentRoomData;
-          if (!latest || latest.status !== "playing") return;
-          const cpuSeat = latest.seats?.[latest.turn];
-          if (!cpuSeat || cpuSeat.type !== "cpu") return;
-          const called = latest.calledNumbers || [];
-          const board = cpuSeat.board || [];
-          const available = board.filter((n) => !called.includes(n));
-          if (!available.length) return;
-          const choice = chooseCpuNumber(cpuSeat.board, called);
-          await submitOnlineMove(choice, latest.turn);
-        }, 900);
-      }
+          const vacationRanking = computed(() => {
+            return [...leaveData.value]
+              .filter((emp) => emp && emp.name && leaveTotalOf(emp) > 0)
+              .sort(
+                (a, b) =>
+                  rateOf(b) - rateOf(a) ||
+                  toNum(b.wheel_leave?.used) - toNum(a.wheel_leave?.used),
+              );
+          });
 
-      function chooseCpuNumber(board, called) {
-        const calledSet = new Set(called);
-        const available = board.filter((n) => !calledSet.has(n));
-        // 簡易 AI：優先選可讓自己接近連線的格子，沒有就隨機。
-        let best = available[0];
-        let bestScore = -1;
-        for (const num of available) {
-          const idx = board.indexOf(num);
-          const score = linePotentialScore(idx, board, calledSet);
-          if (
-            score > bestScore ||
-            (score === bestScore && Math.random() > 0.5)
-          ) {
-            best = num;
-            bestScore = score;
-          }
-        }
-        return best || available[Math.floor(Math.random() * available.length)];
-      }
+          const displayedVacationRanks = computed(() => {
+            return showAllRanks.value
+              ? vacationRanking.value
+              : vacationRanking.value.slice(0, 10);
+          });
 
-      function linePotentialScore(idx, board, calledSet) {
-        const groups = [];
-        const row = Math.floor(idx / 5),
-          col = idx % 5;
-        groups.push([0, 1, 2, 3, 4].map((j) => row * 5 + j));
-        groups.push([0, 1, 2, 3, 4].map((j) => j * 5 + col));
-        if ([0, 6, 12, 18, 24].includes(idx)) groups.push([0, 6, 12, 18, 24]);
-        if ([4, 8, 12, 16, 20].includes(idx)) groups.push([4, 8, 12, 16, 20]);
-        return groups.reduce(
-          (sum, group) =>
-            sum + group.filter((i) => calledSet.has(board[i])).length,
-          0,
-        );
-      }
+          const rankLabel = (index) => {
+            if (index === 0) return "🥇";
+            if (index === 1) return "🥈";
+            if (index === 2) return "🥉";
+            return index + 1;
+          };
 
-      function calculateWinnerSeats(seats, called) {
-        return seats
-          .map((seat, idx) => ({
-            idx,
-            lines: calcLinesForBoard(seat.board || [], called),
-          }))
-          .filter((x) => x.lines >= WIN_LINES)
-          .map((x) => x.idx);
-      }
-      function calcLinesForBoard(board, called) {
-        const calledSet = new Set(called);
-        const m = board.map((n) => calledSet.has(n));
-        let lines = 0;
-        for (let i = 0; i < 5; i++) {
-          if ([0, 1, 2, 3, 4].every((j) => m[i * 5 + j])) lines++;
-          if ([0, 1, 2, 3, 4].every((j) => m[j * 5 + i])) lines++;
-        }
-        if ([0, 6, 12, 18, 24].every((i) => m[i])) lines++;
-        if ([4, 8, 12, 16, 20].every((i) => m[i])) lines++;
-        return lines;
-      }
-      function getNextTurn(seats, current) {
-        let next = current;
-        for (let i = 0; i < seats.length; i++) {
-          next = (next + 1) % seats.length;
-          const seat = seats[next];
-          if (
-            seat &&
-            (seat.type === "cpu" || (seat.type === "human" && seat.playerId))
-          )
-            return next;
-        }
-        return current;
-      }
-      function checkOnlineWinnerLocally(room) {
-        if (room.status !== "ended") return;
-        saveOnlineRecord(room);
-      }
-
-      function setTurn(t) {
-        turn = t;
-        participants.forEach((_, i) => {
-          const wrapper = document.getElementById(`wrapper-${i}`);
-          if (wrapper)
-            wrapper.classList.toggle("active", i === turn && !gameOver);
-        });
-        updateCellAvailability();
-        if (appMode === "single" && !gameOver) {
-          if (turn === 0) setMessage("🎮 輪到你了，請選一個號碼！", false);
-          else
-            setMessage(
-              `🤖 ${participants[turn].displayName.split("(")[0]} 思考中...`,
-              false,
+          const selectedEmp = computed(() => {
+            if (!selectedName.value || selectedName.value === "__overview")
+              return null;
+            return (
+              leaveData.value.find((emp) => emp.name === selectedName.value) ||
+              null
             );
-        }
-      }
-
-      function updateCellAvailability() {
-        participants.forEach((p) => {
-          if (!p) return;
-          const canClick =
-            !gameOver &&
-            p.isLocalHuman &&
-            ((appMode === "single" && turn === 0) ||
-              (appMode === "online" &&
-                currentRoomData?.status === "playing" &&
-                turn === p.id));
-          const boardEl = document.getElementById(`board-${p.id}`);
-          Array.from(boardEl.children).forEach((cell) => {
-            const num = Number(cell.innerText);
-            cell.disabled = calledNumbers.has(num) || !canClick;
-            if (calledNumbers.has(num)) cell.classList.add("marked");
           });
-        });
-      }
 
-      function addCalledNumber(num, append = false) {
-        const list = document.getElementById("called-numbers");
-        const pill = document.createElement("span");
-        pill.className = "called-pill";
-        pill.innerText = num;
-        if (append) list.appendChild(pill);
-        else list.prepend(pill);
-      }
-
-      function copyRoomCode() {
-        const code =
-          currentRoomId || document.getElementById("roomCodeText").innerText;
-        if (!code || code === "尚未開房") return;
-        navigator.clipboard?.writeText(code);
-        setMessage(`已複製房號：${code}`, false);
-      }
-
-      function clearHostCpuTimer() {
-        if (hostCpuTimer) clearTimeout(hostCpuTimer);
-        hostCpuTimer = null;
-      }
-      function clearRoomListener() {
-        clearHostCpuTimer();
-        if (roomUnsubscribe) roomUnsubscribe();
-        roomUnsubscribe = null;
-      }
-      async function leaveRoom(resetToSingle = true) {
-        const roomIdToLeave = currentRoomId;
-        const seatToLeave = mySeat;
-        const roomBeforeLeave = currentRoomData;
-        const wasHost = isHost;
-
-        if (
-          firebaseReady &&
-          db &&
-          roomIdToLeave &&
-          roomBeforeLeave &&
-          seatToLeave >= 0
-        ) {
-          try {
-            const roomRef = db.collection(ROOM_COLLECTION).doc(roomIdToLeave);
-            await db.runTransaction(async (tx) => {
-              const snap = await tx.get(roomRef);
-              if (!snap.exists) return;
-              const room = snap.data();
-              const seats = [...(room.seats || [])];
-              const seat = seats[seatToLeave];
-              if (!seat || seat.type !== "human" || seat.playerId !== playerId)
-                return;
-
-              seats[seatToLeave] = {
-                ...seat,
-                playerId: "",
-                name: "等待玩家加入",
-                joinedAt: null,
-              };
-
-              const updateData = {
-                seats,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-              };
-
-              if (room.status === "waiting") {
-                updateData.status = "waiting";
-              } else if (wasHost && room.status === "playing") {
-                updateData.status = "ended";
-                updateData.hostLeft = true;
-                updateData.winnerSeats = [];
-              }
-
-              tx.update(roomRef, updateData);
-            });
-          } catch (error) {
-            console.warn("離開房間同步失敗：", error.message);
-          }
-        }
-
-        clearRoomListener();
-        currentRoomId = "";
-        currentRoomData = null;
-        isHost = false;
-        mySeat = 0;
-        document.getElementById("roomCodeText").innerText = "尚未開房";
-        document.getElementById("roomStatusText").innerText = resetToSingle
-          ? "已離開房間。"
-          : "目前為單機模式。";
-        document.getElementById("startOnlineBtn").style.display = "none";
-        if (resetToSingle) {
-          appMode = "single";
-          switchMode("single");
-        }
-      }
-
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-
-      playerName = getPlayerName();
-      playerId = getPlayerId();
-      loadLocalStreak();
-      initFirebase();
-      resetSingleGame();
-
-      /*
-        Cloud Firestore 安全規則建議：
-        注意：這份規則偏向展示與輕量派對遊戲使用。若要公開大量玩家使用，建議改用 Firebase Auth + Cloud Functions 做更嚴謹驗證。
-
-        rules_version = '2';
-        service cloud.firestore {
-          match /databases/{database}/documents {
-            match /bingo_single_rankings/{docId} {
-              allow read: if true;
-              allow create, update: if request.resource.data.keys().hasOnly([
-                "playerId", "name", "currentStreak", "bestStreak", "lastWinLines", "lastCalledCount", "lastDurationSeconds", "updatedAt", "dateText"
-              ]);
-              allow delete: if false;
-            }
-            match /bingo_online_rankings/{docId} {
-              allow read: if true;
-              allow create, update: if request.resource.data.keys().hasOnly([
-                "playerId", "name", "onlineWins", "onlineGames", "winRate", "lastResult", "lastRoomId", "lastCalledCount", "updatedAt", "dateText"
-              ]);
-              allow delete: if false;
-            }
-            match /bingo_online_rooms/{roomId} {
-              allow read: if true;
-              allow create: if request.resource.data.roomId == roomId;
-              allow update: if true;
-              allow delete: if false;
-            }
-          }
-        }
-      */
-
-      document.oncontextmenu = function () {
-        console.warn("系統提示：為了保護排版參數，已禁用右鍵功能。");
-        return false;
-      };
+          return {
+            leaveData,
+            selectedName,
+            selectedEmp,
+            loadError,
+            overviewData,
+            overviewGroups,
+            showAllRanks,
+            vacationRanking,
+            displayedVacationRanks,
+            rankLabel,
+            rateOf,
+            leaveTotalOf,
+            fmt,
+          };
+        },
+      }).mount("#app");
     </script>
   </body>
 </html>
