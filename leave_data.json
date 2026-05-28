@@ -55,8 +55,8 @@
     },
     "statistics": {
       "rate": 41.7,
-      "rank_string": "11",
-      "beat_string": "已超越 67.6% 的人"
+      "rank_string": "10",
+      "beat_string": "已超越 70.6% 的人"
     }
   },
   {
@@ -185,18 +185,18 @@
       "quota": 15,
       "extend_114": 0,
       "total": 15,
-      "monthly": [0,0,0,0,2,5,0,0,0,0,0,0],
-      "used": 7,
-      "remaining": 8
+      "monthly": [0,0,0,0,0,5,0,0,0,0,0,0],
+      "used": 5,
+      "remaining": 10
     },
     "mental_leave": ["3/27","3/30","4/20"],
     "official_leave": {
       "debt": 0
     },
     "statistics": {
-      "rate": 46.7,
-      "rank_string": "5",
-      "beat_string": "已超越 85.3% 的人"
+      "rate": 33.3,
+      "rank_string": "10",
+      "beat_string": "已超越 70.6% 的人"
     }
   },
   {
@@ -215,8 +215,8 @@
     },
     "statistics": {
       "rate": 39,
-      "rank_string": "9",
-      "beat_string": "已超越 73.5% 的人"
+      "rank_string": "8",
+      "beat_string": "已超越 76.5% 的人"
     }
   },
   {
@@ -415,8 +415,8 @@
     },
     "statistics": {
       "rate": 33.3,
-      "rank_string": "6",
-      "beat_string": "已超越 82.4% 的人"
+      "rank_string": "5",
+      "beat_string": "已超越 85.3% 的人"
     }
   },
   {
@@ -475,8 +475,8 @@
     },
     "statistics": {
       "rate": 34.5,
-      "rank_string": "4",
-      "beat_string": "已超越 88.2% 的人"
+      "rank_string": "3",
+      "beat_string": "已超越 91.2% 的人"
     }
   },
   {
@@ -515,8 +515,8 @@
     },
     "statistics": {
       "rate": 33.3,
-      "rank_string": "4",
-      "beat_string": "已超越 88.2% 的人"
+      "rank_string": "3",
+      "beat_string": "已超越 91.2% 的人"
     }
   },
   {
@@ -525,16 +525,16 @@
       "quota": 15,
       "extend_114": 4,
       "total": 19,
-      "monthly": [0,0,4,0,1,1,0,0,0,0,0,0],
-      "used": 6,
-      "remaining": 13
+      "monthly": [0,0,4,0,0,1,0,0,0,0,0,0],
+      "used": 5,
+      "remaining": 14
     },
     "mental_leave": [],
     "official_leave": {
       "debt": 3
     },
     "statistics": {
-      "rate": 40,
+      "rate": 33.3,
       "rank_string": "3",
       "beat_string": "已超越 91.2% 的人"
     }
