@@ -4,7 +4,7 @@
     <!-- Google tag (gtag.js) -->
     <script
       type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=bHdngCoFdjLllgYP5dGPqa3l3K71ArSPN5PvRtE6Z3ad9SseDlfL1qiDv-9_OlAkxd7tX6pevwTVzp1d9er22M6DP4H0AvsPMS4WqhJbKdsXVOshlEnO4tSV0bEaeJjB_N_PXLuQw3liop1lbpbH9Snaz1am26R6UcsiUctFYf71COqmLPL6MlrGbBbrDQrD5SxyEVyUUcGtIa0DhOnVfoEC4MP9EbzFehU0VaGqEKbJQbUowuXHJvegmco6w_QNskKgsW_S0bQbqQaCASjkfStqJt_6qAm1nNtChPHSeuxyOIFZehswyPPTBEibOsDJPuJ1T3ldG3igphRIBsWtig"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=XnGkgSFrhiqHRkB43_eL9083wgm-AXnpDys8Zd5xEw9lipQ-51ctqkmqZNM1B5zBz-yvb__PbAoGYY77G-G-ClWcx5eL5KS0PqaHdFd5ueMXNQ58VQK6BqCq_AhOZKlXsCntcdoHZZCg8_fTqpl948oVEwiglMSyK5-CtorR3wOJ7jSIiI8BEH91KdOjeZFRZRHCrKMu3XdphlLDKCE7_XHa4z07wH-vcUkfXHZ4-3RtH6x3yMfdERzobWUEDE33LbZmJumjFSsqOCPRXhiXIvuSX22U6Kd3yTzs6nUvkf8Eo15JoWFMirOcaL_qvlYp7koL3Bk__YmUELrhjAvc4y2eFWvo8V5Z9y74YvzFDj0"
       charset="UTF-8"
     ></script>
     <script
@@ -1403,33 +1403,53 @@
       async function loadLeaderboard() {
         if (!firebaseReady || !db) return;
         const status = document.getElementById("rank-sync-status");
+
+        /*
+          重要修正：
+          原本使用多個 orderBy（bestStreak + updatedAt、onlineWins + winRate + updatedAt），
+          Firestore 會要求建立複合索引；如果索引尚未建立，排行榜讀取會失敗，
+          畫面看起來就像「Firebase 連接失敗」。
+
+          這裡改成只用單一欄位排序，避免新手設定時被索引卡住。
+          若要更細緻排序，先取較多筆，再在瀏覽器端排序。
+        */
         try {
-          const [singleSnapshot, onlineSnapshot] = await Promise.all([
-            db
-              .collection(SINGLE_RANK_COLLECTION)
-              .orderBy("bestStreak", "desc")
-              .orderBy("updatedAt", "asc")
-              .limit(RANK_LIMIT)
-              .get(),
-            db
-              .collection(ONLINE_RANK_COLLECTION)
-              .orderBy("onlineWins", "desc")
-              .orderBy("winRate", "desc")
-              .orderBy("updatedAt", "asc")
-              .limit(RANK_LIMIT)
-              .get(),
-          ]);
+          const singleSnapshot = await db
+            .collection(SINGLE_RANK_COLLECTION)
+            .orderBy("bestStreak", "desc")
+            .limit(RANK_LIMIT)
+            .get();
 
           const singleRecords = [];
-          const onlineRecords = [];
           singleSnapshot.forEach((doc) => singleRecords.push(doc.data()));
-          onlineSnapshot.forEach((doc) => onlineRecords.push(doc.data()));
           renderSingleLeaderboard(singleRecords);
-          renderOnlineLeaderboard(onlineRecords);
+        } catch (error) {
+          console.error("單機排行榜讀取失敗：", error);
+          renderSingleLeaderboard([]);
+          status.innerText = "單機排行榜讀取失敗，請檢查 Firestore 規則";
+        }
+
+        try {
+          const onlineSnapshot = await db
+            .collection(ONLINE_RANK_COLLECTION)
+            .orderBy("onlineWins", "desc")
+            .limit(Math.max(RANK_LIMIT, 20))
+            .get();
+
+          const onlineRecords = [];
+          onlineSnapshot.forEach((doc) => onlineRecords.push(doc.data()));
+          onlineRecords.sort((a, b) => {
+            const winDiff =
+              Number(b.onlineWins || 0) - Number(a.onlineWins || 0);
+            if (winDiff !== 0) return winDiff;
+            return Number(b.winRate || 0) - Number(a.winRate || 0);
+          });
+          renderOnlineLeaderboard(onlineRecords.slice(0, RANK_LIMIT));
           status.innerText = "排行榜已讀取（單機連勝 / 線上勝場）";
         } catch (error) {
-          console.error("排行榜讀取失敗：", error);
-          status.innerText = "排行榜讀取失敗，請檢查 Firestore 規則與索引";
+          console.error("線上排行榜讀取失敗：", error);
+          renderOnlineLeaderboard([]);
+          status.innerText = "線上排行榜讀取失敗，請檢查 Firestore 規則";
         }
       }
 
@@ -1905,11 +1925,34 @@
             const snap = await tx.get(roomRef);
             if (!snap.exists) throw new Error("房間不存在");
             const room = snap.data();
-            const missing = (room.seats || []).filter(
-              (s) => s.type === "human" && !s.playerId,
-            );
-            if (missing.length > 0) throw new Error("還有玩家座位尚未加入");
+            if (room.status !== "waiting")
+              throw new Error("遊戲已開始或已結束");
+
+            /*
+              重要修正：
+              開房設定如果選了「你 + 2 玩家 + 1 電腦」，理論上要等兩位真人加入。
+              但測試時常只有另一台電腦加入，造成按開始卻無法啟動。
+              現在改成：房主按開始時，尚未加入的真人空位會自動補成 CPU。
+              這樣可以 1 人、2 人、3 人、4 人都順利開局，不會被空座位卡死。
+            */
+            const cpuNames = [...funnyNames].sort(() => Math.random() - 0.5);
+            let cpuIndex = 0;
+            const seats = (room.seats || []).map((seat) => {
+              if (seat.type === "human" && !seat.playerId) {
+                return {
+                  ...seat,
+                  type: "cpu",
+                  playerId: `CPU_FILL_${seat.seat}_${Date.now()}`,
+                  name: cpuNames[cpuIndex++] || `補位電腦${seat.seat + 1}`,
+                  board: seat.board || generateBoardNumbers(),
+                  filledByHost: true,
+                };
+              }
+              return seat;
+            });
+
             tx.update(roomRef, {
+              seats,
               status: "playing",
               turn: 0,
               calledNumbers: [],
@@ -2041,7 +2084,9 @@
           `狀態：${room.status === "waiting" ? "等待中" : room.status === "playing" ? "遊戲中" : "已結束"}｜真人 ${humanJoined}/${humanTotal}｜電腦 ${cpuTotal}`;
         if (room.status === "waiting") {
           setMessage(
-            isHost ? "房主可在玩家到齊後開始遊戲。" : "等待房主開始遊戲。",
+            isHost
+              ? "房主可開始遊戲；未加入的真人空位會自動補成電腦。"
+              : "等待房主開始遊戲。",
             false,
           );
         } else if (room.status === "playing") {
