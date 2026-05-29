@@ -7,6 +7,7 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>幸運連鎖：賓果之星</title>
+
     <style>
       :root {
         --bg-0: #080b1d;
@@ -1058,7 +1059,7 @@
           onclick="switchMode('single')"
         >
           <strong>單機模式</strong>
-          <span>玩家 vs 2 電腦，適合自己練手感。</span>
+          <span>玩家 vs 3 電腦，四人同桌開戰，適合自己練手感。</span>
         </div>
         <div
           id="onlineModeCard"
@@ -1357,6 +1358,7 @@
           this.isLocalHuman = Boolean(options.isLocalHuman);
           this.isCPU = Boolean(options.isCPU);
           this.isRemote = Boolean(options.isRemote);
+          this.hideNumbers = Boolean(options.hideNumbers);
           this.nums = options.nums ? [...options.nums] : generateBoardNumbers();
           this.marked = Array(25).fill(false);
           this.render();
@@ -1394,8 +1396,12 @@
             const cell = document.createElement("button");
             cell.type = "button";
             cell.className = "cell";
-            cell.innerText = num;
-            cell.setAttribute("aria-label", `號碼 ${num}`);
+            cell.dataset.number = String(num);
+            cell.innerText = this.hideNumbers ? "?" : num;
+            cell.setAttribute(
+              "aria-label",
+              this.hideNumbers ? "保密號碼" : `號碼 ${num}`,
+            );
             cell.onclick = () => handleCellClick(num);
             boardEl.appendChild(cell);
           });
@@ -1407,6 +1413,13 @@
           Array.from(boardEl.children).forEach((cell) => {
             cell.classList.remove("marked");
             cell.disabled = false;
+            if (this.hideNumbers) {
+              cell.innerText = "?";
+              cell.setAttribute("aria-label", "保密號碼");
+            } else if (cell.dataset.number) {
+              cell.innerText = cell.dataset.number;
+              cell.setAttribute("aria-label", `號碼 ${cell.dataset.number}`);
+            }
           });
           this.calcLines();
         }
@@ -1418,6 +1431,10 @@
             const targetCell = document.getElementById(`board-${this.id}`)
               .children[idx];
             if (targetCell) {
+              if (this.hideNumbers) {
+                targetCell.innerText = String(num);
+                targetCell.setAttribute("aria-label", `已揭露號碼 ${num}`);
+              }
               targetCell.classList.add("marked");
               targetCell.disabled = true;
             }
@@ -1857,9 +1874,7 @@
           "目前為單機模式。";
         document.getElementById("startOnlineBtn").style.display = "none";
         for (let i = 0; i < MAX_SEATS; i++)
-          document
-            .getElementById(`wrapper-${i}`)
-            .classList.toggle("hidden", i === 3);
+          document.getElementById(`wrapper-${i}`).classList.remove("hidden");
         const shuffledNames = [...funnyNames].sort(() => Math.random() - 0.5);
         participants = [
           new BingoGame(0, `玩家:${playerName}(使用者)`, {
@@ -1867,10 +1882,11 @@
           }),
           new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`, { isCPU: true }),
           new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`, { isCPU: true }),
+          new BingoGame(3, `玩家:${shuffledNames[2]}(NPC)`, { isCPU: true }),
         ];
         setTurn(0);
         setMessage(
-          `🎮 單機模式開始！目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝｜${getVictoryModeText(victoryMode)}`,
+          `🎮 單機模式開始！1 對 3 四人局開戰｜目前 ${currentStreak} 連勝，最佳 ${bestStreak} 連勝｜${getVictoryModeText(victoryMode)}`,
           false,
         );
         startLocalKingModeTimer();
@@ -1915,7 +1931,7 @@
         clearTurnTimers();
         await playLocal(num, 0);
         if (gameOver) return;
-        for (let i = 1; i <= 2; i++) {
+        for (let i = 1; i < participants.length; i++) {
           setTurn(i);
           await sleep(850);
           const available = participants[i].nums.filter(
@@ -2304,6 +2320,8 @@
             isLocalHuman,
             isCPU,
             isRemote: !isLocalHuman && !isCPU,
+            hideNumbers:
+              appMode === "online" && !isLocalHuman && seat.type === "human",
             nums: seat.board || generateBoardNumbers(),
           });
           participants[i] = p;
@@ -2851,7 +2869,7 @@
                 turn === p.id));
           const boardEl = document.getElementById(`board-${p.id}`);
           Array.from(boardEl.children).forEach((cell) => {
-            const num = Number(cell.innerText);
+            const num = Number(cell.dataset.number || cell.innerText);
             cell.disabled = calledNumbers.has(num) || !canClick;
             if (calledNumbers.has(num)) cell.classList.add("marked");
           });
