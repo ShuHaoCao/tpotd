@@ -1,24 +1,17 @@
 <!doctype html>
 <html lang="zh-TW">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-0VSMGFF0E6");
-    </script>
     <meta charset="UTF-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate, max-age=0"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>NEON ARCADE｜遊戲大廳</title>
     <style>
       :root {
@@ -380,6 +373,151 @@
         line-height: 1.55;
       }
 
+      .announcement-board {
+        position: relative;
+        overflow: hidden;
+        margin: 24px 0 22px;
+        padding: clamp(18px, 3vw, 26px);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 28px;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.105),
+            rgba(255, 255, 255, 0.048)
+          ),
+          radial-gradient(
+            circle at 8% 0%,
+            rgba(255, 209, 102, 0.18),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 92% 12%,
+            rgba(0, 229, 255, 0.16),
+            transparent 34%
+          );
+        box-shadow:
+          0 18px 46px rgba(0, 0, 0, 0.26),
+          inset 0 1px 0 rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(18px);
+      }
+
+      .announcement-board::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.08),
+          transparent
+        );
+        transform: translateX(-100%);
+        animation: lightSweep 8s linear infinite;
+        opacity: 0.5;
+      }
+
+      .announcement-header {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .announcement-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .announcement-icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 16px;
+        background: rgba(255, 209, 102, 0.15);
+        border: 1px solid rgba(255, 209, 102, 0.26);
+        box-shadow: 0 0 22px rgba(255, 209, 102, 0.16);
+      }
+
+      .announcement-title h2 {
+        margin: 0;
+        font-size: clamp(1.12rem, 2.5vw, 1.65rem);
+        letter-spacing: -0.02em;
+      }
+
+      .announcement-title p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+      }
+
+      .announcement-version {
+        padding: 7px 11px;
+        border-radius: 999px;
+        color: #08101d;
+        background: linear-gradient(135deg, var(--gold), #fff2b2);
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+
+      .announcement-list {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .announcement-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+        align-items: start;
+        padding: 13px 14px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        background: rgba(4, 9, 24, 0.38);
+      }
+
+      .announcement-dot {
+        width: 10px;
+        height: 10px;
+        margin-top: 6px;
+        border-radius: 999px;
+        background: var(--cyan);
+        box-shadow: 0 0 16px rgba(0, 229, 255, 0.55);
+      }
+
+      .announcement-item b {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.96rem;
+      }
+
+      .announcement-item span {
+        color: #b7c5db;
+        font-size: 0.84rem;
+        line-height: 1.55;
+      }
+
+      .announcement-date {
+        color: var(--gold);
+        font-size: 0.74rem;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
       .toolbar {
         display: flex;
         flex-wrap: wrap;
@@ -711,6 +849,31 @@
           gap: 12px;
         }
 
+        .announcement-header,
+        .announcement-item {
+          grid-template-columns: 1fr;
+        }
+
+        .announcement-header {
+          align-items: flex-start;
+        }
+
+        .announcement-item {
+          position: relative;
+          gap: 8px;
+          padding-left: 38px;
+        }
+
+        .announcement-dot {
+          position: absolute;
+          left: 16px;
+          top: 17px;
+        }
+
+        .announcement-date {
+          justify-self: start;
+        }
+
         .game-card {
           min-height: 178px;
           border-radius: 22px;
@@ -843,6 +1006,22 @@
           </aside>
         </section>
 
+        <section class="announcement-board" aria-label="版本公告">
+          <div class="announcement-header">
+            <div class="announcement-title">
+              <div class="announcement-icon" aria-hidden="true">📢</div>
+              <div>
+                <h2>版本公告</h2>
+                <p>更新不吵人，但要讓玩家知道：這座霓虹城市還活著。</p>
+              </div>
+            </div>
+            <div class="announcement-version" id="announcementVersion">
+              UPDATE LOG
+            </div>
+          </div>
+          <ul class="announcement-list" id="announcementList"></ul>
+        </section>
+
         <section class="toolbar" id="gamesSection" aria-label="遊戲篩選工具列">
           <div class="search-box">
             <span>⌕</span>
@@ -906,9 +1085,11 @@
     </div>
 
     <script>
+      let announcements = [];
+
       const games = [
         {
-          title: "巔峰建築師：摩天挑戰 v2.0",
+          title: "巔峰建築師：摩天挑戰",
           desc: "精準堆疊，挑戰最高樓層。手一抖，城市夢就變豆腐渣工程。",
           icon: "🏢",
           url: "stack_game.html",
@@ -918,7 +1099,7 @@
           keywords: "堆積木 建築 休閒 反應",
         },
         {
-          title: "泡泡平安：情緒回收桶 v2.0",
+          title: "泡泡平安：情緒回收桶",
           desc: "將煩惱連同泡泡一秒清空，現代人的低成本心靈 SPA。",
           icon: "🫧",
           url: "pop_game.html",
@@ -928,7 +1109,7 @@
           keywords: "泡泡 紓壓 點擊 情緒",
         },
         {
-          title: "華爾街之狼：財富自由 v2.0",
+          title: "華爾街之狼：財富自由",
           desc: "判斷市場走勢，追逐財富高峰。先別辭職，先贏一局。",
           icon: "📈",
           url: "stock_game.html",
@@ -938,7 +1119,7 @@
           keywords: "股票 投資 經營 模擬 市場",
         },
         {
-          title: "幸運連鎖：賓果之星 v4.0",
+          title: "幸運連鎖：賓果之星",
           desc: "命運的交叉點，誰能率先連成制勝一線。",
           icon: "🎯",
           url: "bingo_game.html",
@@ -948,7 +1129,7 @@
           keywords: "賓果 連線 幸運 休閒",
         },
         {
-          title: "終極 99：臨界點 v2.0",
+          title: "終極 99：臨界點",
           desc: "誰是下一個爆掉的人？壓力來了，牌也來了。",
           icon: "💣",
           url: "99_game.html",
@@ -958,7 +1139,7 @@
           keywords: "99 撲克牌 臨界點 爆掉",
         },
         {
-          title: "王牌壓制：大老二 v2.0",
+          title: "王牌壓制：大老二",
           desc: "經典牌局，比的是佈局，贏的是氣勢。",
           icon: "♠️",
           url: "bigtwo_game.html",
@@ -968,7 +1149,7 @@
           keywords: "大老二 撲克牌 牌局 經典",
         },
         {
-          title: "撲克牌十點半：命運之手 v2.0",
+          title: "撲克牌十點半：命運之手",
           desc: "在爆掉與翻倍之間，你敢再要一張牌嗎？",
           icon: "🃏",
           url: "10half_game.html",
@@ -978,7 +1159,7 @@
           keywords: "十點半 撲克牌 命運 爆掉",
         },
         {
-          title: "黑傑克：決戰21點 v2.0",
+          title: "黑傑克：決戰21點",
           desc: "算計與膽識的極致對決，贏家通吃。",
           icon: "🂡",
           url: "21_game.html",
@@ -988,7 +1169,7 @@
           keywords: "黑傑克 21點 blackjack 撲克牌",
         },
         {
-          title: "巔峰對賭：梭哈 v2.0",
+          title: "巔峰對賭：梭哈",
           desc: "底牌在手，勝負由我。當然，運氣不站你這邊時另當別論。",
           icon: "💰",
           url: "showhand_game.html",
@@ -998,7 +1179,7 @@
           keywords: "梭哈 撲克牌 對賭 showhand",
         },
         {
-          title: "象棋:楚河漢界 v2.0",
+          title: "象棋:楚河漢界",
           desc: "運籌帷幄之中，決勝千里之外。老派智慧，永遠耐玩。",
           icon: "☖",
           url: "chess_game.html",
@@ -1008,7 +1189,7 @@
           keywords: "中國象棋 楚河漢界 策略 棋牌",
         },
         {
-          title: "五子棋：指尖佈局 v2.0",
+          title: "五子棋：指尖佈局",
           desc: "黑白交鋒，五步之內定生死。看似簡單，其實很會背刺。",
           icon: "⚫",
           url: "5s_game.html",
@@ -1018,7 +1199,7 @@
           keywords: "五子棋 策略 黑白 棋牌",
         },
         {
-          title: "黑白棋:逆轉之翼 v2.0",
+          title: "黑白棋:逆轉之翼",
           desc: "享受瞬間染黑白大地的絕對快感。局勢不到最後，別太囂張。",
           icon: "⚪",
           url: "othello_game.html",
@@ -1028,7 +1209,7 @@
           keywords: "黑白棋 奧賽羅 othello 策略",
         },
         {
-          title: "圍棋:黑白爭霸 v2.0",
+          title: "圍棋:黑白爭霸",
           desc: "在黑白交錯間開疆闢土，成就霸業。一步慢，滿盤霜。",
           icon: "🌑",
           url: "go_game.html",
@@ -1038,7 +1219,7 @@
           keywords: "圍棋 黑白 策略 棋盤",
         },
         {
-          title: "暗棋：智鬥電腦 v2.0",
+          title: "暗棋：智鬥電腦",
           desc: "未知才是戰場，翻開之前，誰都可能是將軍。",
           icon: "🌓",
           url: "darkchess_game.html",
@@ -1048,7 +1229,7 @@
           keywords: "暗棋 中國暗棋 策略 翻棋",
         },
         {
-          title: "小瑪莉：黃金傳說 v2.0",
+          title: "小瑪莉：黃金傳說",
           desc: "找回街機時代的熱血感動，燈一閃，童年就回來了。",
           icon: "🍒",
           url: "mario_game.html",
@@ -1063,6 +1244,10 @@
       const iframe = document.getElementById("game-iframe");
       const loadingText = document.getElementById("loading-text");
       const gameGrid = document.getElementById("gameGrid");
+      const announcementList = document.getElementById("announcementList");
+      const announcementVersion = document.getElementById(
+        "announcementVersion",
+      );
       const gameSearch = document.getElementById("gameSearch");
       const emptyState = document.getElementById("emptyState");
       const randomPlayBtn = document.getElementById("randomPlayBtn");
@@ -1090,6 +1275,81 @@
           .replaceAll(">", "&gt;")
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#039;");
+      }
+
+      async function loadAnnouncements() {
+        try {
+          const response = await fetch("./announcements.json?v=" + Date.now(), {
+            cache: "no-store",
+          });
+
+          if (!response.ok) {
+            throw new Error(`公告 JSON 載入失敗：HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          // 支援兩種 JSON 格式：
+          // 1. { "announcements": [...] }
+          // 2. [ ... ]
+          const loadedAnnouncements = Array.isArray(data)
+            ? data
+            : Array.isArray(data.announcements)
+              ? data.announcements
+              : [];
+
+          announcements = loadedAnnouncements
+            .filter((item) => item && typeof item === "object")
+            .sort((a, b) =>
+              String(b.date || "").localeCompare(String(a.date || "")),
+            );
+        } catch (error) {
+          console.warn("公告資料讀取失敗：", error);
+          announcements = [];
+        }
+
+        renderAnnouncements();
+      }
+
+      function renderAnnouncements() {
+        if (!announcementList) return;
+
+        if (!Array.isArray(announcements) || announcements.length === 0) {
+          announcementVersion.textContent = "UPDATE LOG";
+          announcementList.innerHTML = `
+            <li class="announcement-item">
+              <div class="announcement-dot" aria-hidden="true"></div>
+              <div>
+                <b>目前尚無公告</b>
+                <span>請確認 announcements.json 是否與本 HTML 放在同一個資料夾，並且 JSON 內有 announcements 陣列。</span>
+              </div>
+              <time class="announcement-date">--</time>
+            </li>
+          `;
+          return;
+        }
+
+        announcementList.innerHTML = announcements
+          .map((item) => {
+            const title = item.title || "未命名公告";
+            const desc = item.desc || item.description || "尚無公告內容";
+            const date = item.date || "--";
+
+            return `
+              <li class="announcement-item">
+                <div class="announcement-dot" aria-hidden="true"></div>
+                <div>
+                  <b>${escapeHtml(title)}</b>
+                  <span>${escapeHtml(desc)}</span>
+                </div>
+                <time class="announcement-date">${escapeHtml(date)}</time>
+              </li>
+            `;
+          })
+          .join("");
+
+        const latestDate = announcements[0]?.date || "UPDATE";
+        announcementVersion.textContent = `LATEST｜${latestDate}`;
       }
 
       function renderGames() {
@@ -1208,6 +1468,7 @@
       };
 
       gameCount.textContent = games.length;
+      loadAnnouncements();
       setupDailyPick();
       renderGames();
     </script>
