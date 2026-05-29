@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate, max-age=0"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>個人休假動態</title>
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
@@ -649,6 +656,388 @@
         font-weight: 700;
       }
 
+      /* ===== 休假總覽 Dashboard ===== */
+      .overview-panel {
+        display: grid;
+        gap: 1.1rem;
+        animation: fadeUp 0.45s ease both;
+      }
+
+      .overview-kpis {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .overview-kpi {
+        position: relative;
+        overflow: hidden;
+        min-height: 126px;
+        padding: 1rem;
+        border-radius: 26px;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(
+            circle at top right,
+            rgba(52, 211, 153, 0.16),
+            transparent 48%
+          ),
+          rgba(15, 23, 42, 0.66);
+        box-shadow: 0 18px 48px rgba(0, 0, 0, 0.26);
+        backdrop-filter: blur(18px);
+      }
+
+      .overview-kpi::after {
+        content: "";
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 0;
+        height: 4px;
+        border-radius: 999px 999px 0 0;
+        background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24);
+        opacity: 0.86;
+      }
+
+      .overview-kpi-label {
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .overview-kpi-value {
+        margin-top: 0.5rem;
+        font-size: clamp(2rem, 5vw, 3.15rem);
+        font-weight: 900;
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+      }
+
+      .overview-kpi-note {
+        margin-top: 0.55rem;
+        color: #cbd5e1;
+        font-size: 0.78rem;
+        line-height: 1.45;
+      }
+
+      .overview-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 1rem;
+        margin-top: 0.4rem;
+      }
+
+      .overview-title-row h2 {
+        font-size: clamp(1.25rem, 3vw, 1.65rem);
+        line-height: 1.25;
+      }
+
+      .overview-title-row small {
+        color: #93c5fd;
+        line-height: 1.7;
+        text-align: right;
+      }
+
+      .overview-groups {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.1rem;
+        align-items: start;
+      }
+
+      .overview-group-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-top: 4px solid rgba(52, 211, 153, 0.8);
+        border-radius: 28px;
+        padding: 1.1rem 1.05rem;
+        background: rgba(15, 23, 42, 0.7);
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+        backdrop-filter: blur(18px);
+      }
+
+      .overview-group-card.safe {
+        border-top-color: #93c5fd;
+      }
+      .overview-group-card.watch {
+        border-top-color: #fde68a;
+      }
+      .overview-group-card.steady {
+        border-top-color: #86efac;
+      }
+      .overview-group-card.hot {
+        border-top-color: #fda4af;
+      }
+
+      .overview-group-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.85rem;
+      }
+
+      .overview-group-head h3 {
+        margin: 0;
+        font-size: 1.18rem;
+      }
+
+      .overview-group-head span {
+        color: var(--muted);
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+
+      .overview-person-row {
+        display: grid;
+        grid-template-columns: minmax(70px, 1fr) 1.18fr minmax(86px, auto);
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.62rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .overview-person-row:last-child {
+        border-bottom: 0;
+      }
+
+      .overview-person-name {
+        overflow: hidden;
+        color: #e5e7eb;
+        font-weight: 900;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .overview-track {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.24);
+      }
+
+      .overview-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24, #fb7185);
+      }
+
+      .overview-person-value {
+        min-width: 86px;
+        color: #f8fafc;
+        font-weight: 900;
+        text-align: right;
+      }
+
+      .leave-fraction {
+        display: inline-flex;
+        align-items: baseline;
+        justify-content: flex-end;
+        gap: 0.16rem;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .leave-fraction .used-days {
+        color: #f8fafc;
+        font-size: clamp(1.18rem, 2.2vw, 1.46rem);
+        font-weight: 950;
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .leave-fraction .divider {
+        color: rgba(226, 232, 240, 0.72);
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      .leave-fraction .total-days {
+        color: rgba(203, 213, 225, 0.78);
+        font-size: 0.82rem;
+        font-weight: 900;
+      }
+
+      .leave-fraction .unit {
+        color: rgba(203, 213, 225, 0.64);
+        font-size: 0.68rem;
+        font-weight: 800;
+        margin-left: 0.05rem;
+      }
+
+      .overview-lower-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+        gap: 1.1rem;
+      }
+
+      .month-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 0.55rem;
+      }
+
+      .month-overview-item {
+        min-height: 82px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0.45rem;
+        padding: 0.72rem 0.45rem;
+        border-radius: 18px;
+        border: 1px solid rgba(52, 211, 153, 0.14);
+        background: rgba(2, 6, 23, 0.38);
+        text-align: center;
+      }
+
+      .month-overview-item b {
+        font-size: 1.22rem;
+      }
+
+      .overview-rank-list {
+        display: grid;
+        gap: 0.7rem;
+      }
+
+      .overview-rank-item {
+        display: grid;
+        grid-template-columns: 28px minmax(80px, 1fr) auto;
+        gap: 0.75rem;
+        align-items: center;
+        padding: 0.68rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.055);
+      }
+
+      .overview-rank-no {
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(251, 191, 36, 0.16);
+        color: var(--gold);
+        font-weight: 900;
+        font-size: 0.78rem;
+      }
+
+      .overview-rank-name {
+        overflow: hidden;
+        font-weight: 900;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .overview-rank-value {
+        color: #f8fafc;
+        font-weight: 900;
+      }
+
+      .vacation-ranking-section {
+        margin-top: 1.1rem;
+      }
+
+      .rank-toggle-group {
+        display: inline-flex;
+        gap: 0.45rem;
+        padding: 0.25rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(2, 6, 23, 0.34);
+      }
+
+      .rank-toggle-btn {
+        border: 0;
+        cursor: pointer;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        color: #cbd5e1;
+        background: transparent;
+        font-weight: 900;
+        font-size: 0.82rem;
+      }
+
+      .rank-toggle-btn.active {
+        color: #042f2e;
+        background: linear-gradient(90deg, #67e8f9, #34d399, #fbbf24);
+        box-shadow: 0 10px 22px rgba(52, 211, 153, 0.18);
+      }
+
+      .vacation-rank-list {
+        display: grid;
+        gap: 0.72rem;
+      }
+
+      .vacation-rank-item {
+        display: grid;
+        grid-template-columns: 44px minmax(92px, 0.65fr) minmax(130px, 1fr) auto;
+        gap: 0.8rem;
+        align-items: center;
+        padding: 0.78rem 0.85rem;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(2, 6, 23, 0.34);
+      }
+
+      .vacation-rank-medal {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: rgba(251, 191, 36, 0.13);
+        color: var(--gold);
+        font-weight: 950;
+      }
+
+      .vacation-rank-name {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 1.02rem;
+        font-weight: 950;
+      }
+
+      .vacation-rank-mid {
+        display: grid;
+        gap: 0.42rem;
+      }
+
+      .vacation-rank-track {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.22);
+      }
+
+      .vacation-rank-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24, #fb7185);
+      }
+
+      .vacation-rank-days {
+        color: #cbd5e1;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .vacation-rank-days strong {
+        color: #f8fafc;
+        font-size: 1.05rem;
+      }
+
+      .vacation-rank-rate {
+        color: #f8fafc;
+        font-size: 1.16rem;
+        font-weight: 950;
+        white-space: nowrap;
+      }
+
       @media (max-width: 980px) {
         .dashboard-card {
           grid-template-columns: 1fr;
@@ -665,6 +1054,16 @@
         }
 
         .month-grid {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+
+        .overview-kpis,
+        .overview-groups,
+        .overview-lower-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .month-overview-grid {
           grid-template-columns: repeat(6, minmax(0, 1fr));
         }
       }
@@ -793,6 +1192,64 @@
         .month-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
+
+        .overview-kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .overview-kpi {
+          min-height: 112px;
+        }
+
+        .overview-title-row {
+          align-items: start;
+          flex-direction: column;
+        }
+
+        .overview-title-row small {
+          text-align: left;
+        }
+
+        .overview-person-row {
+          grid-template-columns: minmax(66px, 0.9fr) 0.9fr 78px;
+          gap: 0.55rem;
+        }
+
+        .month-overview-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .vacation-rank-item {
+          grid-template-columns:
+            34px minmax(68px, 0.72fr) minmax(110px, 1fr)
+            auto;
+          gap: 0.55rem;
+          padding: 0.68rem;
+        }
+
+        .vacation-rank-medal {
+          width: 30px;
+          height: 30px;
+          border-radius: 12px;
+          font-size: 0.8rem;
+        }
+
+        .vacation-rank-name {
+          font-size: 0.94rem;
+        }
+
+        .vacation-rank-rate {
+          font-size: 1rem;
+        }
+
+        .rank-toggle-group {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .rank-toggle-btn {
+          flex: 1;
+        }
       }
     </style>
   </head>
@@ -828,7 +1285,7 @@
             v-model="selectedName"
             :disabled="leaveData.length === 0"
           >
-            <option value="">-- 請選擇人員 --</option>
+            <option value="__overview">📊 休假總覽</option>
             <option v-for="emp in leaveData" :key="emp.name" :value="emp.name">
               {{ emp.name }}
             </option>
@@ -836,11 +1293,206 @@
         </div>
       </div>
 
-      <div v-if="!selectedEmp" class="empty-state">
+      <div
+        v-if="!selectedEmp && selectedName !== '__overview'"
+        class="empty-state"
+      >
         💡 請由上方下拉選單選擇人員。
       </div>
 
-      <div v-if="selectedEmp" class="dashboard-card">
+      <div
+        v-if="selectedName === '__overview' && overviewData"
+        class="overview-panel"
+      >
+        <div class="overview-kpis">
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">整體休假率</div>
+            <div class="overview-kpi-value">
+              {{ fmt(overviewData.usageRate) }}%
+            </div>
+            <div class="overview-kpi-note">
+              已休 {{ fmt(overviewData.used) }} / 總 {{ fmt(overviewData.total)
+              }} 天
+            </div>
+          </div>
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">平均每人積欠公休</div>
+            <div class="overview-kpi-value highlight">
+              {{ fmt(overviewData.avgOfficialDebt) }}
+            </div>
+            <div class="overview-kpi-note">
+              總積欠 {{ fmt(overviewData.officialDebt) }} 天 / {{
+              overviewData.totalPeople }} 人
+            </div>
+          </div>
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">身心假休假率</div>
+            <div class="overview-kpi-value">
+              {{ fmt(overviewData.mentalRate) }}%
+            </div>
+            <div class="overview-kpi-note">
+              已休 {{ fmt(overviewData.mentalUsed) }} / 總 {{
+              fmt(overviewData.mentalTotal) }} 天
+            </div>
+          </div>
+          <div class="overview-kpi">
+            <div class="overview-kpi-label">登錄人數</div>
+            <div class="overview-kpi-value">{{ overviewData.totalPeople }}</div>
+            <div class="overview-kpi-note">依 leave_data.json 即時計算</div>
+          </div>
+        </div>
+
+        <div class="overview-title-row">
+          <h2>人員總覽</h2>
+          <small
+            >依休假率分組，不複製加班邏輯；休假看的不是誰最操，是誰的假還在沉睡。</small
+          >
+        </div>
+
+        <div class="overview-groups">
+          <div
+            class="overview-group-card"
+            v-for="group in overviewGroups"
+            :key="group.key"
+            :class="group.key"
+          >
+            <div class="overview-group-head">
+              <h3>{{ group.title }}</h3>
+              <span>{{ group.people.length }} 人</span>
+            </div>
+            <div
+              class="overview-person-row"
+              v-for="emp in group.people"
+              :key="group.key + '-' + emp.name"
+            >
+              <span class="overview-person-name">{{ emp.name }}</span>
+              <div class="overview-track">
+                <div
+                  class="overview-fill"
+                  :style="{ width: Math.min(rateOf(emp), 100) + '%' }"
+                ></div>
+              </div>
+              <span class="overview-person-value leave-fraction">
+                <span class="used-days">{{ fmt(emp.wheel_leave.used) }}</span>
+                <span class="divider">/</span>
+                <span class="total-days">{{ fmt(leaveTotalOf(emp)) }}</span>
+                <span class="unit">天</span>
+              </span>
+            </div>
+            <div v-if="group.people.length === 0" class="muted-text">
+              目前無人落在此區間
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-lower-grid">
+          <section class="section-box">
+            <div class="section-inner">
+              <div class="section-title">
+                <span>📅 1-12月排休分布</span>
+                <span class="section-chip">全體合計</span>
+              </div>
+              <div class="month-overview-grid">
+                <div
+                  class="month-overview-item"
+                  v-for="(days, index) in overviewData.monthlyTotals"
+                  :key="'overview-month-' + index"
+                >
+                  <span class="month-name">{{ index + 1 }}月</span>
+                  <b>{{ fmt(days) }}</b>
+                  <span class="data-label">天</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-box">
+            <div class="section-inner">
+              <div class="section-title">
+                <span>⚠️ 休假提醒排行</span>
+                <span class="section-chip">優先關注</span>
+              </div>
+              <div class="overview-rank-list">
+                <div
+                  class="overview-rank-item"
+                  v-for="(emp, index) in overviewData.remainingTop"
+                  :key="'remain-top-' + emp.name"
+                >
+                  <span class="overview-rank-no">{{ index + 1 }}</span>
+                  <span class="overview-rank-name">{{ emp.name }}</span>
+                  <span class="overview-rank-value"
+                    >{{ fmt(emp.wheel_leave.remaining) }}天</span
+                  >
+                </div>
+              </div>
+              <p class="official-note">
+                剩餘天數越高，越適合優先納入後續排休調度。
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <section class="section-box vacation-ranking-section">
+          <div class="section-inner">
+            <div class="section-title">
+              <span>🏆 個人休假率排行榜</span>
+              <div class="rank-toggle-group" aria-label="排行榜顯示切換">
+                <button
+                  type="button"
+                  class="rank-toggle-btn"
+                  :class="{ active: !showAllRanks }"
+                  @click="showAllRanks = false"
+                >
+                  前10名
+                </button>
+                <button
+                  type="button"
+                  class="rank-toggle-btn"
+                  :class="{ active: showAllRanks }"
+                  @click="showAllRanks = true"
+                >
+                  全部排名
+                </button>
+              </div>
+            </div>
+            <p
+              class="official-note"
+              style="margin-top: -0.25rem; margin-bottom: 0.9rem"
+            >
+              休假率＝已休天數 ÷（可休天數＋展延天數），排除總天數為 0
+              的人員；數字取至小數點後 1 位。
+            </p>
+            <div class="vacation-rank-list">
+              <div
+                class="vacation-rank-item"
+                v-for="(emp, index) in displayedVacationRanks"
+                :key="'vacation-rank-' + emp.name"
+              >
+                <span class="vacation-rank-medal">{{ rankLabel(index) }}</span>
+                <span class="vacation-rank-name">{{ emp.name }}</span>
+                <div class="vacation-rank-mid">
+                  <div class="vacation-rank-track">
+                    <div
+                      class="vacation-rank-fill"
+                      :style="{ width: Math.min(rateOf(emp), 100) + '%' }"
+                    ></div>
+                  </div>
+                  <div class="vacation-rank-days">
+                    <strong>{{ fmt(emp.wheel_leave.used) }}</strong>
+                    / {{ fmt(leaveTotalOf(emp)) }} 天
+                  </div>
+                </div>
+                <span class="vacation-rank-rate">{{ fmt(rateOf(emp)) }}%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div
+        v-if="selectedEmp && selectedName !== '__overview'"
+        class="dashboard-card"
+      >
         <div class="full-width">
           <div class="name-title">
             <div class="person-block">
@@ -993,12 +1645,15 @@
       createApp({
         setup() {
           const leaveData = ref([]);
-          const selectedName = ref("");
+          const selectedName = ref("__overview");
           const loadError = ref(false);
+          const showAllRanks = ref(false);
 
           onMounted(async () => {
             try {
-              const response = await fetch("leave_data.json");
+              const response = await fetch("leave_data.json?t=" + Date.now(), {
+                cache: "no-store",
+              });
               if (!response.ok) throw new Error("檔案讀取失敗");
               leaveData.value = await response.json();
             } catch (error) {
@@ -1007,15 +1662,181 @@
             }
           });
 
+          const toNum = (value) => {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : 0;
+          };
+
+          const fmt = (value) => {
+            const n = toNum(value);
+            return (Math.round(n * 10) / 10).toFixed(1);
+          };
+
+          const leaveTotalOf = (emp) => {
+            const wheel = emp?.wheel_leave || {};
+            return toNum(wheel.quota) + toNum(wheel.extend_114);
+          };
+
+          const rateOf = (emp) => {
+            const total = leaveTotalOf(emp);
+            const used = toNum(emp?.wheel_leave?.used);
+            return total > 0 ? Math.round((used / total) * 1000) / 10 : 0;
+          };
+
+          const overviewData = computed(() => {
+            const people = leaveData.value.filter((emp) => emp && emp.name);
+            const monthlyTotals = Array.from({ length: 12 }, () => 0);
+            let quota = 0;
+            let extend = 0;
+            let total = 0;
+            let used = 0;
+            let remaining = 0;
+            let officialDebt = 0;
+            let officialDebtPeople = 0;
+            let mentalUsed = 0;
+            let noMentalPeople = 0;
+
+            people.forEach((emp) => {
+              const wheel = emp.wheel_leave || {};
+              quota += toNum(wheel.quota);
+              extend += toNum(wheel.extend_114);
+              total += toNum(wheel.total);
+              used += toNum(wheel.used);
+              remaining += toNum(wheel.remaining);
+
+              (wheel.monthly || []).forEach((days, index) => {
+                if (index < 12) monthlyTotals[index] += toNum(days);
+              });
+
+              const debt = toNum(emp.official_leave?.debt);
+              officialDebt += debt;
+              if (debt > 0) officialDebtPeople += 1;
+
+              const mentalCount = Array.isArray(emp.mental_leave)
+                ? emp.mental_leave.length
+                : 0;
+              mentalUsed += mentalCount;
+              if (mentalCount === 0) noMentalPeople += 1;
+            });
+
+            const usageRate =
+              total > 0 ? Math.round((used / total) * 1000) / 10 : 0;
+            const avgOfficialDebt = people.length
+              ? Math.round((officialDebt / people.length) * 10) / 10
+              : 0;
+            const mentalTotal = people.length * 3;
+            const mentalRate =
+              mentalTotal > 0
+                ? Math.round((mentalUsed / mentalTotal) * 1000) / 10
+                : 0;
+            const remainingTop = [...people]
+              .sort(
+                (a, b) =>
+                  toNum(b.wheel_leave?.remaining) -
+                  toNum(a.wheel_leave?.remaining),
+              )
+              .slice(0, 6);
+
+            return {
+              totalPeople: people.length,
+              quota,
+              extend,
+              total,
+              used,
+              remaining,
+              usageRate,
+              officialDebt,
+              avgOfficialDebt,
+              officialDebtPeople,
+              mentalUsed,
+              mentalTotal,
+              mentalRate,
+              noMentalPeople,
+              monthlyTotals,
+              remainingTop,
+            };
+          });
+
+          const overviewGroups = computed(() => {
+            const people = [...leaveData.value]
+              .filter((emp) => emp && emp.name)
+              .sort((a, b) => rateOf(b) - rateOf(a));
+
+            return [
+              {
+                key: "safe",
+                title: "尚未啟動",
+                people: people.filter((emp) => rateOf(emp) === 0),
+              },
+              {
+                key: "watch",
+                title: "緩慢排休",
+                people: people.filter(
+                  (emp) => rateOf(emp) > 0 && rateOf(emp) < 30,
+                ),
+              },
+              {
+                key: "steady",
+                title: "穩定排休",
+                people: people.filter(
+                  (emp) => rateOf(emp) >= 30 && rateOf(emp) < 60,
+                ),
+              },
+              {
+                key: "hot",
+                title: "高度排休",
+                people: people.filter((emp) => rateOf(emp) >= 60),
+              },
+            ];
+          });
+
+          const vacationRanking = computed(() => {
+            return [...leaveData.value]
+              .filter((emp) => emp && emp.name && leaveTotalOf(emp) > 0)
+              .sort(
+                (a, b) =>
+                  rateOf(b) - rateOf(a) ||
+                  toNum(b.wheel_leave?.used) - toNum(a.wheel_leave?.used),
+              );
+          });
+
+          const displayedVacationRanks = computed(() => {
+            return showAllRanks.value
+              ? vacationRanking.value
+              : vacationRanking.value.slice(0, 10);
+          });
+
+          const rankLabel = (index) => {
+            if (index === 0) return "🥇";
+            if (index === 1) return "🥈";
+            if (index === 2) return "🥉";
+            return index + 1;
+          };
+
           const selectedEmp = computed(() => {
-            if (!selectedName.value) return null;
+            if (!selectedName.value || selectedName.value === "__overview")
+              return null;
             return (
               leaveData.value.find((emp) => emp.name === selectedName.value) ||
               null
             );
           });
 
-          return { leaveData, selectedName, selectedEmp, loadError };
+          return {
+            leaveData,
+            selectedName,
+            selectedEmp,
+            loadError,
+            overviewData,
+            overviewGroups,
+            showAllRanks,
+            vacationRanking,
+            displayedVacationRanks,
+            rankLabel,
+            rateOf,
+            leaveTotalOf,
+            fmt,
+          };
         },
       }).mount("#app");
     </script>
