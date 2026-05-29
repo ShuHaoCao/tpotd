@@ -7,7 +7,6 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>幸運連鎖：賓果之星</title>
-
     <style>
       :root {
         --bg-0: #080b1d;
@@ -1241,7 +1240,7 @@
       </section>
 
       <footer>
-        <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲</div>
+        <div class="copyright">© 2025 CaoShuHao 版權所有，請勿抄襲 v3.0</div>
       </footer>
     </main>
 
@@ -1880,9 +1879,18 @@
           new BingoGame(0, `玩家:${playerName}(使用者)`, {
             isLocalHuman: true,
           }),
-          new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`, { isCPU: true }),
-          new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`, { isCPU: true }),
-          new BingoGame(3, `玩家:${shuffledNames[2]}(NPC)`, { isCPU: true }),
+          new BingoGame(1, `玩家:${shuffledNames[0]}(NPC)`, {
+            isCPU: true,
+            hideNumbers: true,
+          }),
+          new BingoGame(2, `玩家:${shuffledNames[1]}(NPC)`, {
+            isCPU: true,
+            hideNumbers: true,
+          }),
+          new BingoGame(3, `玩家:${shuffledNames[2]}(NPC)`, {
+            isCPU: true,
+            hideNumbers: true,
+          }),
         ];
         setTurn(0);
         setMessage(
@@ -2320,8 +2328,7 @@
             isLocalHuman,
             isCPU,
             isRemote: !isLocalHuman && !isCPU,
-            hideNumbers:
-              appMode === "online" && !isLocalHuman && seat.type === "human",
+            hideNumbers: !isLocalHuman,
             nums: seat.board || generateBoardNumbers(),
           });
           participants[i] = p;
