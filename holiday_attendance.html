@@ -1,0 +1,1942 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate, max-age=0"
+    />
+    <title>假日出勤觀察室</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #08111f;
+        --bg2: #102a37;
+        --card: rgba(255, 255, 255, 0.08);
+        --card2: rgba(8, 17, 31, 0.72);
+        --line: rgba(255, 255, 255, 0.14);
+        --text: #f8fafc;
+        --muted: #a8b3c7;
+        --green: #35e3a1;
+        --blue: #60a5fa;
+        --gold: #facc15;
+        --red: #fb7185;
+        --violet: #c084fc;
+        --shadow: 0 26px 70px rgba(0, 0, 0, 0.38);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Noto Sans TC", sans-serif;
+      }
+      body {
+        min-height: 100vh;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 12% 8%,
+            rgba(53, 227, 161, 0.24),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 88% 16%,
+            rgba(96, 165, 250, 0.2),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 50% 100%,
+            rgba(250, 204, 21, 0.12),
+            transparent 34%
+          ),
+          linear-gradient(135deg, var(--bg), var(--bg2));
+        padding: clamp(0.9rem, 3vw, 2.4rem);
+        overflow-x: hidden;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(#000, transparent 82%);
+      }
+      .app {
+        position: relative;
+        width: min(1240px, 100%);
+        margin: auto;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 34px;
+        padding: clamp(1.4rem, 4vw, 3rem);
+        box-shadow: var(--shadow);
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.14),
+            rgba(255, 255, 255, 0.035)
+          ),
+          rgba(8, 17, 31, 0.7);
+        backdrop-filter: blur(22px);
+        margin-bottom: 1rem;
+      }
+      .hero:after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        top: -140px;
+        width: 380px;
+        height: 380px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(53, 227, 161, 0.34),
+          transparent 65%
+        );
+      }
+      .eyebrow {
+        display: inline-flex;
+        gap: 0.45rem;
+        align-items: center;
+        padding: 0.45rem 0.8rem;
+        border-radius: 999px;
+        border: 1px solid rgba(53, 227, 161, 0.32);
+        background: rgba(53, 227, 161, 0.1);
+        color: #bbf7d0;
+        font-weight: 800;
+        font-size: 0.9rem;
+      }
+      .hero h1 {
+        margin-top: 0.9rem;
+        font-size: clamp(2rem, 6vw, 4.2rem);
+        line-height: 1.05;
+        letter-spacing: -0.06em;
+        font-weight: 900;
+      }
+      .hero h1 span {
+        background: linear-gradient(90deg, #fff, #35e3a1 48%, #60a5fa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero p {
+        margin-top: 0.9rem;
+        color: #cbd5e1;
+        line-height: 1.75;
+        max-width: 760px;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+        margin-top: 1.1rem;
+      }
+      .pill {
+        padding: 0.55rem 0.8rem;
+        border: 1px solid var(--line);
+        background: rgba(15, 23, 42, 0.55);
+        border-radius: 999px;
+        color: #dbeafe;
+        font-weight: 700;
+        font-size: 0.88rem;
+      }
+      .toolbar {
+        display: grid;
+        grid-template-columns: 1fr minmax(260px, 440px);
+        gap: 1rem;
+        align-items: center;
+        margin: 1rem 0 1.15rem;
+        padding: 1rem;
+        border: 1px solid rgba(53, 227, 161, 0.28);
+        border-radius: 26px;
+        background: linear-gradient(
+          135deg,
+          rgba(53, 227, 161, 0.13),
+          rgba(15, 23, 42, 0.72)
+        );
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.26);
+        backdrop-filter: blur(18px);
+      }
+      .toolbar h2 {
+        font-size: 1.15rem;
+      }
+      .toolbar small {
+        display: block;
+        margin-top: 0.22rem;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .select-wrap {
+        position: relative;
+      }
+      .select-wrap:after {
+        content: "⌄";
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-56%);
+        pointer-events: none;
+        color: #86efac;
+        font-size: 1.35rem;
+      }
+      select {
+        width: 100%;
+        appearance: none;
+        border: 1px solid rgba(53, 227, 161, 0.34);
+        background: rgba(2, 6, 23, 0.72);
+        color: var(--text);
+        border-radius: 18px;
+        padding: 1rem 2.7rem 1rem 1rem;
+        font-size: 1rem;
+        outline: none;
+      }
+      select:focus {
+        box-shadow: 0 0 0 4px rgba(53, 227, 161, 0.14);
+      }
+      .error {
+        padding: 1rem;
+        border: 1px solid rgba(251, 113, 133, 0.42);
+        background: rgba(127, 29, 29, 0.3);
+        border-radius: 22px;
+        color: #fecdd3;
+        line-height: 1.7;
+      }
+      .grid {
+        display: grid;
+        gap: 1rem;
+      }
+      .kpis {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+      .kpi,
+      .panel {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        background:
+          linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.03)
+          ),
+          var(--card2);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+      .kpi {
+        min-height: 138px;
+        padding: 1.05rem;
+      }
+      .kpi:after {
+        content: "";
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 0;
+        height: 4px;
+        border-radius: 999px 999px 0 0;
+        background: linear-gradient(
+          90deg,
+          var(--blue),
+          var(--green),
+          var(--gold)
+        );
+      }
+      .label {
+        color: var(--muted);
+        font-weight: 800;
+        font-size: 0.86rem;
+      }
+      .value {
+        margin-top: 0.45rem;
+        font-size: clamp(2.05rem, 4.8vw, 3.25rem);
+        font-weight: 950;
+        letter-spacing: -0.06em;
+        line-height: 0.95;
+      }
+      .note {
+        margin-top: 0.5rem;
+        color: #cbd5e1;
+        font-size: 0.8rem;
+        line-height: 1.5;
+      }
+      .green {
+        color: var(--green);
+      }
+      .gold {
+        color: var(--gold);
+      }
+      .red {
+        color: var(--red);
+      }
+      .blue {
+        color: var(--blue);
+      }
+      .main {
+        grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+        align-items: start;
+      }
+      .panel {
+        padding: 1.1rem;
+      }
+      .panel-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 1rem;
+        margin-bottom: 0.95rem;
+      }
+      .panel-title h3 {
+        font-size: clamp(1.18rem, 2.5vw, 1.5rem);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 0.78rem;
+        color: #cbd5e1;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .tabs {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.85rem;
+      }
+      .tab {
+        border: 0;
+        cursor: pointer;
+        padding: 0.46rem 0.75rem;
+        border-radius: 999px;
+        color: #cbd5e1;
+        background: rgba(255, 255, 255, 0.07);
+        font-weight: 900;
+      }
+      .tab.active {
+        color: #052e2b;
+        background: linear-gradient(90deg, #67e8f9, #35e3a1, #facc15);
+      }
+      .rank-list {
+        display: grid;
+        gap: 0.65rem;
+      }
+      .rank-item {
+        display: grid;
+        grid-template-columns:
+          42px minmax(86px, 0.55fr) minmax(130px, 1fr)
+          minmax(82px, auto);
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        background: rgba(2, 6, 23, 0.34);
+        border-radius: 18px;
+      }
+      .medal {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 14px;
+        background: rgba(250, 204, 21, 0.14);
+        color: var(--gold);
+        font-weight: 950;
+      }
+      .name {
+        font-weight: 950;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .track {
+        height: 12px;
+        background: rgba(148, 163, 184, 0.22);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(
+          90deg,
+          var(--blue),
+          var(--green),
+          var(--gold),
+          var(--red)
+        );
+      }
+      .count {
+        font-size: 1.45rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+      .rate {
+        color: #cbd5e1;
+        font-size: 0.78rem;
+        font-weight: 800;
+      }
+      .rank-num {
+        text-align: right;
+      }
+      .mini {
+        font-size: 0.75rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .group-cards {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .group-card {
+        padding: 1rem;
+        border: 1px solid var(--line);
+        border-top: 4px solid var(--green);
+        background: rgba(15, 23, 42, 0.62);
+        border-radius: 24px;
+      }
+      .group-card:nth-child(2) {
+        border-top-color: var(--blue);
+      }
+      .group-card:nth-child(3) {
+        border-top-color: var(--violet);
+      }
+      .group-card:nth-child(4) {
+        border-top-color: var(--gold);
+      }
+      .group-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin-bottom: 0.85rem;
+      }
+      .group-head b {
+        font-size: 1.18rem;
+      }
+      .group-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.6rem;
+        align-items: baseline;
+        padding: 0.48rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .group-row:last-child {
+        border-bottom: 0;
+      }
+      .group-row span:first-child {
+        font-weight: 850;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .month-grid {
+        display: grid;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 0.68rem;
+      }
+      .month {
+        position: relative;
+        min-height: 118px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.36rem;
+        text-align: center;
+        border: 1px solid rgba(53, 227, 161, 0.16);
+        border-radius: 24px;
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(53, 227, 161, 0.13),
+            transparent 42%
+          ),
+          linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(2, 6, 23, 0.52));
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.07),
+          0 16px 34px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.22s ease,
+          border-color 0.22s ease,
+          box-shadow 0.22s ease;
+      }
+      .month:hover {
+        transform: translateY(-3px);
+        border-color: rgba(53, 227, 161, 0.42);
+        box-shadow:
+          0 0 0 1px rgba(53, 227, 161, 0.12),
+          0 18px 42px rgba(0, 0, 0, 0.3),
+          0 0 24px rgba(53, 227, 161, 0.14);
+      }
+      .month-orb {
+        width: 48px;
+        height: 48px;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        font-size: 1.05rem;
+        font-weight: 950;
+        letter-spacing: 0.02em;
+        color: #dffcf0;
+        background:
+          radial-gradient(
+            circle at 35% 28%,
+            rgba(255, 255, 255, 0.3),
+            transparent 32%
+          ),
+          linear-gradient(
+            145deg,
+            rgba(53, 227, 161, 0.32),
+            rgba(15, 23, 42, 0.9)
+          );
+        border: 1px solid rgba(110, 231, 183, 0.46);
+        box-shadow:
+          0 0 16px rgba(53, 227, 161, 0.2),
+          inset 0 0 18px rgba(53, 227, 161, 0.08);
+      }
+      .month-value {
+        font-size: clamp(1.55rem, 3.1vw, 2rem);
+        font-weight: 950;
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+      .month-unit {
+        font-size: 0.74rem;
+        color: var(--muted);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+      .month-crown {
+        position: absolute;
+        top: 0.45rem;
+        right: 0.48rem;
+        font-size: 1rem;
+        filter: drop-shadow(0 3px 10px rgba(250, 204, 21, 0.3));
+      }
+      .month.top1 {
+        border-color: rgba(250, 204, 21, 0.42);
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(250, 204, 21, 0.16),
+            transparent 45%
+          ),
+          linear-gradient(180deg, rgba(15, 23, 42, 0.86), rgba(2, 6, 23, 0.52));
+      }
+      .month.top1 .month-orb {
+        color: #451a03;
+        background:
+          radial-gradient(
+            circle at 35% 28%,
+            rgba(255, 255, 255, 0.62),
+            transparent 33%
+          ),
+          linear-gradient(145deg, #fde68a, #facc15 58%, #92400e);
+        border-color: rgba(253, 230, 138, 0.9);
+        box-shadow:
+          0 0 24px rgba(250, 204, 21, 0.32),
+          inset 0 0 18px rgba(255, 255, 255, 0.18);
+      }
+      .month.top2 .month-orb {
+        background:
+          radial-gradient(
+            circle at 35% 28%,
+            rgba(255, 255, 255, 0.48),
+            transparent 33%
+          ),
+          linear-gradient(145deg, #e5e7eb, #94a3b8 58%, #334155);
+        border-color: rgba(226, 232, 240, 0.72);
+      }
+      .month.top3 .month-orb {
+        background:
+          radial-gradient(
+            circle at 35% 28%,
+            rgba(255, 255, 255, 0.42),
+            transparent 33%
+          ),
+          linear-gradient(145deg, #fdba74, #c2410c 58%, #7c2d12);
+        border-color: rgba(253, 186, 116, 0.72);
+      }
+      .month.zero {
+        opacity: 0.64;
+      }
+      .month.zero .month-orb {
+        color: #94a3b8;
+        background: linear-gradient(
+          145deg,
+          rgba(51, 65, 85, 0.72),
+          rgba(2, 6, 23, 0.82)
+        );
+        border-color: rgba(148, 163, 184, 0.24);
+        box-shadow: inset 0 0 14px rgba(148, 163, 184, 0.05);
+      }
+      .person-layout {
+        grid-template-columns: minmax(0, 0.82fr) minmax(320px, 1.18fr);
+      }
+      .profile {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+      .avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 24px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #ecfeff, #35e3a1 62%, #047857);
+        color: #042f2e;
+        font-weight: 950;
+        font-size: 2rem;
+        box-shadow: 0 16px 36px rgba(53, 227, 161, 0.24);
+      }
+      .person-name {
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        font-weight: 950;
+        letter-spacing: -0.04em;
+      }
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+      .stat {
+        padding: 1rem;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.055);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+      .stat .value {
+        font-size: 2.35rem;
+      }
+      .date-cloud {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .date-tag {
+        padding: 0.45rem 0.65rem;
+        border-radius: 999px;
+        background: rgba(53, 227, 161, 0.12);
+        border: 1px solid rgba(53, 227, 161, 0.24);
+        color: #bbf7d0;
+        font-weight: 850;
+      }
+      .empty {
+        color: var(--muted);
+        padding: 0.85rem;
+        border: 1px dashed rgba(148, 163, 184, 0.3);
+        border-radius: 18px;
+        text-align: center;
+      }
+      .insight {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid rgba(250, 204, 21, 0.24);
+        background: rgba(250, 204, 21, 0.08);
+        border-radius: 20px;
+        color: #fde68a;
+        line-height: 1.75;
+      }
+      .footer-note {
+        margin-top: 1rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.7;
+      }
+
+      .line-chart {
+        position: relative;
+        min-height: 300px;
+        padding: 0.75rem 0.35rem 0.2rem;
+        border: 1px solid rgba(53, 227, 161, 0.12);
+        border-radius: 22px;
+        background: linear-gradient(
+          180deg,
+          rgba(2, 6, 23, 0.36),
+          rgba(15, 23, 42, 0.28)
+        );
+      }
+      .line-chart svg {
+        width: 100%;
+        height: 280px;
+        display: block;
+        overflow: visible;
+      }
+      .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        margin: -0.25rem 0 0.75rem;
+      }
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.42rem;
+        padding: 0.36rem 0.62rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.11);
+        background: rgba(255, 255, 255, 0.055);
+        color: #cbd5e1;
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+      .legend-dot {
+        width: 22px;
+        height: 4px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #60a5fa, #35e3a1, #facc15);
+      }
+      .legend-dot.avg {
+        height: 0;
+        border-top: 3px dashed #93c5fd;
+        background: none;
+      }
+      .legend-dot.all {
+        height: 0;
+        border-top: 3px dashed #facc15;
+        background: none;
+      }
+      .chart-grid {
+        stroke: rgba(148, 163, 184, 0.18);
+        stroke-width: 1;
+      }
+      .chart-axis {
+        stroke: rgba(203, 213, 225, 0.34);
+        stroke-width: 1.2;
+      }
+      .chart-line {
+        fill: none;
+        stroke: url(#personalLineGradient);
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0 0 8px rgba(53, 227, 161, 0.28));
+      }
+      .chart-avg-line {
+        fill: none;
+        stroke: #93c5fd;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 8 7;
+        opacity: 0.92;
+        filter: drop-shadow(0 0 5px rgba(147, 197, 253, 0.2));
+      }
+      .chart-all-line {
+        fill: none;
+        stroke: #facc15;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 3 7;
+        opacity: 0.95;
+        filter: drop-shadow(0 0 5px rgba(250, 204, 21, 0.18));
+      }
+      .chart-area {
+        fill: url(#personalAreaGradient);
+        opacity: 0.72;
+      }
+      .chart-point {
+        fill: #f8fafc;
+        stroke: #35e3a1;
+        stroke-width: 3;
+        filter: drop-shadow(0 0 6px rgba(53, 227, 161, 0.38));
+      }
+      .chart-point.zero {
+        fill: #0f172a;
+        stroke: rgba(148, 163, 184, 0.6);
+        filter: none;
+      }
+      .chart-avg-point {
+        fill: #0f172a;
+        stroke: #93c5fd;
+        stroke-width: 2.5;
+        opacity: 0.92;
+      }
+      .chart-all-point {
+        fill: #0f172a;
+        stroke: #facc15;
+        stroke-width: 2.5;
+        opacity: 0.92;
+      }
+      .chart-label {
+        fill: #cbd5e1;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .chart-value {
+        fill: #f8fafc;
+        font-size: 14px;
+        font-weight: 950;
+      }
+      .chart-empty {
+        height: 280px;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        border: 1px dashed rgba(148, 163, 184, 0.28);
+        border-radius: 18px;
+      }
+      .chart-metrics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.55rem;
+        margin: 0.2rem 0 0.85rem;
+      }
+      .chart-metric {
+        padding: 0.65rem 0.7rem;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(2, 6, 23, 0.32);
+      }
+      .chart-metric span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 900;
+        margin-bottom: 0.2rem;
+      }
+      .chart-metric b {
+        font-size: 1.05rem;
+        line-height: 1.15;
+      }
+      .chart-metric .good {
+        color: var(--green);
+      }
+      .chart-metric .warn {
+        color: var(--gold);
+      }
+      @media (max-width: 980px) {
+        .toolbar,
+        .main,
+        .person-layout {
+          grid-template-columns: 1fr;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .group-cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .month-grid {
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 640px) {
+        body {
+          padding: 0.8rem;
+        }
+        .hero,
+        .toolbar,
+        .panel,
+        .kpi {
+          border-radius: 22px;
+        }
+        .kpis,
+        .group-cards {
+          grid-template-columns: 1fr;
+        }
+        .rank-item {
+          grid-template-columns:
+            34px minmax(70px, 0.62fr) minmax(100px, 1fr)
+            auto;
+          gap: 0.5rem;
+          padding: 0.65rem;
+        }
+        .count {
+          font-size: 1.18rem;
+        }
+        .month-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .stat-grid {
+          grid-template-columns: 1fr;
+        }
+        .profile {
+          align-items: flex-start;
+        }
+        .avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 20px;
+        }
+      }
+
+      /* ===== 月份熱度：圓球版尺寸優化與RWD ===== */
+      .month-heat-grid,
+      .month-orb-grid,
+      .heat-month-grid {
+        display: grid !important;
+        grid-template-columns: repeat(12, minmax(42px, 1fr)) !important;
+        gap: clamp(0.34rem, 0.85vw, 0.66rem) !important;
+        align-items: stretch !important;
+      }
+
+      .month-heat-item,
+      .month-orb-item,
+      .heat-month-item {
+        min-width: 0 !important;
+        min-height: clamp(108px, 12vw, 132px) !important;
+        padding: clamp(0.52rem, 1.1vw, 0.78rem) clamp(0.24rem, 0.8vw, 0.54rem) !important;
+        border-radius: 24px !important;
+        display: grid !important;
+        grid-template-rows: auto auto auto !important;
+        justify-items: center !important;
+        align-content: center !important;
+        gap: clamp(0.3rem, 0.8vw, 0.48rem) !important;
+      }
+
+      .month-orb,
+      .month-badge,
+      .month-circle,
+      .heat-orb {
+        width: clamp(38px, 4.6vw, 52px) !important;
+        height: clamp(38px, 4.6vw, 52px) !important;
+        min-width: clamp(38px, 4.6vw, 52px) !important;
+        min-height: clamp(38px, 4.6vw, 52px) !important;
+        max-width: 52px !important;
+        max-height: 52px !important;
+        border-radius: 999px !important;
+        font-size: clamp(0.9rem, 1.55vw, 1.18rem) !important;
+        font-weight: 950 !important;
+        line-height: 1 !important;
+      }
+
+      .month-crown,
+      .orb-crown,
+      .heat-crown {
+        font-size: clamp(0.72rem, 1.1vw, 0.9rem) !important;
+        transform: translateY(-2px) !important;
+      }
+
+      .month-value,
+      .month-count,
+      .heat-count {
+        font-size: clamp(1.45rem, 3vw, 2.28rem) !important;
+        line-height: 0.92 !important;
+        letter-spacing: -0.06em !important;
+        font-weight: 950 !important;
+        white-space: nowrap !important;
+      }
+
+      .month-unit,
+      .heat-unit {
+        font-size: clamp(0.78rem, 1.2vw, 0.95rem) !important;
+        line-height: 1 !important;
+        opacity: 0.78 !important;
+      }
+
+      /* 若原檔使用單一 .month-card 結構，也一併壓尺寸 */
+      .month-card {
+        min-width: 0 !important;
+      }
+      .month-card .orb,
+      .month-card .month-orb,
+      .month-card .month-badge {
+        width: clamp(38px, 4.6vw, 52px) !important;
+        height: clamp(38px, 4.6vw, 52px) !important;
+        font-size: clamp(0.9rem, 1.55vw, 1.18rem) !important;
+      }
+      .month-card .value,
+      .month-card .month-value,
+      .month-card .month-count {
+        font-size: clamp(1.45rem, 3vw, 2.28rem) !important;
+      }
+
+      /* 平板：6欄，保持呼吸感 */
+      @media (max-width: 980px) {
+        .month-heat-grid,
+        .month-orb-grid,
+        .heat-month-grid {
+          grid-template-columns: repeat(6, minmax(74px, 1fr)) !important;
+        }
+
+        .month-heat-item,
+        .month-orb-item,
+        .heat-month-item {
+          min-height: 112px !important;
+        }
+      }
+
+      /* 手機：3欄，不再硬擠12個月 */
+      @media (max-width: 640px) {
+        .month-heat-grid,
+        .month-orb-grid,
+        .heat-month-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 0.72rem !important;
+        }
+
+        .month-heat-item,
+        .month-orb-item,
+        .heat-month-item {
+          min-height: 116px !important;
+          padding: 0.7rem 0.4rem !important;
+          border-radius: 22px !important;
+        }
+
+        .month-orb,
+        .month-badge,
+        .month-circle,
+        .heat-orb {
+          width: 48px !important;
+          height: 48px !important;
+          min-width: 48px !important;
+          min-height: 48px !important;
+          font-size: 1.08rem !important;
+        }
+
+        .month-value,
+        .month-count,
+        .heat-count {
+          font-size: 2.05rem !important;
+        }
+
+        .month-unit,
+        .heat-unit {
+          font-size: 0.85rem !important;
+        }
+      }
+
+      /* 極小手機：2欄，避免破版 */
+      @media (max-width: 380px) {
+        .month-heat-grid,
+        .month-orb-grid,
+        .heat-month-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+      }
+
+      /* ===== 班別排名展開/收合 ===== */
+      .group-rank-wrap {
+        display: grid;
+        gap: 0.15rem;
+        margin-top: 0.35rem;
+      }
+      .group-row {
+        min-height: 34px;
+      }
+      .group-row span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 0;
+      }
+      .group-rank-no {
+        width: 1.45rem;
+        height: 1.45rem;
+        display: inline-grid;
+        place-items: center;
+        flex: 0 0 auto;
+        border-radius: 999px;
+        font-style: normal;
+        font-size: 0.72rem;
+        font-weight: 950;
+        color: #d1fae5;
+        background: rgba(53, 227, 161, 0.13);
+        border: 1px solid rgba(53, 227, 161, 0.26);
+      }
+      .group-expand-btn {
+        width: 100%;
+        margin-top: 0.8rem;
+        padding: 0.62rem 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        color: #dbeafe;
+        background: linear-gradient(
+          135deg,
+          rgba(96, 165, 250, 0.18),
+          rgba(53, 227, 161, 0.1)
+        );
+        font-weight: 900;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+      .group-expand-btn:hover {
+        transform: translateY(-1px);
+        border-color: rgba(53, 227, 161, 0.42);
+        box-shadow:
+          0 10px 24px rgba(0, 0, 0, 0.22),
+          0 0 18px rgba(53, 227, 161, 0.12);
+      }
+      @media (max-width: 640px) {
+        .group-expand-btn {
+          padding: 0.72rem 0.9rem;
+          font-size: 0.92rem;
+        }
+      }
+
+      /* ===== 個人相對平均：改為差幾次＋百分比 ===== */
+      .chart-metric b {
+        white-space: nowrap;
+        font-size: clamp(1rem, 2.2vw, 1.32rem);
+      }
+      @media (max-width: 640px) {
+        .chart-metric b {
+          font-size: 1.05rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="hero">
+        <div class="eyebrow">臺南郵局運輸股</div>
+        <h1><span>假日出勤觀察室</span></h1>
+        <p>數字不會說謊，但它有時候會裝睡；我們把它叫醒。</p>
+        <div class="meta">
+          <span class="pill">📊 全體排名</span
+          ><span class="pill">🌙 班別負荷</span
+          ><span class="pill">📅 月份熱區</span
+          ><span class="pill">🎯 個人軌跡</span>
+        </div>
+      </header>
+
+      <div v-if="loadError" class="error">
+        ⚠️ holiday_attendance_data.json 載入失敗。
+      </div>
+
+      <section class="toolbar">
+        <div>
+          <h2>查詢模式</h2>
+          <small>預設為總覽，切換可查詢人員的假日出勤狀況。</small>
+        </div>
+        <div class="select-wrap">
+          <select v-model="selectedId">
+            <option value="__overview">📊 總覽</option>
+            <option v-for="p in people" :key="p.id" :value="p.id">
+              {{ p.name }}｜{{ p.group }}
+            </option>
+          </select>
+        </div>
+      </section>
+
+      <template v-if="selectedId==='__overview' && overview">
+        <section class="grid kpis">
+          <div class="kpi">
+            <div class="label">出勤次數</div>
+            <div class="value green">{{ fmt(overview.totalAttendance) }}</div>
+            <div class="note">全體人員出勤次數總數</div>
+          </div>
+          <div class="kpi">
+            <div class="label">有效輪值人數</div>
+            <div class="value blue">{{ overview.activePeople }}</div>
+            <div class="note">次數大於 0 的人員</div>
+          </div>
+          <div class="kpi">
+            <div class="label">平均每人次數</div>
+            <div class="value">{{ fmt(overview.avgPerActive) }}</div>
+            <div class="note">總次數 ÷ 有效輪值人數</div>
+          </div>
+          <div class="kpi">
+            <div class="label">最高次數者</div>
+            <div class="value gold">{{ overview.topPerson?.name || '-' }}</div>
+            <div class="note">
+              {{ fmt(overview.topPerson?.total || 0) }} 次，別讓英雄變成耗材
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="label">次數落差</div>
+            <div class="value red">{{ fmt(overview.loadGap) }}</div>
+            <div class="note">最高與最低出勤次數差距</div>
+          </div>
+        </section>
+
+        <section class="grid main" style="margin-top: 1rem">
+          <div class="panel">
+            <div class="panel-title">
+              <h3>🏆 次數排名</h3>
+              <span class="chip">次數｜出勤率</span>
+            </div>
+            <div class="tabs">
+              <button
+                v-for="t in rankTabs"
+                :key="t.key"
+                class="tab"
+                :class="{active:activeRank===t.key}"
+                @click="activeRank=t.key"
+              >
+                {{ t.name }}
+              </button>
+            </div>
+            <div class="rank-list">
+              <div
+                class="rank-item"
+                v-for="(p,i) in rankedPeople"
+                :key="activeRank+p.id"
+              >
+                <span class="medal">{{ medal(i) }}</span
+                ><span class="name">{{ p.name }}</span>
+                <div>
+                  <div class="track">
+                    <div
+                      class="fill"
+                      :style="{width:barWidth(p,totalMax)+'%'}"
+                    ></div>
+                  </div>
+                  <div class="mini">
+                    {{ p.group }}｜{{ personInsightShort(p) }}
+                  </div>
+                </div>
+                <div class="rank-num">
+                  <div class="count">{{ fmt(p.total) }}次</div>
+                  <div class="rate">{{ percent(p.attendanceRate) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="grid">
+            <div class="panel">
+              <div class="panel-title">
+                <h3>🔥 排班提示</h3>
+                <span class="chip">不是警報，是雷達</span>
+              </div>
+              <p class="note" style="font-size: 0.95rem">
+                {{ overview.managementNote }}
+              </p>
+              <div class="insight">{{ overview.balanceNote }}</div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">
+                <h3>📅 月份熱度</h3>
+                <span class="chip">全體合計</span>
+              </div>
+              <div class="month-grid">
+                <div
+                  class="month"
+                  v-for="m in overview.months"
+                  :key="m.label"
+                  :class="monthHeatClass(m, overview.months)"
+                >
+                  <span
+                    class="month-crown"
+                    v-if="monthRankIcon(m, overview.months)"
+                    >{{ monthRankIcon(m, overview.months) }}</span
+                  >
+                  <div class="month-orb">{{ monthNo(m) }}</div>
+                  <div class="month-value">{{ fmt(m.count) }}</div>
+                  <div class="month-unit">次</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="panel" style="margin-top: 1rem">
+          <div class="panel-title">
+            <h3>🧩 依班別排序</h3>
+            <span class="chip">看比例，也看人數</span>
+          </div>
+          <div class="grid group-cards">
+            <div class="group-card" v-for="g in groupSummary" :key="g.key">
+              <div class="group-head">
+                <b>{{ g.name }}</b
+                ><span class="chip">{{ g.peopleCount }}人</span>
+              </div>
+              <div class="value">{{ fmt(g.total) }}</div>
+              <div class="note">
+                占全部 {{ percent(g.rate) }}｜月均 {{ fmt(g.avg) }} 次/人
+              </div>
+              <div class="group-rank-wrap">
+                <div
+                  class="group-row"
+                  v-for="(p,idx) in displayedGroupPeople(g)"
+                  :key="g.key+p.name"
+                >
+                  <span
+                    ><i class="group-rank-no">{{ idx + 1 }}</i>{{ p.name
+                    }}</span
+                  ><b>{{ fmt(p.total) }}次</b>
+                </div>
+              </div>
+              <button
+                v-if="g.people.length > 3"
+                type="button"
+                class="group-expand-btn"
+                @click="toggleGroupRank(g.key)"
+              >
+                {{ expandedGroups[g.key] ? '收合' : '顯示全部' }}
+              </button>
+            </div>
+          </div>
+        </section>
+      </template>
+
+      <template v-if="selectedPerson">
+        <section class="grid person-layout">
+          <aside class="panel">
+            <div class="profile">
+              <div class="avatar">{{ selectedPerson.name.slice(0,1) }}</div>
+              <div>
+                <div class="person-name">{{ selectedPerson.name }}</div>
+                <div class="note">
+                  {{ selectedPerson.group }}｜假日出勤個人軌跡
+                </div>
+              </div>
+            </div>
+            <div class="stat-grid">
+              <div class="stat">
+                <div class="label">累積次數</div>
+                <div class="value green">{{ fmt(selectedPerson.total) }}</div>
+              </div>
+              <div class="stat">
+                <div class="label">出勤率</div>
+                <div class="value blue">
+                  {{ percent(selectedPerson.attendanceRate) }}
+                </div>
+              </div>
+              <div class="stat">
+                <div class="label">全體排名</div>
+                <div class="value gold">{{ selectedPerson.rankOverall }}</div>
+              </div>
+              <div class="stat">
+                <div class="label">班別排名</div>
+                <div class="value">{{ selectedPerson.rankGroup }}</div>
+              </div>
+            </div>
+            <div class="insight">{{ personInsight(selectedPerson) }}</div>
+          </aside>
+          <main class="grid">
+            <div class="panel">
+              <div class="panel-title">
+                <h3>📈 1-12月出勤次數</h3>
+                <span class="chip">個人(綠)｜組平均(藍)｜全體平均(黃)</span>
+              </div>
+              <div
+                class="chart-legend"
+                v-if="selectedPerson.months && selectedPerson.months.length"
+              >
+                <span class="legend-item"
+                  ><i class="legend-dot"></i>個人出勤</span
+                ><span class="legend-item"
+                  ><i class="legend-dot avg"></i>{{ selectedPerson.group
+                  }}平均</span
+                ><span class="legend-item"
+                  ><i class="legend-dot all"></i>全體平均</span
+                >
+              </div>
+              <div
+                class="chart-metrics"
+                v-if="selectedPerson.months && selectedPerson.months.length"
+              >
+                <div class="chart-metric">
+                  <span>個人相對組平均</span
+                  ><b :class="compareClass(groupCompareDiff(selectedPerson))"
+                    >{{ compareDiffText(groupCompareDiff(selectedPerson),
+                    groupComparePercent(selectedPerson)) }}</b
+                  >
+                </div>
+                <div class="chart-metric">
+                  <span>個人相對全體平均</span
+                  ><b :class="compareClass(allCompareDiff(selectedPerson))"
+                    >{{ compareDiffText(allCompareDiff(selectedPerson),
+                    allComparePercent(selectedPerson)) }}</b
+                  >
+                </div>
+                <div class="chart-metric">
+                  <span>組內排名</span
+                  ><b
+                    >{{ selectedPerson.rankGroup }} / {{
+                    groupPeopleCount(selectedPerson) }}</b
+                  >
+                </div>
+                <div class="chart-metric">
+                  <span>全體排名</span
+                  ><b>{{ selectedPerson.rankOverall }} / {{ people.length }}</b>
+                </div>
+              </div>
+              <div
+                class="line-chart"
+                v-if="selectedPerson.months && selectedPerson.months.length"
+              >
+                <svg
+                  viewBox="0 0 760 300"
+                  role="img"
+                  :aria-label="selectedPerson.name + ' 1到12月出勤折線圖，含組別平均與全體平均'"
+                >
+                  <defs>
+                    <linearGradient
+                      id="personalLineGradient"
+                      x1="0"
+                      x2="1"
+                      y1="0"
+                      y2="0"
+                    >
+                      <stop offset="0%" stop-color="#60a5fa" />
+                      <stop offset="48%" stop-color="#35e3a1" />
+                      <stop offset="100%" stop-color="#facc15" />
+                    </linearGradient>
+                    <linearGradient
+                      id="personalAreaGradient"
+                      x1="0"
+                      x2="0"
+                      y1="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="0%"
+                        stop-color="#35e3a1"
+                        stop-opacity=".28"
+                      />
+                      <stop
+                        offset="100%"
+                        stop-color="#35e3a1"
+                        stop-opacity="0"
+                      />
+                    </linearGradient>
+                  </defs>
+                  <line
+                    v-for="t in chartTicks(selectedPerson)"
+                    :key="'tick'+t.value"
+                    class="chart-grid"
+                    x1="54"
+                    x2="724"
+                    :y1="t.y"
+                    :y2="t.y"
+                  />
+                  <text
+                    v-for="t in chartTicks(selectedPerson)"
+                    :key="'tick-label'+t.value"
+                    class="chart-label"
+                    x="44"
+                    :y="t.y+4"
+                    text-anchor="end"
+                  >
+                    {{ fmt(t.value) }}
+                  </text>
+                  <line class="chart-axis" x1="54" x2="724" y1="244" y2="244" />
+                  <line class="chart-axis" x1="54" x2="54" y1="34" y2="244" />
+                  <path class="chart-area" :d="chartAreaPath(selectedPerson)" />
+                  <path
+                    class="chart-all-line"
+                    :d="allAverageLinePath(selectedPerson)"
+                  />
+                  <path
+                    class="chart-avg-line"
+                    :d="groupAverageLinePath(selectedPerson)"
+                  />
+                  <path class="chart-line" :d="chartLinePath(selectedPerson)" />
+                  <g
+                    v-for="pt in allAveragePoints(selectedPerson)"
+                    :key="'allpt'+pt.month"
+                  >
+                    <circle class="chart-all-point" :cx="pt.x" :cy="pt.y" r="4">
+                      <title>全體平均：{{ fmt(pt.count) }}次</title>
+                    </circle>
+                  </g>
+                  <g
+                    v-for="pt in groupAveragePoints(selectedPerson)"
+                    :key="'avgpt'+pt.month"
+                  >
+                    <circle class="chart-avg-point" :cx="pt.x" :cy="pt.y" r="4">
+                      <title>
+                        {{ selectedPerson.group }}平均：{{ fmt(pt.count) }}次
+                      </title>
+                    </circle>
+                  </g>
+                  <g
+                    v-for="pt in chartPoints(selectedPerson)"
+                    :key="'pt'+pt.month"
+                  >
+                    <circle
+                      class="chart-point"
+                      :class="{zero: pt.count===0}"
+                      :cx="pt.x"
+                      :cy="pt.y"
+                      r="6"
+                    />
+                    <text
+                      class="chart-value"
+                      :x="pt.x"
+                      :y="pt.y-12"
+                      text-anchor="middle"
+                    >
+                      {{ fmt(pt.count) }}
+                    </text>
+                    <text
+                      class="chart-label"
+                      :x="pt.x"
+                      y="268"
+                      text-anchor="middle"
+                    >
+                      {{ pt.label }}
+                    </text>
+                  </g>
+                </svg>
+              </div>
+              <div v-else class="chart-empty">尚無月份資料</div>
+            </div>
+            <div class="panel">
+              <div class="panel-title">
+                <h3>🗓️ 出勤日期</h3>
+                <span class="chip">按月份整理</span>
+              </div>
+              <div class="grid" style="gap: 0.9rem">
+                <div
+                  v-for="m in selectedPerson.months.filter(x=>x.count>0 || x.rawDates)"
+                  :key="'dates'+m.month"
+                >
+                  <div class="label" style="margin-bottom: 0.45rem">
+                    {{ m.label }}｜{{ fmt(m.count) }} 次
+                  </div>
+                  <div v-if="m.dates.length" class="date-cloud">
+                    <span class="date-tag" v-for="d in m.dates" :key="m.month+d"
+                      >{{ d }}日</span
+                    >
+                  </div>
+                  <div v-else class="empty">
+                    {{ m.rawDates || '本月無出勤紀錄' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </section>
+      </template>
+      <div class="footer-note">
+        數值若為整數顯示整數；若有小數則顯示到小數點 1 位。
+      </div>
+    </div>
+    <script>
+      const { createApp, ref, computed, onMounted } = Vue;
+      createApp({
+        setup() {
+          const raw = ref(null),
+            people = ref([]),
+            groups = ref([]),
+            selectedId = ref("__overview"),
+            activeRank = ref("all"),
+            loadError = ref(false),
+            expandedGroups = ref({});
+          const rankTabs = [
+            { key: "all", name: "全體" },
+            { key: "morning", name: "早班" },
+            { key: "middle", name: "中班" },
+            { key: "night", name: "大夜班" },
+            { key: "office", name: "內勤" },
+          ];
+          const n = (v) => {
+            const x = Number(v);
+            return Number.isFinite(x) ? x : 0;
+          };
+          const fmt = (v) => {
+            const x = Math.round(n(v) * 10) / 10;
+            return Number.isInteger(x) ? String(x) : x.toFixed(1);
+          };
+          const percent = (v) => fmt(n(v) * 100) + "%";
+          const medal = (i) =>
+            i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1;
+          const barWidth = (p, max) =>
+            max ? Math.max(3, Math.min(100, (n(p.total) / max) * 100)) : 0;
+          function enrich(data) {
+            groups.value = data.groups || [];
+            let arr = (data.people || []).map((p) => ({
+              ...p,
+              total: n(p.total),
+              correctedTotal: n(p.correctedTotal),
+              attendanceRate: n(p.attendanceRate),
+              months: (p.months || []).map((m) => ({
+                ...m,
+                count: n(m.count),
+                dates: Array.isArray(m.dates) ? m.dates : [],
+              })),
+            }));
+            const all = [...arr].sort(
+              (a, b) =>
+                b.total - a.total || b.attendanceRate - a.attendanceRate,
+            );
+            all.forEach((p, i) => (p.rankOverall = i + 1));
+            groups.value.forEach((g) => {
+              const gp = arr
+                .filter((p) => p.groupKey === g.key)
+                .sort(
+                  (a, b) =>
+                    b.total - a.total || b.attendanceRate - a.attendanceRate,
+                );
+              gp.forEach((p, i) => (p.rankGroup = i + 1));
+            });
+            people.value = arr;
+            raw.value = data;
+          }
+          onMounted(async () => {
+            try {
+              const res = await fetch(
+                "holiday_attendance_data.json?t=" + Date.now(),
+                { cache: "no-store" },
+              );
+              if (!res.ok) throw new Error("load failed");
+              enrich(await res.json());
+            } catch (e) {
+              console.error(e);
+              loadError.value = true;
+            }
+          });
+          const totalMax = computed(() =>
+            Math.max(0, ...people.value.map((p) => p.total)),
+          );
+          const selectedPerson = computed(
+            () => people.value.find((p) => p.id === selectedId.value) || null,
+          );
+          const rankedPeople = computed(() =>
+            people.value
+              .filter(
+                (p) =>
+                  activeRank.value === "all" || p.groupKey === activeRank.value,
+              )
+              .sort(
+                (a, b) =>
+                  b.total - a.total || b.attendanceRate - a.attendanceRate,
+              ),
+          );
+          const overview = computed(() => {
+            if (!raw.value) return null;
+            const active = people.value.filter((p) => p.total > 0);
+            const totals = active.map((p) => p.total);
+            const totalAttendance =
+              n(raw.value.meta?.totalAttendance) ||
+              people.value.reduce((s, p) => s + p.total, 0);
+            const top = [...people.value].sort((a, b) => b.total - a.total)[0];
+            const min = totals.length ? Math.min(...totals) : 0,
+              max = totals.length ? Math.max(...totals) : 0;
+            const monthTotals = Array.from({ length: 12 }, (_, i) => ({
+              label: raw.value.meta?.months?.[i] || `${i + 1}月`,
+              count: people.value.reduce(
+                (s, p) => s + n(p.months[i]?.count),
+                0,
+              ),
+            }));
+            const busiest = [...monthTotals].sort(
+              (a, b) => b.count - a.count,
+            )[0];
+            const avg = active.length ? totalAttendance / active.length : 0;
+            return {
+              totalAttendance,
+              activePeople: active.length,
+              avgPerActive: avg,
+              topPerson: top,
+              loadGap: max - min,
+              months: monthTotals,
+              managementNote: `目前最熱月份是 ${busiest?.label || "-"}，合計 ${fmt(busiest?.count || 0)} 次。若後續月份仍集中在少數人身上，排班表看起來會很努力，但人會先沒電。`,
+              balanceNote: `有效輪值者最高 ${fmt(max)} 次、最低 ${fmt(min)} 次，落差 ${fmt(max - min)} 次。這不是世界末日，但已經值得主管多看一眼。`,
+            };
+          });
+          const currentMonthCount = computed(() => {
+            const totals = raw.value?.meta?.allMonthlyTotals;
+            if (Array.isArray(totals)) {
+              return totals.filter((v) => n(v) > 0).length || 1;
+            }
+            if (people.value.length) {
+              const monthTotals = Array.from({ length: 12 }, (_, i) =>
+                people.value.reduce(
+                  (sum, p) => sum + n(p.months?.[i]?.count),
+                  0,
+                ),
+              );
+              return monthTotals.filter((v) => v > 0).length || 1;
+            }
+            return 1;
+          });
+          const groupSummary = computed(() =>
+            groups.value.map((g) => {
+              const ps = people.value.filter((p) => p.groupKey === g.key);
+              const sorted = [...ps].sort(
+                (a, b) =>
+                  b.total - a.total || b.attendanceRate - a.attendanceRate,
+              );
+              const total = n(g.total) || ps.reduce((s, p) => s + p.total, 0);
+              return {
+                ...g,
+                total,
+                peopleCount: ps.length,
+                rate: n(g.rate),
+                avg: ps.length
+                  ? total / ps.length / currentMonthCount.value
+                  : 0,
+                people: sorted,
+                top3: sorted.slice(0, 3),
+              };
+            }),
+          );
+
+          function toggleGroupRank(key) {
+            expandedGroups.value = {
+              ...expandedGroups.value,
+              [key]: !expandedGroups.value[key],
+            };
+          }
+          function displayedGroupPeople(g) {
+            return expandedGroups.value[g.key]
+              ? g.people
+              : g.people.slice(0, 3);
+          }
+          function groupAveragesFor(p) {
+            if (!p) return [];
+            const g = groups.value.find((x) => x.key === p.groupKey);
+            if (g && Array.isArray(g.monthlyAverages))
+              return g.monthlyAverages.map(n);
+            const ps = people.value.filter((x) => x.groupKey === p.groupKey);
+            return Array.from({ length: 12 }, (_, i) =>
+              ps.length
+                ? ps.reduce((sum, x) => sum + n(x.months?.[i]?.count), 0) /
+                  ps.length
+                : 0,
+            );
+          }
+          function allAveragesFor(p) {
+            const months = p?.months || [];
+            const totalPeople = people.value.length || 0;
+            return months.map((m, i) =>
+              totalPeople
+                ? people.value.reduce(
+                    (sum, x) => sum + n(x.months?.[i]?.count),
+                    0,
+                  ) / totalPeople
+                : 0,
+            );
+          }
+          function chartMax(p) {
+            const personal = (p?.months || []).map((m) => n(m.count));
+            const avg = groupAveragesFor(p);
+            const allAvg = allAveragesFor(p);
+            return Math.max(1, ...personal, ...avg, ...allAvg);
+          }
+          function makeChartPoints(months, values, max) {
+            const left = 54,
+              right = 724,
+              top = 34,
+              bottom = 244;
+            const step = (right - left) / Math.max(1, months.length - 1);
+            return months.map((m, i) => ({
+              month: m.month,
+              label: m.label,
+              rawDates: m.rawDates,
+              count: n(values[i]),
+              x: left + i * step,
+              y: bottom - (n(values[i]) / max) * (bottom - top),
+            }));
+          }
+          function chartPoints(p) {
+            const months = p?.months || [];
+            return makeChartPoints(
+              months,
+              months.map((m) => n(m.count)),
+              chartMax(p),
+            );
+          }
+          function groupAveragePoints(p) {
+            const months = p?.months || [];
+            return makeChartPoints(months, groupAveragesFor(p), chartMax(p));
+          }
+          function allAveragePoints(p) {
+            const months = p?.months || [];
+            return makeChartPoints(months, allAveragesFor(p), chartMax(p));
+          }
+          function pathFromPoints(pts) {
+            return pts
+              .map(
+                (pt, i) =>
+                  (i ? "L" : "M") + pt.x.toFixed(1) + " " + pt.y.toFixed(1),
+              )
+              .join(" ");
+          }
+          function chartLinePath(p) {
+            return pathFromPoints(chartPoints(p));
+          }
+          function groupAverageLinePath(p) {
+            return pathFromPoints(groupAveragePoints(p));
+          }
+          function allAverageLinePath(p) {
+            return pathFromPoints(allAveragePoints(p));
+          }
+          function chartAreaPath(p) {
+            const pts = chartPoints(p);
+            if (!pts.length) return "";
+            const bottom = 244;
+            return (
+              chartLinePath(p) +
+              " L " +
+              pts[pts.length - 1].x.toFixed(1) +
+              " " +
+              bottom +
+              " L " +
+              pts[0].x.toFixed(1) +
+              " " +
+              bottom +
+              " Z"
+            );
+          }
+          function chartTicks(p) {
+            const max = chartMax(p);
+            const nice = Math.max(1, Math.ceil(max / 4));
+            const top = 34,
+              bottom = 244;
+            return Array.from({ length: 5 }, (_, i) => {
+              const value = nice * (4 - i);
+              const y = bottom - (value / (nice * 4)) * (bottom - top);
+              return { value, y };
+            });
+          }
+          function groupPeopleCount(p) {
+            return people.value.filter((x) => x.groupKey === p.groupKey).length;
+          }
+          function roundNearest(v) {
+            return Math.round(n(v));
+          }
+          function groupAverageTotal(p) {
+            const ps = people.value.filter((x) => x.groupKey === p.groupKey);
+            return ps.length
+              ? ps.reduce((sum, x) => sum + n(x.total), 0) / ps.length
+              : 0;
+          }
+          function allAverageTotal() {
+            return people.value.length
+              ? people.value.reduce((sum, x) => sum + n(x.total), 0) /
+                  people.value.length
+              : 0;
+          }
+          function groupAverageTotalForCompare(p) {
+            return roundNearest(groupAverageTotal(p));
+          }
+          function allAverageTotalForCompare() {
+            return roundNearest(allAverageTotal());
+          }
+          function comparePercent(value, base) {
+            return base > 0 ? ((value - base) / base) * 100 : 0;
+          }
+          function groupCompareDiff(p) {
+            return n(p?.total) - groupAverageTotalForCompare(p);
+          }
+          function allCompareDiff(p) {
+            return n(p?.total) - allAverageTotalForCompare();
+          }
+          function groupComparePercent(p) {
+            return comparePercent(n(p?.total), groupAverageTotalForCompare(p));
+          }
+          function allComparePercent(p) {
+            return comparePercent(n(p?.total), allAverageTotalForCompare());
+          }
+          function compareDiffText(diff, percentValue) {
+            const d = roundNearest(diff);
+            const pct = Math.round(n(percentValue) * 10) / 10;
+            if (d === 0) return "持平 0次";
+            return (
+              (d > 0 ? "+" : "-") +
+              Math.abs(d) +
+              "次(" +
+              (pct > 0 ? "+" : "") +
+              fmt(pct) +
+              "%)"
+            );
+          }
+          function compareText(v) {
+            const x = Math.round(n(v) * 10) / 10;
+            if (x === 0) return "持平 0%";
+            return (x > 0 ? "高於 +" : "低於 ") + fmt(x) + "%";
+          }
+          function compareClass(v) {
+            return n(v) >= 0 ? "good" : "warn";
+          }
+          function monthNo(m) {
+            const raw = String(m?.label || "");
+            const found = raw.match(/\d+/);
+            const num = found ? Number(found[0]) : Number(m?.month || 0);
+            return String(num || 0).padStart(2, "0");
+          }
+          function monthRank(m, months) {
+            const positives = [...months]
+              .filter((x) => n(x.count) > 0)
+              .sort((a, b) => n(b.count) - n(a.count));
+            const idx = positives.findIndex((x) => x === m);
+            return idx >= 0 ? idx + 1 : 0;
+          }
+          function monthRankIcon(m, months) {
+            const r = monthRank(m, months);
+            return r === 1 ? "👑" : r === 2 ? "✦" : r === 3 ? "◆" : "";
+          }
+          function monthHeatClass(m, months) {
+            const r = monthRank(m, months);
+            return {
+              zero: n(m.count) === 0,
+              top1: r === 1,
+              top2: r === 2,
+              top3: r === 3,
+            };
+          }
+          function personInsightShort(p) {
+            const mx = [...p.months].sort((a, b) => b.count - a.count)[0];
+            return mx && mx.count > 0
+              ? `${mx.label}最高 ${fmt(mx.count)}次`
+              : "尚未形成節奏";
+          }
+          function personInsight(p) {
+            const activeMonths = p.months.filter((m) => m.count > 0).length;
+            const mx = [...p.months].sort((a, b) => b.count - a.count)[0];
+            const group = groupSummary.value.find((g) => g.key === p.groupKey);
+            const share = group && group.total ? p.total / group.total : 0;
+            return `${p.name} 目前累積 ${fmt(p.total)} 次，於 ${p.group} 排名第 ${p.rankGroup}，全體排名第 ${p.rankOverall}。已有 ${activeMonths} 個月份出勤；最高月份為 ${mx?.label || "-"}（${fmt(mx?.count || 0)} 次）。在本班別中約占 ${percent(share)}，這個數字可以拿來判斷是否需要微調輪值節奏。`;
+          }
+          return {
+            people,
+            groups,
+            selectedId,
+            activeRank,
+            rankTabs,
+            loadError,
+            overview,
+            currentMonthCount,
+            groupSummary,
+            selectedPerson,
+            rankedPeople,
+            totalMax,
+            expandedGroups,
+            toggleGroupRank,
+            displayedGroupPeople,
+            fmt,
+            percent,
+            medal,
+            barWidth,
+            personInsightShort,
+            personInsight,
+            chartPoints,
+            groupAveragePoints,
+            allAveragePoints,
+            chartLinePath,
+            groupAverageLinePath,
+            allAverageLinePath,
+            chartAreaPath,
+            chartTicks,
+            groupPeopleCount,
+            groupComparePercent,
+            allComparePercent,
+            groupCompareDiff,
+            allCompareDiff,
+            compareDiffText,
+            compareText,
+            compareClass,
+            monthNo,
+            monthRankIcon,
+            monthHeatClass,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
