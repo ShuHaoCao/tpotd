@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VOCAB 英文字彙練習</title>
+
+    <style>
+      :root {
+        --bg: #06091b;
+        --bg2: #101538;
+        --panel: rgba(255, 255, 255, 0.095);
+        --panel2: rgba(255, 255, 255, 0.06);
+        --line: rgba(255, 255, 255, 0.16);
+        --line2: rgba(99, 230, 255, 0.28);
+        --text: #f7fbff;
+        --muted: #aebbd4;
+        --cyan: #38e7ff;
+        --cyan2: #1aa7c0;
+        --purple: #8c5cff;
+        --gold: #ffd166;
+        --pink: #ff77c8;
+        --green: #7cffb2;
+        --shadow: 0 26px 90px rgba(0, 0, 0, 0.42);
+        --radius: 28px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          "Noto Sans TC",
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 15% 5%,
+            rgba(56, 231, 255, 0.18),
+            transparent 26%
+          ),
+          radial-gradient(
+            circle at 80% 0%,
+            rgba(140, 92, 255, 0.26),
+            transparent 34%
+          ),
+          radial-gradient(
+            circle at 70% 82%,
+            rgba(255, 119, 200, 0.1),
+            transparent 35%
+          ),
+          linear-gradient(135deg, #030713 0%, #0a0e28 48%, #130d2d 100%);
+        overflow-x: hidden;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.75),
+          transparent 78%
+        );
+        pointer-events: none;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+        color: var(--text);
+      }
+      .app {
+        width: min(1220px, 96vw);
+        min-height: calc(100vh - 36px);
+        margin: 18px auto;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 18px;
+        position: relative;
+      }
+      .glass {
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, var(--panel), var(--panel2));
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+      .sidebar {
+        border-radius: var(--radius);
+        padding: 22px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-height: calc(100vh - 36px);
+        position: sticky;
+        top: 18px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 6px 8px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(
+          135deg,
+          rgba(56, 231, 255, 0.22),
+          rgba(255, 119, 200, 0.18)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 0 28px rgba(56, 231, 255, 0.18);
+        font-size: 1.55rem;
+      }
+      .brand b {
+        display: block;
+        font-size: 1.32rem;
+        letter-spacing: 0.02em;
+      }
+      .brand span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.82rem;
+        letter-spacing: 0.28em;
+        margin-top: 2px;
+      }
+      .nav {
+        display: grid;
+        gap: 8px;
+      }
+      .nav button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+        border: 1px solid transparent;
+        background: transparent;
+        border-radius: 16px;
+        padding: 13px 14px;
+        color: #cbd7ef;
+        transition: 0.2s;
+      }
+      .nav button:hover,
+      .nav button.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+      .nav button.active {
+        box-shadow: inset 4px 0 0 var(--cyan);
+        color: var(--cyan);
+      }
+      .sideStats {
+        margin-top: auto;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.055);
+        border-radius: 20px;
+        padding: 16px;
+      }
+      .sideStats h3 {
+        margin: 0 0 12px;
+        color: var(--cyan);
+        font-size: 0.95rem;
+      }
+      .sideStats .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        margin: 9px 0;
+      }
+      .sideStats b {
+        color: #fff;
+      }
+
+      .content {
+        display: grid;
+        gap: 18px;
+        align-content: start;
+      }
+      .mobileTop {
+        display: none;
+      }
+      .toolbar {
+        border-radius: var(--radius);
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1.4fr 220px 170px 140px;
+        gap: 12px;
+        align-items: center;
+      }
+      .searchWrap {
+        position: relative;
+      }
+      .searchWrap span {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+      }
+      .search {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(0, 0, 0, 0.18);
+        color: var(--text);
+        outline: none;
+        padding: 14px 16px 14px 44px;
+      }
+      .search:focus {
+        border-color: var(--cyan);
+        box-shadow: 0 0 0 4px rgba(56, 231, 255, 0.1);
+      }
+      select,
+      .smallBtn {
+        min-height: 50px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        padding: 0 14px;
+        outline: none;
+      }
+      select option {
+        color: #111;
+        background: #fff;
+      }
+      .smallBtn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          rgba(56, 231, 255, 0.2),
+          rgba(140, 92, 255, 0.16)
+        );
+      }
+
+      .studyGrid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: 18px;
+        align-items: start;
+      }
+      .card {
+        border-radius: var(--radius);
+        padding: 36px;
+        min-height: 570px;
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            circle at 50% 22%,
+            rgba(56, 231, 255, 0.1),
+            transparent 36%
+          ),
+          radial-gradient(
+            circle at 85% 78%,
+            rgba(140, 92, 255, 0.12),
+            transparent 36%
+          );
+        pointer-events: none;
+      }
+      .card::after {
+        content: "VOCAB";
+        position: absolute;
+        right: -18px;
+        bottom: -26px;
+        font-size: 7rem;
+        font-weight: 950;
+        letter-spacing: -0.08em;
+        color: rgba(255, 255, 255, 0.035);
+        pointer-events: none;
+      }
+      .cardInner {
+        position: relative;
+        z-index: 1;
+        width: min(680px, 100%);
+        margin: 0 auto;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+      }
+      .chipGroup {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+      }
+      .chip {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.085);
+        border-radius: 999px;
+        padding: 8px 13px;
+        color: #edf5ff;
+        font-weight: 700;
+        font-size: 0.92rem;
+      }
+      .recommend {
+        border-color: rgba(124, 255, 178, 0.34);
+        background: rgba(124, 255, 178, 0.13);
+        color: #dffff0;
+      }
+      .heart {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.08);
+        display: grid;
+        place-items: center;
+        color: #fff;
+      }
+      .wordLine {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        margin: 10px 0 8px;
+      }
+      .bigword {
+        font-size: clamp(4rem, 10vw, 7.4rem);
+        line-height: 0.9;
+        letter-spacing: -0.08em;
+        margin: 0;
+        text-align: center;
+        text-shadow: 0 16px 50px rgba(255, 255, 255, 0.07);
+      }
+      .speak {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.09);
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+      }
+      .meaning {
+        text-align: center;
+        font-size: clamp(1.35rem, 3vw, 2rem);
+        line-height: 1.55;
+        margin: 18px 0 26px;
+        color: #fff;
+      }
+      .divider {
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--line),
+          transparent
+        );
+        margin: 0 0 22px;
+      }
+      .example {
+        padding: 0 0 24px;
+        margin: 0 auto;
+        width: min(520px, 100%);
+      }
+      .exTitle {
+        color: var(--muted);
+        font-weight: 800;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 18px rgba(56, 231, 255, 0.8);
+      }
+      .exampleEN {
+        font-size: 1.26rem;
+        line-height: 1.65;
+        font-weight: 650;
+      }
+      .exampleZH {
+        color: var(--muted);
+        font-size: 1.02rem;
+        line-height: 1.7;
+        margin-top: 6px;
+      }
+      .cardNav {
+        display: grid;
+        grid-template-columns: 1fr 150px 1fr;
+        gap: 18px;
+        align-items: center;
+        margin: 22px auto 0;
+        width: min(640px, 100%);
+      }
+      .navBtn {
+        min-height: 64px;
+        border-radius: 26px;
+        border: 1px solid var(--line);
+        font-weight: 900;
+        font-size: 1.05rem;
+        transition: 0.2s;
+      }
+      .navBtn:hover {
+        transform: translateY(-2px);
+      }
+      .prev {
+        background: linear-gradient(
+          135deg,
+          rgba(140, 92, 255, 0.62),
+          rgba(255, 119, 200, 0.15)
+        );
+        box-shadow: 0 12px 34px rgba(140, 92, 255, 0.2);
+      }
+      .next {
+        background: linear-gradient(
+          135deg,
+          rgba(56, 231, 255, 0.55),
+          rgba(26, 167, 192, 0.28)
+        );
+        box-shadow: 0 12px 34px rgba(56, 231, 255, 0.18);
+      }
+      .random {
+        background: rgba(0, 0, 0, 0.14);
+      }
+      .underProgress {
+        width: min(360px, 74%);
+        height: 8px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.11);
+        overflow: hidden;
+        margin: 22px auto 0;
+      }
+      .bar {
+        height: 100%;
+        width: 0;
+        background: linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--purple),
+          var(--gold)
+        );
+        transition: 0.25s;
+      }
+
+      .listPanel {
+        border-radius: var(--radius);
+        padding: 16px;
+        max-height: 570px;
+        overflow: auto;
+      }
+      .listHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 4px 4px 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .wordList {
+        display: grid;
+        gap: 8px;
+      }
+      .item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+        border: 1px solid transparent;
+        border-radius: 18px;
+        padding: 12px;
+        cursor: pointer;
+        color: #dce7fb;
+        transition: 0.18s;
+      }
+      .item:hover,
+      .item.active {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.14);
+      }
+      .item.active {
+        box-shadow: inset 3px 0 0 var(--cyan);
+      }
+      .rank {
+        color: var(--gold);
+        font-weight: 900;
+        font-size: 0.9rem;
+      }
+      .wordMini {
+        font-weight: 900;
+      }
+      .metaMini {
+        color: var(--muted);
+        font-size: 0.82rem;
+        margin-top: 2px;
+      }
+      .arrow {
+        color: var(--muted);
+      }
+      .empty {
+        min-height: 300px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        color: var(--muted);
+        padding: 24px;
+      }
+      mark {
+        background: transparent;
+        color: var(--cyan);
+        font-weight: 900;
+      }
+
+      @media (max-width: 1080px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+        .sidebar {
+          display: none;
+        }
+        .mobileTop {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-radius: 24px;
+          padding: 14px 16px;
+        }
+        .mobileTop b {
+          letter-spacing: 0.04em;
+        }
+        .toolbar {
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+        .searchWrap {
+          grid-column: 1/-1;
+        }
+        .studyGrid {
+          grid-template-columns: 1fr;
+        }
+        .listPanel {
+          display: none;
+        }
+        .card {
+          min-height: auto;
+          padding: 28px 20px;
+        }
+      }
+      @media (max-width: 620px) {
+        .app {
+          width: min(100vw - 20px, 460px);
+          margin: 10px auto;
+          min-height: calc(100vh - 20px);
+        }
+        .content {
+          gap: 12px;
+        }
+        .toolbar {
+          padding: 12px;
+          border-radius: 22px;
+          grid-template-columns: 1fr;
+          gap: 9px;
+        }
+        .search {
+          padding-top: 12px;
+          padding-bottom: 12px;
+        }
+        select,
+        .smallBtn {
+          min-height: 44px;
+          border-radius: 15px;
+          font-size: 0.92rem;
+        }
+        .card {
+          border-radius: 24px;
+          padding: 18px 16px 20px;
+        }
+        .chips {
+          justify-content: center;
+          margin-bottom: 14px;
+        }
+        .chipGroup {
+          justify-content: center;
+          gap: 7px;
+        }
+        .chip {
+          font-size: 0.82rem;
+          padding: 7px 10px;
+        }
+        .heart {
+          display: none;
+        }
+        .wordLine {
+          gap: 10px;
+          margin-top: 4px;
+        }
+        .bigword {
+          font-size: clamp(3.2rem, 19vw, 5.2rem);
+        }
+        .speak {
+          width: 42px;
+          height: 42px;
+        }
+        .meaning {
+          margin: 12px 0 16px;
+          font-size: 1.35rem;
+        }
+        .divider {
+          margin-bottom: 15px;
+        }
+        .example {
+          padding-bottom: 16px;
+        }
+        .exTitle {
+          margin-bottom: 7px;
+          font-size: 0.93rem;
+        }
+        .exampleEN {
+          font-size: 1.04rem;
+          line-height: 1.55;
+        }
+        .exampleZH {
+          font-size: 0.93rem;
+          line-height: 1.55;
+        }
+        .cardNav {
+          grid-template-columns: 1fr 58px 1fr;
+          gap: 10px;
+          margin-top: 12px;
+        }
+        .navBtn {
+          min-height: 54px;
+          border-radius: 18px;
+          font-size: 0.94rem;
+          padding: 0 10px;
+        }
+        .random span {
+          display: none;
+        }
+        .underProgress {
+          margin-top: 14px;
+          width: 86%;
+        }
+      }
+
+      .infoCard {
+        margin-top: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 18px;
+        padding: 12px 14px;
+      }
+      .infoHead {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+      .infoHead span {
+        color: #dff8ff;
+      }
+      .infoHead b {
+        color: var(--gold);
+      }
+      .infoText {
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.6;
+      }
+      .infoCard summary {
+        cursor: pointer;
+        color: var(--cyan);
+        margin-top: 6px;
+        font-size: 0.8rem;
+      }
+
+      /* === Learning compact tools === */
+      .learnPanel {
+        margin-top: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.045);
+        border-radius: 20px;
+        padding: 12px;
+      }
+      .learnStats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .learnStat {
+        min-height: 58px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.052);
+        border-radius: 16px;
+        padding: 9px 10px;
+      }
+      .learnStat span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.72rem;
+        line-height: 1.2;
+      }
+      .learnStat b {
+        display: block;
+        margin-top: 4px;
+        color: #fff;
+        font-size: 1rem;
+      }
+      .learnBar {
+        height: 7px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.1);
+        margin-top: 10px;
+      }
+      .learnBar i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(
+          90deg,
+          var(--cyan),
+          var(--purple),
+          var(--gold)
+        );
+        transition: 0.25s;
+      }
+      .learnActions {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .toolBtn {
+        min-height: 38px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.07);
+        color: #dce9ff;
+        font-size: 0.8rem;
+        font-weight: 800;
+        transition: 0.18s;
+      }
+      .toolBtn:hover,
+      .toolBtn.active {
+        transform: translateY(-1px);
+        border-color: rgba(56, 231, 255, 0.35);
+        background: rgba(56, 231, 255, 0.1);
+        color: #fff;
+      }
+      .toolBtn.warn.active {
+        border-color: rgba(255, 119, 200, 0.35);
+        background: rgba(255, 119, 200, 0.1);
+      }
+      .ratingBox {
+        margin: 8px auto 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+      }
+      .starBtn {
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.35);
+        font-size: 1rem;
+      }
+      .starBtn.on {
+        color: var(--gold);
+        background: rgba(255, 209, 102, 0.12);
+        border-color: rgba(255, 209, 102, 0.35);
+      }
+      .favoriteBtn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        display: grid;
+        place-items: center;
+      }
+      .favoriteBtn.on {
+        color: var(--pink);
+        border-color: rgba(255, 119, 200, 0.38);
+        background: rgba(255, 119, 200, 0.12);
+      }
+      .quizBox {
+        width: min(620px, 100%);
+        margin: 0 auto;
+        display: grid;
+        gap: 12px;
+      }
+      .quizQuestion {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+      .quizWord {
+        text-align: center;
+        font-size: clamp(3.2rem, 9vw, 6.5rem);
+        line-height: 1;
+        letter-spacing: -0.06em;
+        font-weight: 950;
+      }
+      .quizChoices {
+        display: grid;
+        gap: 10px;
+      }
+      .quizChoice {
+        min-height: 54px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.07);
+        color: #fff;
+        text-align: left;
+        padding: 12px 14px;
+        font-weight: 750;
+      }
+      .quizChoice.correct {
+        border-color: rgba(124, 255, 178, 0.5);
+        background: rgba(124, 255, 178, 0.13);
+      }
+      .quizChoice.wrong {
+        border-color: rgba(255, 119, 200, 0.5);
+        background: rgba(255, 119, 200, 0.13);
+      }
+      .quizResult {
+        min-height: 24px;
+        text-align: center;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .modeNote {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8rem;
+        margin-top: 8px;
+      }
+      @media (max-width: 1080px) {
+        .learnStats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .learnActions {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 620px) {
+        .learnPanel {
+          padding: 10px;
+          border-radius: 18px;
+        }
+        .learnStats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 7px;
+        }
+        .learnStat {
+          min-height: 52px;
+          padding: 8px;
+        }
+        .learnStat b {
+          font-size: 0.95rem;
+        }
+        .learnActions {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 7px;
+        }
+        .toolBtn {
+          font-size: 0.78rem;
+          min-height: 36px;
+        }
+        .ratingBox {
+          gap: 4px;
+        }
+        .starBtn {
+          width: 28px;
+          height: 28px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <aside class="sidebar glass">
+        <div class="brand">
+          <div class="logo">📖</div>
+          <div><b>VOCAB</b><span>英文字彙練習</span></div>
+        </div>
+        <nav class="nav" aria-label="功能選單">
+          <button type="button">⌂　總覽</button>
+          <button type="button" class="active">✾　瀏覽單字</button>
+          <button type="button" onclick="focusSearch()">⌕　搜尋單字</button>
+          <button type="button" onclick="randomPick()">♡　隨機抽卡</button>
+          <button
+            type="button"
+            onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+          >
+            ⚙　回到上方
+          </button>
+        </nav>
+        <section class="sideStats">
+          <h3>統計資料</h3>
+          <div class="row"><span>總單字數</span><b id="sideTotal">0</b></div>
+          <div class="row"><span>總出現次數</span><b id="sideCount">0</b></div>
+          <div class="row"><span>目前篩選</span><b id="sideView">0</b></div>
+          <div class="row"><span>目前位置</span><b id="sideNow">0</b></div>
+        </section>
+      </aside>
+
+      <section class="content">
+        <header class="mobileTop glass">
+          <span>☰</span><b>VOCAB 單字練習</b
+          ><button class="heart" type="button" onclick="focusSearch()">
+            ⌕
+          </button>
+        </header>
+
+        <section class="toolbar glass">
+          <div class="searchWrap">
+            <span>⌕</span>
+            <input
+              id="searchInput"
+              class="search"
+              placeholder="搜尋單字、中文意思，例如：policy、運輸、責任..."
+              autocomplete="off"
+            />
+          </div>
+          <select id="sortSelect" title="排序方式">
+            <option value="rankAsc">排名 ↓ 高頻優先</option>
+            <option value="rankDesc">排名 ↑ 低頻優先</option>
+            <option value="az">字母 A → Z</option>
+            <option value="za">字母 Z → A</option>
+            <option value="random">隨機排序</option>
+          </select>
+          <select id="filterSelect" title="篩選">
+            <option value="all">全部單字</option>
+            <option value="yes">建議背誦：是</option>
+            <option value="no">建議背誦：否</option>
+          </select>
+          <button class="smallBtn" type="button" id="randomTopBtn">
+            🎲 隨機
+          </button>
+        </section>
+
+        <div class="infoCard glass">
+          <div class="infoHead">
+            <span>📚 <b>1360份考卷</b></span>
+            <span>🎯 <b>1600核心字</b></span>
+            <span>🤖 <b>AI統計分析</b></span>
+          </div>
+          <div class="infoText">時間有限？先掌握這1600個高頻核心字。</div>
+          <details>
+            <summary>了解更多</summary>
+            <div class="infoText">
+              本字庫統計了100-115年間，包含高普初考、中華郵政、國營事業、北桃中捷及各家銀行等1,360份關鍵考卷，從中淬煉出出現機率大於1%的1,600個高頻單字。如果備考時間不夠，請至少把這1,600個精華單字記熟，它們能為您奠定最紮實的分數基本盤。若時間充裕，在掌握這1,600字之後，一定要持續擴充單字庫。
+            </div>
+          </details>
+        </div>
+
+        <section class="learnPanel glass" aria-label="學習功能">
+          <div class="learnStats">
+            <div class="learnStat">
+              <span>今日進度</span><b id="dailyProgressText">0 / 100</b>
+            </div>
+            <div class="learnStat">
+              <span>連續學習</span><b id="streakText">0 天</b>
+            </div>
+            <div class="learnStat">
+              <span>我的最愛</span><b id="favoriteCountText">0 字</b>
+            </div>
+            <div class="learnStat">
+              <span>錯題本</span><b id="wrongCountText">0 字</b>
+            </div>
+          </div>
+          <div class="learnBar"><i id="dailyProgressBar"></i></div>
+          <div class="learnActions">
+            <button
+              class="toolBtn"
+              type="button"
+              id="modeAllBtn"
+              onclick="setStudyMode('all')"
+            >
+              全部
+            </button>
+            <button
+              class="toolBtn"
+              type="button"
+              id="modeFavoriteBtn"
+              onclick="setStudyMode('favorite')"
+            >
+              ♡ 最愛
+            </button>
+            <button
+              class="toolBtn"
+              type="button"
+              id="modeReviewBtn"
+              onclick="setStudyMode('review')"
+            >
+              ⏳ 複習
+            </button>
+            <button
+              class="toolBtn warn"
+              type="button"
+              id="modeWrongBtn"
+              onclick="setStudyMode('wrong')"
+            >
+              ✎ 錯題
+            </button>
+            <button
+              class="toolBtn"
+              type="button"
+              id="quizBtn"
+              onclick="toggleQuizMode()"
+            >
+              ⚡ 測驗
+            </button>
+          </div>
+          <div class="modeNote" id="modeNote">
+            一般瀏覽模式｜點星星可標記熟悉度，愛心可收藏。
+          </div>
+        </section>
+
+        <section class="studyGrid">
+          <article class="card glass" id="wordCard"></article>
+          <aside class="listPanel glass">
+            <div class="listHeader">
+              <b>瀏覽清單</b><span id="listCount">0 筆</span>
+            </div>
+            <div class="wordList" id="wordList"></div>
+          </aside>
+        </section>
+      </section>
+    </main>
+
+    <script>
+      let vocabulary = [];
+      let view = [];
+      let currentIndex = 0;
+      const DAILY_GOAL = 100;
+      let studyMode = "all";
+      let quizMode = false;
+      let quizLocked = false;
+      let quizAnswer = null;
+      const STORE_KEY = "vocabLearningState_v1";
+      const todayKey = () => new Date().toISOString().slice(0, 10);
+      let learningState = loadLearningState();
+
+      function loadLearningState() {
+        const base = {
+          favorites: {},
+          ratings: {},
+          wrong: {},
+          seen: {},
+          lastSeen: {},
+          daily: {},
+          streak: { lastDate: "", count: 0 },
+        };
+        try {
+          return {
+            ...base,
+            ...JSON.parse(localStorage.getItem(STORE_KEY) || "{}"),
+          };
+        } catch (e) {
+          return base;
+        }
+      }
+
+      function saveLearningState() {
+        localStorage.setItem(STORE_KEY, JSON.stringify(learningState));
+      }
+
+      function wordKey(x) {
+        return String(x?.word || "").toLowerCase();
+      }
+
+      function ensureToday() {
+        const t = todayKey();
+        if (!learningState.daily[t]) learningState.daily[t] = {};
+        if (learningState.streak.lastDate !== t) {
+          const yesterday = new Date(Date.now() - 86400000)
+            .toISOString()
+            .slice(0, 10);
+          learningState.streak.count =
+            learningState.streak.lastDate === yesterday
+              ? (learningState.streak.count || 0) + 1
+              : 1;
+          learningState.streak.lastDate = t;
+          saveLearningState();
+        }
+      }
+
+      function markSeen(x) {
+        if (!x) return;
+        ensureToday();
+        const k = wordKey(x);
+        learningState.seen[k] = (learningState.seen[k] || 0) + 1;
+        learningState.lastSeen[k] = Date.now();
+        learningState.daily[todayKey()][k] = true;
+        saveLearningState();
+      }
+
+      function getReviewDueWords(source) {
+        const now = Date.now();
+        return source.filter((x) => {
+          const k = wordKey(x);
+          const rating = Number(learningState.ratings[k] || 0);
+          const last = Number(learningState.lastSeen[k] || 0);
+          if (!last) return true;
+          const days = [0, 1, 2, 4, 7, 14][rating] || 1;
+          return now - last >= days * 86400000;
+        });
+      }
+
+      function updateLearningPanel() {
+        ensureToday();
+        const dailyCount = Object.keys(
+          learningState.daily[todayKey()] || {},
+        ).length;
+        const favCount = Object.keys(learningState.favorites || {}).length;
+        const wrongCount = Object.keys(learningState.wrong || {}).length;
+        const progress = Math.min(
+          100,
+          Math.round((dailyCount / DAILY_GOAL) * 100),
+        );
+        const dailyText = $("dailyProgressText");
+        if (!dailyText) return;
+        dailyText.textContent = `${dailyCount} / ${DAILY_GOAL}`;
+        $("dailyProgressBar").style.width = progress + "%";
+        $("streakText").textContent = `${learningState.streak.count || 0} 天`;
+        $("favoriteCountText").textContent = `${favCount} 字`;
+        $("wrongCountText").textContent = `${wrongCount} 字`;
+        ["All", "Favorite", "Review", "Wrong"].forEach((name) => {
+          const btn = $("mode" + name + "Btn");
+          if (btn) btn.classList.remove("active");
+        });
+        const activeMap = {
+          all: "modeAllBtn",
+          favorite: "modeFavoriteBtn",
+          review: "modeReviewBtn",
+          wrong: "modeWrongBtn",
+        };
+        if ($(activeMap[studyMode]))
+          $(activeMap[studyMode]).classList.add("active");
+        if ($("quizBtn")) $("quizBtn").classList.toggle("active", quizMode);
+      }
+
+      function setStudyMode(mode) {
+        studyMode = mode;
+        quizMode = false;
+        quizLocked = false;
+        applyView();
+      }
+
+      function toggleQuizMode() {
+        quizMode = !quizMode;
+        quizLocked = false;
+        renderAll();
+      }
+
+      function toggleFavorite(word) {
+        const k = String(word || "").toLowerCase();
+        if (!k) return;
+        if (learningState.favorites[k]) delete learningState.favorites[k];
+        else learningState.favorites[k] = true;
+        saveLearningState();
+        renderAll();
+      }
+
+      function setRating(word, rating) {
+        const k = String(word || "").toLowerCase();
+        if (!k) return;
+        learningState.ratings[k] = rating;
+        saveLearningState();
+        renderAll();
+      }
+
+      function buildRatingStars(word) {
+        const rating = Number(
+          learningState.ratings[String(word || "").toLowerCase()] || 0,
+        );
+        return `<div class="ratingBox" title="熟悉度評分">${[1, 2, 3, 4, 5].map((n) => `<button class="starBtn ${n <= rating ? "on" : ""}" type="button" onclick="setRating('${String(word).replace(/'/g, "\\'")}', ${n})">★</button>`).join("")}</div>`;
+      }
+
+      function buildQuizChoices(x) {
+        const correct = x.meaning || "";
+        const pool = vocabulary
+          .filter((w) => w.word !== x.word && w.meaning)
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 3)
+          .map((w) => w.meaning);
+        return [...pool, correct].sort(() => Math.random() - 0.5);
+      }
+
+      function answerQuiz(choice) {
+        if (quizLocked || !view.length) return;
+        const x = view[currentIndex];
+        quizLocked = true;
+        quizAnswer = choice;
+        const k = wordKey(x);
+        if (choice !== x.meaning) learningState.wrong[k] = true;
+        else delete learningState.wrong[k];
+        saveLearningState();
+        renderCard();
+        renderStats();
+        updateLearningPanel();
+      }
+
+      function nextQuiz() {
+        quizLocked = false;
+        quizAnswer = null;
+        move(1);
+      }
+
+      const $ = (id) => document.getElementById(id);
+      const esc = (s) =>
+        String(s ?? "").replace(
+          /[&<>\"]/g,
+          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m],
+        );
+      const num = (n) => Number(n || 0).toLocaleString();
+
+      function highlightExample(sentence, word) {
+        const safeSentence = esc(sentence);
+        const w = String(word || "").trim();
+        if (!w) return safeSentence;
+        try {
+          const re = new RegExp(
+            `\\b(${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})\\b`,
+            "ig",
+          );
+          return safeSentence.replace(re, "<mark>$1</mark>");
+        } catch (e) {
+          return safeSentence;
+        }
+      }
+
+      async function loadData() {
+        try {
+          const res = await fetch("vocabulary.json", { cache: "no-store" });
+          if (!res.ok) throw new Error("找不到 vocabulary.json");
+          vocabulary = await res.json();
+        } catch (e) {
+          $("wordCard").innerHTML =
+            `<div class="empty"><div><h2>讀不到 vocabulary.json</h2><p>請確認本網頁與 vocabulary.json 放在同一個資料夾，或使用 VS Code Live Server 開啟。</p></div></div>`;
+          return;
+        }
+        const totalCount = vocabulary.reduce(
+          (sum, x) => sum + Number(x.count || 0),
+          0,
+        );
+        $("sideTotal").textContent = num(vocabulary.length);
+        $("sideCount").textContent = num(totalCount);
+        applyView();
+      }
+
+      function applyView() {
+        const q = $("searchInput").value.trim().toLowerCase();
+        const f = $("filterSelect").value;
+        view = vocabulary.filter((x) => {
+          const hay =
+            `${x.word || ""} ${x.meaning || ""} ${x.partOfSpeech || ""} ${x.level || ""}`.toLowerCase();
+          const matchQ = !q || hay.includes(q);
+          const matchF =
+            f === "all" ||
+            (f === "yes" ? x.recommended === "是" : x.recommended !== "是");
+          const k = wordKey(x);
+          const matchMode =
+            studyMode === "all" ||
+            (studyMode === "favorite" && learningState.favorites[k]) ||
+            (studyMode === "wrong" && learningState.wrong[k]) ||
+            studyMode === "review";
+          return matchQ && matchF && matchMode;
+        });
+        if (studyMode === "review") view = getReviewDueWords(view);
+        sortView();
+        currentIndex = 0;
+        renderAll();
+      }
+
+      function sortView() {
+        const mode = $("sortSelect").value;
+        if (mode === "rankAsc")
+          view.sort((a, b) => Number(a.rank) - Number(b.rank));
+        if (mode === "rankDesc")
+          view.sort((a, b) => Number(b.rank) - Number(a.rank));
+        if (mode === "az")
+          view.sort((a, b) => String(a.word).localeCompare(String(b.word)));
+        if (mode === "za")
+          view.sort((a, b) => String(b.word).localeCompare(String(a.word)));
+        if (mode === "random") view.sort(() => Math.random() - 0.5);
+      }
+
+      function renderAll() {
+        renderCard();
+        renderList();
+        renderStats();
+        updateLearningPanel();
+      }
+
+      function renderStats() {
+        $("sideView").textContent = num(view.length);
+        $("sideNow").textContent = view.length
+          ? `${currentIndex + 1}/${view.length}`
+          : "0";
+        $("listCount").textContent = `${num(view.length)} 筆`;
+        const note = $("modeNote");
+        if (note) {
+          const modeText =
+            {
+              all: "一般瀏覽模式｜點星星可標記熟悉度，愛心可收藏。",
+              favorite: "最愛收藏模式｜只看你按過愛心的單字。",
+              review: "忘記曲線複習模式｜優先顯示今天該回頭看的字。",
+              wrong: "錯題本模式｜只看測驗答錯的單字。",
+            }[studyMode] || "";
+          note.textContent = quizMode
+            ? "測驗模式｜選錯會自動加入錯題本，選對會從錯題本移除。"
+            : modeText;
+        }
+      }
+
+      function renderCard() {
+        const card = $("wordCard");
+        if (!view.length) {
+          card.innerHTML = `<div class="empty"><div><h2>找不到資料</h2><p>換個關鍵字。單字不是不見，只是躲到另一片星雲去了。</p></div></div>`;
+          renderStats();
+          return;
+        }
+        const x = view[currentIndex];
+        markSeen(x);
+        const prev = view[(currentIndex - 1 + view.length) % view.length];
+        const next = view[(currentIndex + 1) % view.length];
+        const progress = ((currentIndex + 1) / view.length) * 100;
+        if (quizMode) {
+          const choices = buildQuizChoices(x);
+          card.innerHTML = `
+        <div class="cardInner">
+          <div class="quizBox">
+            <div class="quizQuestion">選出正確中文意思</div>
+            <div class="quizWord">${esc(x.word)}</div>
+            <div class="chipGroup" style="justify-content:center">
+              <span class="chip">排名 #${esc(x.rank)}</span>
+              <span class="chip">${num(x.count)} 次</span>
+              <span class="chip">${esc(x.partOfSpeech)}</span>
+            </div>
+            <div class="quizChoices">
+              ${choices
+                .map((c) => {
+                  const cls = quizLocked
+                    ? c === x.meaning
+                      ? "correct"
+                      : c === quizAnswer
+                        ? "wrong"
+                        : ""
+                    : "";
+                  return `<button class="quizChoice ${cls}" type="button" onclick="answerQuiz('${String(c).replace(/'/g, "\'")}')">${esc(c)}</button>`;
+                })
+                .join("")}
+            </div>
+            <div class="quizResult">${quizLocked ? (quizAnswer === x.meaning ? "答對了，這顆星收下。" : `答錯了，正解：${esc(x.meaning)}`) : "別急，先判斷，再出手。"}</div>
+            <div class="cardNav">
+              <button class="navBtn prev" type="button" onclick="move(-1)">‹ 上一題</button>
+              <button class="navBtn random" type="button" onclick="nextQuiz()">⭐ 下一題</button>
+              <button class="navBtn next" type="button" onclick="move(1)">跳過 ›</button>
+            </div>
+            <div class="underProgress"><div class="bar" style="width:${progress}%"></div></div>
+          </div>
+        </div>`;
+        } else {
+          const favOn = !!learningState.favorites[wordKey(x)];
+          card.innerHTML = `
+        <div class="cardInner">
+          <div class="chips">
+            <div class="chipGroup">
+              <span class="chip">排名 #${esc(x.rank)}</span>
+              <span class="chip">${num(x.count)} 次</span>
+              <span class="chip">${esc(x.partOfSpeech)}</span>
+              <span class="chip">${esc(x.level)}</span>
+              ${x.recommended === "是" ? `<span class="chip recommend">建議背誦</span>` : ""}
+            </div>
+            <button class="favoriteBtn ${favOn ? "on" : ""}" type="button" onclick="toggleFavorite('${String(x.word).replace(/'/g, "\'")}')" title="加入我的最愛">${favOn ? "♥" : "♡"}</button>
+          </div>
+
+          <div class="wordLine">
+            <h1 class="bigword">${esc(x.word)}</h1>
+            <button class="speak" type="button" onclick="speakWord('${String(x.word).replace(/'/g, "\'")}')" title="朗讀單字">🔊</button>
+          </div>
+          <p class="meaning">${esc(x.meaning)}</p>
+          ${buildRatingStars(x.word)}
+          <div class="divider"></div>
+
+          <section class="example">
+            <div class="exTitle"><span class="dot"></span>例句</div>
+            <div class="exampleEN">${highlightExample(x.example, x.word)}</div>
+            <div class="exampleZH">${esc(x.translation)}</div>
+          </section>
+
+          <div class="cardNav">
+            <button class="navBtn prev" type="button" onclick="move(-1)">‹ 上一個<br><small>#${esc(prev.rank)}</small></button>
+            <button class="navBtn random" type="button" onclick="randomPick()">⭐ <span>隨機</span></button>
+            <button class="navBtn next" type="button" onclick="move(1)">下一個 ›<br><small>#${esc(next.rank)}</small></button>
+          </div>
+          <div class="underProgress"><div class="bar" style="width:${progress}%"></div></div>
+        </div>`;
+        }
+        renderStats();
+      }
+
+      function renderList() {
+        const box = $("wordList");
+        if (!view.length) {
+          box.innerHTML = `<div class="empty">沒有單字</div>`;
+          return;
+        }
+        const start = Math.max(0, currentIndex - 60);
+        const end = Math.min(view.length, start + 150);
+        box.innerHTML = view
+          .slice(start, end)
+          .map((x, offset) => {
+            const i = start + offset;
+            return `<div class="item ${i === currentIndex ? "active" : ""}" onclick="pick(${i})">
+          <span class="rank">#${esc(x.rank)}</span>
+          <span><span class="wordMini">${esc(x.word)}</span><div class="metaMini">${esc(x.partOfSpeech)}｜${num(x.count)} 次</div></span>
+          <span class="arrow">›</span>
+        </div>`;
+          })
+          .join("");
+        const active = box.querySelector(".item.active");
+        if (active) active.scrollIntoView({ block: "nearest" });
+      }
+
+      function pick(i) {
+        currentIndex = i;
+        renderAll();
+      }
+
+      function move(step) {
+        if (!view.length) return;
+        currentIndex = (currentIndex + step + view.length) % view.length;
+        renderAll();
+      }
+
+      function randomPick() {
+        if (!view.length) return;
+        currentIndex = Math.floor(Math.random() * view.length);
+        renderAll();
+      }
+
+      function focusSearch() {
+        $("searchInput").focus();
+      }
+
+      function speakWord(word) {
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(word);
+        u.lang = "en-US";
+        u.rate = 0.86;
+        window.speechSynthesis.speak(u);
+      }
+
+      $("searchInput").addEventListener("input", applyView);
+      $("sortSelect").addEventListener("change", applyView);
+      $("filterSelect").addEventListener("change", applyView);
+      $("randomTopBtn").addEventListener("click", randomPick);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") move(1);
+        if (e.key === "ArrowLeft") move(-1);
+        if (e.key === "/") {
+          e.preventDefault();
+          focusSearch();
+        }
+        if (e.key.toLowerCase() === "r") randomPick();
+        if (e.key.toLowerCase() === "q") toggleQuizMode();
+        if (e.key.toLowerCase() === "f" && view.length)
+          toggleFavorite(view[currentIndex].word);
+      });
+
+      loadData();
+    </script>
+  </body>
+</html>
