@@ -1,0 +1,1170 @@
+﻿{
+  "meta": {
+    "title": "運輸股公務車詳情表  更新日期:115.4.9",
+    "sourceSheet": "車輛基本資料",
+    "exportedAt": "2026-06-01 09:23:40",
+    "vehicleCount": 22
+  },
+  "overviewRankings": {
+    "vehicleAge": [
+      {"rank": 1, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": "12年6月7天", "sortValue": 4571},
+      {"rank": 2, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": "12年5月21天", "sortValue": 4555},
+      {"rank": 3, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": "11年7月2天", "sortValue": 4232},
+      {"rank": 4, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": "11年6月12天", "sortValue": 4211},
+      {"rank": 5, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": "11年6月12天", "sortValue": 4211},
+      {"rank": 6, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": "10年6月6天", "sortValue": 3840},
+      {"rank": 7, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": "10年6月6天", "sortValue": 3840},
+      {"rank": 8, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": "10年6月6天", "sortValue": 3840},
+      {"rank": 9, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": "10年6月6天", "sortValue": 3840},
+      {"rank": 10, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": "10年5月24天", "sortValue": 3828},
+      {"rank": 11, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": "9年5月19天", "sortValue": 3457},
+      {"rank": 12, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": "9年5月19天", "sortValue": 3457},
+      {"rank": 13, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": "7年8月12天", "sortValue": 2811},
+      {"rank": 14, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": "7年8月12天", "sortValue": 2811},
+      {"rank": 15, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": "7年6月13天", "sortValue": 2751},
+      {"rank": 16, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": "7年6月13天", "sortValue": 2751},
+      {"rank": 17, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": "6年5月22天", "sortValue": 2365},
+      {"rank": 18, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": "6年5月22天", "sortValue": 2365},
+      {"rank": 19, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": "6年5月22天", "sortValue": 2365},
+      {"rank": 20, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": "4年5月25天", "sortValue": 1637},
+      {"rank": 21, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": "2年6月26天", "sortValue": 938},
+      {"rank": 22, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": "1年5月12天", "sortValue": 528}
+    ],
+    "totalMileage": [
+      {"rank": 1, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": 645127, "sortValue": 645127},
+      {"rank": 2, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": 590519, "sortValue": 590519},
+      {"rank": 3, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": 575392, "sortValue": 575392},
+      {"rank": 4, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": 572166, "sortValue": 572166},
+      {"rank": 5, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": 504309, "sortValue": 504309},
+      {"rank": 6, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": 471253, "sortValue": 471253},
+      {"rank": 7, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": 321490, "sortValue": 321490},
+      {"rank": 8, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": 277666, "sortValue": 277666},
+      {"rank": 9, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": 259945, "sortValue": 259945},
+      {"rank": 10, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": 231844, "sortValue": 231844},
+      {"rank": 11, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": 178014, "sortValue": 178014},
+      {"rank": 12, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": 177369, "sortValue": 177369},
+      {"rank": 13, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": 160312, "sortValue": 160312},
+      {"rank": 14, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": 152641, "sortValue": 152641},
+      {"rank": 15, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": 139846, "sortValue": 139846},
+      {"rank": 16, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": 125814, "sortValue": 125814},
+      {"rank": 17, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": 86891, "sortValue": 86891},
+      {"rank": 18, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": 82236, "sortValue": 82236},
+      {"rank": 19, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": 79573, "sortValue": 79573},
+      {"rank": 20, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": 53407, "sortValue": 53407},
+      {"rank": 21, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": 31812, "sortValue": 31812},
+      {"rank": 22, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": 25201, "sortValue": 25201}
+    ],
+    "yearlyMileage": [
+      {"rank": 1, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": 98420, "sortValue": 98420},
+      {"rank": 2, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": 95899, "sortValue": 95899},
+      {"rank": 3, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": 89007, "sortValue": 89007},
+      {"rank": 4, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": 78542, "sortValue": 78542},
+      {"rank": 5, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": 64986, "sortValue": 64986},
+      {"rank": 6, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": 58648, "sortValue": 58648},
+      {"rank": 7, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": 52015, "sortValue": 52015},
+      {"rank": 8, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": 42026, "sortValue": 42026},
+      {"rank": 9, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": 32149, "sortValue": 32149},
+      {"rank": 10, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": 27767, "sortValue": 27767},
+      {"rank": 11, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": 25201, "sortValue": 25201},
+      {"rank": 12, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": 23184, "sortValue": 23184},
+      {"rank": 13, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": 19978, "sortValue": 19978},
+      {"rank": 14, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": 17973, "sortValue": 17973},
+      {"rank": 15, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": 16960, "sortValue": 16960},
+      {"rank": 16, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": 16124, "sortValue": 16124},
+      {"rank": 17, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": 16031, "sortValue": 16031},
+      {"rank": 18, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": 11368, "sortValue": 11368},
+      {"rank": 19, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": 9655, "sortValue": 9655},
+      {"rank": 20, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": 7630, "sortValue": 7630},
+      {"rank": 21, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": 6853, "sortValue": 6853},
+      {"rank": 22, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": 3181, "sortValue": 3181}
+    ],
+    "maintenanceCost": [
+      {"rank": 1, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": 1240913, "sortValue": 1240913},
+      {"rank": 2, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": 1230729, "sortValue": 1230729},
+      {"rank": 3, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": 1039832, "sortValue": 1039832},
+      {"rank": 4, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": 975138, "sortValue": 975138},
+      {"rank": 5, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": 942787, "sortValue": 942787},
+      {"rank": 6, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": 899606, "sortValue": 899606},
+      {"rank": 7, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": 864629, "sortValue": 864629},
+      {"rank": 8, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": 798609, "sortValue": 798609},
+      {"rank": 9, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": 773382, "sortValue": 773382},
+      {"rank": 10, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": 743696, "sortValue": 743696},
+      {"rank": 11, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": 587957, "sortValue": 587957},
+      {"rank": 12, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": 543886, "sortValue": 543886},
+      {"rank": 13, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": 511472, "sortValue": 511472},
+      {"rank": 14, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": 493635, "sortValue": 493635},
+      {"rank": 15, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": 378329, "sortValue": 378329},
+      {"rank": 16, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": 341403, "sortValue": 341403},
+      {"rank": 17, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": 327363, "sortValue": 327363},
+      {"rank": 18, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": 291255, "sortValue": 291255},
+      {"rank": 19, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": 272015, "sortValue": 272015},
+      {"rank": 20, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": 257523, "sortValue": 257523},
+      {"rank": 21, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": 128093, "sortValue": 128093},
+      {"rank": 22, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": 15987, "sortValue": 15987}
+    ],
+    "remainingValue": [
+      {"rank": 1, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": 3570000, "sortValue": 3570000},
+      {"rank": 2, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": 2800000, "sortValue": 2800000},
+      {"rank": 3, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": 2405000, "sortValue": 2405000},
+      {"rank": 4, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": 1897500, "sortValue": 1897500},
+      {"rank": 5, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": 1897500, "sortValue": 1897500},
+      {"rank": 6, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": 1870000, "sortValue": 1870000},
+      {"rank": 7, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": 975000, "sortValue": 975000},
+      {"rank": 8, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": 975000, "sortValue": 975000},
+      {"rank": 9, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": 807500, "sortValue": 807500},
+      {"rank": 10, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": 807500, "sortValue": 807500},
+      {"rank": 11, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": 725000, "sortValue": 725000},
+      {"rank": 12, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": 688750, "sortValue": 688750},
+      {"rank": 13, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": 688750, "sortValue": 688750},
+      {"rank": 14, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": 625000, "sortValue": 625000},
+      {"rank": 15, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": 625000, "sortValue": 625000},
+      {"rank": 16, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": 625000, "sortValue": 625000},
+      {"rank": 17, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": 525000, "sortValue": 525000},
+      {"rank": 18, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": 525000, "sortValue": 525000},
+      {"rank": 19, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": 450000, "sortValue": 450000},
+      {"rank": 20, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": 310000, "sortValue": 310000},
+      {"rank": 21, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": 271250, "sortValue": 271250},
+      {"rank": 22, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": 185000, "sortValue": 185000}
+    ],
+    "maintenanceScore": [
+      {"rank": 1, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": 99, "sortValue": 99},
+      {"rank": 2, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": 95, "sortValue": 95},
+      {"rank": 3, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": 94, "sortValue": 94},
+      {"rank": 4, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": 91, "sortValue": 91},
+      {"rank": 5, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": 87, "sortValue": 87},
+      {"rank": 6, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": 87, "sortValue": 87},
+      {"rank": 7, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": 85, "sortValue": 85},
+      {"rank": 8, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": 83, "sortValue": 83},
+      {"rank": 9, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": 82, "sortValue": 82},
+      {"rank": 10, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": 81, "sortValue": 81},
+      {"rank": 11, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": 80, "sortValue": 80},
+      {"rank": 12, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": 80, "sortValue": 80},
+      {"rank": 13, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": 77, "sortValue": 77},
+      {"rank": 14, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": 77, "sortValue": 77},
+      {"rank": 15, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": 74, "sortValue": 74},
+      {"rank": 16, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": 73, "sortValue": 73},
+      {"rank": 17, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": 69, "sortValue": 69},
+      {"rank": 18, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": 57, "sortValue": 57},
+      {"rank": 19, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": 56, "sortValue": 56},
+      {"rank": 20, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": 33, "sortValue": 33},
+      {"rank": 21, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": 11, "sortValue": 11},
+      {"rank": 22, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": 3, "sortValue": 3}
+    ],
+    "healthScore": [
+      {"rank": 1, "plateNo": "KEJ-1662", "adminNo": "A400574", "custodian": "簡慶富", "value": 98, "sortValue": 98},
+      {"rank": 2, "plateNo": "KEP-6030", "adminNo": "A400524", "custodian": "陳柏林", "value": 92, "sortValue": 92},
+      {"rank": 3, "plateNo": "KEG-1993", "adminNo": "A400469", "custodian": "連志維", "value": 88, "sortValue": 88},
+      {"rank": 4, "plateNo": "083-Y5", "adminNo": "A400293", "custodian": "翁志峰", "value": 80, "sortValue": 80},
+      {"rank": 5, "plateNo": "KEA-0772", "adminNo": "A400380", "custodian": "陳柏宇", "value": 78, "sortValue": 78},
+      {"rank": 6, "plateNo": "KEA-1773", "adminNo": "A400403", "custodian": "王寶生", "value": 76, "sortValue": 76},
+      {"rank": 7, "plateNo": "KEB-5326", "adminNo": "A400220", "custodian": "許瑞廷", "value": 75, "sortValue": 75},
+      {"rank": 8, "plateNo": "KEG-1727", "adminNo": "A400442", "custodian": "周耀宗", "value": 73, "sortValue": 73},
+      {"rank": 9, "plateNo": "KEB-5327", "adminNo": "A400221", "custodian": "張智雄", "value": 73, "sortValue": 73},
+      {"rank": 10, "plateNo": "KEA-1775", "adminNo": "A400404", "custodian": "陳俊瑋", "value": 71, "sortValue": 71},
+      {"rank": 11, "plateNo": "KEA-0851", "adminNo": "A400396", "custodian": "鄭憲鴻", "value": 71, "sortValue": 71},
+      {"rank": 12, "plateNo": "AAQ-672", "adminNo": "A400219", "custodian": "金哲駿", "value": 64, "sortValue": 64},
+      {"rank": 13, "plateNo": "AAB-298", "adminNo": "A400244", "custodian": "程世桓", "value": 61, "sortValue": 61},
+      {"rank": 14, "plateNo": "989-BT", "adminNo": "A400189", "custodian": "莊景宇", "value": 60, "sortValue": 60},
+      {"rank": 15, "plateNo": "988-BT", "adminNo": "A400188", "custodian": "吳佳錚", "value": 59, "sortValue": 59},
+      {"rank": 16, "plateNo": "KEA-0850", "adminNo": "A400395", "custodian": "周恆毅", "value": 58, "sortValue": 58},
+      {"rank": 17, "plateNo": "AAB-336", "adminNo": "A400235", "custodian": "葉吉順", "value": 55, "sortValue": 55},
+      {"rank": 18, "plateNo": "080-Y5", "adminNo": "A400292", "custodian": "葉育宏", "value": 55, "sortValue": 55},
+      {"rank": 19, "plateNo": "KEA-0771", "adminNo": "A400379", "custodian": "邱俊融", "value": 53, "sortValue": 53},
+      {"rank": 20, "plateNo": "007-BT", "adminNo": "A400139", "custodian": "陳緯謙", "value": 39, "sortValue": 39},
+      {"rank": 21, "plateNo": "052-BT", "adminNo": "A400153", "custodian": "李翊宏", "value": 38, "sortValue": 38},
+      {"rank": 22, "plateNo": "499-BV", "adminNo": "A400179", "custodian": "沈銘展", "value": 28, "sortValue": 28}
+    ]
+  },
+  "vehicles": [
+    {
+      "plateNo": "007-BT",
+      "adminNo": "A400139",
+      "custodian": "陳緯謙",
+      "basic": {
+        "brand": "達富",
+        "tonnage": 17,
+        "purchaseDate": "2013-11-25",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "已報廢",
+        "propertyNo": "4010702-01-00779",
+        "displacement": 6692,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "12年6月7天",
+        "ageYears": 12,
+        "mileageTotal": 504309,
+        "mileageYearly": 42026,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 82052
+      },
+      "maintenance": {
+        "repairCostTotal": 942787,
+        "repairCostLast3YearsAvg": 149909
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3100000,
+        "depreciationStatus": "已達殘值",
+        "replacementAdvice": "優先汰換",
+        "remainingValue": 310000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 0,
+        "mileageScore": 58,
+        "maintenanceScore": 3,
+        "valueScore": 70,
+        "healthScore": 39
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "052-BT",
+      "adminNo": "A400153",
+      "custodian": "李翊宏",
+      "basic": {
+        "brand": "五十鈴",
+        "tonnage": 9.5,
+        "purchaseDate": "2013-12-11",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00767",
+        "displacement": 5193,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "12年5月21天",
+        "ageYears": 12,
+        "mileageTotal": 82236,
+        "mileageYearly": 6853,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 10658
+      },
+      "maintenance": {
+        "repairCostTotal": 327363,
+        "repairCostLast3YearsAvg": 61625.3333333333
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1850000,
+        "depreciationStatus": "已達殘值",
+        "replacementAdvice": "優先汰換",
+        "remainingValue": 185000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 0,
+        "mileageScore": 92,
+        "maintenanceScore": 33,
+        "valueScore": 0,
+        "healthScore": 38
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "499-BV",
+      "adminNo": "A400179",
+      "custodian": "沈銘展",
+      "basic": {
+        "brand": "中華堅達",
+        "tonnage": 8,
+        "purchaseDate": "2014-10-30",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00794",
+        "displacement": 2998,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "11年7月2天",
+        "ageYears": 11,
+        "mileageTotal": 177369,
+        "mileageYearly": 16124,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 27557
+      },
+      "maintenance": {
+        "repairCostTotal": 899606,
+        "repairCostLast3YearsAvg": 121070
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1550000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 271250,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 8,
+        "mileageScore": 80,
+        "maintenanceScore": 11,
+        "valueScore": 0,
+        "healthScore": 28
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "988-BT",
+      "adminNo": "A400188",
+      "custodian": "吳佳錚",
+      "basic": {
+        "brand": "三菱",
+        "tonnage": 17,
+        "purchaseDate": "2014-11-20",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00803",
+        "displacement": 7545,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "11年6月12天",
+        "ageYears": 11,
+        "mileageTotal": 645127,
+        "mileageYearly": 58648,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 94589
+      },
+      "maintenance": {
+        "repairCostTotal": 1240913,
+        "repairCostLast3YearsAvg": 113115.666666667
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3000000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 525000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 8,
+        "mileageScore": 46,
+        "maintenanceScore": 57,
+        "valueScore": 90,
+        "healthScore": 59
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "989-BT",
+      "adminNo": "A400189",
+      "custodian": "莊景宇",
+      "basic": {
+        "brand": "三菱",
+        "tonnage": 17,
+        "purchaseDate": "2014-11-20",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00804",
+        "displacement": 7545,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "11年6月12天",
+        "ageYears": 11,
+        "mileageTotal": 572166,
+        "mileageYearly": 52015,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 98223
+      },
+      "maintenance": {
+        "repairCostTotal": 1230729,
+        "repairCostLast3YearsAvg": 115432.333333333
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3000000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 525000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 8,
+        "mileageScore": 52,
+        "maintenanceScore": 56,
+        "valueScore": 90,
+        "healthScore": 60
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "AAQ-672",
+      "adminNo": "A400219",
+      "custodian": "金哲駿",
+      "basic": {
+        "brand": "裕佳東風",
+        "tonnage": 17,
+        "purchaseDate": "2015-11-26",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00845",
+        "displacement": 6690,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "10年6月6天",
+        "ageYears": 10,
+        "mileageTotal": 231844,
+        "mileageYearly": 23184,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 15243
+      },
+      "maintenance": {
+        "repairCostTotal": 743696,
+        "repairCostLast3YearsAvg": 41888.3333333333
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 2500000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 625000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 17,
+        "mileageScore": 81,
+        "maintenanceScore": 87,
+        "valueScore": 40,
+        "healthScore": 64
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEB-5326",
+      "adminNo": "A400220",
+      "custodian": "許瑞廷",
+      "basic": {
+        "brand": "裕佳東風",
+        "tonnage": 17,
+        "purchaseDate": "2015-11-26",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00846",
+        "displacement": 6690,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "10年6月6天",
+        "ageYears": 10,
+        "mileageTotal": 321490,
+        "mileageYearly": 32149,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 53254
+      },
+      "maintenance": {
+        "repairCostTotal": 798609,
+        "repairCostLast3YearsAvg": 59418.5
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 2500000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 625000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 17,
+        "mileageScore": 73,
+        "maintenanceScore": 81,
+        "valueScore": 90,
+        "healthScore": 75
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEB-5327",
+      "adminNo": "A400221",
+      "custodian": "張智雄",
+      "basic": {
+        "brand": "裕佳東風",
+        "tonnage": 17,
+        "purchaseDate": "2015-11-26",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00847",
+        "displacement": 6690,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "10年6月6天",
+        "ageYears": 10,
+        "mileageTotal": 277666,
+        "mileageYearly": 27767,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 38949
+      },
+      "maintenance": {
+        "repairCostTotal": 587957,
+        "repairCostLast3YearsAvg": 61597
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 2500000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 625000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 17,
+        "mileageScore": 77,
+        "maintenanceScore": 80,
+        "valueScore": 80,
+        "healthScore": 73
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "AAB-336",
+      "adminNo": "A400235",
+      "custodian": "葉吉順",
+      "basic": {
+        "brand": "賽德卡",
+        "tonnage": 17,
+        "purchaseDate": "2015-12-08",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00859",
+        "displacement": 6871,
+        "loadCapacity": 18
+      },
+      "usage": {
+        "ageText": "10年5月24天",
+        "ageYears": 10,
+        "mileageTotal": 31812,
+        "mileageYearly": 3181,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 6477
+      },
+      "maintenance": {
+        "repairCostTotal": 493635,
+        "repairCostLast3YearsAvg": 64006.6666666667
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 2900000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 725000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 17,
+        "mileageScore": 97,
+        "maintenanceScore": 82,
+        "valueScore": 0,
+        "healthScore": 55
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "AAB-298",
+      "adminNo": "A400244",
+      "custodian": "程世桓",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 8,
+        "purchaseDate": "2015-11-26",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00830",
+        "displacement": 4009,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "10年6月6天",
+        "ageYears": 10,
+        "mileageTotal": 160312,
+        "mileageYearly": 16031,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 22143
+      },
+      "maintenance": {
+        "repairCostTotal": 511472,
+        "repairCostLast3YearsAvg": 58208.6666666667
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1800000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 450000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 17,
+        "mileageScore": 82,
+        "maintenanceScore": 74,
+        "valueScore": 40,
+        "healthScore": 61
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "080-Y5",
+      "adminNo": "A400292",
+      "custodian": "葉育宏",
+      "basic": {
+        "brand": "賽德卡",
+        "tonnage": 17,
+        "purchaseDate": "2016-12-13",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00906",
+        "displacement": 6871,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "9年5月19天",
+        "ageYears": 9,
+        "mileageTotal": 86891,
+        "mileageYearly": 9655,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 16915
+      },
+      "maintenance": {
+        "repairCostTotal": 773382,
+        "repairCostLast3YearsAvg": 81962
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3000000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 975000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 25,
+        "mileageScore": 93,
+        "maintenanceScore": 83,
+        "valueScore": 0,
+        "healthScore": 55
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "083-Y5",
+      "adminNo": "A400293",
+      "custodian": "翁志峰",
+      "basic": {
+        "brand": "賽德卡",
+        "tonnage": 17,
+        "purchaseDate": "2016-12-13",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00907",
+        "displacement": 6871,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "9年5月19天",
+        "ageYears": 9,
+        "mileageTotal": 152641,
+        "mileageYearly": 16960,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 28975
+      },
+      "maintenance": {
+        "repairCostTotal": 543886,
+        "repairCostLast3YearsAvg": 42186
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3000000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "列入觀察",
+        "remainingValue": 975000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 25,
+        "mileageScore": 87,
+        "maintenanceScore": 91,
+        "valueScore": 80,
+        "healthScore": 80
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEA-0771",
+      "adminNo": "A400379",
+      "custodian": "邱俊融",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 6.5,
+        "purchaseDate": "2018-09-20",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00972",
+        "displacement": 4009,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "7年8月12天",
+        "ageYears": 7,
+        "mileageTotal": 53407,
+        "mileageYearly": 7630,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 13501
+      },
+      "maintenance": {
+        "repairCostTotal": 257523,
+        "repairCostLast3YearsAvg": 105370
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1450000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 688750,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 42,
+        "mileageScore": 93,
+        "maintenanceScore": 69,
+        "valueScore": 0,
+        "healthScore": 53
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEA-0772",
+      "adminNo": "A400380",
+      "custodian": "陳柏宇",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 6.5,
+        "purchaseDate": "2018-09-20",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00973",
+        "displacement": 4009,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "7年8月12天",
+        "ageYears": 7,
+        "mileageTotal": 79573,
+        "mileageYearly": 11368,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 24678
+      },
+      "maintenance": {
+        "repairCostTotal": 128093,
+        "repairCostLast3YearsAvg": 44205
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1450000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 688750,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 42,
+        "mileageScore": 90,
+        "maintenanceScore": 87,
+        "valueScore": 70,
+        "healthScore": 78
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEA-0850",
+      "adminNo": "A400395",
+      "custodian": "周恆毅",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 8,
+        "purchaseDate": "2018-11-19",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00995",
+        "displacement": 4009,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "7年6月13天",
+        "ageYears": 7,
+        "mileageTotal": 125814,
+        "mileageYearly": 17973,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 31497
+      },
+      "maintenance": {
+        "repairCostTotal": 341403,
+        "repairCostLast3YearsAvg": 108873
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1700000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 807500,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 42,
+        "mileageScore": 86,
+        "maintenanceScore": 73,
+        "valueScore": 20,
+        "healthScore": 58
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEA-0851",
+      "adminNo": "A400396",
+      "custodian": "鄭憲鴻",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 8,
+        "purchaseDate": "2018-11-19",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-00996",
+        "displacement": 4009,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "7年6月13天",
+        "ageYears": 7,
+        "mileageTotal": 139846,
+        "mileageYearly": 19978,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 45935
+      },
+      "maintenance": {
+        "repairCostTotal": 378329,
+        "repairCostLast3YearsAvg": 94642.6666666667
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 1700000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 807500,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 42,
+        "mileageScore": 84,
+        "maintenanceScore": 77,
+        "valueScore": 60,
+        "healthScore": 71
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEA-1773",
+      "adminNo": "A400403",
+      "custodian": "王寶生",
+      "basic": {
+        "brand": "五十鈴",
+        "tonnage": 17,
+        "purchaseDate": "2019-12-10",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-01008",
+        "displacement": 7790,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "6年5月22天",
+        "ageYears": 6,
+        "mileageTotal": 575392,
+        "mileageYearly": 95899,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 203790
+      },
+      "maintenance": {
+        "repairCostTotal": 864629,
+        "repairCostLast3YearsAvg": 137961
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3450000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 1897500,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 50,
+        "mileageScore": 52,
+        "maintenanceScore": 85,
+        "valueScore": 100,
+        "healthScore": 76
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEA-1775",
+      "adminNo": "A400404",
+      "custodian": "陳俊瑋",
+      "basic": {
+        "brand": "五十鈴",
+        "tonnage": 17,
+        "purchaseDate": "2019-12-10",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-01009",
+        "displacement": 7790,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "6年5月22天",
+        "ageYears": 6,
+        "mileageTotal": 590519,
+        "mileageYearly": 98420,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 204828
+      },
+      "maintenance": {
+        "repairCostTotal": 1039832,
+        "repairCostLast3YearsAvg": 189609.666666667
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3450000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 1897500,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 50,
+        "mileageScore": 51,
+        "maintenanceScore": 80,
+        "valueScore": 90,
+        "healthScore": 71
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEG-1727",
+      "adminNo": "A400442",
+      "custodian": "周耀宗",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 17,
+        "purchaseDate": "2019-12-10",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-01009",
+        "displacement": 7790,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "6年5月22天",
+        "ageYears": 6,
+        "mileageTotal": 471253,
+        "mileageYearly": 78542,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 234301
+      },
+      "maintenance": {
+        "repairCostTotal": 975138,
+        "repairCostLast3YearsAvg": 212674.666666667
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 3400000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 1870000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 50,
+        "mileageScore": 61,
+        "maintenanceScore": 77,
+        "valueScore": 90,
+        "healthScore": 73
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEG-1993",
+      "adminNo": "A400469",
+      "custodian": "連志維",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 17,
+        "purchaseDate": "2021-12-07",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-01085",
+        "displacement": 7684,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "4年5月25天",
+        "ageYears": 4,
+        "mileageTotal": 259945,
+        "mileageYearly": 64986,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 167514
+      },
+      "maintenance": {
+        "repairCostTotal": 291255,
+        "repairCostLast3YearsAvg": 77459
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 4000000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 2800000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 67,
+        "mileageScore": 78,
+        "maintenanceScore": 94,
+        "valueScore": 100,
+        "healthScore": 88
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEP-6030",
+      "adminNo": "A400524",
+      "custodian": "陳柏林",
+      "basic": {
+        "brand": "國瑞",
+        "tonnage": 17,
+        "purchaseDate": "2023-11-06",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-01-01123",
+        "displacement": 7685,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "2年6月26天",
+        "ageYears": 2,
+        "mileageTotal": 178014,
+        "mileageYearly": 89007,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 176037
+      },
+      "maintenance": {
+        "repairCostTotal": 272015,
+        "repairCostLast3YearsAvg": 90054.3333333333
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 4200000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 3570000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 83,
+        "mileageScore": 85,
+        "maintenanceScore": 95,
+        "valueScore": 100,
+        "healthScore": 92
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    },
+    {
+      "plateNo": "KEJ-1662",
+      "adminNo": "A400574",
+      "custodian": "簡慶富",
+      "basic": {
+        "brand": "五十鈴",
+        "tonnage": 11,
+        "purchaseDate": "2024-12-20",
+        "unit": "台南郵局郵務科運輸股",
+        "status": "使用中",
+        "propertyNo": "4010702-0101159",
+        "displacement": 5193,
+        "loadCapacity": "不詳"
+      },
+      "usage": {
+        "ageText": "1年5月12天",
+        "ageYears": 1,
+        "mileageTotal": 25201,
+        "mileageYearly": 25201,
+        "mileageMonthlyAvg": null,
+        "mileageLast3Years": 25201
+      },
+      "maintenance": {
+        "repairCostTotal": 15987,
+        "repairCostLast3YearsAvg": 15987
+      },
+      "depreciation": {
+        "estimatedPurchasePrice": 2600000,
+        "depreciationStatus": "折舊中",
+        "replacementAdvice": "正常使用",
+        "remainingValue": 2405000,
+        "residualRate": 0.1
+      },
+      "scores": {
+        "ageScore": 92,
+        "mileageScore": 97,
+        "maintenanceScore": 99,
+        "valueScore": 100,
+        "healthScore": 98
+      },
+      "links": {
+        "mileageRecords": [],
+        "repairRecords": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>車務數據中心｜Fleet Intelligence</title>
+
+    <style>
+      :root {
+        --bg: #07111f;
+        --panel: rgba(255, 255, 255, 0.08);
+        --panel2: rgba(255, 255, 255, 0.12);
+        --line: rgba(255, 255, 255, 0.16);
+        --text: #eef6ff;
+        --muted: #9fb0c6;
+        --good: #55f0b4;
+        --warn: #ffd166;
+        --bad: #ff6b6b;
+        --blue: #7cc7ff;
+        --purple: #c9a6ff;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          "Microsoft JhengHei",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at 15% 8%,
+            rgba(75, 207, 255, 0.22),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 85% 18%,
+            rgba(160, 104, 255, 0.2),
+            transparent 30%
+          ),
+          linear-gradient(135deg, #050a12, #0c1728 46%, #101827);
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+          );
+        background-size: 42px 42px;
+        mask-image: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.75),
+          transparent
+        );
+        pointer-events: none;
+      }
+      .wrap {
+        width: min(1440px, calc(100% - 28px));
+        margin: auto;
+        padding: 22px 0 42px;
+        position: relative;
+        z-index: 1;
+      }
+      .hero {
+        display: grid;
+        grid-template-columns: 1.35fr 0.65fr;
+        gap: 16px;
+        align-items: stretch;
+        margin-bottom: 16px;
+      }
+      .glass {
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.13),
+          rgba(255, 255, 255, 0.055)
+        );
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+        border-radius: 28px;
+      }
+      .titleCard {
+        padding: 24px;
+        overflow: hidden;
+        position: relative;
+      }
+      .titleCard:after {
+        content: "";
+        position: absolute;
+        right: -90px;
+        top: -90px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(124, 199, 255, 0.16);
+        filter: blur(5px);
+      }
+      .eyebrow {
+        letter-spacing: 0.22em;
+        color: var(--blue);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .title {
+        font-size: clamp(28px, 4vw, 54px);
+        margin: 8px 0 8px;
+        line-height: 1.05;
+        font-weight: 900;
+      }
+      .sub {
+        color: var(--muted);
+        line-height: 1.8;
+        max-width: 800px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .select,
+      .fileLabel,
+      .btn {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text);
+        border-radius: 16px;
+        padding: 12px 14px;
+        font-weight: 800;
+        outline: none;
+      }
+      .select {
+        min-width: 270px;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: rgba(39, 63, 78, 0.96);
+        background-image:
+          linear-gradient(45deg, transparent 50%, #eaf6ff 50%),
+          linear-gradient(135deg, #eaf6ff 50%, transparent 50%);
+        background-position:
+          calc(100% - 22px) 50%,
+          calc(100% - 16px) 50%;
+        background-size:
+          6px 6px,
+          6px 6px;
+        background-repeat: no-repeat;
+        padding-right: 44px;
+      }
+      .select option {
+        background: #1f3948;
+        color: #eaf6ff;
+        font-weight: 800;
+      }
+      .select option:checked {
+        background: #2568d7;
+        color: #fff;
+      }
+      .select option:hover {
+        background: #2d5368;
+        color: #fff;
+      }
+      .fileLabel,
+      .btn {
+        cursor: pointer;
+        transition: 0.25s;
+      }
+      .fileLabel:hover,
+      .btn:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.16);
+      }
+      input[type="file"] {
+        display: none;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 16px;
+      }
+      .stat {
+        border-radius: 22px;
+        padding: 16px;
+        background: rgba(0, 0, 0, 0.18);
+        border: 1px solid var(--line);
+      }
+      .stat .num {
+        font-size: 30px;
+        font-weight: 900;
+      }
+      .stat .lab {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .section {
+        display: none;
+      }
+      .section.active {
+        display: block;
+      }
+      .rankGrid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .rankCard {
+        padding: 16px;
+        overflow: hidden;
+      }
+      .rankHead {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .rankTitle {
+        font-weight: 900;
+        font-size: 18px;
+      }
+      .miniBtn {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text);
+        padding: 7px 10px;
+        cursor: pointer;
+        font-weight: 800;
+      }
+      .rankList {
+        display: grid;
+        gap: 8px;
+      }
+      .rankItem {
+        display: grid;
+        grid-template-columns: 34px 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+      .rankNo {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        background: rgba(124, 199, 255, 0.18);
+        color: #c9ecff;
+      }
+      .plate {
+        font-weight: 900;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .value {
+        text-align: right;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .bar {
+        height: 7px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 99px;
+        overflow: hidden;
+        margin-top: 6px;
+      }
+      .bar > i {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--blue), var(--good));
+        border-radius: 99px;
+      }
+      .detailTop {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 14px;
+      }
+      .identity {
+        padding: 20px;
+      }
+      .plateBig {
+        font-size: 42px;
+        font-weight: 950;
+        letter-spacing: 0.04em;
+      }
+      .statusPill {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 10px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.09);
+        font-weight: 800;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--good);
+        box-shadow: 0 0 18px var(--good);
+      }
+      .dot.bad {
+        background: var(--bad);
+        box-shadow: 0 0 18px var(--bad);
+      }
+      .scoreRing {
+        margin-top: 18px;
+        display: grid;
+        place-items: center;
+        width: 190px;
+        height: 190px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--good) calc(var(--p) * 1%),
+          rgba(255, 255, 255, 0.1) 0
+        );
+        position: relative;
+      }
+      .scoreRing:after {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border-radius: 50%;
+        background: #0b1524;
+        border: 1px solid var(--line);
+      }
+      .scoreRing span {
+        position: relative;
+        z-index: 1;
+        font-size: 42px;
+        font-weight: 950;
+      }
+      .scoreRing small {
+        display: block;
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .infoCard {
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.075);
+        border: 1px solid var(--line);
+      }
+      .infoCard .label {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .infoCard .data {
+        font-size: 22px;
+        font-weight: 900;
+        margin-top: 6px;
+      }
+      .blockGrid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .block {
+        padding: 18px;
+      }
+      .block h3 {
+        margin: 0 0 12px;
+        font-size: 19px;
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.09);
+        padding: 10px 0;
+      }
+      .kv:first-of-type {
+        border-top: 0;
+      }
+      .k {
+        color: var(--muted);
+      }
+      .v {
+        font-weight: 800;
+        text-align: right;
+      }
+      .scoreBars {
+        display: grid;
+        gap: 12px;
+      }
+      .scoreLine {
+        display: grid;
+        grid-template-columns: 120px 1fr 42px;
+        gap: 10px;
+        align-items: center;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+      .ghost {
+        background: rgba(124, 199, 255, 0.13);
+        border-color: rgba(124, 199, 255, 0.32);
+      }
+      .advice {
+        margin-top: 16px;
+        padding: 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 209, 102, 0.35);
+        background: rgba(255, 209, 102, 0.09);
+        color: #ffe6a6;
+        line-height: 1.7;
+      }
+      .empty {
+        padding: 28px;
+        text-align: center;
+        color: var(--muted);
+      }
+      .footerTip {
+        margin-top: 16px;
+        padding: 16px;
+        border-radius: 22px;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px dashed rgba(255, 255, 255, 0.22);
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .overviewPanelGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 14px;
+        margin-bottom: 14px;
+      }
+      .overviewPanel {
+        padding: 16px;
+      }
+      .warningGrid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .warningCard {
+        border-radius: 18px;
+        padding: 14px;
+        background: rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+      }
+      .warningCard .warningNum {
+        font-size: 30px;
+        font-weight: 950;
+      }
+      .warningCard .warningLabel {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 4px;
+      }
+      .warningCard.bad {
+        border-color: rgba(255, 107, 107, 0.38);
+        background: rgba(255, 107, 107, 0.11);
+      }
+      .warningCard.warn {
+        border-color: rgba(255, 209, 102, 0.38);
+        background: rgba(255, 209, 102, 0.1);
+      }
+      .warningCard.good {
+        border-color: rgba(85, 240, 180, 0.3);
+        background: rgba(85, 240, 180, 0.08);
+      }
+      .distributionList {
+        display: grid;
+        gap: 10px;
+      }
+      .distRow {
+        display: grid;
+        grid-template-columns: 86px 1fr 42px;
+        gap: 10px;
+        align-items: center;
+      }
+      .distName {
+        font-weight: 900;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .distCount {
+        text-align: right;
+        font-weight: 900;
+      }
+      .distBar {
+        height: 10px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      .distBar i {
+        display: block;
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--blue), var(--good));
+      }
+      .toolbar.single .select {
+        min-width: min(520px, 100%);
+      }
+      @media (max-width: 1100px) {
+        .hero,
+        .detailTop {
+          grid-template-columns: 1fr;
+        }
+        .overviewPanelGrid {
+          grid-template-columns: 1fr;
+        }
+        .rankGrid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .cards {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 720px) {
+        .wrap {
+          width: min(100% - 18px, 1440px);
+          padding-top: 10px;
+        }
+        .titleCard,
+        .stats,
+        .identity,
+        .block {
+          border-radius: 22px;
+        }
+        .rankGrid,
+        .blockGrid,
+        .overviewPanelGrid {
+          grid-template-columns: 1fr;
+        }
+        .rankItem {
+          grid-template-columns: 30px 1fr;
+        }
+        .value {
+          grid-column: 2;
+          text-align: left;
+        }
+        .cards {
+          grid-template-columns: 1fr 1fr;
+        }
+        .infoCard .data {
+          font-size: 18px;
+        }
+        .plateBig {
+          font-size: 34px;
+        }
+        .select {
+          width: 100%;
+          min-width: 0;
+        }
+        .kv {
+          grid-template-columns: 1fr;
+        }
+        .v {
+          text-align: left;
+        }
+        .scoreLine {
+          grid-template-columns: 88px 1fr 38px;
+        }
+        .scoreRing {
+          width: 160px;
+          height: 160px;
+        }
+        .warningGrid {
+          grid-template-columns: 1fr;
+        }
+        .distRow {
+          grid-template-columns: 72px 1fr 34px;
+        }
+      }
+
+      /* === RWD 強化版：桌機 / 平板 / 手機自動適配 === */
+      html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+      img,
+      svg,
+      canvas {
+        max-width: 100%;
+        height: auto;
+      }
+      .glass,
+      .rankCard,
+      .infoCard,
+      .block,
+      .stat {
+        min-width: 0;
+      }
+      .rankTitle,
+      .plate,
+      .meta,
+      .value,
+      .infoCard .data,
+      .v {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+      .toolbar > * {
+        min-height: 44px;
+      }
+
+      @media (min-width: 1281px) {
+        .rankGrid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .cards {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 1280px) {
+        .wrap {
+          width: min(1180px, calc(100% - 24px));
+        }
+        .hero {
+          grid-template-columns: 1.15fr 0.85fr;
+        }
+        .rankGrid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .detailTop {
+          grid-template-columns: 320px minmax(0, 1fr);
+        }
+        .cards {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        .wrap {
+          width: calc(100% - 22px);
+          padding: 14px 0 34px;
+        }
+        .hero,
+        .detailTop {
+          grid-template-columns: 1fr;
+        }
+        .stats {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+        .rankGrid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .blockGrid {
+          grid-template-columns: 1fr;
+        }
+        .identity {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 14px;
+          align-items: center;
+        }
+        .scoreRing {
+          margin-top: 0;
+        }
+      }
+
+      @media (max-width: 640px) {
+        body {
+          background-attachment: scroll;
+        }
+        body:before {
+          background-size: 30px 30px;
+        }
+        .wrap {
+          width: calc(100% - 16px);
+          padding: 10px 0 26px;
+        }
+        .hero {
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+        .titleCard {
+          padding: 18px;
+          border-radius: 22px;
+        }
+        .eyebrow {
+          font-size: 10px;
+          letter-spacing: 0.14em;
+        }
+        .title {
+          font-size: clamp(26px, 9vw, 36px);
+          line-height: 1.12;
+        }
+        .sub {
+          font-size: 14px;
+          line-height: 1.65;
+        }
+        .toolbar {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+          margin-top: 14px;
+        }
+        .select,
+        .fileLabel,
+        .btn {
+          width: 100%;
+          min-width: 0;
+          text-align: center;
+          padding: 12px 13px;
+          border-radius: 14px;
+        }
+        .stats {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+          padding: 10px;
+          border-radius: 20px;
+        }
+        .stat {
+          padding: 12px;
+          border-radius: 16px;
+        }
+        .stat .num {
+          font-size: clamp(20px, 7vw, 28px);
+        }
+        .stat .lab {
+          font-size: 12px;
+        }
+        .rankGrid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .rankCard {
+          padding: 12px;
+          border-radius: 20px;
+        }
+        .rankHead {
+          align-items: flex-start;
+          margin-bottom: 10px;
+        }
+        .rankTitle {
+          font-size: 16px;
+          line-height: 1.35;
+        }
+        .miniBtn {
+          padding: 7px 9px;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+        .rankItem {
+          grid-template-columns: 28px minmax(0, 1fr);
+          gap: 8px;
+          padding: 9px;
+          border-radius: 14px;
+        }
+        .rankNo {
+          width: 26px;
+          height: 26px;
+          border-radius: 9px;
+          font-size: 12px;
+        }
+        .value {
+          grid-column: 2;
+          text-align: left;
+          white-space: normal;
+          font-size: 14px;
+        }
+        .bar {
+          grid-column: 2;
+          margin-top: 5px;
+        }
+        .detailTop {
+          gap: 10px;
+        }
+        .identity {
+          display: block;
+          padding: 16px;
+          border-radius: 20px;
+          text-align: center;
+        }
+        .plateBig {
+          font-size: clamp(30px, 11vw, 42px);
+        }
+        .statusPill {
+          justify-content: center;
+        }
+        .scoreRing {
+          width: 150px;
+          height: 150px;
+          margin: 16px auto 0;
+        }
+        .scoreRing:after {
+          inset: 13px;
+        }
+        .scoreRing span {
+          font-size: 34px;
+        }
+        .cards {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 8px;
+        }
+        .infoCard {
+          padding: 12px;
+          border-radius: 16px;
+        }
+        .infoCard .label {
+          font-size: 12px;
+        }
+        .infoCard .data {
+          font-size: clamp(16px, 5vw, 20px);
+        }
+        .blockGrid {
+          gap: 10px;
+          margin-top: 10px;
+        }
+        .block {
+          padding: 14px;
+          border-radius: 20px;
+        }
+        .block h3 {
+          font-size: 17px;
+        }
+        .kv {
+          grid-template-columns: 1fr;
+          gap: 4px;
+          padding: 9px 0;
+        }
+        .v {
+          text-align: left;
+          font-size: 15px;
+        }
+        .scoreLine {
+          grid-template-columns: 82px minmax(0, 1fr) 36px;
+          gap: 8px;
+          font-size: 14px;
+        }
+        .actions {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .actions .btn {
+          margin: 0;
+        }
+        .advice,
+        .footerTip {
+          font-size: 14px;
+          border-radius: 18px;
+          padding: 13px;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .wrap {
+          width: calc(100% - 12px);
+        }
+        .stats,
+        .cards {
+          grid-template-columns: 1fr;
+        }
+        .titleCard {
+          padding: 16px;
+        }
+        .rankHead {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .miniBtn {
+          width: 100%;
+        }
+        .scoreLine {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+        .scoreLine .bar {
+          width: 100%;
+        }
+        .scoreLine span:last-child {
+          text-align: left;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto !important;
+          transition: none !important;
+          animation: none !important;
+        }
+        .fileLabel:hover,
+        .btn:hover {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="hero">
+        <div class="titleCard glass">
+          <div class="eyebrow">FLEET INTELLIGENCE DASHBOARD</div>
+          <h1 class="title">車務數據中心</h1>
+          <div class="sub" id="sourceInfo">讀取 fleet_data.json 中……</div>
+          <div class="toolbar single">
+            <select id="vehicleSelect" class="select">
+              <option value="overview">總覽｜排行儀表板</option>
+            </select>
+          </div>
+        </div>
+        <div class="stats glass" id="topStats"></div>
+      </section>
+
+      <section id="overview" class="section active">
+        <div class="overviewPanelGrid">
+          <article class="overviewPanel glass">
+            <div class="rankHead">
+              <div>
+                <div class="rankTitle">預警燈號</div>
+                <div class="meta">依健康度與汰換建議</div>
+              </div>
+            </div>
+            <div class="warningGrid" id="warningGrid"></div>
+          </article>
+          <article class="overviewPanel glass">
+            <div class="rankHead">
+              <div>
+                <div class="rankTitle">車隊分布</div>
+                <div class="meta">依噸數統計數量</div>
+              </div>
+            </div>
+            <div class="distributionList" id="tonnageDistribution"></div>
+          </article>
+          <article class="overviewPanel glass">
+            <div class="rankHead">
+              <div>
+                <div class="rankTitle">健康度分布</div>
+                <div class="meta">檢視整體車況，而非單一車輛</div>
+              </div>
+            </div>
+            <div class="distributionList" id="healthDistribution"></div>
+          </article>
+        </div>
+        <div class="rankGrid" id="rankGrid"></div>
+        <div class="footerTip">
+          車不是壞了才管理，數字開始歪的那一刻，就已經在小聲求救。
+        </div>
+      </section>
+
+      <section id="detail" class="section"></section>
+    </main>
+
+    <script>
+      let fleetData = null;
+      let expandedCards = new Set();
+
+      const rankingConfig = [
+        ["vehicleAge", "車齡", "使用時間", "age"],
+        ["totalMileage", "里程數", "累積里程數", "km"],
+        ["yearlyMileage", "平均里程數", "年平均里程數", "km"],
+        ["maintenanceCost", "維修費用", "累積維修費用", "money"],
+        ["remainingValue", "剩餘價值", "扣除折舊額之剩餘殘值", "money"],
+        [
+          "maintenanceScore",
+          "維修報酬率",
+          "近3年平均維修費用佔剩餘價值之比",
+          "score",
+        ],
+        ["healthScore", "健康度排行榜", "健康度", "score"],
+      ];
+
+      const $ = (id) => document.getElementById(id);
+      const nf = new Intl.NumberFormat("zh-TW");
+      function num(v) {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+      }
+      function fmt(v, type = "normal") {
+        if (v === null || v === undefined || v === "") return "—";
+        if (type === "money") return "$" + nf.format(Math.round(num(v)));
+        if (type === "km") return nf.format(Math.round(num(v))) + " km";
+        if (type === "score") return Math.round(num(v)) + " 分";
+        if (type === "percent") return Math.round(num(v) * 100) + "%";
+        return typeof v === "number" ? nf.format(Math.round(v)) : v;
+      }
+      function getAdviceClass(text) {
+        return String(text || "").includes("優先") ? "bad" : "";
+      }
+
+      async function loadData() {
+        try {
+          const res = await fetch("fleet_data.json?ts=" + Date.now(), {
+            cache: "no-store",
+          });
+          if (!res.ok)
+            throw new Error(`無法讀取 fleet_data.json：HTTP ${res.status}`);
+          fleetData = await res.json();
+
+          if (!fleetData || !Array.isArray(fleetData.vehicles)) {
+            throw new Error("fleet_data.json 格式不正確：找不到 vehicles 陣列");
+          }
+
+          $("sourceInfo").textContent =
+            `${fleetData.meta?.title || "車務資料"}｜資料時間：${fleetData.meta?.exportedAt || "未標示"}｜來源：fleet_data.json`;
+          init();
+        } catch (e) {
+          fleetData = { vehicles: [], overviewRankings: {}, meta: {} };
+          $("sourceInfo").textContent =
+            `無法讀取 fleet_data.json。錯誤：${e.message}`;
+          $("topStats").innerHTML =
+            '<div class="stat" style="grid-column:1/-1"><div class="num">!</div><div class="lab">JSON 載入失敗</div></div>';
+          $("rankGrid").innerHTML =
+            '<div class="empty glass">尚未載入資料。</div>';
+          $("warningGrid").innerHTML =
+            '<div class="empty">尚未載入資料。</div>';
+          $("tonnageDistribution").innerHTML =
+            '<div class="empty">尚未載入資料。</div>';
+          $("healthDistribution").innerHTML =
+            '<div class="empty">尚未載入資料。</div>';
+        }
+      }
+
+      function init() {
+        buildSelect();
+        buildStats();
+        buildOverview();
+        renderDetail(0);
+      }
+      function buildSelect() {
+        const select = $("vehicleSelect");
+        select.innerHTML = '<option value="overview">總覽｜排行儀表板</option>';
+        fleetData.vehicles.forEach((v, i) => {
+          const opt = document.createElement("option");
+          opt.value = i;
+          opt.textContent = `${v.plateNo}｜${v.adminNo || "無編號"}｜${v.custodian || "未填保管人"}`;
+          select.appendChild(opt);
+        });
+      }
+      function buildStats() {
+        const vehicles = fleetData.vehicles || [];
+        const active = vehicles.filter(
+          (v) => v.basic?.status !== "已報廢",
+        ).length;
+        const replace = vehicles.filter((v) =>
+          String(v.depreciation?.replacementAdvice || "").includes("優先"),
+        ).length;
+        const avgHealth = vehicles.length
+          ? vehicles.reduce((s, v) => s + num(v.scores?.healthScore), 0) /
+            vehicles.length
+          : 0;
+        const totalMileage = vehicles.reduce(
+          (s, v) => s + num(v.usage?.mileageTotal),
+          0,
+        );
+        $("topStats").innerHTML = `
+        <div class="stat"><div class="num">${vehicles.length}</div><div class="lab">車輛總數</div></div>
+        <div class="stat"><div class="num">${active}</div><div class="lab">使用中</div></div>
+        <div class="stat"><div class="num">${Math.round(avgHealth)}</div><div class="lab">平均健康度</div></div>
+        <div class="stat"><div class="num">${replace}</div><div class="lab">優先汰換</div></div>
+        <div class="stat" style="grid-column:1/-1"><div class="num">${fmt(totalMileage, "km")}</div><div class="lab">全隊累積里程</div></div>`;
+      }
+      function buildOverview() {
+        buildWarnings();
+        buildTonnageDistribution();
+        buildHealthDistribution();
+        $("rankGrid").innerHTML = rankingConfig
+          .map(([key, title, label, type]) =>
+            rankingCard(key, title, label, type),
+          )
+          .join("");
+      }
+      function buildWarnings() {
+        const vehicles = fleetData.vehicles || [];
+        const high = vehicles.filter(
+          (v) =>
+            String(v.depreciation?.replacementAdvice || "").includes("優先") ||
+            num(v.scores?.healthScore) < 60,
+        );
+        const watch = vehicles.filter(
+          (v) =>
+            !high.includes(v) &&
+            num(v.scores?.healthScore) >= 60 &&
+            num(v.scores?.healthScore) < 75,
+        );
+        const normal = vehicles.filter(
+          (v) => !high.includes(v) && !watch.includes(v),
+        );
+        const html = [
+          ["bad", "高風險車輛", high.length, "優先檢視健康度低或建議汰換車輛"],
+          [
+            "warn",
+            "注意觀察",
+            watch.length,
+            "健康度 60–74，別等它變成修車黑洞",
+          ],
+          ["good", "正常車輛", normal.length, "目前狀態相對穩定"],
+        ]
+          .map(
+            ([cls, label, count, tip]) =>
+              `<div class="warningCard ${cls}" onclick="jumpWarning('${cls}')"><div class="warningNum">${count}</div><div class="warningLabel">${label}</div><div class="meta">${tip}</div></div>`,
+          )
+          .join("");
+        $("warningGrid").innerHTML = html;
+      }
+      function buildTonnageDistribution() {
+        const rows = makeDistribution(
+          fleetData.vehicles || [],
+          (v) => v.basic?.tonnage || "未標示",
+        );
+        $("tonnageDistribution").innerHTML = distributionHtml(rows);
+      }
+      function buildHealthDistribution() {
+        const buckets = {
+          "90–100": 0,
+          "80–89": 0,
+          "70–79": 0,
+          "60–69": 0,
+          "50以下": 0,
+        };
+        (fleetData.vehicles || []).forEach((v) => {
+          const h = num(v.scores?.healthScore);
+          if (h >= 90) buckets["90–100"]++;
+          else if (h >= 80) buckets["80–89"]++;
+          else if (h >= 70) buckets["70–79"]++;
+          else if (h >= 60) buckets["60–69"]++;
+          else buckets["50以下"]++;
+        });
+        $("healthDistribution").innerHTML = distributionHtml(
+          Object.entries(buckets).map(([name, count]) => ({ name, count })),
+        );
+      }
+      function makeDistribution(items, getter) {
+        const map = new Map();
+        items.forEach((item) => {
+          const k = String(getter(item) || "未標示");
+          map.set(k, (map.get(k) || 0) + 1);
+        });
+        return [...map.entries()]
+          .map(([name, count]) => ({ name, count }))
+          .sort(
+            (a, b) =>
+              b.count - a.count ||
+              String(a.name).localeCompare(String(b.name), "zh-Hant"),
+          );
+      }
+      function distributionHtml(rows) {
+        const max = Math.max(...rows.map((r) => r.count), 1);
+        return (
+          rows
+            .map(
+              (r) =>
+                `<div class="distRow"><div class="distName" title="${r.name}">${r.name}</div><div class="distBar"><i style="width:${Math.max(5, (r.count / max) * 100)}%"></i></div><div class="distCount">${r.count}</div></div>`,
+            )
+            .join("") || '<div class="empty">尚無資料</div>'
+        );
+      }
+      window.jumpWarning = (cls) => {
+        if (cls === "bad") expandedCards.add("healthScore");
+        $("rankGrid").scrollIntoView({ behavior: "smooth", block: "start" });
+        buildOverview();
+      };
+      function normalizeRanking(key) {
+        let arr = fleetData.overviewRankings?.[key];
+        if (Array.isArray(arr) && arr.length) return arr;
+        const getters = {
+          vehicleAge: (v) => [v.usage?.ageText, v.usage?.ageYears],
+          totalMileage: (v) => [v.usage?.mileageTotal, v.usage?.mileageTotal],
+          yearlyMileage: (v) => [
+            v.usage?.mileageYearly,
+            v.usage?.mileageYearly,
+          ],
+          maintenanceCost: (v) => [
+            v.maintenance?.repairCostTotal,
+            v.maintenance?.repairCostTotal,
+          ],
+          remainingValue: (v) => [
+            v.depreciation?.remainingValue,
+            v.depreciation?.remainingValue,
+          ],
+          maintenanceScore: (v) => [
+            v.scores?.maintenanceScore,
+            v.scores?.maintenanceScore,
+          ],
+          healthScore: (v) => [v.scores?.healthScore, v.scores?.healthScore],
+        };
+        arr = fleetData.vehicles
+          .map((v) => {
+            const [value, sortValue] = getters[key](v);
+            return {
+              plateNo: v.plateNo,
+              adminNo: v.adminNo,
+              custodian: v.custodian,
+              value,
+              sortValue: num(sortValue),
+            };
+          })
+          .sort((a, b) => b.sortValue - a.sortValue);
+        arr.forEach((x, i) => (x.rank = i + 1));
+        return arr;
+      }
+      function rankingCard(key, title, label, type) {
+        const arr = normalizeRanking(key);
+        const showAll = expandedCards.has(key);
+        const list = showAll ? arr : arr.slice(0, 5);
+        const max = Math.max(...arr.map((x) => num(x.sortValue)), 1);
+        if (!arr.length) {
+          return `<article class="rankCard glass"><div class="rankHead"><div><div class="rankTitle">${title}</div><div class="meta">依「${label}」遞減排序</div></div></div><div class="empty">尚無資料</div></article>`;
+        }
+        return `<article class="rankCard glass">
+        <div class="rankHead"><div><div class="rankTitle">${title}</div><div class="meta">依「${label}」遞減排序</div></div><button class="miniBtn" onclick="toggleRank('${key}')">${showAll ? "收合" : "展開"}</button></div>
+        <div class="rankList">${list
+          .map(
+            (item) => `
+          <div class="rankItem" onclick="selectVehicleByPlate('${item.plateNo}')">
+            <div class="rankNo">${item.rank}</div>
+            <div><div class="plate">${item.plateNo}</div><div class="meta">${item.adminNo || "—"}｜${item.custodian || "—"}</div><div class="bar"><i style="width:${Math.max(4, (num(item.sortValue) / max) * 100)}%"></i></div></div>
+            <div class="value">${fmt(item.value, type)}</div>
+          </div>`,
+          )
+          .join("")}</div>
+      </article>`;
+      }
+      window.toggleRank = (key) => {
+        expandedCards.has(key)
+          ? expandedCards.delete(key)
+          : expandedCards.add(key);
+        buildOverview();
+      };
+      window.selectVehicleByPlate = (plate) => {
+        const idx = fleetData.vehicles.findIndex((v) => v.plateNo === plate);
+        if (idx >= 0) {
+          $("vehicleSelect").value = idx;
+          switchView();
+        }
+      };
+
+      function switchView() {
+        const val = $("vehicleSelect").value;
+        $("overview").classList.toggle("active", val === "overview");
+        $("detail").classList.toggle("active", val !== "overview");
+        if (val !== "overview") renderDetail(Number(val));
+      }
+      function renderDetail(i) {
+        const v = fleetData.vehicles[i];
+        if (!v) return;
+        const health = Math.max(0, Math.min(100, num(v.scores?.healthScore)));
+        $("detail").innerHTML = `<div class="detailTop">
+        <aside class="identity glass">
+          <div class="eyebrow">VEHICLE PROFILE</div>
+          <div class="plateBig">${v.plateNo}</div>
+          <div class="meta">行政編號：${v.adminNo || "—"}｜保管人：${v.custodian || "—"}</div>
+          <div class="statusPill"><i class="dot ${v.basic?.status === "已報廢" ? "bad" : ""}"></i>${v.basic?.status || "未標示"}｜${v.depreciation?.replacementAdvice || "無建議"}</div>
+          <div class="scoreRing" style="--p:${health}"><span>${Math.round(health)}<small>健康度</small></span></div>
+          <div class="actions"><button class="btn ghost" onclick="placeholder('里程數紀錄')">里程數紀錄</button><button class="btn ghost" onclick="placeholder('維修費紀錄')">維修費紀錄</button></div>
+        </aside>
+        <div class="cards">
+          ${metric("車齡", v.usage?.ageText)} ${metric("累積里程", fmt(v.usage?.mileageTotal, "km"))}
+          ${metric("年里程", fmt(v.usage?.mileageYearly, "km"))}
+          ${metric("近3年里程", fmt(v.usage?.mileageLast3Years, "km"))}
+          ${metric("累積維修費", fmt(v.maintenance?.repairCostTotal, "money"))} ${metric("近3年平均維修費", fmt(v.maintenance?.repairCostLast3YearsAvg, "money"))}
+          ${metric("剩餘殘值", fmt(v.depreciation?.remainingValue, "money"))} ${metric("折舊狀態", v.depreciation?.depreciationStatus)}
+        </div>
+      </div>
+      <div class="blockGrid">
+        ${block("基本資料", [
+          ["廠牌", v.basic?.brand],
+          ["噸數", v.basic?.tonnage],
+          ["購置日期", v.basic?.purchaseDate],
+          ["使用單位", v.basic?.unit],
+          ["財產編號", v.basic?.propertyNo],
+          ["排氣量", v.basic?.displacement],
+          ["籃車裝載數", v.basic?.loadCapacity],
+        ])}
+        ${block("里程與使用", [
+          ["累積里程數", fmt(v.usage?.mileageTotal, "km")],
+          ["年里程數", fmt(v.usage?.mileageYearly, "km")],
+          ["近3年里程數", fmt(v.usage?.mileageLast3Years, "km")],
+        ])}
+        ${block("維修與折舊", [
+          [
+            "推估購入價格",
+            fmt(v.depreciation?.estimatedPurchasePrice, "money"),
+          ],
+          ["累積維修費用", fmt(v.maintenance?.repairCostTotal, "money")],
+          [
+            "近3年平均維修費用",
+            fmt(v.maintenance?.repairCostLast3YearsAvg, "money"),
+          ],
+          ["剩餘價值", fmt(v.depreciation?.remainingValue, "money")],
+          ["殘值率", fmt(v.depreciation?.residualRate, "percent")],
+        ])}
+        <article class="block glass"><h3>分數雷達</h3><div class="scoreBars">
+          ${scoreLine("車齡分數", v.scores?.ageScore)}${scoreLine("里程分數", v.scores?.mileageScore)}${scoreLine("維修分數", v.scores?.maintenanceScore)}${scoreLine("保值分數", v.scores?.valueScore)}${scoreLine("健康度", v.scores?.healthScore)}
+        </div><div class="advice">汰換建議：${v.depreciation?.replacementAdvice || "—"}。分數只是儀表，不是神諭；真正要看的是趨勢有沒有越來越歪。</div></article>
+      </div>`;
+      }
+      function metric(label, value) {
+        return `<div class="infoCard"><div class="label">${label}</div><div class="data">${value ?? "—"}</div></div>`;
+      }
+      function block(title, rows) {
+        return `<article class="block glass"><h3>${title}</h3>${rows.map(([k, v]) => `<div class="kv"><div class="k">${k}</div><div class="v">${v ?? "—"}</div></div>`).join("")}</article>`;
+      }
+      function scoreLine(label, value) {
+        const p = Math.max(0, Math.min(100, num(value)));
+        return `<div class="scoreLine"><div class="k">${label}</div><div class="bar"><i style="width:${p}%"></i></div><div class="v">${Math.round(p)}</div></div>`;
+      }
+      window.placeholder = (name) => alert(`${name}功能開發中。`);
+
+      $("vehicleSelect").addEventListener("change", switchView);
+      loadData();
+    </script>
+  </body>
+</html>
