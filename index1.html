@@ -497,6 +497,9 @@
             📢 宣導事項
           </button>
           <div id="propagandaSection" class="collapse-content">
+            <a href="javascript:void(0)" onclick="openCardI()" class="btn"
+              >重要公告</a
+            >
             <a href="javascript:void(0)" onclick="openCardD()" class="btn"
               >月台作業守則</a
             >
@@ -729,6 +732,23 @@
         <img
           src="custodian.png"
           alt="車輛保管人制度"
+          style="width: 100%; height: auto"
+        />
+      </div>
+    </div>
+    <div id="cardIModal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div style="text-align: right">
+          <button
+            onclick="closeCardI()"
+            style="border: none; background: none; font-size: 20px; color: #888"
+          >
+            ✖
+          </button>
+        </div>
+        <img
+          src="announcement.png"
+          alt="月台守則"
           style="width: 100%; height: auto"
         />
       </div>
@@ -1039,6 +1059,12 @@
       }
       function closeCardG() {
         document.getElementById("cardGModal").style.display = "none";
+      }
+      function openCardI() {
+        document.getElementById("cardIModal").style.display = "flex";
+      }
+      function closeCardI() {
+        document.getElementById("cardIModal").style.display = "none";
       }
       function openRoster() {
         document.getElementById("rosterModal").style.display = "flex";
