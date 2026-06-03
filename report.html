@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>郵件轉運回報產生器 (典雅旗艦版)</title>
+    <!-- 引入 Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 引入 Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      /* 隱藏數字欄位的微調按鈕並符合標準屬性 */
+      input::-webkit-outer-spin-button,
+      input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+      /* 典雅字體美化與平滑滾動 */
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#f8fafc] text-slate-700 min-h-screen p-3 sm:p-6 lg:p-8 antialiased"
+  >
+    <div id="app" class="max-w-7xl mx-auto">
+      <!-- 典雅頁首設計 -->
+      <header
+        class="mb-8 pb-5 border-b border-slate-200/80 flex flex-col md:flex-row md:items-end md:justify-between gap-2"
+      >
+        <div>
+          <h1
+            class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-wide flex items-center gap-3"
+          >
+            <span
+              class="w-2.5 h-7 bg-gradient-to-b from-indigo-600 to-indigo-800 rounded-full inline-block"
+            ></span>
+            郵件轉運回報系統
+          </h1>
+          <p class="text-xs md:text-sm text-slate-400 font-medium mt-1.5">
+            智慧型深夜物流排班與數據即時回報系統
+          </p>
+        </div>
+        <div class="text-xs text-slate-400 font-mono hidden md:block">
+          v2.5 // Clean & Elegant Edition
+        </div>
+      </header>
+
+      <!-- 主要版面：手機直式、大螢幕(lg) 3 欄配置 -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- 左側編輯區 -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- 北上郵件轉運區塊 -->
+          <section
+            class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-5 transition duration-300 hover:shadow-md"
+          >
+            <div
+              class="flex justify-between items-center border-b border-slate-100 pb-3"
+            >
+              <h2
+                class="text-base md:text-lg font-bold text-emerald-800 flex items-center gap-2.5"
+              >
+                <span
+                  class="w-2 h-2 bg-emerald-500 rounded-full ring-4 ring-emerald-50"
+                ></span>
+                北上郵件轉運
+              </h2>
+              <button
+                @click="addRow('north')"
+                class="px-3.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 active:scale-95 rounded-lg text-xs md:text-sm font-semibold transition-all cursor-pointer shadow-xs"
+              >
+                ＋ 新增一列
+              </button>
+            </div>
+
+            <!-- 表頭 -->
+            <div
+              class="grid grid-cols-12 gap-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-center px-2"
+            >
+              <div class="col-span-3 text-left pl-2">時間 (2300)</div>
+              <div class="col-span-5 text-left">車次選單</div>
+              <div class="col-span-3">數量 (台)</div>
+              <div class="col-span-1"></div>
+            </div>
+
+            <!-- 資料列表 -->
+            <div class="space-y-2 max-h-[480px] overflow-y-auto pr-1">
+              <div
+                v-for="(row, index) in northRows"
+                :key="'north-'+index"
+                class="grid grid-cols-12 gap-2 items-center bg-slate-50/60 hover:bg-slate-50 p-2 rounded-xl border border-slate-100 transition"
+              >
+                <div class="col-span-3">
+                  <input
+                    type="text"
+                    v-model="row.time"
+                    @blur="formatTime(row)"
+                    placeholder="請輸入"
+                    class="w-full text-center font-mono font-medium bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs md:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
+                  />
+                </div>
+                <div class="col-span-5">
+                  <select
+                    v-model="row.carType"
+                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs md:text-sm font-medium text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
+                  >
+                    <option value="">-- 請選擇車次 --</option>
+                    <option v-for="car in northCarOptions" :value="car">
+                      {{ car }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-span-3">
+                  <input
+                    type="number"
+                    v-model.number="row.count"
+                    placeholder="0"
+                    class="w-full text-center font-mono font-medium bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs md:text-sm focus:outline-hidden focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
+                  />
+                </div>
+                <div class="col-span-1 text-center">
+                  <button
+                    @click="deleteRow('north', index)"
+                    title="刪除此行"
+                    class="text-slate-300 hover:text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg transition cursor-pointer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 小計 -->
+            <div
+              class="text-right text-xs md:text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100"
+            >
+              北上車次累計：<span
+                class="text-lg font-extrabold font-mono text-emerald-600 ml-1"
+                >{{ totalNorthCount }}</span
+              >
+              台
+            </div>
+
+            <!-- 精美附加狀態編輯區 -->
+            <div
+              class="bg-emerald-50/30 p-4 rounded-xl border border-emerald-100/70 space-y-4 text-xs md:text-sm"
+            >
+              <h3 class="font-bold text-emerald-900 flex items-center gap-2">
+                📝 北上留置與因應措施
+              </h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 00:00 以前郵件 -->
+                <div
+                  class="bg-white p-3 rounded-lg border border-slate-100 shadow-2xs flex items-center justify-between"
+                >
+                  <span class="font-semibold text-slate-600"
+                    >00:00 以前郵件尚留：</span
+                  >
+                  <div class="flex items-center gap-2">
+                    <input
+                      type="number"
+                      v-model.number="status0000"
+                      class="w-16 font-mono font-bold text-center bg-slate-50 border border-slate-200 rounded-md p-1 focus:outline-hidden focus:border-emerald-500"
+                      min="0"
+                    />
+                    <span class="text-slate-400 font-medium">台</span>
+                  </div>
+                </div>
+
+                <!-- 02:00 北上郵件 -->
+                <div
+                  class="bg-white p-3 rounded-lg border border-slate-100 shadow-2xs flex items-center justify-between col-span-1"
+                >
+                  <span class="font-semibold text-slate-600"
+                    >02:00 北上 (主編 + 宜花東)：</span
+                  >
+                  <div class="flex items-center gap-1.5 font-mono">
+                    <input
+                      type="number"
+                      v-model.number="status0200_main"
+                      class="w-12 font-bold text-center bg-slate-50 border border-slate-200 rounded-md p-1 focus:outline-hidden focus:border-emerald-500"
+                      min="0"
+                    />
+                    <span class="text-slate-300 font-bold">+</span>
+                    <input
+                      type="number"
+                      v-model.number="status0200_east"
+                      class="w-12 font-bold text-center bg-slate-50 border border-slate-200 rounded-md p-1 focus:outline-hidden focus:border-emerald-500"
+                      min="0"
+                    />
+                    <span class="text-slate-400 font-bold text-xs ml-1">=</span>
+                    <span
+                      class="bg-slate-100 px-2 py-1 rounded-md font-extrabold text-slate-700 text-xs"
+                      >{{ status0200_total }}</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <!-- 因應措施 -->
+              <div
+                class="space-y-1.5 bg-white p-3 rounded-lg border border-slate-100 shadow-2xs"
+              >
+                <label class="block font-semibold text-slate-600"
+                  >因應措施說明：</label
+                >
+                <input
+                  type="text"
+                  v-model="northResponseMeasure"
+                  class="w-full bg-slate-50 border border-slate-200 rounded-md p-2 text-xs md:text-sm font-medium focus:outline-hidden focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition"
+                />
+              </div>
+            </div>
+          </section>
+
+          <!-- 南下郵件載運區塊 -->
+          <section
+            class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-5 transition duration-300 hover:shadow-md"
+          >
+            <div
+              class="flex justify-between items-center border-b border-slate-100 pb-3"
+            >
+              <h2
+                class="text-base md:text-lg font-bold text-indigo-800 flex items-center gap-2.5"
+              >
+                <span
+                  class="w-2 h-2 bg-indigo-500 rounded-full ring-4 ring-indigo-50"
+                ></span>
+                南下郵件載運
+              </h2>
+              <button
+                @click="addRow('south')"
+                class="px-3.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 active:scale-95 rounded-lg text-xs md:text-sm font-semibold transition-all cursor-pointer shadow-xs"
+              >
+                ＋ 新增一列
+              </button>
+            </div>
+
+            <!-- 表頭 -->
+            <div
+              class="grid grid-cols-12 gap-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-center px-2"
+            >
+              <div class="col-span-3 text-left pl-2">時間 (0150)</div>
+              <div class="col-span-5 text-left">車次選單</div>
+              <div class="col-span-3">數量 (台)</div>
+              <div class="col-span-1"></div>
+            </div>
+
+            <!-- 資料列表 -->
+            <div class="space-y-2 max-h-[480px] overflow-y-auto pr-1">
+              <div
+                v-for="(row, index) in southRows"
+                :key="'south-'+index"
+                class="grid grid-cols-12 gap-2 items-center bg-slate-50/60 hover:bg-slate-50 p-2 rounded-xl border border-slate-100 transition"
+              >
+                <div class="col-span-3">
+                  <input
+                    type="text"
+                    v-model="row.time"
+                    @blur="formatTime(row)"
+                    placeholder="請輸入"
+                    class="w-full text-center font-mono font-medium bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs md:text-sm focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  />
+                </div>
+                <div class="col-span-5">
+                  <select
+                    v-model="row.carType"
+                    class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs md:text-sm font-medium text-slate-600 focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  >
+                    <option value="">-- 請選擇車次 --</option>
+                    <option v-for="car in southCarOptions" :value="car">
+                      {{ car }}
+                    </option>
+                  </select>
+                </div>
+                <div class="col-span-3">
+                  <input
+                    type="number"
+                    v-model.number="row.count"
+                    placeholder="0"
+                    class="w-full text-center font-mono font-medium bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs md:text-sm focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition"
+                  />
+                </div>
+                <div class="col-span-1 text-center">
+                  <button
+                    @click="deleteRow('south', index)"
+                    title="刪除此行"
+                    class="text-slate-300 hover:text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg transition cursor-pointer"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 小計 -->
+            <div
+              class="text-right text-xs md:text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100"
+            >
+              南下車次累計：<span
+                class="text-lg font-extrabold font-mono text-indigo-600 ml-1"
+                >{{ totalSouthCount }}</span
+              >
+              台
+            </div>
+
+            <!-- 南下附加狀態編輯區 -->
+            <div
+              class="bg-indigo-50/30 p-4 rounded-xl border border-indigo-100/70 text-xs md:text-sm"
+            >
+              <h3
+                class="font-bold text-indigo-900 mb-3 flex items-center gap-2"
+              >
+                📝 南下留置狀態
+              </h3>
+              <div
+                class="bg-white p-3 rounded-lg border border-slate-100 shadow-2xs flex items-center justify-between"
+              >
+                <span class="font-semibold text-slate-600"
+                  >南下郵件尚留台數：</span
+                >
+                <div class="flex items-center gap-2">
+                  <input
+                    type="number"
+                    v-model.number="statusSouth"
+                    class="w-16 font-mono font-bold text-center bg-slate-50 border border-slate-200 rounded-md p-1 focus:outline-hidden focus:border-indigo-500"
+                    min="0"
+                  />
+                  <span class="text-slate-400 font-medium">台</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 選單自訂與擴充彈性區 -->
+          <details
+            class="bg-slate-100 p-4 rounded-xl border border-slate-200/60 transition group"
+          >
+            <summary
+              class="font-semibold text-xs md:text-sm text-slate-500 cursor-pointer focus:outline-hidden select-none flex items-center gap-1 hover:text-slate-700"
+            >
+              <span>⚙️ 車次自訂管理選單（點擊展開/收合）</span>
+            </summary>
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 bg-white p-4 rounded-xl shadow-inner border border-slate-100"
+            >
+              <div>
+                <h4
+                  class="font-bold text-xs text-emerald-800 mb-2 border-b pb-1"
+                >
+                  北上車次庫
+                </h4>
+                <div class="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    v-model="newNorthCar"
+                    placeholder="新增車次"
+                    class="border border-slate-200 rounded-lg px-2 py-1 text-xs flex-1 focus:outline-hidden focus:border-emerald-500"
+                  />
+                  <button
+                    @click="addCarOption('north')"
+                    class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-emerald-700 transition cursor-pointer"
+                  >
+                    加入
+                  </button>
+                </div>
+                <ul
+                  class="text-xs space-y-1 max-h-32 overflow-y-auto border border-slate-100 p-2 rounded-lg bg-slate-50/50"
+                >
+                  <li
+                    v-for="(car, i) in northCarOptions"
+                    class="flex justify-between items-center py-1.5 px-1 border-b border-slate-100 last:border-0 font-medium text-slate-600"
+                  >
+                    <span>{{ car }}</span>
+                    <button
+                      @click="removeCarOption('north', i)"
+                      class="text-slate-300 hover:text-rose-500 transition cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h4
+                  class="font-bold text-xs text-indigo-800 mb-2 border-b pb-1"
+                >
+                  南下車次庫
+                </h4>
+                <div class="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    v-model="newSouthCar"
+                    placeholder="新增車次"
+                    class="border border-slate-200 rounded-lg px-2 py-1 text-xs flex-1 focus:outline-hidden focus:border-indigo-500"
+                  />
+                  <button
+                    @click="addCarOption('south')"
+                    class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-xs font-semibold hover:bg-indigo-700 transition cursor-pointer"
+                  >
+                    加入
+                  </button>
+                </div>
+                <ul
+                  class="text-xs space-y-1 max-h-32 overflow-y-auto border border-slate-100 p-2 rounded-lg bg-slate-50/50"
+                >
+                  <li
+                    v-for="(car, i) in southCarOptions"
+                    class="flex justify-between items-center py-1.5 px-1 border-b border-slate-100 last:border-0 font-medium text-slate-600"
+                  >
+                    <span>{{ car }}</span>
+                    <button
+                      @click="removeCarOption('south', i)"
+                      class="text-slate-300 hover:text-rose-500 transition cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- 右側：典雅的深邃預覽與複製控制台 -->
+        <div class="lg:col-span-1">
+          <div
+            class="lg:sticky lg:top-8 bg-slate-900 text-slate-200 p-5 md:p-6 rounded-2xl shadow-xl border border-slate-800 flex flex-col h-[460px] lg:h-[calc(100vh-9rem)] transition-all"
+          >
+            <div
+              class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800"
+            >
+              <h3
+                class="font-bold text-sm md:text-base text-slate-400 flex items-center gap-2"
+              >
+                <span>📋 最終報表即時預覽</span>
+              </h3>
+              <button
+                @click="copyToClipboard"
+                :class="copyStatus.includes('✅') ? 'bg-emerald-600 text-white' : 'bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white'"
+                class="px-4 py-2 font-semibold rounded-xl text-xs md:text-sm transition-all shadow-md active:scale-95 flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>{{ copyStatus }}</span>
+              </button>
+            </div>
+
+            <!-- 完美排版文字輸出區 -->
+            <textarea
+              readonly
+              class="w-full flex-1 bg-slate-950/80 text-emerald-400 font-mono text-xs md:text-sm p-4 rounded-xl leading-relaxed resize-none focus:outline-hidden border border-slate-900 tracking-wide scrollbar-thin shadow-inner"
+              :value="finalReport"
+            ></textarea>
+
+            <div
+              class="mt-3 flex items-center gap-2 text-[11px] text-slate-500"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3.5 w-3.5 text-slate-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0x"
+                />
+              </svg>
+              <span>智能排序技術：自動融合跨夜班次時間線。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref, computed } = Vue;
+
+      createApp({
+        setup() {
+          const northCarOptions = ref([
+            "台南128車次",
+            "台南員工車",
+            "桃園外包車",
+            "台北外包車",
+            "台中120車次",
+            "台中122車次",
+            "台中郵局車",
+          ]);
+
+          const southCarOptions = ref([
+            "高雄郵局車",
+            "高雄27車次",
+            "高雄41車次",
+            "高雄61車次",
+            "高雄25車次",
+          ]);
+
+          const createInitialRows = () =>
+            Array.from({ length: 12 }, () => ({
+              time: "",
+              carType: "",
+              count: null,
+            }));
+
+          const northRows = ref(createInitialRows());
+          const southRows = ref(createInitialRows());
+
+          const newNorthCar = ref("");
+          const newSouthCar = ref("");
+          const copyStatus = ref("一鍵複製");
+
+          const status0000 = ref(0);
+          const status0200_main = ref(0);
+          const status0200_east = ref(0);
+          const statusSouth = ref(0);
+          const northResponseMeasure = ref("預計由796、快8及其他北上車次載運");
+
+          const status0200_total = computed(() => {
+            return (
+              (Number(status0200_main.value) || 0) +
+              (Number(status0200_east.value) || 0)
+            );
+          });
+
+          const formatTime = (row) => {
+            let raw = row.time.replace(/[^0-9]/g, "");
+            if (!raw) {
+              row.time = "";
+              return;
+            }
+            raw = raw.padStart(4, "0");
+            let hour = raw.substring(0, 2);
+            let min = raw.substring(2, 4);
+            if (parseInt(hour) > 23) hour = "23";
+            if (parseInt(min) > 59) min = "59";
+
+            row.time = `${hour}:${min}`;
+          };
+
+          const addRow = (type) => {
+            if (type === "north")
+              northRows.value.push({ time: "", carType: "", count: null });
+            if (type === "south")
+              southRows.value.push({ time: "", carType: "", count: null });
+          };
+
+          const deleteRow = (type, index) => {
+            if (type === "north") northRows.value.splice(index, 1);
+            if (type === "south") southRows.value.splice(index, 1);
+          };
+
+          const addCarOption = (type) => {
+            if (type === "north" && newNorthCar.value.trim()) {
+              if (!northCarOptions.value.includes(newNorthCar.value.trim())) {
+                northCarOptions.value.push(newNorthCar.value.trim());
+              }
+              newNorthCar.value = "";
+            }
+            if (type === "south" && newSouthCar.value.trim()) {
+              if (!southCarOptions.value.includes(newSouthCar.value.trim())) {
+                southCarOptions.value.push(newSouthCar.value.trim());
+              }
+              newSouthCar.value = "";
+            }
+          };
+
+          const removeCarOption = (type, index) => {
+            if (type === "north") northCarOptions.value.splice(index, 1);
+            if (type === "south") southCarOptions.value.splice(index, 1);
+          };
+
+          const totalNorthCount = computed(() => {
+            return northRows.value.reduce(
+              (sum, row) =>
+                sum + (typeof row.count === "number" ? row.count : 0),
+              0,
+            );
+          });
+
+          const totalSouthCount = computed(() => {
+            return southRows.value.reduce(
+              (sum, row) =>
+                sum + (typeof row.count === "number" ? row.count : 0),
+              0,
+            );
+          });
+
+          const getProcessedReportLines = (rows) => {
+            const validRows = rows.value.filter(
+              (row) => row.carType && row.count !== null && row.count !== "",
+            );
+
+            validRows.sort((a, b) => {
+              if (!a.time) return 1;
+              if (!b.time) return -1;
+
+              const hourA = parseInt(a.time.split(":")[0]);
+              const hourB = parseInt(b.time.split(":")[0]);
+
+              const groupA = hourA >= 12 ? 0 : 1;
+              const groupB = hourB >= 12 ? 0 : 1;
+
+              if (groupA !== groupB) {
+                return groupA - groupB;
+              } else {
+                return a.time.localeCompare(b.time);
+              }
+            });
+
+            let lines = validRows.map((row) => {
+              const timeStr = row.time ? row.time : "00:00";
+              return `${timeStr} ${row.carType}  ${row.count}台`;
+            });
+
+            const total = validRows.reduce(
+              (sum, row) => sum + (Number(row.count) || 0),
+              0,
+            );
+
+            return { lines, total };
+          };
+
+          const finalReport = computed(() => {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = today.getMonth() + 1;
+            const dd = today.getDate();
+            const dayNames = ["日", "一", "二", "三", "四", "五", "六"];
+            const dayName = dayNames[today.getDay()];
+
+            const northData = getProcessedReportLines(northRows);
+            const southData = getProcessedReportLines(southRows);
+
+            let text = `臺南郵局\n${yyyy}/${mm}/${dd}（${dayName}）（凌晨作業）\n\n`;
+
+            text += `北上郵件轉運\n`;
+            if (northData.lines.length > 0) {
+              text += northData.lines.join("\n") + "\n";
+            } else {
+              text += `（無轉運資料）\n`;
+            }
+            text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
+            text += `              計${northData.total}台\n\n`;
+
+            if (status0000.value === 0 || !status0000.value) {
+              text += `00:00 以前郵件全數運完\n`;
+            } else {
+              text += `00:00 以前郵件尚留${status0000.value}台\n`;
+            }
+
+            const m = Number(status0200_main.value) || 0;
+            const e = Number(status0200_east.value) || 0;
+            const t = status0200_total.value;
+
+            if (m === 0 && e === 0) {
+              text += `02:00 北上郵件全數運完\n`;
+            } else if (m === 0 && e > 0) {
+              text += `02:00 北上郵件尚留${e}台(宜花東)\n`;
+            } else if (m > 0 && e === 0) {
+              text += `02:00 北上郵件尚留${m}台\n`;
+            } else if (m > 0 && e > 0) {
+              text += `02:00 北上郵件尚留${m}+${e}(宜花東)=${t}台\n`;
+            }
+
+            if (northResponseMeasure.value.trim()) {
+              text += `${northResponseMeasure.value.trim()}\n\n`;
+            } else {
+              text += `\n`;
+            }
+
+            text += `南下郵件載運\n`;
+            if (southData.lines.length > 0) {
+              text += southData.lines.join("\n") + "\n";
+            } else {
+              text += `（無載運資料）\n`;
+            }
+            text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
+            text += `               計${southData.total}台\n\n`;
+
+            if (statusSouth.value === 0 || !statusSouth.value) {
+              text += `南下郵件全數運完`;
+            } else {
+              text += `南下郵件尚留${statusSouth.value}台`;
+            }
+
+            return text;
+          });
+
+          const copyToClipboard = () => {
+            navigator.clipboard
+              .writeText(finalReport.value)
+              .then(() => {
+                copyStatus.value = "✅ 複製成功！";
+                setTimeout(() => {
+                  copyStatus.value = "一鍵複製";
+                }, 2000);
+              })
+              .catch((err) => {
+                alert("複製失敗，請手動全選右側文字複製");
+              });
+          };
+
+          return {
+            northRows,
+            southRows,
+            northCarOptions,
+            southCarOptions,
+            newNorthCar,
+            newSouthCar,
+            copyStatus,
+            status0000,
+            status0200_main,
+            status0200_east,
+            status0200_total,
+            statusSouth,
+            northResponseMeasure,
+            formatTime,
+            addRow,
+            deleteRow,
+            addCarOption,
+            removeCarOption,
+            totalNorthCount,
+            totalSouthCount,
+            finalReport,
+            copyToClipboard,
+          };
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
