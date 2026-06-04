@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>郵件轉運回報產生器 (典雅旗艦版)</title>
+    <title>郵件轉運回報產生器</title>
     <!-- 引入 Vue 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- 引入 Tailwind CSS CDN -->
@@ -46,7 +46,7 @@
             郵件轉運回報系統
           </h1>
           <p class="text-xs md:text-sm text-slate-400 font-medium mt-1.5">
-            智慧型深夜物流排班與數據即時回報系統
+            大夜班MOMO出口回報
           </p>
         </div>
         <div class="text-xs text-slate-400 font-mono hidden md:block">
@@ -516,13 +516,13 @@
       createApp({
         setup() {
           const northCarOptions = ref([
-            "台南128車次",
-            "台南員工車",
+            "臺南128車次",
+            "臺南郵局車",
             "桃園外包車",
-            "台北外包車",
-            "台中120車次",
-            "台中122車次",
-            "台中郵局車",
+            "臺北外包車",
+            "臺中120車次",
+            "臺中122車次",
+            "臺中郵局車",
           ]);
 
           const southCarOptions = ref([
@@ -531,6 +531,7 @@
             "高雄41車次",
             "高雄61車次",
             "高雄25車次",
+            "臺南郵局車",
           ]);
 
           const createInitialRows = () =>
