@@ -683,7 +683,10 @@
               text += `02:00 北上郵件尚留${m}+${e}(宜花東)=${t}台\n`;
             }
 
-            if (northResponseMeasure.value.trim()) {
+            const hasNorthRemaining =
+              (Number(status0000.value) || 0) > 0 || m > 0 || e > 0;
+
+            if (hasNorthRemaining && northResponseMeasure.value.trim()) {
               text += `${northResponseMeasure.value.trim()}\n\n`;
             } else {
               text += `\n`;
