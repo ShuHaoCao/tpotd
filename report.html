@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>郵件轉運回報產生器 (工作日優化版)</title>
+    <title>MOMO郵件出口籃車數回報</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -38,10 +38,10 @@
             <span
               class="w-2.5 h-7 bg-gradient-to-b from-indigo-600 to-indigo-800 rounded-full inline-block"
             ></span>
-            郵件轉運回報系統
+            MOMO郵件出口籃車數回報
           </h1>
           <p class="text-xs md:text-sm text-slate-400 font-medium mt-1.5">
-            智慧型深夜物流排班與數據即時回報系統 (自動調整工作日為前一日)
+            自動按時間順序排序，自動加總籃車數(請確認日期顯示是否正確)
           </p>
         </div>
         <div class="text-xs text-slate-400 font-mono hidden md:block">
@@ -493,13 +493,14 @@
       createApp({
         setup() {
           const northCarOptions = ref([
-            "台南128車次",
-            "台南員工車",
+            "臺南128車次",
+            "臺南郵局車",
             "桃園外包車",
-            "台北外包車",
-            "台中120車次",
-            "台中122車次",
-            "台中郵局車",
+            "桃園124車次",
+            "臺北外包車",
+            "臺中120車次",
+            "臺中122車次",
+            "臺中郵局車",
           ]);
 
           const southCarOptions = ref([
@@ -508,6 +509,7 @@
             "高雄41車次",
             "高雄61車次",
             "高雄25車次",
+            "臺南郵局車",
           ]);
 
           const createInitialRows = () =>
