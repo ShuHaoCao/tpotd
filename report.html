@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>郵件轉運回報產生器</title>
-    <!-- 引入 Vue 3 CDN -->
+    <title>郵件轉運回報產生器 (工作日優化版)</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <!-- 引入 Tailwind CSS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-      /* 隱藏數字欄位的微調按鈕並符合標準屬性 */
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button {
         -webkit-appearance: none;
@@ -19,7 +16,6 @@
         -moz-appearance: textfield;
         appearance: textfield;
       }
-      /* 典雅字體美化與平滑滾動 */
       body {
         font-family:
           -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -32,7 +28,6 @@
     class="bg-[#f8fafc] text-slate-700 min-h-screen p-3 sm:p-6 lg:p-8 antialiased"
   >
     <div id="app" class="max-w-7xl mx-auto">
-      <!-- 典雅頁首設計 -->
       <header
         class="mb-8 pb-5 border-b border-slate-200/80 flex flex-col md:flex-row md:items-end md:justify-between gap-2"
       >
@@ -46,19 +41,16 @@
             郵件轉運回報系統
           </h1>
           <p class="text-xs md:text-sm text-slate-400 font-medium mt-1.5">
-            大夜班MOMO出口回報
+            智慧型深夜物流排班與數據即時回報系統 (自動調整工作日為前一日)
           </p>
         </div>
         <div class="text-xs text-slate-400 font-mono hidden md:block">
-          v2.5 // Clean & Elegant Edition
+          v2.6 // Date Logic Updated
         </div>
       </header>
 
-      <!-- 主要版面：手機直式、大螢幕(lg) 3 欄配置 -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- 左側編輯區 -->
         <div class="lg:col-span-2 space-y-8">
-          <!-- 北上郵件轉運區塊 -->
           <section
             class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-5 transition duration-300 hover:shadow-md"
           >
@@ -81,7 +73,6 @@
               </button>
             </div>
 
-            <!-- 表頭 -->
             <div
               class="grid grid-cols-12 gap-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-center px-2"
             >
@@ -91,7 +82,6 @@
               <div class="col-span-1"></div>
             </div>
 
-            <!-- 資料列表 -->
             <div class="space-y-2 max-h-[480px] overflow-y-auto pr-1">
               <div
                 v-for="(row, index) in northRows"
@@ -151,7 +141,6 @@
               </div>
             </div>
 
-            <!-- 小計 -->
             <div
               class="text-right text-xs md:text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100"
             >
@@ -162,7 +151,6 @@
               台
             </div>
 
-            <!-- 精美附加狀態編輯區 -->
             <div
               class="bg-emerald-50/30 p-4 rounded-xl border border-emerald-100/70 space-y-4 text-xs md:text-sm"
             >
@@ -171,7 +159,6 @@
               </h3>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- 00:00 以前郵件 -->
                 <div
                   class="bg-white p-3 rounded-lg border border-slate-100 shadow-2xs flex items-center justify-between"
                 >
@@ -189,7 +176,6 @@
                   </div>
                 </div>
 
-                <!-- 02:00 北上郵件 -->
                 <div
                   class="bg-white p-3 rounded-lg border border-slate-100 shadow-2xs flex items-center justify-between col-span-1"
                 >
@@ -219,7 +205,6 @@
                 </div>
               </div>
 
-              <!-- 因應措施 -->
               <div
                 class="space-y-1.5 bg-white p-3 rounded-lg border border-slate-100 shadow-2xs"
               >
@@ -235,7 +220,6 @@
             </div>
           </section>
 
-          <!-- 南下郵件載運區塊 -->
           <section
             class="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-100 space-y-5 transition duration-300 hover:shadow-md"
           >
@@ -258,7 +242,6 @@
               </button>
             </div>
 
-            <!-- 表頭 -->
             <div
               class="grid grid-cols-12 gap-2 text-xs font-bold text-slate-400 tracking-wider uppercase text-center px-2"
             >
@@ -268,7 +251,6 @@
               <div class="col-span-1"></div>
             </div>
 
-            <!-- 資料列表 -->
             <div class="space-y-2 max-h-[480px] overflow-y-auto pr-1">
               <div
                 v-for="(row, index) in southRows"
@@ -328,7 +310,6 @@
               </div>
             </div>
 
-            <!-- 小計 -->
             <div
               class="text-right text-xs md:text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100"
             >
@@ -339,7 +320,6 @@
               台
             </div>
 
-            <!-- 南下附加狀態編輯區 -->
             <div
               class="bg-indigo-50/30 p-4 rounded-xl border border-indigo-100/70 text-xs md:text-sm"
             >
@@ -367,7 +347,6 @@
             </div>
           </section>
 
-          <!-- 選單自訂與擴充彈性區 -->
           <details
             class="bg-slate-100 p-4 rounded-xl border border-slate-200/60 transition group"
           >
@@ -457,7 +436,6 @@
           </details>
         </div>
 
-        <!-- 右側：典雅的深邃預覽與複製控制台 -->
         <div class="lg:col-span-1">
           <div
             class="lg:sticky lg:top-8 bg-slate-900 text-slate-200 p-5 md:p-6 rounded-2xl shadow-xl border border-slate-800 flex flex-col h-[460px] lg:h-[calc(100vh-9rem)] transition-all"
@@ -479,7 +457,6 @@
               </button>
             </div>
 
-            <!-- 完美排版文字輸出區 -->
             <textarea
               readonly
               class="w-full flex-1 bg-slate-950/80 text-emerald-400 font-mono text-xs md:text-sm p-4 rounded-xl leading-relaxed resize-none focus:outline-hidden border border-slate-900 tracking-wide scrollbar-thin shadow-inner"
@@ -503,7 +480,7 @@
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0x"
                 />
               </svg>
-              <span>智能排序技術：自動融合跨夜班次時間線。</span>
+              <span>智能工作日邏輯：自動將今日日期減去 1 天顯示。</span>
             </div>
           </div>
         </div>
@@ -516,14 +493,13 @@
       createApp({
         setup() {
           const northCarOptions = ref([
-            "臺南128車次",
-            "臺南郵局車",
+            "台南128車次",
+            "台南員工車",
             "桃園外包車",
-            "桃園124車次",
-            "臺北外包車",
-            "臺中120車次",
-            "臺中122車次",
-            "臺中郵局車",
+            "台北外包車",
+            "台中120車次",
+            "台中122車次",
+            "台中郵局車",
           ]);
 
           const southCarOptions = ref([
@@ -532,7 +508,6 @@
             "高雄41車次",
             "高雄61車次",
             "高雄25車次",
-            "臺南郵局車",
           ]);
 
           const createInitialRows = () =>
@@ -660,13 +635,17 @@
             return { lines, total };
           };
 
+          // 核心更新：自動計算「前1日」做為貨件工作日的邏輯
           const finalReport = computed(() => {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = today.getMonth() + 1;
-            const dd = today.getDate();
+            const dateTarget = new Date();
+            // 將時間往回推 24 小時，取得前一天的真實日期與星期
+            dateTarget.setDate(dateTarget.getDate() - 1);
+
+            const yyyy = dateTarget.getFullYear();
+            const mm = dateTarget.getMonth() + 1;
+            const dd = dateTarget.getDate();
             const dayNames = ["日", "一", "二", "三", "四", "五", "六"];
-            const dayName = dayNames[today.getDay()];
+            const dayName = dayNames[dateTarget.getDay()];
 
             const northData = getProcessedReportLines(northRows);
             const southData = getProcessedReportLines(southRows);
