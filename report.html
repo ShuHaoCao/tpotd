@@ -144,7 +144,11 @@
             <div
               class="text-right text-xs md:text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100"
             >
-              北上車次累計：<span
+              北上車次累計：共<span
+                class="text-lg font-extrabold font-mono text-emerald-600 ml-1"
+                >{{ totalNorthTrips }}</span
+              >
+              車次　計<span
                 class="text-lg font-extrabold font-mono text-emerald-600 ml-1"
                 >{{ totalNorthCount }}</span
               >
@@ -313,7 +317,11 @@
             <div
               class="text-right text-xs md:text-sm font-bold text-slate-500 bg-slate-50 p-3 rounded-xl border border-slate-100"
             >
-              南下車次累計：<span
+              南下車次累計：共<span
+                class="text-lg font-extrabold font-mono text-indigo-600 ml-1"
+                >{{ totalSouthTrips }}</span
+              >
+              車次　計<span
                 class="text-lg font-extrabold font-mono text-indigo-600 ml-1"
                 >{{ totalSouthCount }}</span
               >
@@ -594,12 +602,24 @@
             );
           });
 
+          const totalNorthTrips = computed(() => {
+            return northRows.value.filter(
+              (row) => row.carType && row.count !== null && row.count !== "",
+            ).length;
+          });
+
           const totalSouthCount = computed(() => {
             return southRows.value.reduce(
               (sum, row) =>
                 sum + (typeof row.count === "number" ? row.count : 0),
               0,
             );
+          });
+
+          const totalSouthTrips = computed(() => {
+            return southRows.value.filter(
+              (row) => row.carType && row.count !== null && row.count !== "",
+            ).length;
           });
 
           const getProcessedReportLines = (rows) => {
@@ -634,7 +654,7 @@
               0,
             );
 
-            return { lines, total };
+            return { lines, total, tripCount: validRows.length };
           };
 
           // 核心更新：自動計算「前1日」做為貨件工作日的邏輯
@@ -661,7 +681,7 @@
               text += `（無轉運資料）\n`;
             }
             text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
-            text += `              計${northData.total}台\n\n`;
+            text += `       共${northData.tripCount}車次   計${northData.total}台\n\n`;
 
             if (status0000.value === 0 || !status0000.value) {
               text += `00:00 以前郵件全數運完\n`;
@@ -699,7 +719,7 @@
               text += `（無載運資料）\n`;
             }
             text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
-            text += `               計${southData.total}台\n\n`;
+            text += `       共${southData.tripCount}車次   計${southData.total}台\n\n`;
 
             if (statusSouth.value === 0 || !statusSouth.value) {
               text += `南下郵件全數運完`;
@@ -744,7 +764,9 @@
             addCarOption,
             removeCarOption,
             totalNorthCount,
+            totalNorthTrips,
             totalSouthCount,
+            totalSouthTrips,
             finalReport,
             copyToClipboard,
           };
