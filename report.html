@@ -156,6 +156,39 @@
             </div>
 
             <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm"
+            >
+              <div
+                class="bg-emerald-50/60 p-3 rounded-xl border border-emerald-100 flex items-center justify-between"
+              >
+                <span class="font-bold text-emerald-900">幹線運輸</span>
+                <span class="font-semibold text-slate-500">
+                  共<span
+                    class="text-lg font-extrabold font-mono text-emerald-600 mx-1"
+                    >{{ northTransportStats.trunkTrips }}</span
+                  >車次 　計<span
+                    class="text-lg font-extrabold font-mono text-emerald-600 mx-1"
+                    >{{ northTransportStats.trunkCount }}</span
+                  >台
+                </span>
+              </div>
+              <div
+                class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between"
+              >
+                <span class="font-bold text-slate-700">加班車次</span>
+                <span class="font-semibold text-slate-500">
+                  共<span
+                    class="text-lg font-extrabold font-mono text-slate-600 mx-1"
+                    >{{ northTransportStats.overtimeTrips }}</span
+                  >車次 　計<span
+                    class="text-lg font-extrabold font-mono text-slate-600 mx-1"
+                    >{{ northTransportStats.overtimeCount }}</span
+                  >台
+                </span>
+              </div>
+            </div>
+
+            <div
               class="bg-emerald-50/30 p-4 rounded-xl border border-emerald-100/70 space-y-4 text-xs md:text-sm"
             >
               <h3 class="font-bold text-emerald-900 flex items-center gap-2">
@@ -326,6 +359,39 @@
                 >{{ totalSouthCount }}</span
               >
               台
+            </div>
+
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs md:text-sm"
+            >
+              <div
+                class="bg-indigo-50/60 p-3 rounded-xl border border-indigo-100 flex items-center justify-between"
+              >
+                <span class="font-bold text-indigo-900">幹線運輸</span>
+                <span class="font-semibold text-slate-500">
+                  共<span
+                    class="text-lg font-extrabold font-mono text-indigo-600 mx-1"
+                    >{{ southTransportStats.trunkTrips }}</span
+                  >車次 　計<span
+                    class="text-lg font-extrabold font-mono text-indigo-600 mx-1"
+                    >{{ southTransportStats.trunkCount }}</span
+                  >台
+                </span>
+              </div>
+              <div
+                class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex items-center justify-between"
+              >
+                <span class="font-bold text-slate-700">加班車次</span>
+                <span class="font-semibold text-slate-500">
+                  共<span
+                    class="text-lg font-extrabold font-mono text-slate-600 mx-1"
+                    >{{ southTransportStats.overtimeTrips }}</span
+                  >車次 　計<span
+                    class="text-lg font-extrabold font-mono text-slate-600 mx-1"
+                    >{{ southTransportStats.overtimeCount }}</span
+                  >台
+                </span>
+              </div>
             </div>
 
             <div
@@ -622,6 +688,47 @@
             ).length;
           });
 
+          const isTrunkTransport = (carType) => {
+            return /\d+\s*車次/.test(carType || "");
+          };
+
+          const getTransportStats = (rows) => {
+            return rows.value.reduce(
+              (stats, row) => {
+                const hasValidData =
+                  row.carType && row.count !== null && row.count !== "";
+
+                if (!hasValidData) return stats;
+
+                const count = Number(row.count) || 0;
+
+                if (isTrunkTransport(row.carType)) {
+                  stats.trunkTrips += 1;
+                  stats.trunkCount += count;
+                } else {
+                  stats.overtimeTrips += 1;
+                  stats.overtimeCount += count;
+                }
+
+                return stats;
+              },
+              {
+                trunkTrips: 0,
+                trunkCount: 0,
+                overtimeTrips: 0,
+                overtimeCount: 0,
+              },
+            );
+          };
+
+          const northTransportStats = computed(() => {
+            return getTransportStats(northRows);
+          });
+
+          const southTransportStats = computed(() => {
+            return getTransportStats(southRows);
+          });
+
           const getProcessedReportLines = (rows) => {
             const validRows = rows.value.filter(
               (row) => row.carType && row.count !== null && row.count !== "",
@@ -765,8 +872,10 @@
             removeCarOption,
             totalNorthCount,
             totalNorthTrips,
+            northTransportStats,
             totalSouthCount,
             totalSouthTrips,
+            southTransportStats,
             finalReport,
             copyToClipboard,
           };
