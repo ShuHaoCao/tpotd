@@ -3,11 +3,24 @@
   <head>
     <meta charset="utf-8" />
     <meta
+      http-equiv="Cache-Control"
+      content="no-store,no-cache,must-revalidate,max-age=0"
+    />
+
+    <meta http-equiv="Pragma" content="no-cache" />
+
+    <meta http-equiv="Expires" content="0" />
+    <meta
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta name="theme-color" content="#08111f" />
     <title>臺南運輸股｜加班戰情室</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=hSOoKopQ0OcSLAewmjLg-Vd46BUTR67NiBKbmcEj9RlfQoWZIEwTwsaeNtOoVzXm9t9N0AhXo444Ptay9UDzuN2S5nleo01TEIRBSgTcgu33kbiL5IjlCtYEf1r3cUeLl5-fRn4L0I1p-BQVR76qZPIkxfGnO4I61zH5fjBgF5cme3HtWSawtzquVFIZnIfCBCvEUBhB251vTEgRu-hb9BKA23rJiP9B2rVU8bo4gvrWDOvkuV8kJ0OYf7lG73TCuWtE2S3uKXTGjvZkZU9Zk3aZGU2szRuzq4Rf1LC1SwdZ6meyWy16ffpVb9uUro0lml7nhIKKuZ59sHRgwFUIRIbXrMLKTG07VP8jlv_NKRc"
+      charset="UTF-8"
+    ></script>
     <style>
       :root {
         --bg: #08111f;
@@ -956,7 +969,10 @@
         <h1 id="title">臺南運輸股｜加班戰情室</h1>
         <div class="sub" id="subtitle">讀取資料中……</div>
         <div class="toolbar">
-          <select id="personSelect">
+          <select id="monthSelect" aria-label="選擇月份">
+            <option>月份載入中</option>
+          </select>
+          <select id="personSelect" aria-label="選擇人員">
             <option>載入中</option>
           </select>
           <div class="legend" id="legend"></div>
@@ -973,19 +989,123 @@
         大夜班: "#c7a5ff",
       };
       let DATA;
+      let selectedMonthKey = currentRocMonthKey();
+      const discoveredMonthData = new Map();
 
-      fetch("overtime_data.json", { cache: "no-store" })
-        .then((r) => {
-          if (!r.ok) throw new Error("no json");
-          return r.json();
-        })
-        .then(init)
-        .catch((err) => {
-          console.error(err);
-          document.getElementById("subtitle").textContent =
-            "自動讀取不到 json，請確認檔案存在，並建議透過本機伺服器、網站空間開啟，或檢查手機端讀取權限。";
-          if (FALLBACK) init(FALLBACK);
+      discoverAvailableMonths();
+
+      function currentRocMonthKey() {
+        const now = new Date();
+        const rocYear = now.getFullYear() - 1911;
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        return `${rocYear}${month}`;
+      }
+
+      function buildMonthKeysForDiscovery() {
+        const now = new Date();
+        const currentRocYear = now.getFullYear() - 1911;
+        const startRocYear = 100;
+        const endRocYear = currentRocYear + 1;
+        const keys = [];
+        for (let y = startRocYear; y <= endRocYear; y++) {
+          for (let m = 1; m <= 12; m++) {
+            keys.push(`${y}${String(m).padStart(2, "0")}`);
+          }
+        }
+        return keys;
+      }
+
+      async function discoverAvailableMonths() {
+        const sel = document.getElementById("monthSelect");
+        sel.innerHTML = '<option value="">搜尋可讀月份中……</option>';
+        document.getElementById("subtitle").textContent =
+          "正在掃描可讀取的月份 JSON……";
+        document.getElementById("personSelect").innerHTML =
+          "<option>載入中</option>";
+        document.getElementById("legend").innerHTML = "";
+        document.getElementById("app").innerHTML = "";
+
+        const keys = buildMonthKeysForDiscovery();
+        const checks = await Promise.all(
+          keys.map(async (key) => {
+            const fileName = `overtime_data_${key}.json`;
+            try {
+              const r = await fetch(fileName + "?v=" + Date.now(), {
+                cache: "no-store",
+              });
+              if (!r.ok) return null;
+              const data = await r.json();
+              discoveredMonthData.set(key, data);
+              return key;
+            } catch (err) {
+              return null;
+            }
+          }),
+        );
+
+        const availableKeys = checks.filter(Boolean).sort((a, b) => {
+          return Number(a) - Number(b);
         });
+
+        if (!availableKeys.length) {
+          sel.innerHTML = '<option value="">找不到可讀月份</option>';
+          document.getElementById("subtitle").textContent =
+            "找不到任何 overtime_data_YYYMM.json。請確認 JSON 檔案與網頁放在同一層資料夾，檔名例如 overtime_data_11505.json。";
+          document.getElementById("personSelect").innerHTML =
+            "<option>無資料</option>";
+          return;
+        }
+
+        sel.innerHTML = availableKeys
+          .map(
+            (key) => `<option value="${key}">${formatMonthLabel(key)}</option>`,
+          )
+          .join("");
+        const defaultKey = availableKeys.includes(currentRocMonthKey())
+          ? currentRocMonthKey()
+          : availableKeys[availableKeys.length - 1];
+        sel.value = defaultKey;
+        sel.onchange = () => loadMonth(sel.value);
+        loadMonth(defaultKey);
+      }
+
+      function formatMonthLabel(key) {
+        const rocYear = key.slice(0, -2);
+        const month = Number(key.slice(-2));
+        return `${rocYear}年${month}月`;
+      }
+
+      function loadMonth(monthKey) {
+        selectedMonthKey = monthKey;
+        const fileName = `overtime_data_${monthKey}.json`;
+        document.getElementById("subtitle").textContent =
+          `讀取 ${formatMonthLabel(monthKey)} 資料中……`;
+        document.getElementById("personSelect").innerHTML =
+          "<option>載入中</option>";
+        document.getElementById("legend").innerHTML = "";
+        document.getElementById("app").innerHTML = "";
+
+        if (discoveredMonthData.has(monthKey)) {
+          init(discoveredMonthData.get(monthKey));
+          return;
+        }
+
+        fetch(fileName + "?v=" + Date.now(), { cache: "no-store" })
+          .then((r) => {
+            if (!r.ok) throw new Error("找不到 " + fileName);
+            return r.json();
+          })
+          .then((data) => {
+            discoveredMonthData.set(monthKey, data);
+            init(data);
+          })
+          .catch((err) => {
+            console.error(err);
+            document.getElementById("subtitle").textContent =
+              `自動讀取不到 ${fileName}。請確認該月份 JSON 已由新版 VBA 匯出，且檔案與網頁放在同一層資料夾。`;
+            if (FALLBACK) init(FALLBACK);
+          });
+      }
 
       function init(data) {
         DATA = normalizeData(data);
@@ -995,8 +1115,11 @@
         const badNames = (DATA.people || []).filter(
           (p) => !p.name || /^\d+(\.\d+)?$/.test(String(p.name)),
         ).length;
+        const expectedSheet = `加班統計表-${selectedMonthKey}`;
+        const monthMismatch =
+          DATA.meta?.sheetName && DATA.meta.sheetName !== expectedSheet;
         document.getElementById("subtitle").textContent =
-          `${DATA.meta?.sheetName || ""}　資料匯出：${DATA.meta?.exportedAt || ""}${badSheet || badNames > 5 ? "　⚠ 這份 JSON 可能匯出到錯誤工作表，請用新版 VBA 重新匯出。" : ""}`;
+          `${DATA.meta?.sheetName || ""}　檔案：overtime_data_${selectedMonthKey}.json　資料匯出：${DATA.meta?.exportedAt || ""}${badSheet || badNames > 5 ? "　⚠ 這份 JSON 可能匯出到錯誤工作表，請用新版 VBA 重新匯出。" : ""}${monthMismatch ? "　⚠ 檔名月份與工作表月份不一致，請確認是否放錯檔案。" : ""}`;
         const sel = document.getElementById("personSelect");
         sel.innerHTML =
           '<option value="__overview">戰況總覽</option>' +
