@@ -1,6 +1,6 @@
 ﻿[
   {
-    "seq": "",
+    "seq": "001",
     "date": "2026-06-11",
     "weekday": "週四",
     "summary": {
@@ -232,7 +232,7 @@
     ]
   },
   {
-    "seq": "",
+    "seq": "002",
     "date": "2026-06-12",
     "weekday": "週五",
     "summary": {
@@ -352,18 +352,6 @@
             "loaded_carts": 8,
             "trip_no": "郵局第5車",
             "interval_mins": 1
-          },
-          {
-            "car_name": "第1階段第8車",
-            "display_name": "總車次第8車",
-            "call_time": "00:45",
-            "driver": "徐鈺沛",
-            "return_time": "01:25",
-            "arrival_time": "02:10",
-            "transit_duration_mins": 45,
-            "loaded_carts": 18,
-            "trip_no": "明嘉第3車",
-            "interval_mins": 78
           }
         ]
       },
@@ -372,6 +360,18 @@
         "cars": [
           {
             "car_name": "第2階段第1車",
+            "display_name": "總車次第8車",
+            "call_time": "00:45",
+            "driver": "徐鈺沛",
+            "return_time": "01:25",
+            "arrival_time": "02:10",
+            "transit_duration_mins": 45,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第3車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第2階段第2車",
             "display_name": "總車次第9車",
             "call_time": "01:28",
             "driver": "周恆毅",
@@ -380,10 +380,15 @@
             "transit_duration_mins": 47,
             "loaded_carts": 13,
             "trip_no": "郵局第6車",
-            "interval_mins": null
-          },
+            "interval_mins": 43
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
           {
-            "car_name": "第2階段第2車",
+            "car_name": "第3階段第1車",
             "display_name": "總車次第10車",
             "call_time": "02:20",
             "driver": "徐鈺沛",
@@ -392,10 +397,10 @@
             "transit_duration_mins": 40,
             "loaded_carts": 18,
             "trip_no": "明嘉第4車",
-            "interval_mins": 52
+            "interval_mins": null
           },
           {
-            "car_name": "第2階段第3車",
+            "car_name": "第3階段第2車",
             "display_name": "總車次第11車",
             "call_time": "02:46",
             "driver": "葉吉順",
@@ -405,14 +410,9 @@
             "loaded_carts": 18,
             "trip_no": "幹線車早5",
             "interval_mins": 26
-          }
-        ]
-      },
-      {
-        "stage_name": "第3階段",
-        "cars": [
+          },
           {
-            "car_name": "第3階段第1車",
+            "car_name": "第3階段第3車",
             "display_name": "總車次第12車",
             "call_time": "03:09",
             "driver": "金哲駿",
@@ -421,14 +421,14 @@
             "transit_duration_mins": 37,
             "loaded_carts": 7,
             "trip_no": "郵局第7車",
-            "interval_mins": null
+            "interval_mins": 23
           }
         ]
       }
     ]
   },
   {
-    "seq": "",
+    "seq": "003",
     "date": "2026-06-13",
     "weekday": "週六",
     "summary": {
@@ -536,9 +536,14 @@
             "loaded_carts": 8,
             "trip_no": "郵局第2車",
             "interval_mins": 2
-          },
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
           {
-            "car_name": "第1階段第7車",
+            "car_name": "第2階段第1車",
             "display_name": "總車次第7車",
             "call_time": "00:41",
             "driver": "徐鈺沛",
@@ -547,10 +552,10 @@
             "transit_duration_mins": 34,
             "loaded_carts": 18,
             "trip_no": "明嘉第5車",
-            "interval_mins": 86
+            "interval_mins": null
           },
           {
-            "car_name": "第1階段第8車",
+            "car_name": "第2階段第2車",
             "display_name": "總車次第8車",
             "call_time": "01:20",
             "driver": "徐鈺沛",
@@ -564,10 +569,10 @@
         ]
       },
       {
-        "stage_name": "第2階段",
+        "stage_name": "第3階段",
         "cars": [
           {
-            "car_name": "第2階段第1車",
+            "car_name": "第3階段第1車",
             "display_name": "總車次第9車",
             "call_time": "02:52",
             "driver": "徐鈺沛",
@@ -579,7 +584,7 @@
             "interval_mins": null
           },
           {
-            "car_name": "第2階段第2車",
+            "car_name": "第3階段第2車",
             "display_name": "總車次第10車",
             "call_time": "03:04",
             "driver": "徐鈺沛",
@@ -591,7 +596,7 @@
             "interval_mins": 12
           },
           {
-            "car_name": "第2階段第3車",
+            "car_name": "第3階段第3車",
             "display_name": "總車次第11車",
             "call_time": "03:00",
             "driver": "李翊宏",
@@ -607,7 +612,7 @@
     ]
   },
   {
-    "seq": "",
+    "seq": "004",
     "date": "2026-06-14",
     "weekday": "週日",
     "summary": {
@@ -703,9 +708,14 @@
             "loaded_carts": 15,
             "trip_no": "郵局第1車",
             "interval_mins": 10
-          },
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
           {
-            "car_name": "第1階段第6車",
+            "car_name": "第2階段第1車",
             "display_name": "總車次第6車",
             "call_time": "00:47",
             "driver": "徐鈺沛",
@@ -714,10 +724,10 @@
             "transit_duration_mins": 43,
             "loaded_carts": 18,
             "trip_no": "明嘉第5車",
-            "interval_mins": 70
+            "interval_mins": null
           },
           {
-            "car_name": "第1階段第7車",
+            "car_name": "第2階段第2車",
             "display_name": "總車次第7車",
             "call_time": "01:24",
             "driver": "徐鈺沛",
@@ -729,7 +739,7 @@
             "interval_mins": 37
           },
           {
-            "car_name": "第1階段第8車",
+            "car_name": "第2階段第3車",
             "display_name": "總車次第8車",
             "call_time": "01:29",
             "driver": "金哲駿",
@@ -743,10 +753,10 @@
         ]
       },
       {
-        "stage_name": "第2階段",
+        "stage_name": "第3階段",
         "cars": [
           {
-            "car_name": "第2階段第1車",
+            "car_name": "第3階段第1車",
             "display_name": "總車次第9車",
             "call_time": "02:34",
             "driver": "徐鈺沛",
@@ -758,7 +768,7 @@
             "interval_mins": null
           },
           {
-            "car_name": "第2階段第2車",
+            "car_name": "第3階段第2車",
             "display_name": "總車次第10車",
             "call_time": "02:55",
             "driver": "徐鈺沛",
@@ -774,7 +784,7 @@
     ]
   },
   {
-    "seq": "",
+    "seq": "005",
     "date": "2026-06-15",
     "weekday": "週一",
     "summary": {
@@ -935,18 +945,6 @@
             "loaded_carts": 6,
             "trip_no": "郵局第7車",
             "interval_mins": 23
-          },
-          {
-            "car_name": "第2階段第3車",
-            "display_name": "總車次第11車",
-            "call_time": "02:05",
-            "driver": "張正德",
-            "return_time": "02:55",
-            "arrival_time": "03:30",
-            "transit_duration_mins": 35,
-            "loaded_carts": 18,
-            "trip_no": "郵局第8車",
-            "interval_mins": 44
           }
         ]
       },
@@ -955,6 +953,18 @@
         "cars": [
           {
             "car_name": "第3階段第1車",
+            "display_name": "總車次第11車",
+            "call_time": "02:05",
+            "driver": "張正德",
+            "return_time": "02:55",
+            "arrival_time": "03:30",
+            "transit_duration_mins": 35,
+            "loaded_carts": 18,
+            "trip_no": "郵局第8車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
             "display_name": "總車次第12車",
             "call_time": "02:52",
             "driver": "徐鈺沛",
@@ -963,10 +973,10 @@
             "transit_duration_mins": 43,
             "loaded_carts": 18,
             "trip_no": "明嘉第4車",
-            "interval_mins": null
+            "interval_mins": 47
           },
           {
-            "car_name": "第3階段第2車",
+            "car_name": "第3階段第3車",
             "display_name": "總車次第13車",
             "call_time": "02:57",
             "driver": "莊世民",
@@ -978,7 +988,7 @@
             "interval_mins": 5
           },
           {
-            "car_name": "第3階段第3車",
+            "car_name": "第3階段第4車",
             "display_name": "總車次第14車",
             "call_time": "03:00",
             "driver": "連志維",
@@ -990,7 +1000,7 @@
             "interval_mins": 3
           },
           {
-            "car_name": "第3階段第4車",
+            "car_name": "第3階段第5車",
             "display_name": "總車次第15車",
             "call_time": "04:05",
             "driver": "張正德",
@@ -1000,6 +1010,30 @@
             "loaded_carts": 18,
             "trip_no": "郵局第10車",
             "interval_mins": 65
+          },
+          {
+            "car_name": "第3階段第6車",
+            "display_name": "總車次第16車",
+            "call_time": "04:07",
+            "driver": "陳柏林",
+            "return_time": "04:47",
+            "arrival_time": "05:30",
+            "transit_duration_mins": 43,
+            "loaded_carts": 18,
+            "trip_no": "郵局第11車",
+            "interval_mins": 2
+          },
+          {
+            "car_name": "第3階段第7車",
+            "display_name": "總車次第17車",
+            "call_time": "04:29",
+            "driver": "莊世民",
+            "return_time": "05:09",
+            "arrival_time": "05:50",
+            "transit_duration_mins": 41,
+            "loaded_carts": 14,
+            "trip_no": "郵局第12車",
+            "interval_mins": 22
           }
         ]
       }
