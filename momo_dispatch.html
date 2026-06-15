@@ -1,0 +1,2550 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>MOMO新市倉派車看板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg0: #020617;
+        --bg1: #071426;
+        --panel: #071b2d;
+        --panel2: #08243a;
+        --cyan: #22d3ee;
+        --blue: #38bdf8;
+        --green: #34d399;
+        --amber: #fbbf24;
+        --purple: #c084fc;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --line: rgba(56, 189, 248, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        color: var(--text) !important;
+        background:
+          radial-gradient(
+            circle at 18% 8%,
+            rgba(34, 211, 238, 0.15),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 88% 18%,
+            rgba(52, 211, 153, 0.12),
+            transparent 26%
+          ),
+          linear-gradient(135deg, #020617 0%, #061525 46%, #03111f 100%) !important;
+        font-family:
+          "Inter",
+          "Noto Sans TC",
+          "Microsoft JhengHei",
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.24;
+        background-image:
+          linear-gradient(rgba(34, 211, 238, 0.12) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(34, 211, 238, 0.12) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(to bottom, black, transparent 75%);
+      }
+
+      #app {
+        max-width: 1640px !important;
+        position: relative;
+      }
+
+      header {
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 18px !important;
+        padding: 24px 28px !important;
+        border: 1px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 18px !important;
+        background:
+          linear-gradient(135deg, rgba(8, 47, 73, 0.82), rgba(2, 6, 23, 0.88)),
+          radial-gradient(
+            circle at 28% 0%,
+            rgba(34, 211, 238, 0.16),
+            transparent 32%
+          );
+        box-shadow:
+          0 0 0 1px rgba(14, 165, 233, 0.12),
+          0 22px 60px rgba(0, 0, 0, 0.35),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(16px);
+      }
+
+      header::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--cyan),
+          transparent
+        );
+        box-shadow: 0 0 18px var(--cyan);
+      }
+
+      h1 {
+        color: #fff !important;
+        font-size: clamp(1.55rem, 3vw, 2.55rem) !important;
+        font-weight: 950 !important;
+        letter-spacing: 0.04em;
+        text-shadow: 0 0 24px rgba(56, 189, 248, 0.24);
+      }
+
+      h1 .material-icons {
+        width: 66px;
+        height: 66px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 18px;
+        color: var(--green) !important;
+        font-size: 42px !important;
+        background: linear-gradient(
+          145deg,
+          rgba(14, 165, 233, 0.2),
+          rgba(2, 6, 23, 0.82)
+        );
+        border: 1px solid rgba(34, 211, 238, 0.5);
+        box-shadow:
+          0 0 22px rgba(34, 211, 238, 0.28),
+          inset 0 0 18px rgba(34, 211, 238, 0.08);
+      }
+
+      header p {
+        margin-left: 82px;
+        color: #a7f3d0 !important;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+      }
+
+      header > div:last-child {
+        background: rgba(15, 23, 42, 0.7) !important;
+        border: 1px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 14px !important;
+        box-shadow:
+          0 0 20px rgba(14, 165, 233, 0.18),
+          inset 0 0 16px rgba(56, 189, 248, 0.05) !important;
+      }
+
+      header > div:last-child div {
+        color: #5eead4 !important;
+        font-weight: 950 !important;
+        font-size: clamp(0.95rem, 1.6vw, 1.45rem) !important;
+      }
+
+      header button {
+        color: #e0f2fe !important;
+        background: linear-gradient(
+          145deg,
+          rgba(15, 23, 42, 0.85),
+          rgba(30, 64, 175, 0.25)
+        ) !important;
+        border: 1px solid rgba(56, 189, 248, 0.45) !important;
+        border-radius: 12px !important;
+      }
+
+      header button:hover {
+        color: #67e8f9 !important;
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+        transform: translateY(-1px);
+      }
+
+      section.grid > div,
+      .tech-card,
+      .bg-white {
+        background: linear-gradient(
+          145deg,
+          rgba(7, 27, 45, 0.94),
+          rgba(2, 6, 23, 0.92)
+        ) !important;
+        border: 1px solid rgba(56, 189, 248, 0.36) !important;
+        color: #f8fafc !important;
+        box-shadow:
+          0 18px 42px rgba(0, 0, 0, 0.34),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06),
+          0 0 20px rgba(14, 165, 233, 0.08) !important;
+      }
+
+      section.grid > div {
+        position: relative;
+        overflow: hidden;
+        min-height: 160px;
+        padding: 24px !important;
+        border-radius: 14px !important;
+        transition: 0.25s ease;
+      }
+
+      section.grid > div:hover {
+        transform: translateY(-3px);
+        box-shadow:
+          0 24px 56px rgba(0, 0, 0, 0.42),
+          0 0 24px rgba(34, 211, 238, 0.14) !important;
+      }
+
+      section.grid > div::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            90deg,
+            rgba(56, 189, 248, 0.32),
+            transparent 32%
+          )
+          top left/100% 1px no-repeat;
+      }
+
+      section.grid p:first-child {
+        color: #38bdf8 !important;
+        font-size: 15px !important;
+        font-weight: 950 !important;
+        letter-spacing: 0.05em;
+      }
+
+      section.grid h3 {
+        margin-top: 20px !important;
+        font-size: clamp(1.75rem, 2.5vw, 2.55rem) !important;
+        color: #fff !important;
+        text-shadow: 0 0 18px rgba(56, 189, 248, 0.18);
+      }
+
+      section.grid span,
+      section.grid div {
+        color: inherit;
+      }
+
+      section.grid .material-icons {
+        font-size: 38px !important;
+        filter: drop-shadow(0 0 12px currentColor);
+      }
+
+      section.grid [class*="bg-blue-50"],
+      section.grid [class*="bg-amber-50"],
+      section.grid [class*="bg-emerald-50"],
+      section.grid [class*="bg-purple-50"] {
+        background: rgba(15, 23, 42, 0.68) !important;
+        border: 1px solid currentColor;
+        border-radius: 999px !important;
+      }
+
+      .text-slate-400,
+      .text-slate-500,
+      .text-slate-600,
+      .text-slate-700,
+      .text-slate-800,
+      .text-slate-900 {
+        color: #cbd5e1 !important;
+      }
+
+      .text-blue-600 {
+        color: #38bdf8 !important;
+      }
+      .text-emerald-600,
+      .text-emerald-700,
+      .text-emerald-800 {
+        color: #34d399 !important;
+      }
+      .text-amber-600,
+      .text-amber-700 {
+        color: #fbbf24 !important;
+      }
+      .text-purple-600,
+      .text-purple-700 {
+        color: #c084fc !important;
+      }
+
+      .tech-charts {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      @media (min-width: 960px) {
+        .tech-charts {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .tech-card {
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .tech-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(135deg, rgba(34, 211, 238, 0.16), transparent 25%),
+          radial-gradient(
+            circle at 92% 8%,
+            rgba(52, 211, 153, 0.14),
+            transparent 28%
+          );
+      }
+
+      .tech-card-head {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 24px 10px;
+        font-size: 20px;
+        font-weight: 950;
+        letter-spacing: 0.04em;
+      }
+
+      .tech-card-head .material-icons {
+        color: #38bdf8;
+        filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.45));
+      }
+
+      .chart-canvas-wrap {
+        position: relative;
+        z-index: 1;
+        height: 260px;
+        padding: 8px 18px 18px;
+      }
+
+      .border-b.border-slate-200.pb-2,
+      div.flex.flex-wrap.gap-2.mb-4 {
+        padding: 14px !important;
+        margin-bottom: 18px !important;
+        background: rgba(7, 27, 45, 0.78) !important;
+        border: 1px solid rgba(56, 189, 248, 0.32) !important;
+        border-radius: 14px;
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+      }
+
+      .border-b.border-slate-200.pb-2 button,
+      div.flex.flex-wrap.gap-2.mb-4 button {
+        border-radius: 10px !important;
+        padding: 10px 18px !important;
+        font-weight: 950 !important;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        background: rgba(15, 23, 42, 0.62);
+        color: #cbd5e1 !important;
+      }
+
+      .border-b.border-slate-200.pb-2 button.bg-slate-800,
+      div.flex.flex-wrap.gap-2.mb-4 button.bg-slate-800 {
+        color: #00111a !important;
+        background: linear-gradient(135deg, #22d3ee, #34d399) !important;
+        box-shadow: 0 0 18px rgba(34, 211, 238, 0.28) !important;
+      }
+
+      .bg-slate-800,
+      .bg-slate-900 {
+        background: linear-gradient(135deg, #082f49, #0f766e) !important;
+      }
+
+      .bg-slate-700 {
+        background: rgba(255, 255, 255, 0.14) !important;
+      }
+
+      thead tr,
+      .bg-slate-50.border-b {
+        background: linear-gradient(
+          135deg,
+          rgba(14, 165, 233, 0.34),
+          rgba(15, 118, 110, 0.34)
+        ) !important;
+      }
+
+      table {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+      }
+
+      thead th {
+        color: #f8fafc !important;
+        background: transparent !important;
+        text-align: center !important;
+        font-weight: 950 !important;
+        border-right: 1px solid rgba(148, 163, 184, 0.25);
+        white-space: nowrap;
+      }
+
+      tbody td {
+        background: rgba(3, 18, 32, 0.58) !important;
+        color: #f8fafc !important;
+        text-align: center;
+        border-right: 1px solid rgba(148, 163, 184, 0.2);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      }
+
+      tbody tr:hover td {
+        background: rgba(14, 165, 233, 0.16) !important;
+      }
+
+      .rounded-xl {
+        border-radius: 14px !important;
+      }
+      .border-slate-200 {
+        border-color: rgba(56, 189, 248, 0.28) !important;
+      }
+      .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
+        border-color: rgba(148, 163, 184, 0.18) !important;
+      }
+      .bg-slate-50,
+      .bg-slate-100,
+      .bg-slate-200 {
+        background-color: rgba(15, 23, 42, 0.65) !important;
+      }
+
+      .fixed .bg-white {
+        background: linear-gradient(145deg, #071b2d, #020617) !important;
+      }
+
+      .fixed canvas {
+        filter: drop-shadow(0 0 4px rgba(34, 211, 238, 0.18));
+      }
+
+      .font-mono {
+        font-variant-numeric: tabular-nums;
+      }
+
+      @media (max-width: 768px) {
+        #app {
+          padding: 10px !important;
+        }
+        header {
+          padding: 20px 16px !important;
+        }
+        h1 {
+          font-size: 1.35rem !important;
+          align-items: flex-start !important;
+        }
+        h1 .material-icons {
+          width: 48px;
+          height: 48px;
+          font-size: 30px !important;
+          flex-shrink: 0;
+        }
+        header p {
+          margin-left: 0;
+        }
+        .chart-canvas-wrap {
+          height: 230px;
+          padding: 8px 8px 14px;
+        }
+      }
+    </style>
+
+    <style>
+      /* === Hover 可讀性修正：深色科技版專用 === */
+      table tbody tr:hover,
+      table tbody tr:hover td,
+      tbody tr:hover,
+      tbody tr:hover td {
+        background: linear-gradient(
+          90deg,
+          rgba(14, 165, 233, 0.24),
+          rgba(20, 184, 166, 0.14)
+        ) !important;
+        color: #f8fafc !important;
+      }
+
+      table tbody tr:hover td *,
+      tbody tr:hover td *,
+      .hover\:bg-slate-50:hover,
+      .hover\:bg-slate-50:hover *,
+      .hover\:bg-slate-50:hover td,
+      .hover\:bg-slate-50:hover span,
+      .hover\:bg-slate-50:hover div {
+        color: inherit !important;
+      }
+
+      .hover\:bg-slate-50:hover,
+      .hover\:bg-slate-50:hover > div,
+      .hover\:bg-slate-50:hover td {
+        background-color: rgba(14, 165, 233, 0.16) !important;
+      }
+
+      /* 甘特圖列表列懸浮：不要再變淺藍底 */
+      #app .divide-y > .flex.items-center:hover {
+        background: linear-gradient(
+          90deg,
+          rgba(14, 165, 233, 0.22),
+          rgba(15, 118, 110, 0.12)
+        ) !important;
+      }
+
+      #app .divide-y > .flex.items-center:hover .sticky,
+      #app .divide-y > .flex.items-center:hover .relative,
+      #app .divide-y > .flex.items-center:hover div {
+        color: #f8fafc !important;
+      }
+
+      #app .divide-y > .flex.items-center:hover .sticky {
+        background: rgba(3, 18, 32, 0.92) !important;
+      }
+
+      /* 表格內各類徽章保留亮色，但文字明確 */
+      table .bg-slate-100,
+      table .bg-blue-50,
+      table .bg-emerald-50,
+      table .bg-amber-50,
+      table .bg-purple-50 {
+        background-color: rgba(15, 23, 42, 0.72) !important;
+        border-color: rgba(56, 189, 248, 0.35) !important;
+      }
+
+      table .text-blue-600,
+      table .text-blue-700 {
+        color: #38bdf8 !important;
+      }
+
+      table .text-emerald-600,
+      table .text-emerald-700,
+      table .text-emerald-800 {
+        color: #34d399 !important;
+      }
+
+      table .text-amber-600,
+      table .text-amber-700 {
+        color: #fbbf24 !important;
+      }
+
+      /* 手機卡片 hover 修正 */
+      .block.md\:hidden .hover\:bg-slate-50:hover,
+      .block.md\:hidden .hover\:bg-slate-50:hover * {
+        background-color: rgba(14, 165, 233, 0.12) !important;
+        color: #f8fafc !important;
+      }
+
+      /* 避免 Tailwind 原 hover:bg-slate-50 反客為主 */
+      .hover\:bg-slate-50:hover {
+        background-color: rgba(14, 165, 233, 0.16) !important;
+      }
+    </style>
+
+    <style>
+      /* === 當日發車時序時間軸：車種底色設定 ===
+         外包車：淺黃色
+         郵局車：淺綠色
+         幹線車：淺紅色
+      */
+      .timeline-car-card {
+        position: relative;
+        overflow: hidden;
+        color: #f8fafc !important;
+        border-width: 1px !important;
+        border-style: solid !important;
+        transition:
+          transform 0.22s ease,
+          box-shadow 0.22s ease,
+          border-color 0.22s ease,
+          background 0.22s ease;
+      }
+
+      .timeline-car-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.9;
+        background:
+          radial-gradient(
+            circle at 10% 15%,
+            rgba(255, 255, 255, 0.16),
+            transparent 26%
+          ),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent 42%);
+      }
+
+      .timeline-car-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .timeline-car-card:hover {
+        transform: translateY(-2px);
+      }
+
+      /* 郵局車：淺綠 */
+      .timeline-post {
+        background:
+          linear-gradient(
+            135deg,
+            rgba(34, 197, 94, 0.28),
+            rgba(6, 78, 59, 0.72)
+          ),
+          rgba(3, 18, 32, 0.9) !important;
+        border-color: rgba(134, 239, 172, 0.72) !important;
+        box-shadow:
+          0 0 22px rgba(34, 197, 94, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+      }
+
+      .timeline-post:hover {
+        box-shadow:
+          0 0 30px rgba(34, 197, 94, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      }
+
+      /* 外包車：淺黃 */
+      .timeline-outsource {
+        background:
+          linear-gradient(
+            135deg,
+            rgba(250, 204, 21, 0.3),
+            rgba(120, 53, 15, 0.68)
+          ),
+          rgba(3, 18, 32, 0.9) !important;
+        border-color: rgba(253, 224, 71, 0.75) !important;
+        box-shadow:
+          0 0 22px rgba(250, 204, 21, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+      }
+
+      .timeline-outsource:hover {
+        box-shadow:
+          0 0 30px rgba(250, 204, 21, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      }
+
+      /* 幹線車：淺紅 */
+      .timeline-trunk {
+        background:
+          linear-gradient(
+            135deg,
+            rgba(248, 113, 113, 0.32),
+            rgba(127, 29, 29, 0.72)
+          ),
+          rgba(3, 18, 32, 0.9) !important;
+        border-color: rgba(252, 165, 165, 0.76) !important;
+        box-shadow:
+          0 0 22px rgba(248, 113, 113, 0.18),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+      }
+
+      .timeline-trunk:hover {
+        box-shadow:
+          0 0 30px rgba(248, 113, 113, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+      }
+
+      /* 未分類：維持深色科技底 */
+      .timeline-unknown {
+        background: linear-gradient(
+          145deg,
+          rgba(7, 27, 45, 0.94),
+          rgba(2, 6, 23, 0.92)
+        ) !important;
+        border-color: rgba(56, 189, 248, 0.36) !important;
+        box-shadow:
+          0 0 20px rgba(14, 165, 233, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+      }
+
+      /* 類型標籤 */
+      .vehicle-type-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+      }
+
+      .vehicle-type-pill.post {
+        color: #dcfce7 !important;
+        background: rgba(34, 197, 94, 0.2) !important;
+        border-color: rgba(134, 239, 172, 0.42);
+      }
+
+      .vehicle-type-pill.outsource {
+        color: #fef9c3 !important;
+        background: rgba(250, 204, 21, 0.2) !important;
+        border-color: rgba(253, 224, 71, 0.42);
+      }
+
+      .vehicle-type-pill.trunk {
+        color: #fee2e2 !important;
+        background: rgba(248, 113, 113, 0.22) !important;
+        border-color: rgba(252, 165, 165, 0.42);
+      }
+
+      .vehicle-type-pill.unknown {
+        color: #cffafe !important;
+        background: rgba(34, 211, 238, 0.16) !important;
+        border-color: rgba(103, 232, 249, 0.36);
+      }
+
+      .timeline-car-card .border-slate-200,
+      .timeline-car-card .border-dashed {
+        border-color: rgba(255, 255, 255, 0.24) !important;
+      }
+
+      .timeline-car-card .text-slate-700,
+      .timeline-car-card .text-slate-600,
+      .timeline-car-card .text-slate-500,
+      .timeline-car-card .text-slate-400,
+      .timeline-car-card .font-medium {
+        color: #f1f5f9 !important;
+      }
+
+      .timeline-car-card .text-blue-600 {
+        color: #7dd3fc !important;
+      }
+
+      .timeline-car-card .text-amber-600 {
+        color: #fde68a !important;
+      }
+    </style>
+
+    <style>
+      /* === 甘特圖長條科技風重設：取代原本黃綠色塊 === */
+      .gantt-bar-tech {
+        position: absolute;
+        top: 12px;
+        height: 34px;
+        display: flex;
+        overflow: hidden;
+        border-radius: 999px;
+        border: 1px solid rgba(56, 189, 248, 0.62) !important;
+        background: rgba(2, 6, 23, 0.72) !important;
+        box-shadow:
+          0 0 18px rgba(34, 211, 238, 0.18),
+          inset 0 0 18px rgba(15, 23, 42, 0.85),
+          inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+        backdrop-filter: blur(10px);
+      }
+
+      .gantt-bar-tech::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.18),
+            transparent 18%,
+            transparent 78%,
+            rgba(255, 255, 255, 0.1)
+          ),
+          repeating-linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.08) 0px,
+            rgba(255, 255, 255, 0.08) 1px,
+            transparent 1px,
+            transparent 9px
+          );
+        opacity: 0.55;
+        z-index: 2;
+      }
+
+      .gantt-segment {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 0.03em;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+        white-space: nowrap;
+      }
+
+      /* 準備與裝載期間：改成藍紫科技色，不再用亮黃 */
+      .gantt-prep {
+        color: #e0f2fe !important;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(59, 130, 246, 0.88),
+            rgba(124, 58, 237, 0.72)
+          ),
+          radial-gradient(
+            circle at 20% 30%,
+            rgba(125, 211, 252, 0.38),
+            transparent 35%
+          ) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow: inset 0 0 16px rgba(125, 211, 252, 0.2);
+      }
+
+      /* 行車運載期間：改成青綠科技色 */
+      .gantt-transit {
+        color: #ecfeff !important;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(20, 184, 166, 0.9),
+            rgba(16, 185, 129, 0.76)
+          ),
+          radial-gradient(
+            circle at 30% 20%,
+            rgba(167, 243, 208, 0.32),
+            transparent 38%
+          ) !important;
+        box-shadow: inset 0 0 16px rgba(52, 211, 153, 0.2);
+      }
+
+      .gantt-bar-tech:hover {
+        transform: translateY(-1px);
+        box-shadow:
+          0 0 26px rgba(34, 211, 238, 0.3),
+          0 0 16px rgba(52, 211, 153, 0.18),
+          inset 0 0 18px rgba(15, 23, 42, 0.75) !important;
+      }
+
+      /* 甘特圖背景格線也調暗，避免灰底突兀 */
+      #app [v-if="viewMode === 'gantt'"] .relative.overflow-x-auto,
+      div[v-if="viewMode === 'gantt'"] .relative.overflow-x-auto {
+        background: linear-gradient(
+          135deg,
+          rgba(2, 6, 23, 0.96),
+          rgba(8, 47, 73, 0.62)
+        ) !important;
+      }
+
+      #app [v-if="viewMode === 'gantt'"] .flex-1.h-14.relative,
+      div[v-if="viewMode === 'gantt'"] .flex-1.h-14.relative {
+        background: linear-gradient(
+          90deg,
+          rgba(15, 23, 42, 0.82),
+          rgba(8, 47, 73, 0.52)
+        ) !important;
+      }
+
+      /* 圖例同步改色 */
+      .gantt-legend-prep {
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.95),
+          rgba(124, 58, 237, 0.85)
+        ) !important;
+        border: 1px solid rgba(125, 211, 252, 0.55);
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.22);
+      }
+
+      .gantt-legend-transit {
+        background: linear-gradient(
+          135deg,
+          rgba(20, 184, 166, 0.95),
+          rgba(16, 185, 129, 0.85)
+        ) !important;
+        border: 1px solid rgba(110, 231, 183, 0.55);
+        box-shadow: 0 0 10px rgba(52, 211, 153, 0.22);
+      }
+
+      /* 手機版甘特圖長條 */
+      .gantt-mobile-bar {
+        background: rgba(2, 6, 23, 0.72) !important;
+        border: 1px solid rgba(56, 189, 248, 0.36);
+        border-radius: 999px !important;
+        box-shadow:
+          0 0 16px rgba(34, 211, 238, 0.14),
+          inset 0 0 12px rgba(15, 23, 42, 0.85);
+      }
+
+      .gantt-mobile-prep {
+        color: #e0f2fe !important;
+        background: linear-gradient(
+          135deg,
+          rgba(59, 130, 246, 0.9),
+          rgba(124, 58, 237, 0.78)
+        ) !important;
+      }
+
+      .gantt-mobile-transit {
+        color: #ecfeff !important;
+        background: linear-gradient(
+          135deg,
+          rgba(20, 184, 166, 0.92),
+          rgba(16, 185, 129, 0.78)
+        ) !important;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-emerald-500 selection:text-white"
+  >
+    <div id="app" class="max-w-7xl mx-auto p-3 sm:p-6 lg:p-8">
+      <header
+        class="mb-4 sm:mb-8 border-b border-slate-200 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-3"
+      >
+        <div>
+          <h1
+            class="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2"
+          >
+            <span class="material-icons text-emerald-600">analytics</span>
+            MOMO新市倉派車看板
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            派車看板系統全新啟動！
+          </p>
+        </div>
+
+        <div
+          class="flex items-center justify-between w-full md:w-auto bg-white shadow-sm border border-slate-200 rounded-xl p-1.5"
+        >
+          <button
+            @click="prevDay"
+            class="p-2.5 hover:bg-slate-100 active:bg-slate-200 rounded-lg text-slate-600 transition-colors"
+          >
+            <span class="material-icons text-base block font-bold"
+              >arrow_back_ios</span
+            >
+          </button>
+          <div
+            class="px-4 sm:px-6 font-bold text-slate-800 text-sm sm:text-base"
+          >
+            日期：{{ currentData.date }} ({{ currentData.weekday }})
+          </div>
+          <button
+            @click="nextDay"
+            class="p-2.5 hover:bg-slate-100 active:bg-slate-200 rounded-lg text-slate-600 transition-colors"
+          >
+            <span class="material-icons text-base block font-bold"
+              >arrow_forward_ios</span
+            >
+          </button>
+        </div>
+      </header>
+
+      <section
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6"
+      >
+        <div
+          class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between relative group"
+        >
+          <div>
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+            >
+              總車次 / 總籃車數
+            </p>
+            <h3 class="text-lg sm:text-xl font-black text-slate-800 mt-1">
+              {{ currentData.summary.total_trips }}
+              <span class="text-xs text-slate-400 font-normal">次</span>
+              <span class="text-slate-300 mx-1">/</span>
+              {{ currentData.summary.total_carts }}
+              <span class="text-xs text-slate-400 font-normal">車</span>
+            </h3>
+            <p
+              class="text-[11px] text-slate-500 mt-1 font-medium bg-slate-50 px-1.5 py-0.5 rounded inline-block"
+            >
+              永康: {{ currentData.warehouse_summary.yk_warehouse.trips }}車次 |
+              新市: {{ currentData.warehouse_summary.xs_warehouse.trips }}車次
+            </p>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+              <span class="material-icons text-xl sm:text-2xl"
+                >local_shipping</span
+              >
+            </div>
+            <button
+              @click="openTrendModal('trips')"
+              class="text-[11px] text-blue-600 hover:text-blue-800 font-bold flex items-center gap-0.5 bg-blue-50/50 px-1.5 py-0.5 rounded border border-blue-100 transition-all"
+            >
+              <span class="material-icons text-xs">trending_up</span>趨勢
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between"
+        >
+          <div>
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+            >
+              作業總耗時
+            </p>
+            <h3 class="text-lg sm:text-xl font-black text-slate-800 mt-1">
+              {{ currentData.summary.total_duration }}
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">
+              第1車叫車時間 至 末班車次到達時間
+            </p>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="p-3 bg-amber-50 text-amber-600 rounded-xl">
+              <span class="material-icons text-xl sm:text-2xl">schedule</span>
+            </div>
+            <button
+              @click="openTrendModal('duration')"
+              class="text-[11px] text-amber-700 hover:text-amber-900 font-bold flex items-center gap-0.5 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-100 transition-all"
+            >
+              <span class="material-icons text-xs">trending_up</span>趨勢
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between"
+        >
+          <div>
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+            >
+              當日郵件量
+            </p>
+            <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">
+              {{ currentData.summary.total_mails }}
+              <span class="text-xs font-normal text-slate-400">件</span>
+            </h3>
+            <p
+              class="text-[11px] text-emerald-700 mt-1 font-bold bg-emerald-50 px-2 py-0.5 rounded-md"
+            >
+              {{ formatInt(currentData.summary.mail_per_trip) }} 件/車次 | {{
+              formatFloat(currentData.summary.mail_per_cart) }} 件/籃車
+            </p>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl">
+              <span class="material-icons text-xl sm:text-2xl">mail</span>
+            </div>
+            <button
+              @click="openTrendModal('mails')"
+              class="text-[11px] text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-0.5 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100 transition-all"
+            >
+              <span class="material-icons text-xs">trending_up</span>趨勢
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between"
+        >
+          <div>
+            <p
+              class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+            >
+              車次運載貢獻度
+            </p>
+            <div
+              class="text-xs font-bold text-slate-700 mt-1.5 flex items-center gap-1"
+            >
+              <span
+                class="inline-block w-2 h-2 rounded-full bg-purple-500"
+              ></span>
+              車次：外包 {{ currentData.summary.contribution.trip_outsource }} /
+              郵局 {{ currentData.summary.contribution.trip_post }}
+            </div>
+            <div
+              class="text-xs font-bold text-slate-600 mt-1 flex items-center gap-1"
+            >
+              <span
+                class="inline-block w-2 h-2 rounded-full bg-blue-500"
+              ></span>
+              籃車：外包 {{ currentData.summary.contribution.cart_outsource }} /
+              郵局 {{ currentData.summary.contribution.cart_post }}
+            </div>
+          </div>
+          <div class="flex flex-col items-end gap-2">
+            <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
+              <span class="material-icons text-xl sm:text-2xl">pie_chart</span>
+            </div>
+            <button
+              @click="openTrendModal('contribution')"
+              class="text-[11px] text-purple-700 hover:text-purple-900 font-bold flex items-center gap-0.5 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100 transition-all"
+            >
+              <span class="material-icons text-xs">trending_up</span>趨勢
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="tech-charts">
+        <article class="tech-card">
+          <div class="tech-card-head">
+            <span class="material-icons">bar_chart</span>
+            <span>各時段車次分布（依叫車時間）</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="bucketTripChart"></canvas>
+          </div>
+        </article>
+
+        <article class="tech-card">
+          <div class="tech-card-head">
+            <span class="material-icons" style="color: #34d399"
+              >inventory_2</span
+            >
+            <span>各時段籃車數分布（依叫車時間）</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="bucketCartChart"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <div class="flex flex-wrap gap-2 mb-4 border-b border-slate-200 pb-2">
+        <button
+          @click="viewMode = 'stage'"
+          :class="['px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all', viewMode === 'stage' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200/60']"
+        >
+          階段別檢視
+        </button>
+        <button
+          @click="viewMode = 'timeline'"
+          :class="['px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all', viewMode === 'timeline' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200/60']"
+        >
+          車次順序檢視
+        </button>
+        <button
+          @click="viewMode = 'gantt'"
+          :class="['px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all flex items-center gap-1', viewMode === 'gantt' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200/60']"
+        >
+          <span class="material-icons text-xs sm:text-sm">view_week</span>
+          甘特圖檢視
+        </button>
+      </div>
+
+      <div v-if="viewMode === 'stage'" class="space-y-4 sm:space-y-6">
+        <div
+          v-for="stage in currentData.stages"
+          :key="stage.stage_name"
+          class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden"
+        >
+          <div
+            class="bg-slate-800 px-4 py-3 flex justify-between items-center text-white"
+          >
+            <h2
+              class="font-bold text-sm sm:text-base flex items-center gap-1.5"
+            >
+              <span class="material-icons text-amber-400 text-base sm:text-lg"
+                >layers</span
+              >
+              {{ stage.stage_name }}
+            </h2>
+            <span
+              class="text-[11px] font-bold bg-slate-700 px-2 py-0.5 rounded text-slate-200"
+              >共 {{ stage.cars.length }} 班次</span
+            >
+          </div>
+
+          <div class="hidden md:block overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs font-bold uppercase tracking-wider"
+                >
+                  <th class="px-6 py-3">階段別車次</th>
+                  <th class="px-6 py-3">單位車次</th>
+                  <th class="px-6 py-3">運務員</th>
+                  <th class="px-6 py-3">月台派車</th>
+                  <th class="px-6 py-3">倉儲駛離</th>
+                  <th class="px-6 py-3">返程靠港</th>
+                  <th class="px-6 py-3 text-center">運載時間</th>
+                  <th class="px-6 py-3 text-center">裝載籃車</th>
+                  <th class="px-6 py-3 text-center">車次間隔</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-sm text-slate-700">
+                <tr
+                  v-for="car in stage.cars"
+                  :key="car.car_name + car.trip_no"
+                  class="hover:bg-slate-50 transition-colors"
+                >
+                  <td class="px-6 py-4 font-bold text-slate-900">
+                    <div>{{ car.car_name }}</div>
+                    <div class="text-xs text-slate-400 font-normal">
+                      {{ car.display_name }}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <span
+                      class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-xs font-bold border border-slate-200"
+                      >{{ car.trip_no || '—' }}</span
+                    >
+                  </td>
+                  <td class="px-6 py-4 font-bold text-emerald-700">
+                    {{ car.driver || '—' }}
+                  </td>
+                  <td class="px-6 py-4 font-mono text-slate-600 font-bold">
+                    {{ car.call_time || '—' }}
+                  </td>
+                  <td class="px-6 py-4 font-mono text-slate-500">
+                    {{ car.return_time || '—' }}
+                  </td>
+                  <td class="px-6 py-4 font-mono text-slate-500">
+                    {{ car.arrival_time || '—' }}
+                  </td>
+                  <td class="px-6 py-4 text-center font-bold text-slate-600">
+                    {{ formatInt(car.transit_duration_mins) }} 分
+                  </td>
+                  <td
+                    class="px-6 py-4 text-center font-bold text-blue-600 bg-blue-50/20"
+                  >
+                    {{ car.loaded_carts }} 台
+                  </td>
+                  <td class="px-6 py-4 text-center">
+                    <span
+                      v-if="car.interval_mins !== null"
+                      class="bg-amber-50 text-amber-700 px-2 py-0.5 rounded text-xs font-bold border border-amber-200"
+                      >+{{ car.interval_mins }} 分</span
+                    >
+                    <span v-else class="text-slate-300">—</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="block md:hidden divide-y divide-slate-100 bg-slate-50/50">
+            <div
+              v-for="car in stage.cars"
+              :key="'phone-'+car.car_name+car.trip_no"
+              class="p-4 hover:bg-slate-50 transition-colors"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <h4 class="font-bold text-slate-900 text-sm">
+                    {{ car.car_name }}
+                  </h4>
+                  <p class="text-[11px] text-slate-400">
+                    {{ car.display_name }}
+                  </p>
+                </div>
+                <span
+                  class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-bold flex items-center gap-0.5"
+                >
+                  <span class="material-icons text-xs">person</span>{{
+                  car.driver || '不詳' }}
+                </span>
+              </div>
+
+              <div
+                class="grid grid-cols-3 gap-2 bg-white p-2.5 rounded-lg border border-slate-200 font-mono text-xs shadow-sm"
+              >
+                <div>
+                  <span
+                    class="block text-[10px] text-slate-400 font-sans font-medium"
+                    >叫車</span
+                  >
+                  <span class="font-bold text-slate-800 text-sm"
+                    >{{ car.call_time || '—' }}</span
+                  >
+                </div>
+                <div>
+                  <span
+                    class="block text-[10px] text-slate-400 font-sans font-medium"
+                    >返程</span
+                  >
+                  <span class="text-slate-600 font-semibold"
+                    >{{ car.return_time || '—' }}</span
+                  >
+                </div>
+                <div>
+                  <span
+                    class="block text-[10px] text-slate-400 font-sans font-medium"
+                    >到達</span
+                  >
+                  <span class="text-slate-600 font-semibold"
+                    >{{ car.arrival_time || '—' }}</span
+                  >
+                </div>
+                <div class="border-t border-slate-100 pt-1 mt-0.5">
+                  <span
+                    class="block text-[10px] text-slate-400 font-sans font-medium"
+                    >運載時間</span
+                  >
+                  <span class="font-bold text-slate-700"
+                    >{{ formatInt(car.transit_duration_mins) }} 分鐘</span
+                  >
+                </div>
+                <div class="border-t border-slate-100 pt-1 mt-0.5">
+                  <span
+                    class="block text-[10px] text-slate-400 font-sans font-medium"
+                    >裝載籃車</span
+                  >
+                  <span class="font-bold text-blue-600"
+                    >{{ car.loaded_carts }} 台</span
+                  >
+                </div>
+                <div class="border-t border-slate-100 pt-1 mt-0.5">
+                  <span
+                    class="block text-[10px] text-slate-400 font-sans font-medium"
+                    >車次編號</span
+                  >
+                  <span
+                    class="font-bold text-slate-500 truncate block max-w-[80px]"
+                    >{{ car.trip_no || '—' }}</span
+                  >
+                </div>
+              </div>
+
+              <div class="mt-2 text-right">
+                <span
+                  v-if="car.interval_mins !== null"
+                  class="inline-block bg-amber-50 text-amber-700 text-[11px] font-bold px-2 py-0.5 rounded border border-amber-200"
+                >
+                  前車間隔 +{{ car.interval_mins }} 分鐘
+                </span>
+                <span v-else class="inline-block text-slate-400 text-[11px]"
+                  >該階段首發班車</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="viewMode === 'timeline'"
+        class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200"
+      >
+        <div
+          class="relative border-l-2 border-slate-200 ml-2 md:ml-40 space-y-6 sm:space-y-8 py-2"
+        >
+          <div
+            v-for="car in sortedTimelineCars"
+            :key="'tl-'+car.car_name+car.call_time"
+            class="relative"
+          >
+            <div
+              class="hidden md:block absolute -left-44 top-1 text-right w-36 font-mono"
+            >
+              <div class="font-black text-slate-900 text-base">
+                {{ car.call_time }}
+              </div>
+              <div
+                class="text-xs font-bold"
+                :class="car.isNextDay ? 'text-blue-600' : 'text-slate-400'"
+              >
+                {{ car.isNextDay ? '隔日凌晨' : '當日深夜' }}
+              </div>
+            </div>
+
+            <div
+              class="absolute -left-[17px] md:-left-[9px] top-2.5 w-4 h-4 rounded-full border-4 border-white shadow-sm"
+              :class="car.isNextDay ? 'bg-blue-500' : 'bg-amber-500'"
+            ></div>
+
+            <div
+              :class="[
+                'ml-4 md:ml-6 p-4 rounded-xl transition-all max-w-xl timeline-car-card',
+                getVehicleTypeClass(car)
+              ]"
+            >
+              <div
+                class="flex flex-wrap items-center justify-between gap-1.5 mb-2"
+              >
+                <span
+                  class="md:hidden font-mono text-[11px] px-2 py-0.5 rounded font-black"
+                  :class="car.isNextDay ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'"
+                >
+                  {{ car.call_time }} ({{ car.isNextDay ? '隔日' : '當日' }})
+                </span>
+
+                <div class="flex items-center gap-1.5">
+                  <span
+                    class="font-extrabold text-slate-800 text-sm sm:text-base"
+                    >{{ car.car_name }}</span
+                  >
+                  <span
+                    class="text-[10px] bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded font-bold max-w-[100px] truncate"
+                    >{{ car.trip_no }}</span
+                  >
+                  <span :class="['vehicle-type-pill', getVehicleTypeKey(car)]">
+                    {{ getVehicleTypeLabel(car) }}
+                  </span>
+                </div>
+                <span
+                  class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-xs flex items-center gap-0.5"
+                >
+                  <span class="material-icons text-xs">person</span>{{
+                  car.driver || '未派員' }}
+                </span>
+              </div>
+
+              <div
+                class="grid grid-cols-2 gap-2 text-xs text-slate-500 mt-2.5 border-t border-slate-200 pt-2 font-mono"
+              >
+                <div>
+                  倉儲駛離：<span class="text-slate-700 font-medium"
+                    >{{ car.return_time || '—' }}</span
+                  >
+                </div>
+                <div>
+                  返程靠港：<span class="text-slate-700 font-medium"
+                    >{{ car.arrival_time || '—' }}</span
+                  >
+                </div>
+                <div>
+                  運載時間：<span class="text-slate-700 font-black"
+                    >{{ formatInt(car.transit_duration_mins) }} 分鐘</span
+                  >
+                </div>
+                <div>
+                  郵件裝載：<span class="text-blue-600 font-black"
+                    >{{ car.loaded_carts }} 台籃車</span
+                  >
+                </div>
+                <div
+                  class="col-span-2 border-t border-dashed border-slate-200 pt-1.5 mt-1 text-slate-400 text-[11px]"
+                >
+                  班次間隔：
+                  <span
+                    v-if="car.interval_mins"
+                    class="text-amber-600 font-bold"
+                    >+{{ car.interval_mins }} 分鐘</span
+                  >
+                  <span v-else class="text-slate-400">該階段首發班車</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="viewMode === 'gantt'" class="space-y-4">
+        <div
+          class="hidden md:block bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden p-4"
+        >
+          <div class="flex justify-end gap-4 mb-4 text-xs font-semibold">
+            <div class="flex items-center gap-1.5">
+              <span
+                class="inline-block w-4 h-3 rounded gantt-legend-prep"
+              ></span>
+              <span>準備與裝載期間 (時間差)</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span
+                class="inline-block w-4 h-3 rounded gantt-legend-transit"
+              ></span>
+              <span>行車運載期間 (時間差)</span>
+            </div>
+          </div>
+
+          <div
+            class="relative overflow-x-auto border border-slate-200 rounded-lg"
+          >
+            <div
+              class="flex bg-slate-800 text-white text-xs font-mono font-bold divide-x divide-slate-700"
+              style="min-width: 900px"
+            >
+              <div
+                class="w-48 p-3 bg-slate-900 sticky left-0 z-10 flex-shrink-0"
+              >
+                車次 / 司機
+              </div>
+              <div
+                v-for="hour in ganttHours"
+                :key="hour"
+                class="flex-1 text-center p-3"
+              >
+                {{ String(hour).padStart(2, '0') }}:00
+              </div>
+            </div>
+
+            <div class="divide-y divide-slate-100" style="min-width: 900px">
+              <div
+                v-for="car in sortedTimelineCars"
+                :key="'gantt-pc-'+car.car_name+car.call_time"
+                class="flex items-center hover:bg-slate-50 transition-colors"
+              >
+                <div
+                  class="w-48 p-3 bg-white border-r border-slate-200 sticky left-0 z-10 flex-shrink-0 shadow-[2px_0_5px_rgba(0,0,0,0.03)]"
+                >
+                  <div class="font-bold text-slate-900 text-sm truncate">
+                    {{ car.car_name }}
+                  </div>
+                  <div
+                    class="text-xs text-slate-500 mt-0.5 flex items-center gap-0.5"
+                  >
+                    <span class="material-icons text-xs text-emerald-600"
+                      >person</span
+                    >
+                    <span class="font-semibold text-emerald-800"
+                      >{{ car.driver || '不詳' }}</span
+                    >
+                    <span class="text-slate-300 mx-1">|</span>
+                    <span
+                      class="text-[10px] bg-slate-100 border px-1 rounded font-mono"
+                      >{{ car.trip_no }}</span
+                    >
+                  </div>
+                </div>
+
+                <div class="flex-1 h-14 relative bg-slate-50/40">
+                  <div
+                    class="absolute inset-0 flex divide-x divide-slate-200/50 pointer-events-none"
+                  >
+                    <div
+                      v-for="n in ganttHours.length"
+                      :key="n"
+                      class="flex-1 h-full"
+                    ></div>
+                  </div>
+
+                  <div
+                    v-if="getGanttStyle(car)"
+                    class="gantt-bar-tech"
+                    :style="getGanttStyle(car)"
+                  >
+                    <div
+                      class="gantt-segment gantt-prep truncate"
+                      :style="{ width: getGanttSegmentWidths(car).prepWidth + '%' }"
+                      :title="'叫車: ' + car.call_time + ' ➜ 返程: ' + car.return_time"
+                    >
+                      {{ getPrepDurationMins(car) }}分鐘
+                    </div>
+                    <div
+                      class="gantt-segment gantt-transit truncate"
+                      :style="{ width: getGanttSegmentWidths(car).transitWidth + '%' }"
+                      :title="'返程: ' + car.return_time + ' ➜ 到達: ' + car.arrival_time + ' (耗時 ' + car.transit_duration_mins + ' 分)'"
+                    >
+                      {{ formatInt(car.transit_duration_mins) }}分鐘
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="block md:hidden space-y-3">
+          <div
+            v-for="car in sortedTimelineCars"
+            :key="'gantt-m-'+car.car_name+car.call_time"
+            class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <h4 class="font-extrabold text-slate-900 text-sm">
+                  {{ car.car_name }}
+                </h4>
+                <p class="text-[11px] text-slate-400 mt-0.5">
+                  階段：{{ car.stage_name }} | 車次：{{ car.trip_no || '—' }}
+                </p>
+              </div>
+              <span
+                class="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-bold flex items-center gap-0.5"
+              >
+                <span class="material-icons text-xs">person</span>{{ car.driver
+                || '未派員' }}
+              </span>
+            </div>
+
+            <div
+              class="mt-3 h-7 overflow-hidden flex text-[10px] font-sans font-bold text-center gantt-mobile-bar"
+            >
+              <div
+                class="gantt-mobile-prep flex items-center justify-center px-1 truncate"
+                style="flex: 2"
+              >
+                準備 {{ getPrepDurationMins(car) }}分鐘
+              </div>
+              <div
+                class="gantt-mobile-transit flex items-center justify-center px-1 truncate"
+                style="flex: 3"
+              >
+                運載 {{ formatInt(car.transit_duration_mins) }}分鐘
+              </div>
+            </div>
+
+            <div
+              class="mt-2 flex justify-between items-center text-[11px] text-slate-500 font-medium"
+            >
+              <span
+                >派車時間：<b class="text-slate-700 font-bold"
+                  >{{ car.call_time }}</b
+                ></span
+              >
+              <span
+                class="text-blue-600 bg-blue-50 px-2 py-0.5 rounded font-bold"
+                >裝載籃車: {{ car.loaded_carts }} 台</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        v-if="trendModal.show"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 transition-all animate-fade-in"
+        @click.self="closeTrendModal"
+      >
+        <div
+          class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]"
+        >
+          <div
+            class="bg-slate-900 text-white p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+          >
+            <h3 class="font-bold flex items-center gap-2 text-sm sm:text-base">
+              <span class="material-icons text-emerald-400"
+                >stacked_line_chart</span
+              >
+              {{ trendModal.title }}
+            </h3>
+            <button
+              @click="closeTrendModal"
+              class="text-slate-400 hover:text-white transition-colors self-end sm:self-auto"
+            >
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+
+          <div
+            class="bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2"
+          >
+            <div
+              class="flex items-center gap-1 bg-white p-1 rounded-lg border shadow-sm"
+            >
+              <button
+                v-for="scale in ['daily', 'weekly', 'monthly', 'yearly']"
+                :key="scale"
+                @click="changeTimeScale(scale)"
+                :class="['px-3 py-1 text-xs font-bold rounded-md transition-all', trendModal.scale === scale ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100']"
+              >
+                <span v-if="scale==='daily'">按 日 (精細)</span>
+                <span v-if="scale==='weekly'">按 週 (摘要)</span>
+                <span v-if="scale==='monthly'">按 月 (趨勢)</span>
+                <span v-if="scale==='yearly'">按 年 (巨觀)</span>
+              </button>
+            </div>
+            <div class="text-[11px] font-medium text-slate-400">
+              * 系統已鎖定由左至右「左舊右新」排序，隨數據量增長會自動縮放軸刻度
+            </div>
+          </div>
+
+          <div
+            class="p-3 sm:p-6 overflow-y-auto flex-1 bg-slate-50 flex items-center justify-center min-h-[320px] sm:min-h-[420px]"
+          >
+            <div class="w-full h-full relative" style="height: 380px">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+
+          <div
+            class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-end"
+          >
+            <button
+              @click="closeTrendModal"
+              class="px-4 py-2 bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-lg hover:bg-slate-700 transition-all"
+            >
+              關閉視窗
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref, computed, nextTick, watch, onMounted } = Vue;
+
+      createApp({
+        setup() {
+          const currentIndex = ref(0);
+          const viewMode = ref("stage");
+          const mockData = ref([]);
+
+          // 歷史趨勢圖核心狀態
+          const trendModal = ref({
+            show: false,
+            title: "",
+            type: "",
+            scale: "daily",
+          });
+
+          let chartInstance = null;
+          let bucketTripChart = null;
+          let bucketCartChart = null;
+
+          const ganttHours = [20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+          // 讀取本地 JSON
+          fetch("momo_dispatch_data.json")
+            .then((response) => response.json())
+            .then((data) => {
+              mockData.value = data;
+              nextTick(() => renderBucketCharts());
+            })
+            .catch((err) => {
+              console.error("加載真實 JSON 失敗，請確認檔案位置", err);
+            });
+
+          const currentData = computed(() => {
+            return (
+              mockData.value[currentIndex.value] || {
+                date: "加載中...",
+                weekday: "",
+                summary: {
+                  total_duration: "—",
+                  total_trips: 0,
+                  total_carts: 0,
+                  total_mails: 0,
+                  mail_per_cart: 0,
+                  mail_per_trip: 0,
+                  contribution: {
+                    trip_outsource: "0%",
+                    trip_post: "0%",
+                    cart_outsource: "0%",
+                    cart_post: "0%",
+                  },
+                },
+                warehouse_summary: {
+                  yk_warehouse: { trips: 0, carts: 0 },
+                  xs_warehouse: { trips: 0, carts: 0 },
+                },
+                stages: [],
+              }
+            );
+          });
+
+          const sortedTimelineCars = computed(() => {
+            let allCars = [];
+            if (!currentData.value.stages) return allCars;
+            const baseDateStr = currentData.value.date;
+            currentData.value.stages.forEach((stage) => {
+              stage.cars.forEach((car) => {
+                let isNextDay = false;
+                let targetDateStr = baseDateStr;
+                if (car.call_time >= "00:00" && car.call_time <= "09:00") {
+                  isNextDay = true;
+                  let d = new Date(baseDateStr);
+                  d.setDate(d.getDate() + 1);
+                  targetDateStr = d.toISOString().split("T")[0];
+                }
+                allCars.push({
+                  ...car,
+                  stage_name: stage.stage_name,
+                  sortKey: `${targetDateStr} ${car.call_time}`,
+                  isNextDay: isNextDay,
+                });
+              });
+            });
+            return allCars.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+          });
+
+          // 主畫面時段圖表：固定 22-00、00-02、02-04、04-06，全部以叫車時間為準。
+          const bucketLabels = ["22-00", "00-02", "02-04", "04-06"];
+
+          const timeBucketStats = computed(() => {
+            const buckets = {
+              "22-00": { trips: 0, carts: 0 },
+              "00-02": { trips: 0, carts: 0 },
+              "02-04": { trips: 0, carts: 0 },
+              "04-06": { trips: 0, carts: 0 },
+            };
+
+            sortedTimelineCars.value.forEach((car) => {
+              if (!car.call_time || car.call_time.indexOf(":") === -1) return;
+              const hour = parseInt(car.call_time.split(":")[0], 10);
+              let key = null;
+
+              if (hour >= 22 && hour < 24) key = "22-00";
+              else if (hour >= 0 && hour < 2) key = "00-02";
+              else if (hour >= 2 && hour < 4) key = "02-04";
+              else if (hour >= 4 && hour < 6) key = "04-06";
+
+              if (!key) return;
+
+              buckets[key].trips += 1;
+              buckets[key].carts += parseInt(car.loaded_carts || 0, 10) || 0;
+            });
+
+            return bucketLabels.map((label) => ({
+              label,
+              trips: buckets[label].trips,
+              carts: buckets[label].carts,
+            }));
+          });
+
+          const renderBucketCharts = () => {
+            const tripCanvas = document.getElementById("bucketTripChart");
+            const cartCanvas = document.getElementById("bucketCartChart");
+            if (!tripCanvas || !cartCanvas || typeof Chart === "undefined")
+              return;
+
+            const stats = timeBucketStats.value;
+            const labels = stats.map((b) => b.label);
+            const trips = stats.map((b) => b.trips);
+            const carts = stats.map((b) => b.carts);
+
+            if (bucketTripChart) bucketTripChart.destroy();
+            if (bucketCartChart) bucketCartChart.destroy();
+
+            const gridColor = "rgba(148, 163, 184, 0.20)";
+            const tickColor = "#cbd5e1";
+
+            bucketTripChart = new Chart(tripCanvas.getContext("2d"), {
+              type: "bar",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "車次",
+                    data: trips,
+                    borderRadius: 6,
+                    borderWidth: 1.5,
+                    borderColor: "rgba(56,189,248,.95)",
+                    backgroundColor: (context) => {
+                      const chart = context.chart;
+                      const { ctx, chartArea } = chart;
+                      if (!chartArea) return "rgba(56,189,248,.65)";
+                      const g = ctx.createLinearGradient(
+                        0,
+                        chartArea.top,
+                        0,
+                        chartArea.bottom,
+                      );
+                      g.addColorStop(0, "rgba(56,189,248,.95)");
+                      g.addColorStop(0.55, "rgba(14,165,233,.70)");
+                      g.addColorStop(1, "rgba(30,64,175,.70)");
+                      return g;
+                    },
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 700 },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    backgroundColor: "rgba(2,6,23,.92)",
+                    borderColor: "rgba(56,189,248,.55)",
+                    borderWidth: 1,
+                    titleColor: "#67e8f9",
+                    bodyColor: "#f8fafc",
+                  },
+                },
+                scales: {
+                  x: {
+                    grid: { color: "rgba(56,189,248,.08)" },
+                    ticks: {
+                      color: tickColor,
+                      font: { weight: "bold", size: 13 },
+                    },
+                  },
+                  y: {
+                    beginAtZero: true,
+                    precision: 0,
+                    suggestedMax: Math.max(5, ...trips) + 2,
+                    grid: { color: gridColor, borderDash: [4, 4] },
+                    ticks: {
+                      color: tickColor,
+                      precision: 0,
+                      font: { weight: "bold" },
+                    },
+                    title: {
+                      display: true,
+                      text: "車次",
+                      color: tickColor,
+                      font: { weight: "bold" },
+                    },
+                  },
+                },
+              },
+              plugins: [valueLabelPlugin("#f8fafc")],
+            });
+
+            bucketCartChart = new Chart(cartCanvas.getContext("2d"), {
+              type: "line",
+              data: {
+                labels,
+                datasets: [
+                  {
+                    label: "籃車數",
+                    data: carts,
+                    borderColor: "rgba(52,211,153,.98)",
+                    backgroundColor: (context) => {
+                      const chart = context.chart;
+                      const { ctx, chartArea } = chart;
+                      if (!chartArea) return "rgba(52,211,153,.18)";
+                      const g = ctx.createLinearGradient(
+                        0,
+                        chartArea.top,
+                        0,
+                        chartArea.bottom,
+                      );
+                      g.addColorStop(0, "rgba(52,211,153,.34)");
+                      g.addColorStop(0.65, "rgba(20,184,166,.13)");
+                      g.addColorStop(1, "rgba(52,211,153,0)");
+                      return g;
+                    },
+                    fill: true,
+                    tension: 0.28,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: "#34d399",
+                    pointBorderColor: "#d1fae5",
+                    pointBorderWidth: 2,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 700 },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    backgroundColor: "rgba(2,6,23,.92)",
+                    borderColor: "rgba(52,211,153,.55)",
+                    borderWidth: 1,
+                    titleColor: "#86efac",
+                    bodyColor: "#f8fafc",
+                  },
+                },
+                scales: {
+                  x: {
+                    grid: { color: "rgba(52,211,153,.08)" },
+                    ticks: {
+                      color: tickColor,
+                      font: { weight: "bold", size: 13 },
+                    },
+                  },
+                  y: {
+                    beginAtZero: true,
+                    suggestedMax: Math.max(10, ...carts) + 8,
+                    grid: { color: gridColor, borderDash: [4, 4] },
+                    ticks: {
+                      color: tickColor,
+                      precision: 0,
+                      font: { weight: "bold" },
+                    },
+                    title: {
+                      display: true,
+                      text: "籃車數",
+                      color: tickColor,
+                      font: { weight: "bold" },
+                    },
+                  },
+                },
+              },
+              plugins: [valueLabelPlugin("#f8fafc")],
+            });
+          };
+
+          const valueLabelPlugin = (labelColor) => ({
+            id: "valueLabelPlugin" + Math.random().toString(36).slice(2),
+            afterDatasetsDraw(chart) {
+              const { ctx } = chart;
+              ctx.save();
+              ctx.fillStyle = labelColor;
+              ctx.font = "800 13px system-ui, -apple-system, sans-serif";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "bottom";
+              chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                meta.data.forEach((element, index) => {
+                  const value = dataset.data[index];
+                  ctx.fillText(String(value), element.x, element.y - 8);
+                });
+              });
+              ctx.restore();
+            },
+          });
+
+          watch(
+            [currentIndex, viewMode, mockData],
+            () => {
+              nextTick(() => renderBucketCharts());
+            },
+            { deep: true },
+          );
+
+          onMounted(() => {
+            nextTick(() => renderBucketCharts());
+          });
+
+          // 車種判斷：
+          // 1. 若 JSON 已有 vehicle_type / vehicleType / car_type / carType / type，優先使用。
+          // 2. 若單位車次或車次名稱為「純數字+車次」，視為幹線車。
+          // 3. 若文字含「郵局」，視為郵局車。
+          // 4. 其他有車次資料者，視為外包車。
+          const getVehicleTypeLabel = (car) => {
+            const explicitType =
+              car.vehicle_type ||
+              car.vehicleType ||
+              car.car_type ||
+              car.carType ||
+              car.type ||
+              "";
+
+            const text = [
+              explicitType,
+              car.trip_no,
+              car.car_name,
+              car.display_name,
+              car.driver,
+            ]
+              .filter(Boolean)
+              .join(" ");
+
+            if (
+              /幹線/.test(text) ||
+              /^\s*\d+\s*車次\s*$/.test(String(car.trip_no || "")) ||
+              /^\s*\d+\s*車次\s*$/.test(String(car.car_name || ""))
+            ) {
+              return "幹線車";
+            }
+
+            if (/郵局車|郵局/.test(text)) {
+              return "郵局車";
+            }
+
+            if (/外包|委外|承攬/.test(text)) {
+              return "外包車";
+            }
+
+            if (car.trip_no || car.car_name) {
+              return "外包車";
+            }
+
+            return "未分類";
+          };
+
+          const getVehicleTypeKey = (car) => {
+            const label = getVehicleTypeLabel(car);
+            if (label === "郵局車") return "post";
+            if (label === "外包車") return "outsource";
+            if (label === "幹線車") return "trunk";
+            return "unknown";
+          };
+
+          const getVehicleTypeClass = (car) => {
+            const key = getVehicleTypeKey(car);
+            if (key === "post") return "timeline-post";
+            if (key === "outsource") return "timeline-outsource";
+            if (key === "trunk") return "timeline-trunk";
+            return "timeline-unknown";
+          };
+
+          // 甘特圖時間差計算
+          const timeToMinutes = (timeStr, isNextDay) => {
+            if (!timeStr || timeStr === "—" || timeStr.indexOf(":") === -1)
+              return null;
+            const [h, m] = timeStr.split(":").map(Number);
+            let hourOffset = h;
+            if (isNextDay || h <= 9) hourOffset = h + 24;
+            return hourOffset * 60 + m - 20 * 60;
+          };
+
+          const getPrepDurationMins = (car) => {
+            if (
+              !car.call_time ||
+              !car.return_time ||
+              car.call_time === "—" ||
+              car.return_time === "—"
+            )
+              return 0;
+            let returnNextDay = car.isNextDay;
+            if (car.return_time < car.call_time && !car.isNextDay)
+              returnNextDay = true;
+            const startMins = timeToMinutes(car.call_time, car.isNextDay);
+            const midMins = timeToMinutes(car.return_time, returnNextDay);
+            if (startMins === null || midMins === null) return 0;
+            return Math.max(midMins - startMins, 0);
+          };
+
+          const getGanttStyle = (car) => {
+            if (
+              !car.call_time ||
+              !car.arrival_time ||
+              car.call_time === "—" ||
+              car.arrival_time === "—"
+            )
+              return null;
+            let arrivalNextDay = car.isNextDay;
+            if (car.arrival_time < car.call_time && !car.isNextDay)
+              arrivalNextDay = true;
+            const startMins = timeToMinutes(car.call_time, car.isNextDay);
+            const endMins = timeToMinutes(car.arrival_time, arrivalNextDay);
+            if (startMins === null || endMins === null || endMins <= startMins)
+              return null;
+            return {
+              left: `${(startMins / (13 * 60)) * 100}%`,
+              width: `${Math.max(((endMins - startMins) / (13 * 60)) * 100, 10)}%`,
+            };
+          };
+
+          const getGanttSegmentWidths = (car) => {
+            let returnNextDay = car.isNextDay;
+            if (car.return_time < car.call_time && !car.isNextDay)
+              returnNextDay = true;
+            let arrivalNextDay = car.isNextDay;
+            if (car.arrival_time < car.call_time && !car.isNextDay)
+              arrivalNextDay = true;
+            const startMins = timeToMinutes(car.call_time, car.isNextDay);
+            const midMins = timeToMinutes(car.return_time, returnNextDay);
+            const endMins = timeToMinutes(car.arrival_time, arrivalNextDay);
+            const total = endMins - startMins;
+            if (total <= 0 || midMins === null)
+              return { prepWidth: 40, transitWidth: 60 };
+            const prepPercent = ((midMins - startMins) / total) * 100;
+            return {
+              prepWidth: Math.max(Math.min(prepPercent, 80), 20),
+              transitWidth: 100 - Math.max(Math.min(prepPercent, 80), 20),
+            };
+          };
+
+          // ─── 【重要：大數據時間軸正序聚合演算法】 ───
+          const getAggregatedData = (scale) => {
+            // 基礎資料流：建立一份獨立複本
+            let baseHistory = [...mockData.value];
+
+            // 完美除錯：檢查如果 JSON 順序是新到舊，就將其反轉；若是舊到新，就維持不變。
+            // 這樣可以確保 baseHistory 陣列從首到尾絕對是純淨的 [過去 ➜ 現在 (左舊右新)]
+            if (
+              baseHistory.length > 1 &&
+              baseHistory[0].date > baseHistory[baseHistory.length - 1].date
+            ) {
+              baseHistory.reverse();
+            }
+
+            // 如果是日線，直接回傳正序結果
+            if (scale === "daily") {
+              return {
+                labels: baseHistory.map((d) => d.date),
+                raw: baseHistory,
+              };
+            }
+
+            const groups = {};
+            const parseDurationToMins = (str) => {
+              if (!str) return 0;
+              const h = str.match(/(\d+)小時/)
+                ? parseInt(str.match(/(\d+)小時/)[1])
+                : 0;
+              const m = str.match(/(\d+)分鐘/)
+                ? parseInt(str.match(/(\d+)分鐘/)[1])
+                : 0;
+              if (str.indexOf(":") !== -1) {
+                const [hh, mm] = str.split(":").map(Number);
+                return hh * 60 + mm;
+              }
+              return h * 60 + m;
+            };
+
+            const getWeekNumber = (dateSrc) => {
+              const d = new Date(dateSrc);
+              d.setHours(0, 0, 0, 0);
+              d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+              const startOfYear = new Date(d.getFullYear(), 0, 1);
+              return Math.ceil(((d - startOfYear) / 86400000 + 1) / 7);
+            };
+
+            baseHistory.forEach((item) => {
+              const dateObj = new Date(item.date);
+              let key = "";
+              if (scale === "weekly")
+                key = `${dateObj.getFullYear()}-W${String(getWeekNumber(dateObj)).padStart(2, "0")}`;
+              else if (scale === "monthly")
+                key = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, "0")}`;
+              else if (scale === "yearly") key = `${dateObj.getFullYear()}年`;
+
+              if (!groups[key]) {
+                groups[key] = {
+                  label: key,
+                  total_trips: 0,
+                  total_carts: 0,
+                  total_mails: 0,
+                  mail_per_cart_sum: 0,
+                  mail_per_trip_sum: 0,
+                  duration_sum: 0,
+                  trip_post_sum: 0,
+                  trip_outsource_sum: 0,
+                  count: 0,
+                };
+              }
+
+              groups[key].total_trips += valCheck(item.summary.total_trips);
+              groups[key].total_carts += valCheck(item.summary.total_carts);
+              groups[key].total_mails += valCheck(item.summary.total_mails);
+              groups[key].mail_per_cart_sum += valCheck(
+                item.summary.mail_per_cart,
+              );
+              groups[key].mail_per_trip_sum += valCheck(
+                item.summary.mail_per_trip,
+              );
+              groups[key].duration_sum += parseDurationToMins(
+                item.summary.total_duration,
+              );
+              groups[key].trip_post_sum += parseFloat(
+                item.summary.contribution.trip_post || 0,
+              );
+              groups[key].trip_outsource_sum += parseFloat(
+                item.summary.contribution.trip_outsource || 0,
+              );
+              groups[key].count += 1;
+            });
+
+            // 排序鍵值，確保聚合後的資料軸也是「左舊右新」
+            const keys = Object.keys(groups).sort();
+            const aggregatedRows = keys.map((k) => {
+              const g = groups[k];
+              return {
+                date: g.label,
+                summary: {
+                  total_trips: g.total_trips,
+                  total_carts: g.total_carts,
+                  total_mails: g.total_mails,
+                  mail_per_cart: (g.mail_per_cart_sum / g.count).toFixed(1),
+                  mail_per_trip: Math.round(g.mail_per_trip_sum / g.count),
+                  total_duration_mins: Math.round(g.duration_sum / g.count),
+                  contribution: {
+                    trip_post: `${Math.round(g.trip_post_sum / g.count)}%`,
+                    trip_outsource: `${Math.round(g.trip_outsource_sum / g.count)}%`,
+                  },
+                },
+              };
+            });
+
+            return {
+              labels: aggregatedRows.map((r) => r.date),
+              raw: aggregatedRows,
+            };
+          };
+
+          const valCheck = (val) => {
+            let n = parseFloat(val);
+            return isNaN(n) ? 0 : n;
+          };
+
+          // ─── 【歷史趨勢控制器】 ───
+          const openTrendModal = (type) => {
+            const titles = {
+              trips: "總車次與總籃車數歷史趨勢分析 (運量交叉比對)",
+              duration: "營運總耗時歷史趨勢追蹤 (時效與流暢度)",
+              mails: "郵件效益比率與承載密度趨勢 (裝裝載產值)",
+              contribution: "外包與郵局單位貢獻度佔比歷史推進",
+            };
+            trendModal.value.title = titles[type] || "歷史趨勢分析";
+            trendModal.value.type = type;
+            trendModal.value.scale = "daily";
+            trendModal.value.show = true;
+            nextTick(() => {
+              renderChart();
+            });
+          };
+
+          const changeTimeScale = (newScale) => {
+            trendModal.value.scale = newScale;
+            nextTick(() => {
+              renderChart();
+            });
+          };
+
+          const closeTrendModal = () => {
+            if (chartInstance) {
+              chartInstance.destroy();
+              chartInstance = null;
+            }
+            trendModal.value.show = false;
+          };
+
+          const renderChart = () => {
+            const type = trendModal.value.type;
+            const scale = trendModal.value.scale;
+            const ctx = document.getElementById("trendChart").getContext("2d");
+
+            if (chartInstance) {
+              chartInstance.destroy();
+            }
+
+            // 完美對齊：不論日、週、月、年，labels 與 raw 都是純正的 [左舊右新] 推進序列
+            const { labels, raw } = getAggregatedData(scale);
+
+            let chartConfig = {};
+
+            // X 軸核心防錯設定：限制最大顯示刻度為 12 個，其餘點自動 skip，絕不發生文字重疊
+            const xAxisConfig = {
+              grid: { display: false },
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 12,
+                maxRotation: 0,
+                font: { size: 11, weight: "bold" },
+              },
+            };
+
+            if (type === "trips") {
+              chartConfig = {
+                type: "bar",
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: "總籃車數 (台)",
+                      data: raw.map((d) => d.summary.total_carts),
+                      backgroundColor: "rgba(59, 130, 246, 0.6)",
+                      borderColor: "rgb(59, 130, 246)",
+                      borderWidth: 1,
+                      yAxisID: "yCarts",
+                    },
+                    {
+                      label: "總車次 (次)",
+                      data: raw.map((d) => d.summary.total_trips),
+                      type: "line",
+                      borderColor: "rgb(234, 179, 8)",
+                      backgroundColor: "rgb(234, 179, 8)",
+                      borderWidth: 3,
+                      tension: 0.15,
+                      yAxisID: "yTrips",
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    x: xAxisConfig,
+                    yCarts: {
+                      type: "linear",
+                      position: "left",
+                      title: { display: true, text: "籃車數 (台)" },
+                    },
+                    yTrips: {
+                      type: "linear",
+                      position: "right",
+                      grid: { drawOnChartArea: false },
+                      title: { display: true, text: "車次數 (次)" },
+                    },
+                  },
+                },
+              };
+            } else if (type === "duration") {
+              chartConfig = {
+                type: "line",
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: "總耗時 (分鐘)",
+                      data: raw.map((d) =>
+                        scale === "daily"
+                          ? parseMinsOnly(d.summary.total_duration)
+                          : d.summary.total_duration_mins,
+                      ),
+                      borderColor: "rgb(245, 158, 11)",
+                      backgroundColor: "rgba(245, 158, 11, 0.1)",
+                      fill: true,
+                      borderWidth: 3,
+                      tension: 0.15,
+                      pointRadius: 4,
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    tooltip: {
+                      callbacks: {
+                        label: function (context) {
+                          const totalMins = context.raw;
+                          return ` 營運時長: ${Math.floor(totalMins / 60)}小時${totalMins % 60}分鐘`;
+                        },
+                      },
+                    },
+                  },
+                  scales: {
+                    x: xAxisConfig,
+                    y: { title: { display: true, text: "耗時 (分鐘)" } },
+                  },
+                },
+              };
+            } else if (type === "mails") {
+              chartConfig = {
+                type: "line",
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: "件 / 車次平均效率",
+                      data: raw.map((d) => d.summary.mail_per_trip),
+                      borderColor: "rgb(16, 185, 129)",
+                      backgroundColor: "rgb(16, 185, 129)",
+                      borderWidth: 2.5,
+                      tension: 0.15,
+                      yAxisID: "yTripMail",
+                    },
+                    {
+                      label: "件 / 籃車平均效率",
+                      data: raw.map((d) => d.summary.mail_per_cart),
+                      borderColor: "rgb(6, 182, 212)",
+                      backgroundColor: "rgb(6, 182, 212)",
+                      borderWidth: 2.5,
+                      borderDash: [4, 4],
+                      tension: 0.15,
+                      yAxisID: "yCartMail",
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    x: xAxisConfig,
+                    yTripMail: {
+                      type: "linear",
+                      position: "left",
+                      title: { display: true, text: "車次效率 (件/車)" },
+                    },
+                    yCartMail: {
+                      type: "linear",
+                      position: "right",
+                      grid: { drawOnChartArea: false },
+                      title: { display: true, text: "籃車效率 (件/籃)" },
+                    },
+                  },
+                },
+              };
+            } else if (type === "contribution") {
+              chartConfig = {
+                type: "bar",
+                data: {
+                  labels: labels,
+                  datasets: [
+                    {
+                      label: "郵局車次比例 (%)",
+                      data: raw.map((d) =>
+                        parseFloat(d.summary.contribution.trip_post),
+                      ),
+                      backgroundColor: "rgba(59, 130, 246, 0.85)",
+                    },
+                    {
+                      label: "外包車次比例 (%)",
+                      data: raw.map((d) =>
+                        parseFloat(d.summary.contribution.trip_outsource),
+                      ),
+                      backgroundColor: "rgba(168, 85, 247, 0.85)",
+                    },
+                  ],
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    x: { ...xAxisConfig, stacked: true },
+                    y: {
+                      stacked: true,
+                      max: 100,
+                      title: { display: true, text: "佔比 (%)" },
+                    },
+                  },
+                },
+              };
+            }
+
+            chartInstance = new Chart(ctx, chartConfig);
+          };
+
+          const parseMinsOnly = (str) => {
+            if (!str) return 0;
+            const h = str.match(/(\d+)小時/)
+              ? parseInt(str.match(/(\d+)小時/)[1])
+              : 0;
+            const m = str.match(/(\d+)分鐘/)
+              ? parseInt(str.match(/(\d+)分鐘/)[1])
+              : 0;
+            if (str.indexOf(":") !== -1) {
+              const [hh, mm] = str.split(":").map(Number);
+              return hh * 60 + mm;
+            }
+            return h * 60 + m;
+          };
+
+          const formatFloat = (val) => {
+            let n = parseFloat(val);
+            return isNaN(n) ? "0.0" : n.toFixed(1);
+          };
+          const formatInt = (val) => {
+            let n = parseInt(val, 10);
+            return isNaN(n) ? 0 : Math.round(n);
+          };
+
+          const nextDay = () => {
+            if (currentIndex.value < mockData.value.length - 1)
+              currentIndex.value++;
+          };
+          const prevDay = () => {
+            if (currentIndex.value > 0) currentIndex.value--;
+          };
+
+          return {
+            currentData,
+            currentIndex,
+            viewMode,
+            sortedTimelineCars,
+            timeBucketStats,
+            ganttHours,
+            trendModal,
+            openTrendModal,
+            closeTrendModal,
+            changeTimeScale,
+            getVehicleTypeLabel,
+            getVehicleTypeKey,
+            getVehicleTypeClass,
+            getPrepDurationMins,
+            getGanttStyle,
+            getGanttSegmentWidths,
+            nextDay,
+            prevDay,
+            formatFloat,
+            formatInt,
+          };
+        },
+      }).mount("#app");
+    </script>
+
+    <style>
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.18s ease-out forwards;
+      }
+    </style>
+  </body>
+</html>
