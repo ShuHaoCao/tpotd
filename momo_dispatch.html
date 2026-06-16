@@ -2010,14 +2010,23 @@
           });
 
           // 主畫面時段圖表：固定 22-00、00-02、02-04、04-06，全部以叫車時間為準。
-          const bucketLabels = ["22-00", "00-02", "02-04", "04-06"];
+          const bucketLabels = [
+            "21-22",
+            "22-00",
+            "00-02",
+            "02-04",
+            "04-06",
+            "06-08",
+          ];
 
           const timeBucketStats = computed(() => {
             const buckets = {
+              "21-22": { trips: 0, carts: 0 },
               "22-00": { trips: 0, carts: 0 },
               "00-02": { trips: 0, carts: 0 },
               "02-04": { trips: 0, carts: 0 },
               "04-06": { trips: 0, carts: 0 },
+              "06-08": { trips: 0, carts: 0 },
             };
 
             sortedTimelineCars.value.forEach((car) => {
@@ -2025,10 +2034,12 @@
               const hour = parseInt(car.call_time.split(":")[0], 10);
               let key = null;
 
-              if (hour >= 22 && hour < 24) key = "22-00";
+              if (hour >= 21 && hour < 22) key = "21-22";
+              else if (hour >= 22 && hour < 24) key = "22-00";
               else if (hour >= 0 && hour < 2) key = "00-02";
               else if (hour >= 2 && hour < 4) key = "02-04";
               else if (hour >= 4 && hour < 6) key = "04-06";
+              else if (hour >= 6 && hour < 8) key = "06-08";
 
               if (!key) return;
 
