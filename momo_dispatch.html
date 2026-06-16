@@ -1135,7 +1135,7 @@
             <p
               class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
             >
-              總車次 / 總籃車數
+              車次 / 籃車數
             </p>
             <h3 class="text-lg sm:text-xl font-black text-slate-800 mt-1">
               {{ currentData.summary.total_trips }}
@@ -1152,8 +1152,8 @@
               </div>
 
               <div class="">
-                總計: {{ currentData.summary.total_trips }}車次 / {{
-                currentData.summary.total_carts }}籃車
+                總計: {{ currentData.summary.grand_total_trips }}車次 / {{
+                currentData.summary.grand_total_carts }}籃車
               </div>
             </div>
           </div>
@@ -1179,7 +1179,7 @@
             <p
               class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
             >
-              作業總耗時
+              作業時間
             </p>
             <h3 class="text-lg sm:text-xl font-black text-slate-800 mt-1">
               {{ currentData.summary.total_duration }}
@@ -1208,7 +1208,7 @@
             <p
               class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
             >
-              當日郵件量
+              郵件量
             </p>
             <h3 class="text-lg sm:text-xl font-black text-slate-900 mt-1">
               {{ currentData.summary.total_mails }}
@@ -1241,7 +1241,7 @@
             <p
               class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
             >
-              車次運載貢獻度
+              貢獻度
             </p>
             <div
               class="text-xs font-bold text-slate-700 mt-1.5 flex items-center gap-1"
@@ -1280,7 +1280,7 @@
         <article class="tech-card">
           <div class="tech-card-head">
             <span class="material-icons">bar_chart</span>
-            <span>各時段車次分布（依叫車時間）</span>
+            <span>各時段車次分布</span>
           </div>
           <div class="chart-canvas-wrap">
             <canvas id="bucketTripChart"></canvas>
@@ -1292,7 +1292,7 @@
             <span class="material-icons" style="color: #34d399"
               >inventory_2</span
             >
-            <span>各時段籃車數分布（依叫車時間）</span>
+            <span>各時段籃車數分布</span>
           </div>
           <div class="chart-canvas-wrap">
             <canvas id="bucketCartChart"></canvas>
@@ -1305,7 +1305,7 @@
           @click="viewMode = 'stage'"
           :class="['px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all', viewMode === 'stage' ? 'bg-slate-800 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-200/60']"
         >
-          階段別檢視
+          階段檢視
         </button>
         <button
           @click="viewMode = 'timeline'"
@@ -1351,7 +1351,7 @@
                 <tr
                   class="bg-slate-50 border-b border-slate-200 text-slate-500 text-xs font-bold uppercase tracking-wider"
                 >
-                  <th class="px-6 py-3">階段別車次</th>
+                  <th class="px-6 py-3">階段車次</th>
                   <th class="px-6 py-3">單位車次</th>
                   <th class="px-6 py-3">運務員</th>
                   <th class="px-6 py-3">月台派車</th>
@@ -1576,7 +1576,7 @@
                   class="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-xs flex items-center gap-0.5"
                 >
                   <span class="material-icons text-xs">person</span>{{
-                  car.driver || '未派員' }}
+                  car.driver || '不詳' }}
                 </span>
               </div>
 
@@ -1905,6 +1905,8 @@
                   total_duration: "—",
                   total_trips: 0,
                   total_carts: 0,
+                  grand_total_trips: 0,
+                  grand_total_carts: 0,
                   total_mails: 0,
                   mail_per_cart: 0,
                   mail_per_trip: 0,
@@ -2452,6 +2454,8 @@
                   label: key,
                   total_trips: 0,
                   total_carts: 0,
+                  grand_total_trips: 0,
+                  grand_total_carts: 0,
                   total_mails: 0,
                   mail_per_cart_sum: 0,
                   mail_per_trip_sum: 0,
