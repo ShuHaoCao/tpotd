@@ -1139,17 +1139,27 @@
             </p>
             <h3 class="text-lg sm:text-xl font-black text-slate-800 mt-1">
               {{ currentData.summary.total_trips }}
-              <span class="text-xs text-slate-400 font-normal">次</span>
+              <span class="text-xs text-slate-400 font-normal">車次</span>
               <span class="text-slate-300 mx-1">/</span>
               {{ currentData.summary.total_carts }}
-              <span class="text-xs text-slate-400 font-normal">車</span>
+              <span class="text-xs text-slate-400 font-normal">籃車</span>
             </h3>
-            <p
-              class="text-[11px] text-slate-500 mt-1 font-medium bg-slate-50 px-1.5 py-0.5 rounded inline-block"
-            >
-              永康: {{ currentData.warehouse_summary.yk_warehouse.trips }}車次 |
-              新市: {{ currentData.warehouse_summary.xs_warehouse.trips }}車次
-            </p>
+            <div class="mt-1 text-[11px] space-y-1">
+              <div
+                class="text-slate-500 font-medium bg-slate-50 px-1.5 py-0.5 rounded inline-block"
+              >
+                永康倉: {{ currentData.warehouse_summary.yk_warehouse.trips
+                }}車次 / {{ currentData.warehouse_summary.yk_warehouse.carts
+                }}籃車
+              </div>
+
+              <div
+                class="text-slate-500 font-medium bg-slate-50 px-1.5 py-0.5 rounded inline-block"
+              >
+                總計: {{ currentData.summary.total_trips }}車次 / {{
+                currentData.summary.total_carts }}籃車
+              </div>
+            </div>
           </div>
           <div class="flex flex-col items-end gap-2">
             <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
@@ -2573,7 +2583,7 @@
                   labels: labels,
                   datasets: [
                     {
-                      label: "總籃車數 (台)",
+                      label: "籃車數 (台)",
                       data: raw.map((d) => d.summary.total_carts),
                       backgroundColor: "rgba(59, 130, 246, 0.6)",
                       borderColor: "rgb(59, 130, 246)",
@@ -2581,7 +2591,7 @@
                       yAxisID: "yCarts",
                     },
                     {
-                      label: "總車次 (次)",
+                      label: "車次 (次)",
                       data: raw.map((d) => d.summary.total_trips),
                       type: "line",
                       borderColor: "rgb(234, 179, 8)",
