@@ -3,128 +3,177 @@
     {
       "id": "card001",
       "title": "安全上車三步驟",
-      "thumb": "manual001_s.webp",
-      "fullImage": "manual001_b.webp",
+      "thumb": "images/manual001_s.webp",
+      "fullImage": "images/manual001_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card002",
       "title": "安全下車五步驟",
-      "thumb": "manual002_s.webp",
-      "fullImage": "manual002_b.webp",
+      "thumb": "images/manual002_s.webp",
+      "fullImage": "images/manual002_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card003",
       "title": "安全帶使用要點",
-      "thumb": "manual003_s.webp",
-      "fullImage": "manual003_b.webp",
+      "thumb": "images/manual003_s.webp",
+      "fullImage": "images/manual003_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card004",
       "title": "駕駛姿勢與調整要點",
-      "thumb": "manual004_s.webp",
-      "fullImage": "manual004_b.webp",
+      "thumb": "images/manual004_s.webp",
+      "fullImage": "images/manual004_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card005",
       "title": "儀表識別與實用指南",
-      "thumb": "manual005_s.webp",
-      "fullImage": "manual005_b.webp",
+      "thumb": "images/manual005_s.webp",
+      "fullImage": "images/manual005_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card006",
       "title": "儀表板燈號全攻略",
-      "thumb": "manual006_s.webp",
-      "fullImage": "manual006_b.webp",
+      "thumb": "images/manual006_s.webp",
+      "fullImage": "images/manual006_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card007",
       "title": "方向盤操作全攻略",
-      "thumb": "manual007_s.webp",
-      "fullImage": "manual007_b.webp",
+      "thumb": "images/manual007_s.webp",
+      "fullImage": "images/manual007_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card008",
       "title": "離合器踏板操作要領",
-      "thumb": "manual008_s.webp",
-      "fullImage": "manual008_b.webp",
+      "thumb": "images/manual008_s.webp",
+      "fullImage": "images/manual008_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card009",
       "title": "剎車踏板操作要點",
-      "thumb": "manual009_s.webp",
-      "fullImage": "manual009_b.webp",
+      "thumb": "images/manual009_s.webp",
+      "fullImage": "images/manual009_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card010",
       "title": "加速踏板正確操作要點",
-      "thumb": "manual010_s.webp",
-      "fullImage": "manual010_b.webp",
+      "thumb": "images/manual010_s.webp",
+      "fullImage": "images/manual010_b.webp",
       "date": "2026-05-24"
     },
     {
       "id": "card011",
       "title": "排檔桿正確操作要點",
-      "thumb": "manual011_s.webp",
-      "fullImage": "manual011_b.webp",
+      "thumb": "images/manual011_s.webp",
+      "fullImage": "images/manual011_b.webp",
       "date": "2026-05-25"
     },
     {
       "id": "card012",
       "title": "手煞車操作與保養指南",
-      "thumb": "manual012_s.webp",
-      "fullImage": "manual012_b.webp",
+      "thumb": "images/manual012_s.webp",
+      "fullImage": "images/manual012_b.webp",
       "date": "2026-05-26"
     },
     {
       "id": "card013",
       "title": "汽車喇叭使用要點",
-      "thumb": "manual013_s.webp",
-      "fullImage": "manual013_b.webp",
+      "thumb": "images/manual013_s.webp",
+      "fullImage": "images/manual013_b.webp",
       "date": "2026-05-27"
     },
     {
       "id": "card014",
       "title": "汽車點火開關使用要點",
-      "thumb": "manual014_s.webp",
-      "fullImage": "manual014_b.webp",
+      "thumb": "images/manual014_s.webp",
+      "fullImage": "images/manual014_b.webp",
       "date": "2026-05-28"
     },
     {
       "id": "card015",
       "title": "方向燈撥桿開關使用要點",
-      "thumb": "manual015_s.webp",
-      "fullImage": "manual015_b.webp",
+      "thumb": "images/manual015_s.webp",
+      "fullImage": "images/manual015_b.webp",
       "date": "2026-05-29"
     },
     {
       "id": "card016",
       "title": "車燈開關操作要點",
-      "thumb": "manual016_s.webp",
-      "fullImage": "manual016_b.webp",
+      "thumb": "images/manual016_s.webp",
+      "fullImage": "images/manual016_b.webp",
       "date": "2026-05-30"
     },
     {
       "id": "card017",
       "title": "變光開關使用要點",
-      "thumb": "manual017_s.webp",
-      "fullImage": "manual017_b.webp",
+      "thumb": "images/manual017_s.webp",
+      "fullImage": "images/manual017_b.webp",
       "date": "2026-05-31"
     },
     {
       "id": "card018",
       "title": "雨刷開關使用要點",
-      "thumb": "manual018_s.webp",
-      "fullImage": "manual018_b.webp",
+      "thumb": "images/manual018_s.webp",
+      "fullImage": "images/manual018_b.webp",
       "date": "2026-06-01"
+    },
+    {
+      "id": "card019",
+      "title": "駕駛艙檢查指引",
+      "thumb": "images/manual019_s.webp",
+      "fullImage": "images/manual019_b.webp",
+      "date": "2026-06-02"
+    },
+    {
+      "id": "card020",
+      "title": "引擎室基礎檢查與維護",
+      "thumb": "images/manual020_s.webp",
+      "fullImage": "images/manual020_b.webp",
+      "date": "2026-06-03"
+    },
+    {
+      "id": "card021",
+      "title": "引擎室基礎檢查與維護",
+      "thumb": "images/manual021_s.webp",
+      "fullImage": "images/manual021_b.webp",
+      "date": "2026-06-04"
+    },
+    {
+      "id": "card022",
+      "title": "正確發車與暖車要點",
+      "thumb": "images/manual022_s.webp",
+      "fullImage": "images/manual022_b.webp",
+      "date": "2026-06-05"
+    },
+    {
+      "id": "card023",
+      "title": "汽車起步核心用領",
+      "thumb": "images/manual023_s.webp",
+      "fullImage": "images/manual023_b.webp",
+      "date": "2026-06-06"
+    },
+    {
+      "id": "card024",
+      "title": "汽車升檔操作要領",
+      "thumb": "images/manual024_s.webp",
+      "fullImage": "images/manual024_b.webp",
+      "date": "2026-06-07"
+    },
+    {
+      "id": "card025",
+      "title": "汽車加速操作要領",
+      "thumb": "images/manual025_s.webp",
+      "fullImage": "images/manual025_b.webp",
+      "date": "2026-06-08"
     }
   ]
 }
