@@ -16,11 +16,6 @@
     />
     <meta name="theme-color" content="#08111f" />
     <title>臺南運輸股｜加班戰情室</title>
-    <script
-      type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=hSOoKopQ0OcSLAewmjLg-Vd46BUTR67NiBKbmcEj9RlfQoWZIEwTwsaeNtOoVzXm9t9N0AhXo444Ptay9UDzuN2S5nleo01TEIRBSgTcgu33kbiL5IjlCtYEf1r3cUeLl5-fRn4L0I1p-BQVR76qZPIkxfGnO4I61zH5fjBgF5cme3HtWSawtzquVFIZnIfCBCvEUBhB251vTEgRu-hb9BKA23rJiP9B2rVU8bo4gvrWDOvkuV8kJ0OYf7lG73TCuWtE2S3uKXTGjvZkZU9Zk3aZGU2szRuzq4Rf1LC1SwdZ6meyWy16ffpVb9uUro0lml7nhIKKuZ59sHRgwFUIRIbXrMLKTG07VP8jlv_NKRc"
-      charset="UTF-8"
-    ></script>
     <style>
       :root {
         --bg: #08111f;
@@ -1050,7 +1045,7 @@
         if (!availableKeys.length) {
           sel.innerHTML = '<option value="">找不到可讀月份</option>';
           document.getElementById("subtitle").textContent =
-            "找不到任何 overtime_data_YYYMM.json。請確認 JSON 檔案與網頁放在同一層資料夾，檔名例如 overtime_data_11505.json。";
+            "找不到任何資料檔，請確認資料檔是否存在。";
           document.getElementById("personSelect").innerHTML =
             "<option>無資料</option>";
           return;
@@ -1102,7 +1097,7 @@
           .catch((err) => {
             console.error(err);
             document.getElementById("subtitle").textContent =
-              `自動讀取不到 ${fileName}。請確認該月份 JSON 已由新版 VBA 匯出，且檔案與網頁放在同一層資料夾。`;
+              `自動讀取不到 ${fileName}。請確認資料是否存在。`;
             if (FALLBACK) init(FALLBACK);
           });
       }
@@ -1119,7 +1114,7 @@
         const monthMismatch =
           DATA.meta?.sheetName && DATA.meta.sheetName !== expectedSheet;
         document.getElementById("subtitle").textContent =
-          `${DATA.meta?.sheetName || ""}　檔案：overtime_data_${selectedMonthKey}.json　資料匯出：${DATA.meta?.exportedAt || ""}${badSheet || badNames > 5 ? "　⚠ 這份 JSON 可能匯出到錯誤工作表，請用新版 VBA 重新匯出。" : ""}${monthMismatch ? "　⚠ 檔名月份與工作表月份不一致，請確認是否放錯檔案。" : ""}`;
+          `${DATA.meta?.sheetName || ""}　資料時間：${DATA.meta?.exportedAt || ""}${badSheet || badNames > 5 ? "　⚠ 資料檔有誤，請查驗資料檔。" : ""}${monthMismatch ? "　⚠ 檔名月份與工作表月份不一致，請確認是否放錯檔案。" : ""}`;
         const sel = document.getElementById("personSelect");
         sel.innerHTML =
           '<option value="__overview">戰況總覽</option>' +
