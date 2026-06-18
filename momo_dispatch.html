@@ -2640,10 +2640,10 @@
           // ─── 【歷史趨勢控制器】 ───
           const openTrendModal = (type) => {
             const titles = {
-              trips: "總車次與總籃車數歷史趨勢分析 (運量交叉比對)",
-              duration: "營運總耗時歷史趨勢追蹤 (時效與流暢度)",
-              mails: "郵件效益比率與承載密度趨勢 (裝裝載產值)",
-              contribution: "外包與郵局單位貢獻度佔比歷史推進",
+              trips: "每日車次與籃車數",
+              duration: "每日運載作業時間",
+              mails: "每日車輛與籃車裝載量",
+              contribution: "每日外包車與郵車運載貢獻比",
             };
             trendModal.value.title = titles[type] || "歷史趨勢分析";
             trendModal.value.type = type;
@@ -2775,7 +2775,7 @@
                   labels: labels,
                   datasets: [
                     {
-                      label: "總耗時 (分鐘)",
+                      label: "作業總耗時 (分鐘)",
                       data: raw.map((d) =>
                         scale === "daily"
                           ? parseMinsOnly(d.summary.total_duration)
@@ -2798,7 +2798,7 @@
                       callbacks: {
                         label: function (context) {
                           const totalMins = context.raw;
-                          return ` 營運時長: ${Math.floor(totalMins / 60)}小時${totalMins % 60}分鐘`;
+                          return ` 作業時長: ${Math.floor(totalMins / 60)}小時${totalMins % 60}分鐘`;
                         },
                       },
                     },
@@ -2834,7 +2834,7 @@
                   labels: labels,
                   datasets: [
                     {
-                      label: "件/車次(運用效率)",
+                      label: "件/車次(裝載量)",
                       data: tripMailValues,
                       borderColor: "rgb(16, 185, 129)",
                       backgroundColor: "rgb(16, 185, 129)",
@@ -2843,7 +2843,7 @@
                       yAxisID: "yTripMail",
                     },
                     {
-                      label: "件/籃車(裝載效率)",
+                      label: "件/籃車(裝載量)",
                       data: cartMailValues,
                       borderColor: "rgb(6, 182, 212)",
                       backgroundColor: "rgb(6, 182, 212)",
@@ -2864,7 +2864,7 @@
                       position: "left",
                       min: tripMailAxis.min,
                       max: tripMailAxis.max,
-                      title: { display: true, text: "車輛運用效率(件/車次)" },
+                      title: { display: true, text: "車輛裝載量(件/車次)" },
                     },
                     yCartMail: {
                       type: "linear",
@@ -2872,7 +2872,7 @@
                       min: cartMailAxis.min,
                       max: cartMailAxis.max,
                       grid: { drawOnChartArea: false },
-                      title: { display: true, text: "籃車裝載效率(件/籃車)" },
+                      title: { display: true, text: "籃車裝載量(件/籃車)" },
                     },
                   },
                 },
