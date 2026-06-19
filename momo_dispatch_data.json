@@ -1502,7 +1502,7 @@
       "total_trips": 25,
       "total_carts": 437,
       "grand_total_trips": 29,
-      "grand_total_carts": 489,
+      "grand_total_carts": 499,
       "total_mails": 10307,
       "mail_per_cart": 23.5858123569794,
       "mail_per_trip": 412.28,
@@ -1514,7 +1514,7 @@
       }
     },
     "warehouse_summary": {
-      "yk_warehouse": { "trips": 4, "carts": 52 },
+      "yk_warehouse": { "trips": 4, "carts": 62 },
       "xs_warehouse": { "trips": 25, "carts": 437 },
       "outsource": {
         "total": { "trips": 5, "carts": 90 },
