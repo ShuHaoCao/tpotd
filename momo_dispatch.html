@@ -1246,8 +1246,8 @@
             >
               作業時間
             </p>
-            <h3 class="text-lg sm:text-xl font-black text-slate-800 mt-1">
-              {{ currentData.summary.total_duration }}
+            <h3 class="duration-value">
+              {{ formatDurationDisplay(currentData.summary.total_duration) }}
             </h3>
             <p class="text-xs text-slate-400 mt-1">
               第1車叫車時間 至 末班車次到達時間
@@ -2926,6 +2926,21 @@
             return isNaN(n) ? 0 : Math.round(n);
           };
 
+          const formatDurationDisplay = (duration) => {
+            if (!duration) return "—";
+
+            const normalized = String(duration).trim();
+            const match = normalized.match(/(\d+)\s*小時\s*(\d+)\s*分鐘/);
+
+            if (match) {
+              const hours = parseInt(match[1], 10);
+              const mins = parseInt(match[2], 10);
+              return `${hours}小時${mins}分鐘`;
+            }
+
+            return normalized;
+          };
+
           const nextDay = () => {
             if (currentIndex.value < mockData.value.length - 1) {
               currentIndex.value++;
@@ -2970,6 +2985,7 @@
             prevDay,
             formatFloat,
             formatInt,
+            formatDurationDisplay,
           };
         },
       }).mount("#app");
@@ -2988,6 +3004,26 @@
       }
       .animate-fade-in {
         animation: fadeIn 0.18s ease-out forwards;
+      }
+
+      /* === 作業時間顯示修正：去除分鐘前導 0，並避免手機換行 === */
+      .duration-value {
+        margin-top: 8px !important;
+        font-weight: 950 !important;
+        color: #ffffff !important;
+        line-height: 1.05 !important;
+        font-size: clamp(1.85rem, 3.2vw, 3.1rem) !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        letter-spacing: -0.04em;
+      }
+
+      @media (max-width: 768px) {
+        .duration-value {
+          font-size: clamp(1.55rem, 8vw, 2.35rem) !important;
+          letter-spacing: -0.06em;
+        }
       }
     </style>
   </body>
