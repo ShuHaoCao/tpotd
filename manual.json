@@ -174,6 +174,111 @@
       "thumb": "images/manual025_s.webp",
       "fullImage": "images/manual025_b.webp",
       "date": "2026-06-08"
+    },
+    {
+      "id": "card026",
+      "title": "汽車減速:剎車減速法",
+      "thumb": "images/manual026_s.webp",
+      "fullImage": "images/manual026_b.webp",
+      "date": "2026-06-09"
+    },
+    {
+      "id": "card027",
+      "title": "汽車減速:油門減速法",
+      "thumb": "images/manual027_s.webp",
+      "fullImage": "images/manual027_b.webp",
+      "date": "2026-06-10"
+    },
+    {
+      "id": "card028",
+      "title": "汽車減速:引擎剎車法",
+      "thumb": "images/manual028_s.webp",
+      "fullImage": "images/manual028_b.webp",
+      "date": "2026-06-11"
+    },
+    {
+      "id": "card029",
+      "title": "汽車減速:離合器減速法",
+      "thumb": "images/manual029_s.webp",
+      "fullImage": "images/manual029_b.webp",
+      "date": "2026-06-12"
+    },
+    {
+      "id": "card030",
+      "title": "汽車退檔操作要領",
+      "thumb": "images/manual030_s.webp",
+      "fullImage": "images/manual030_b.webp",
+      "date": "2026-06-13"
+    },
+    {
+      "id": "card031",
+      "title": "停車要領-道路臨時停車",
+      "thumb": "images/manual031_s.webp",
+      "fullImage": "images/manual031_b.webp",
+      "date": "2026-06-14"
+    },
+    {
+      "id": "card032",
+      "title": "停車要領-坡道停車",
+      "thumb": "images/manual032_s.webp",
+      "fullImage": "images/manual032_b.webp",
+      "date": "2026-06-15"
+    },
+    {
+      "id": "card033",
+      "title": "停車要領-定點停車",
+      "thumb": "images/manual033_s.webp",
+      "fullImage": "images/manual033_b.webp",
+      "date": "2026-06-16"
+    },
+    {
+      "id": "card034",
+      "title": "直線行車要領",
+      "thumb": "images/manual034_s.webp",
+      "fullImage": "images/manual034_b.webp",
+      "date": "2026-06-17"
+    },
+    {
+      "id": "card035",
+      "title": "汽車轉向要領-轉彎速度",
+      "thumb": "images/manual035_s.webp",
+      "fullImage": "images/manual035_b.webp",
+      "date": "2026-06-18"
+    },
+    {
+      "id": "card036",
+      "title": "汽車轉向要領-幅度與控制",
+      "thumb": "images/manual036_s.webp",
+      "fullImage": "images/manual036_b.webp",
+      "date": "2026-06-19"
+    },
+    {
+      "id": "card037",
+      "title": "倒車操作要領",
+      "thumb": "images/manual037_s.webp",
+      "fullImage": "images/manual037_b.webp",
+      "date": "2026-06-20"
+    },
+    {
+      "id": "card038",
+      "title": "倒車注意事項",
+      "thumb": "images/manual038_s.webp",
+      "fullImage": "images/manual038_b.webp",
+      "date": "2026-06-21"
+    },
+    {
+      "id": "card039",
+      "title": "車速控制要點",
+      "thumb": "images/manual039_s.webp",
+      "fullImage": "images/manual039_b.webp",
+      "date": "2026-06-22"
+    },
+    {
+      "id": "card040",
+      "title": "車速控制要點",
+      "thumb": "images/manual040_s.webp",
+      "fullImage": "images/manual040_b.webp",
+      "date": "2026-06-23"
     }
   ]
 }
