@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>台南郵局運輸股｜MOMO進出口列印表</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=X-xpgAogxuQ1Nq8RdQAoXFSvFqStIqCuORvS8S9VIepJbIiW9QWvAm-jkv7RWNZmXNvNfCySjjJIsF49ktwdB1dQsrzwj4Uoekfx04hrqH_yesJAjQbSbMWB3FQvjZmO72zwZcXAdPygjzwUgHJZ9VTH1UNOC6BMKVjIBI_NLP19lODaxrreu57CvZF2w1CVRaBHDWvBYbJfAWi4mwts5sYj3xuBqwCicxUqfRj62Eoi_TcdGyjZY_CrWRQbUgOPptBCtTXPaIkxQXl-zR3ZDxVIoaM3qORRAuaqidSx-H6W8ORfMuw1Tp8ae_V5gLIA"
+      charset="UTF-8"
+    ></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #eef2f7;
+        color: #111827;
+        font-family: "Microsoft JhengHei", Arial, sans-serif;
+      }
+      .app {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 22px;
+      }
+      .toolbar {
+        background: #fff;
+        border: 1px solid #d9e2ec;
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 8px 24px #0001;
+      }
+      .toolbar h1 {
+        font-size: 22px;
+        margin: 0 0 10px;
+      }
+      .toolbar .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .file {
+        border: 1px dashed #94a3b8;
+        border-radius: 10px;
+        padding: 10px;
+        background: #f8fafc;
+      }
+      .btn {
+        border: 0;
+        border-radius: 10px;
+        padding: 11px 18px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .print {
+        background: #14532d;
+        color: #fff;
+      }
+      .clear {
+        background: #334155;
+        color: #fff;
+      }
+      .hint {
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 10px;
+        line-height: 1.6;
+      }
+      .paper {
+        background: #fff;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 10mm;
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 14px 35px #0002;
+      }
+      .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 8px;
+        font-size: 18px;
+        font-weight: 800;
+      }
+      .title {
+        font-size: 26px;
+        text-align: center;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+        margin: 4px 0 10px;
+      }
+      .section {
+        border: 2px solid #111827;
+        margin-bottom: 10px;
+      }
+      .section-title {
+        background: #e5e7eb;
+        border-bottom: 2px solid #111827;
+        padding: 6px 10px;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+      }
+      .stage-title {
+        background: #f3f4f6;
+        border-top: 1px solid #111827;
+        border-bottom: 1px solid #111827;
+        padding: 5px 8px;
+        font-weight: 900;
+      }
+      .stage-title:first-child {
+        border-top: 0;
+      }
+      .subline {
+        text-align: right;
+        font-weight: 800;
+        padding: 4px 8px;
+        border-top: 1px solid #111827;
+      }
+      .total {
+        background: #f8fafc;
+        text-align: right;
+        font-size: 18px;
+        font-weight: 900;
+        padding: 6px 10px;
+        border-top: 2px solid #111827;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      th,
+      td {
+        border: 1px solid #111827;
+        padding: 5px 6px;
+        text-align: center;
+        font-size: 14px;
+        height: 30px;
+      }
+      th {
+        background: #f9fafb;
+        font-weight: 900;
+      }
+      .left {
+        text-align: left;
+      }
+      .empty {
+        color: #9ca3af;
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 14px;
+        font-weight: 800;
+      }
+      .sign {
+        width: 32%;
+        border-top: 1px solid #111827;
+        padding-top: 8px;
+      }
+      .w-time {
+        width: 16%;
+      }
+      .w-car {
+        width: 14%;
+      }
+      .w-driver {
+        width: 16%;
+      }
+      .w-item {
+        width: 36%;
+      }
+      .w-cart {
+        width: 12%;
+      }
+      @media print {
+        body {
+          background: #fff;
+        }
+        .app {
+          padding: 0;
+          max-width: none;
+        }
+        .toolbar {
+          display: none;
+        }
+        .paper {
+          width: auto;
+          min-height: auto;
+          margin: 0;
+          border: 0;
+          box-shadow: none;
+          padding: 8mm;
+        }
+        @page {
+          size: A4 portrait;
+          margin: 8mm;
+        }
+        .section {
+          break-inside: avoid;
+        }
+        th,
+        td {
+          font-size: 12px;
+          padding: 3px 4px;
+          height: 24px;
+        }
+        .title {
+          font-size: 22px;
+        }
+        .top {
+          font-size: 15px;
+        }
+        .section-title {
+          font-size: 17px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="toolbar">
+        <h1>台南郵局運輸股｜MOMO進出口列印表</h1>
+        <div class="row">
+          <label class="file"
+            >進口 JSON（momo_dispatch）：<input
+              id="inboundFile"
+              type="file"
+              accept=".json,application/json"
+          /></label>
+          <label class="file"
+            >出口 JSON（report）：<input
+              id="outboundFile"
+              type="file"
+              accept=".json,application/json"
+          /></label>
+          <button class="btn print" onclick="window.print()">列印</button>
+          <button class="btn clear" onclick="resetData()">清空</button>
+        </div>
+        <div class="hint">
+          先在 momo_dispatch.html 與 report.html
+          按「匯出json」，再回本頁匯入。列印時會自動隱藏上方操作區。
+        </div>
+      </div>
+
+      <main class="paper" id="paper">
+        <div class="top">
+          <div>單位：台南郵局運輸股</div>
+          <div id="dateText">日期：—</div>
+        </div>
+        <div class="title">MOMO 進出口籃車數作業表</div>
+
+        <section class="section" id="inboundSection">
+          <div class="section-title">進口</div>
+          <div id="inboundContent"></div>
+          <div class="total" id="inboundTotal">進口總計：0 車次／0 籃車</div>
+        </section>
+
+        <section class="section" id="outboundSection">
+          <div class="section-title">出口</div>
+          <div id="outboundContent"></div>
+          <div class="total" id="outboundTotal">出口總計：0 車次／0 籃車</div>
+        </section>
+
+        <div class="footer">
+          <div class="sign">股長：</div>
+          <div class="sign">專員：</div>
+          <div class="sign">製表：</div>
+        </div>
+      </main>
+    </div>
+    <script>
+      const state = { inbound: null, outbound: null };
+      const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+      function todayRoc() {
+        const d = new Date();
+        return `${d.getFullYear() - 1911}年${d.getMonth() + 1}月${d.getDate()}日星期${weekdays[d.getDay()]}`;
+      }
+      function setDateText() {
+        const roc =
+          state.inbound?.workDate?.rocDate ||
+          state.outbound?.workDate?.rocDate ||
+          todayRoc();
+        document.getElementById("dateText").textContent = "日期：" + roc;
+      }
+      function n(v) {
+        return Number(v) || 0;
+      }
+      function esc(s) {
+        return String(s ?? "").replace(
+          /[&<>"]/g,
+          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m],
+        );
+      }
+      function rowCells(cols) {
+        return (
+          "<tr>" +
+          cols
+            .map((c) => `<td class="${c.cls || ""}">${esc(c.v || "")}</td>`)
+            .join("") +
+          "</tr>"
+        );
+      }
+      function table(headers, rows, widths = []) {
+        return `<table><thead><tr>${headers.map((h, i) => `<th class="${widths[i] || ""}">${h}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
+      }
+      function renderInbound() {
+        const box = document.getElementById("inboundContent");
+        const data = state.inbound?.inbound;
+        if (!data) {
+          box.innerHTML =
+            '<div class="stage-title empty">尚未匯入進口 JSON</div>';
+          document.getElementById("inboundTotal").textContent =
+            "進口總計：0 車次／0 籃車";
+          return;
+        }
+        let html = "";
+        (data.stages || []).forEach((st, idx) => {
+          let rows = (st.rows || [])
+            .map((r) =>
+              rowCells([
+                { v: r.time },
+                { v: r.carNo },
+                { v: r.driver },
+                { v: r.workItem, cls: "left" },
+                { v: n(r.carts) },
+              ]),
+            )
+            .join("");
+          if (!rows)
+            rows = rowCells([
+              { v: "" },
+              { v: "" },
+              { v: "" },
+              { v: "（無資料）", cls: "left empty" },
+              { v: "" },
+            ]);
+          html +=
+            `<div class="stage-title">${esc(st.stageName || `第${idx + 1}階段`)}</div>` +
+            table(["時間", "車次", "司機", "工作項目", "籃車數"], rows, [
+              "w-time",
+              "w-car",
+              "w-driver",
+              "w-item",
+              "w-cart",
+            ]) +
+            `<div class="subline">小計：${n(st.subtotalTrips)} 車次／${n(st.subtotalCarts)} 籃車</div>`;
+        });
+        const y = data.yongkang || { trips: 0, carts: 0 };
+        html +=
+          `<div class="stage-title">永康倉</div>` +
+          table(
+            ["項目", "車次", "籃車數"],
+            rowCells([
+              { v: "永康倉", cls: "left" },
+              { v: n(y.trips) },
+              { v: n(y.carts) },
+            ]),
+          );
+        box.innerHTML = html;
+        document.getElementById("inboundTotal").textContent =
+          `進口總計：${n(data.totalTrips)} 車次／${n(data.totalCarts)} 籃車`;
+      }
+      function renderOutbound() {
+        const box = document.getElementById("outboundContent");
+        const data = state.outbound?.outbound;
+        if (!data) {
+          box.innerHTML =
+            '<div class="stage-title empty">尚未匯入出口 JSON</div>';
+          document.getElementById("outboundTotal").textContent =
+            "出口總計：0 車次／0 籃車";
+          return;
+        }
+        let html = "";
+        [
+          ["北上", "north"],
+          ["南下", "south"],
+        ].forEach(([label, key]) => {
+          const part = data[key] || { rows: [] };
+          let rows = (part.rows || [])
+            .map((r) =>
+              rowCells([{ v: r.time }, { v: r.carNo }, { v: n(r.carts) }]),
+            )
+            .join("");
+          if (!rows)
+            rows = rowCells([
+              { v: "" },
+              { v: "（無資料）", cls: "empty" },
+              { v: "" },
+            ]);
+          html +=
+            `<div class="stage-title">${label}</div>` +
+            table(["時間", "車次", "籃車數"], rows, ["w-time", "", "w-cart"]) +
+            `<div class="subline">小計：${n(part.subtotalTrips)} 車次／${n(part.subtotalCarts)} 籃車</div>`;
+        });
+        box.innerHTML = html;
+        document.getElementById("outboundTotal").textContent =
+          `出口總計：${n(data.totalTrips)} 車次／${n(data.totalCarts)} 籃車`;
+      }
+      function render() {
+        setDateText();
+        renderInbound();
+        renderOutbound();
+      }
+      function resetData() {
+        state.inbound = null;
+        state.outbound = null;
+        document.getElementById("inboundFile").value = "";
+        document.getElementById("outboundFile").value = "";
+        render();
+      }
+      async function loadFile(file, type) {
+        if (!file) return;
+        const data = JSON.parse(await file.text());
+        if (type === "inbound") state.inbound = data;
+        else state.outbound = data;
+        render();
+      }
+      document
+        .getElementById("inboundFile")
+        .addEventListener("change", (e) =>
+          loadFile(e.target.files[0], "inbound"),
+        );
+      document
+        .getElementById("outboundFile")
+        .addEventListener("change", (e) =>
+          loadFile(e.target.files[0], "outbound"),
+        );
+      render();
+    </script>
+  </body>
+</html>

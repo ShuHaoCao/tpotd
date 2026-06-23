@@ -1385,6 +1385,14 @@
           <span class="material-icons text-xs sm:text-sm">view_week</span>
           甘特圖檢視
         </button>
+        <button
+          @click="exportJson"
+          class="px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all flex items-center gap-1 bg-emerald-600 text-white shadow-sm hover:bg-emerald-500"
+          type="button"
+        >
+          <span class="material-icons text-xs sm:text-sm">download</span>
+          匯出json
+        </button>
       </div>
 
       <div v-if="viewMode === 'stage'" class="space-y-4 sm:space-y-6">
@@ -2941,6 +2949,87 @@
             return normalized;
           };
 
+          const getRocDateText = (dateStr, weekday) => {
+            const [yyyy, mm, dd] = String(dateStr || "")
+              .split("-")
+              .map(Number);
+            if (!yyyy || !mm || !dd) return "";
+            const day =
+              weekday ||
+              ["日", "一", "二", "三", "四", "五", "六"][
+                new Date(yyyy, mm - 1, dd).getDay()
+              ];
+            return `${yyyy - 1911}年${mm}月${dd}日星期${day}`;
+          };
+
+          const downloadJson = (data, filename) => {
+            const blob = new Blob([JSON.stringify(data, null, 2)], {
+              type: "application/json;charset=utf-8",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          };
+
+          const exportJson = () => {
+            const data = currentData.value || {};
+            const stages = (data.stages || []).map((stage, stageIndex) => {
+              const rows = (stage.cars || []).map((car, carIndex) => ({
+                time: car.arrival_time || "",
+                carNo: car.car_name || String(carIndex + 1),
+                driver: car.driver || "",
+                workItem: car.trip_no || "",
+                carts: Number(car.loaded_carts) || 0,
+              }));
+              return {
+                stageName: stage.stage_name || `第${stageIndex + 1}階段`,
+                rows,
+                subtotalTrips: rows.length,
+                subtotalCarts: rows.reduce((sum, row) => sum + row.carts, 0),
+              };
+            });
+
+            const yk = data.warehouse_summary?.yk_warehouse || {
+              trips: 0,
+              carts: 0,
+            };
+            const payload = {
+              schema: "tainan_post_dispatch_print_export.v1",
+              source: "momo_dispatch.html",
+              unit: "台南郵局運輸股",
+              workDate: {
+                date: data.date || "",
+                rocDate: getRocDateText(data.date, data.weekday),
+                weekday: data.weekday || "",
+              },
+              exportTime: new Date().toISOString(),
+              inbound: {
+                stages,
+                yongkang: {
+                  trips: Number(yk.trips) || 0,
+                  carts: Number(yk.carts) || 0,
+                },
+                totalTrips:
+                  Number(data.summary?.grand_total_trips) ||
+                  stages.reduce((sum, stage) => sum + stage.subtotalTrips, 0) +
+                    (Number(yk.trips) || 0),
+                totalCarts:
+                  Number(data.summary?.grand_total_carts) ||
+                  stages.reduce((sum, stage) => sum + stage.subtotalCarts, 0) +
+                    (Number(yk.carts) || 0),
+              },
+            };
+            downloadJson(
+              payload,
+              `momo_dispatch_export_${data.date || "today"}.json`,
+            );
+          };
+
           const nextDay = () => {
             if (currentIndex.value < mockData.value.length - 1) {
               currentIndex.value++;
@@ -2986,6 +3075,7 @@
             formatFloat,
             formatInt,
             formatDurationDisplay,
+            exportJson,
           };
         },
       }).mount("#app");

@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MOMO郵件出口籃車數回報</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Y__41olFovsBgKCfrBhCJ89IrX38GqWVpwCg3tgT0DzsJR6n3V5l1qTgqPPafHLz_0sAGFqhJvr-2RmVQh4WmKYtewbBD_EkJur50o30PfTyCJCPrP-cDhxZNgCQ5yjM4tE2kwZ9ai4LYv0dvB43Zk0Pq9HN_AAaRza8nWo4skGWzw-HQ5d44xiXMPRL4JiaZ9CaXJ2Hx3jUBS60yDM6oTn9MVZRijNcmHKkWxwf1KxANlQ9IrBge5RCgLzzKKUrMyVsgFXJUAoIekHKFQt7Qt8bV6Uv5gcMwyPYJjr-QBSonGJeM1hYdpnGHA6ob46B7PfOuen6li6cbTQclpW1nA"
+      charset="UTF-8"
+    ></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -44,8 +49,17 @@
             自動按時間順序排序，自動加總籃車數(請確認日期顯示是否正確)
           </p>
         </div>
-        <div class="text-xs text-slate-400 font-mono hidden md:block">
-          v2.6 // Date Logic Updated
+        <div class="flex items-center gap-2">
+          <button
+            @click="exportJson"
+            class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs md:text-sm font-bold transition-all cursor-pointer shadow-sm"
+            type="button"
+          >
+            匯出json
+          </button>
+          <div class="text-xs text-slate-400 font-mono hidden md:block">
+            v2.7 // JSON Export
+          </div>
         </div>
       </header>
 
@@ -767,6 +781,91 @@
             return { lines, total, tripCount: validRows.length };
           };
 
+          const getWorkDateInfo = () => {
+            const dateTarget = new Date();
+            dateTarget.setDate(dateTarget.getDate() - 1);
+            const yyyy = dateTarget.getFullYear();
+            const mm = dateTarget.getMonth() + 1;
+            const dd = dateTarget.getDate();
+            const dayNames = ["日", "一", "二", "三", "四", "五", "六"];
+            const dayName = dayNames[dateTarget.getDay()];
+            const pad = (n) => String(n).padStart(2, "0");
+            return {
+              date: `${yyyy}-${pad(mm)}-${pad(dd)}`,
+              rocDate: `${yyyy - 1911}年${mm}月${dd}日星期${dayName}`,
+              weekday: dayName,
+            };
+          };
+
+          const getExportRows = (rows) => {
+            return rows.value
+              .filter(
+                (row) => row.carType && row.count !== null && row.count !== "",
+              )
+              .map((row) => ({
+                time: row.time || "",
+                carNo: row.carType || "",
+                carts: Number(row.count) || 0,
+              }))
+              .sort((a, b) => {
+                if (!a.time) return 1;
+                if (!b.time) return -1;
+                const hourA = parseInt(a.time.split(":")[0]);
+                const hourB = parseInt(b.time.split(":")[0]);
+                const groupA = hourA >= 12 ? 0 : 1;
+                const groupB = hourB >= 12 ? 0 : 1;
+                return groupA !== groupB
+                  ? groupA - groupB
+                  : a.time.localeCompare(b.time);
+              });
+          };
+
+          const downloadJson = (data, filename) => {
+            const blob = new Blob([JSON.stringify(data, null, 2)], {
+              type: "application/json;charset=utf-8",
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          };
+
+          const exportJson = () => {
+            const workDate = getWorkDateInfo();
+            const north = getExportRows(northRows);
+            const south = getExportRows(southRows);
+            const payload = {
+              schema: "tainan_post_dispatch_print_export.v1",
+              source: "report.html",
+              unit: "台南郵局運輸股",
+              workDate,
+              exportTime: new Date().toISOString(),
+              outbound: {
+                north: {
+                  rows: north,
+                  subtotalTrips: north.length,
+                  subtotalCarts: north.reduce((sum, row) => sum + row.carts, 0),
+                },
+                south: {
+                  rows: south,
+                  subtotalTrips: south.length,
+                  subtotalCarts: south.reduce((sum, row) => sum + row.carts, 0),
+                },
+              },
+            };
+            payload.outbound.totalTrips =
+              payload.outbound.north.subtotalTrips +
+              payload.outbound.south.subtotalTrips;
+            payload.outbound.totalCarts =
+              payload.outbound.north.subtotalCarts +
+              payload.outbound.south.subtotalCarts;
+            downloadJson(payload, `report_export_${workDate.date}.json`);
+          };
+
           // 核心更新：自動計算「前1日」做為貨件工作日的邏輯
           const finalReport = computed(() => {
             const dateTarget = new Date();
@@ -881,6 +980,7 @@
             southTransportStats,
             finalReport,
             copyToClipboard,
+            exportJson,
           };
         },
       }).mount("#app");
