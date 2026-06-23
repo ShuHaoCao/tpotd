@@ -4,11 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>台南郵局運輸股｜MOMO進出口列印表</title>
-    <script
-      type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=X-xpgAogxuQ1Nq8RdQAoXFSvFqStIqCuORvS8S9VIepJbIiW9QWvAm-jkv7RWNZmXNvNfCySjjJIsF49ktwdB1dQsrzwj4Uoekfx04hrqH_yesJAjQbSbMWB3FQvjZmO72zwZcXAdPygjzwUgHJZ9VTH1UNOC6BMKVjIBI_NLP19lODaxrreu57CvZF2w1CVRaBHDWvBYbJfAWi4mwts5sYj3xuBqwCicxUqfRj62Eoi_TcdGyjZY_CrWRQbUgOPptBCtTXPaIkxQXl-zR3ZDxVIoaM3qORRAuaqidSx-H6W8ORfMuw1Tp8ae_V5gLIA"
-      charset="UTF-8"
-    ></script>
     <style>
       * {
         box-sizing: border-box;
@@ -268,9 +263,9 @@
         </section>
 
         <div class="footer">
-          <div class="sign">股長：</div>
-          <div class="sign">專員：</div>
           <div class="sign">製表：</div>
+          <div class="sign">覆核：</div>
+          <div class="sign">主管：</div>
         </div>
       </main>
     </div>
@@ -279,6 +274,9 @@
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
       function todayRoc() {
         const d = new Date();
+        // 顯示前一天
+        d.setDate(d.getDate() - 1);
+
         return `${d.getFullYear() - 1911}年${d.getMonth() + 1}月${d.getDate()}日星期${weekdays[d.getDay()]}`;
       }
       function setDateText() {
