@@ -2170,5 +2170,491 @@
         ]
       }
     ]
+  },
+  {
+    "seq": "011",
+    "date": "2026-06-21",
+    "weekday": "週日",
+    "summary": {
+      "total_duration": "7小時43分鐘",
+      "total_trips": 8,
+      "total_carts": 133,
+      "grand_total_trips": 10,
+      "grand_total_carts": 155,
+      "total_mails": 5841,
+      "mail_per_cart": 43.9172932330827,
+      "mail_per_trip": 730.125,
+      "contribution": {
+        "trip_outsource": "75%",
+        "trip_post": "25%",
+        "cart_outsource": "81%",
+        "cart_post": "19%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 22 },
+      "xs_warehouse": { "trips": 8, "carts": 133 },
+      "outsource": {
+        "total": { "trips": 6, "carts": 108 },
+        "stage1": { "trips": 4, "carts": 72 },
+        "stage2": { "trips": 1, "carts": 18 },
+        "stage3": { "trips": 1, "carts": 18 }
+      },
+      "post": {
+        "total": { "trips": 2, "carts": 25 },
+        "stage1": { "trips": 1, "carts": 10 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 1, "carts": 15 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:00",
+            "driver": "",
+            "return_time": "21:33",
+            "arrival_time": "22:55",
+            "transit_duration_mins": 82,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:16",
+            "driver": "",
+            "return_time": "22:56",
+            "arrival_time": "23:36",
+            "transit_duration_mins": 39.9999999999999,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第2車",
+            "interval_mins": 76
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "22:55",
+            "driver": "",
+            "return_time": "23:35",
+            "arrival_time": "00:15",
+            "transit_duration_mins": 40.0000000000002,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第3車",
+            "interval_mins": 39
+          },
+          {
+            "car_name": "第1階段第4車",
+            "display_name": "總車次第4車",
+            "call_time": "23:06",
+            "driver": "",
+            "return_time": "23:46",
+            "arrival_time": "00:26",
+            "transit_duration_mins": 39.9999999999999,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第4車",
+            "interval_mins": 11
+          },
+          {
+            "car_name": "第1階段第5車",
+            "display_name": "總車次第5車",
+            "call_time": "23:58",
+            "driver": "周恆毅",
+            "return_time": "00:31",
+            "arrival_time": "01:12",
+            "transit_duration_mins": 41,
+            "loaded_carts": 10,
+            "trip_no": "郵局第1車",
+            "interval_mins": 52
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第6車",
+            "call_time": "00:46",
+            "driver": "",
+            "return_time": "01:26",
+            "arrival_time": "02:22",
+            "transit_duration_mins": 56,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第5車",
+            "interval_mins": null
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第7車",
+            "call_time": "02:39",
+            "driver": "",
+            "return_time": "03:19",
+            "arrival_time": "04:13",
+            "transit_duration_mins": 54,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第6車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第8車",
+            "call_time": "03:00",
+            "driver": "周耀宗",
+            "return_time": "04:00",
+            "arrival_time": "04:43",
+            "transit_duration_mins": 43,
+            "loaded_carts": 15,
+            "trip_no": "幹線車早5",
+            "interval_mins": 21
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "seq": "012",
+    "date": "2026-06-22",
+    "weekday": "週一",
+    "summary": {
+      "total_duration": "7小時30分鐘",
+      "total_trips": 9,
+      "total_carts": 155,
+      "grand_total_trips": 11,
+      "grand_total_carts": 176,
+      "total_mails": 5973,
+      "mail_per_cart": 38.5354838709677,
+      "mail_per_trip": 663.666666666667,
+      "contribution": {
+        "trip_outsource": "44%",
+        "trip_post": "56%",
+        "cart_outsource": "46%",
+        "cart_post": "54%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 21 },
+      "xs_warehouse": { "trips": 9, "carts": 155 },
+      "outsource": {
+        "total": { "trips": 4, "carts": 72 },
+        "stage1": { "trips": 2, "carts": 36 },
+        "stage2": { "trips": 1, "carts": 18 },
+        "stage3": { "trips": 1, "carts": 18 }
+      },
+      "post": {
+        "total": { "trips": 5, "carts": 83 },
+        "stage1": { "trips": 3, "carts": 54 },
+        "stage2": { "trips": 1, "carts": 11 },
+        "stage3": { "trips": 1, "carts": 18 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:00",
+            "driver": "徐鈺沛",
+            "return_time": "21:47",
+            "arrival_time": "22:58",
+            "transit_duration_mins": 71.0000000000001,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:14",
+            "driver": "陳柏林",
+            "return_time": "22:54",
+            "arrival_time": "23:42",
+            "transit_duration_mins": 48,
+            "loaded_carts": 18,
+            "trip_no": "郵局第1車",
+            "interval_mins": 74
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "22:52",
+            "driver": "黃憲章",
+            "return_time": "23:32",
+            "arrival_time": "00:23",
+            "transit_duration_mins": 51.0000000000001,
+            "loaded_carts": 18,
+            "trip_no": "郵局第2車",
+            "interval_mins": 38
+          },
+          {
+            "car_name": "第1階段第4車",
+            "display_name": "總車次第4車",
+            "call_time": "23:05",
+            "driver": "徐鈺沛",
+            "return_time": "23:45",
+            "arrival_time": "00:35",
+            "transit_duration_mins": 50,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第4車",
+            "interval_mins": 13
+          },
+          {
+            "car_name": "第1階段第5車",
+            "display_name": "總車次第5車",
+            "call_time": "23:25",
+            "driver": "張正德",
+            "return_time": "00:05",
+            "arrival_time": "00:55",
+            "transit_duration_mins": 50,
+            "loaded_carts": 18,
+            "trip_no": "郵局第3車",
+            "interval_mins": 20
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第6車",
+            "call_time": "00:56",
+            "driver": "徐鈺沛",
+            "return_time": "01:36",
+            "arrival_time": "02:20",
+            "transit_duration_mins": 44,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第3車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第2階段第2車",
+            "display_name": "總車次第7車",
+            "call_time": "01:29",
+            "driver": "",
+            "return_time": "02:09",
+            "arrival_time": "03:30",
+            "transit_duration_mins": 81,
+            "loaded_carts": 11,
+            "trip_no": "郵局第4車",
+            "interval_mins": 33
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第8車",
+            "call_time": "02:54",
+            "driver": "徐鈺沛",
+            "return_time": "03:34",
+            "arrival_time": "04:30",
+            "transit_duration_mins": 56,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第4車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第9車",
+            "call_time": "03:00",
+            "driver": "周耀宗",
+            "return_time": "03:54",
+            "arrival_time": "04:40",
+            "transit_duration_mins": 46,
+            "loaded_carts": 18,
+            "trip_no": "幹線車早5",
+            "interval_mins": 6
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "seq": "013",
+    "date": "2026-06-23",
+    "weekday": "週二",
+    "summary": {
+      "total_duration": "6小時00分鐘",
+      "total_trips": 14,
+      "total_carts": 221,
+      "grand_total_trips": 16,
+      "grand_total_carts": 237,
+      "total_mails": 6716,
+      "mail_per_cart": 30.3891402714932,
+      "mail_per_trip": 479.714285714286,
+      "contribution": {
+        "trip_outsource": "36%",
+        "trip_post": "64%",
+        "cart_outsource": "37%",
+        "cart_post": "63%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 16 },
+      "xs_warehouse": { "trips": 14, "carts": 221 },
+      "outsource": {
+        "total": { "trips": 5, "carts": 81 },
+        "stage1": { "trips": 2, "carts": 36 },
+        "stage2": { "trips": 2, "carts": 36 },
+        "stage3": { "trips": 1, "carts": 9 }
+      },
+      "post": {
+        "total": { "trips": 9, "carts": 140 },
+        "stage1": { "trips": 4, "carts": 61 },
+        "stage2": { "trips": 4, "carts": 61 },
+        "stage3": { "trips": 1, "carts": 18 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:00",
+            "driver": "徐鈺沛",
+            "return_time": "22:05",
+            "arrival_time": "23:00",
+            "transit_duration_mins": 55.0000000000001,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:02",
+            "driver": "陳柏林",
+            "return_time": "22:46",
+            "arrival_time": "23:25",
+            "transit_duration_mins": 39,
+            "loaded_carts": 18,
+            "trip_no": "郵局第1車",
+            "interval_mins": 62
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "22:47",
+            "driver": "黃憲章",
+            "return_time": "23:21",
+            "arrival_time": "",
+            "transit_duration_mins": 39,
+            "loaded_carts": 18,
+            "trip_no": "郵局第2車",
+            "interval_mins": 45
+          },
+          {
+            "car_name": "第1階段第4車",
+            "display_name": "總車次第4車",
+            "call_time": "23:28",
+            "driver": "徐鈺沛",
+            "return_time": "00:08",
+            "arrival_time": "01:00",
+            "transit_duration_mins": 52,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第2車",
+            "interval_mins": 41
+          },
+          {
+            "car_name": "第1階段第5車",
+            "display_name": "總車次第5車",
+            "call_time": "23:29",
+            "driver": "周恆毅",
+            "return_time": "00:29",
+            "arrival_time": "01:25",
+            "transit_duration_mins": 56,
+            "loaded_carts": 18,
+            "trip_no": "郵局第3車",
+            "interval_mins": 1
+          },
+          {
+            "car_name": "第1階段第6車",
+            "display_name": "總車次第6車",
+            "call_time": "23:45",
+            "driver": "陳柏林",
+            "return_time": "00:30",
+            "arrival_time": "01:29",
+            "transit_duration_mins": 59,
+            "loaded_carts": 7,
+            "trip_no": "郵局第4車",
+            "interval_mins": 16
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第7車",
+            "call_time": "01:19",
+            "driver": "葉吉順",
+            "return_time": "01:59",
+            "arrival_time": "02:40",
+            "transit_duration_mins": 41,
+            "loaded_carts": 13,
+            "trip_no": "郵局第5車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第2階段第2車",
+            "display_name": "總車次第8車",
+            "call_time": "01:37",
+            "driver": "",
+            "return_time": "02:17",
+            "arrival_time": "03:00",
+            "transit_duration_mins": 43,
+            "loaded_carts": 18,
+            "trip_no": "明嘉第3車",
+            "interval_mins": 18
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第9車",
+            "call_time": "03:00",
+            "driver": "周耀宗",
+            "return_time": "03:55",
+            "arrival_time": "04:30",
+            "transit_duration_mins": 35,
+            "loaded_carts": 18,
+            "trip_no": "幹線車早5",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第10車",
+            "call_time": "04:20",
+            "driver": "",
+            "return_time": "03:58",
+            "arrival_time": "05:10",
+            "transit_duration_mins": 72,
+            "loaded_carts": 9,
+            "trip_no": "明嘉第4車",
+            "interval_mins": 80
+          }
+        ]
+      }
+    ]
   }
 ]
