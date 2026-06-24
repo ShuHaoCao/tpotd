@@ -2635,7 +2635,7 @@
             const titles = {
               trips: "每日車次與籃車數",
               duration: "每日運載作業時間",
-              mails: "每日車輛與籃車裝載量",
+              mails: "每日郵件量與車輛／籃車裝載量",
               contribution: "每日外包車與郵車運載貢獻比",
             };
             trendModal.value.title = titles[type] || "歷史趨勢分析";
@@ -2816,33 +2816,53 @@
                 },
               };
             } else if (type === "mails") {
+              const mailValues = raw.map((d) => d.summary.total_mails || 0);
               const tripMailValues = raw.map((d) => d.summary.mail_per_trip);
               const cartMailValues = raw.map((d) => d.summary.mail_per_cart);
+              const mailAxis = calcAxisRange(mailValues, 0.16);
               const tripMailAxis = calcAxisRange(tripMailValues, 0.2);
               const cartMailAxis = calcAxisRange(cartMailValues, 0.2);
 
               chartConfig = {
-                type: "line",
+                type: "bar",
                 data: {
                   labels: labels,
                   datasets: [
                     {
+                      label: "郵件量(件)",
+                      data: mailValues,
+                      type: "bar",
+                      backgroundColor: "rgba(34, 211, 238, 0.26)",
+                      borderColor: "rgba(34, 211, 238, 0.78)",
+                      borderWidth: 1,
+                      borderRadius: 8,
+                      maxBarThickness: 34,
+                      order: 3,
+                      yAxisID: "yMailCount",
+                    },
+                    {
                       label: "件/車次(裝載量)",
                       data: tripMailValues,
+                      type: "line",
                       borderColor: "rgb(16, 185, 129)",
                       backgroundColor: "rgb(16, 185, 129)",
                       borderWidth: 2.5,
                       tension: 0.15,
+                      pointRadius: 4,
+                      order: 1,
                       yAxisID: "yTripMail",
                     },
                     {
                       label: "件/籃車(裝載量)",
                       data: cartMailValues,
+                      type: "line",
                       borderColor: "rgb(6, 182, 212)",
                       backgroundColor: "rgb(6, 182, 212)",
                       borderWidth: 2.5,
                       borderDash: [4, 4],
                       tension: 0.15,
+                      pointRadius: 4,
+                      order: 2,
                       yAxisID: "yCartMail",
                     },
                   ],
@@ -2850,13 +2870,22 @@
                 options: {
                   responsive: true,
                   maintainAspectRatio: false,
+                  interaction: { mode: "index", intersect: false },
                   scales: {
                     x: xAxisConfig,
-                    yTripMail: {
+                    yMailCount: {
                       type: "linear",
                       position: "left",
+                      min: Math.max(0, mailAxis.min ?? 0),
+                      max: mailAxis.max,
+                      title: { display: true, text: "郵件量(件)" },
+                    },
+                    yTripMail: {
+                      type: "linear",
+                      position: "right",
                       min: tripMailAxis.min,
                       max: tripMailAxis.max,
+                      grid: { drawOnChartArea: false },
                       title: { display: true, text: "車輛裝載量(件/車次)" },
                     },
                     yCartMail: {
@@ -2864,6 +2893,7 @@
                       position: "right",
                       min: cartMailAxis.min,
                       max: cartMailAxis.max,
+                      display: false,
                       grid: { drawOnChartArea: false },
                       title: { display: true, text: "籃車裝載量(件/籃車)" },
                     },
