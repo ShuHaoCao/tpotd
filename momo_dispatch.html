@@ -1933,6 +1933,57 @@
                 重設 240~720
               </button>
             </div>
+            <div
+              v-if="trendModal.type === 'mails' && trendModal.scale === 'daily'"
+              class="flex flex-wrap items-center gap-2 bg-white/90 border border-slate-200 rounded-lg px-2 py-1.5 shadow-sm"
+            >
+              <span class="text-[11px] font-black text-slate-500"
+                >指定日期色</span
+              >
+              <input
+                type="date"
+                v-model="trendModal.specialDateInput"
+                @change="addMailSpecialDateColor"
+                class="px-2 py-1 rounded-md border border-slate-300 text-center font-mono text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/30"
+              />
+              <input
+                type="color"
+                v-model="trendModal.specialColorInput"
+                @change="addMailSpecialDateColor"
+                class="w-10 h-8 rounded-md border border-slate-300 bg-white cursor-pointer"
+                title="選擇指定日期顏色"
+              />
+              <button
+                @click="addMailSpecialDateColor"
+                type="button"
+                class="px-2 py-1 rounded-md bg-slate-800 text-white text-[11px] font-bold hover:bg-slate-700 transition"
+              >
+                套用
+              </button>
+              <span class="text-[11px] text-slate-400 font-bold"
+                >週六／週日已自動改為琥珀色</span
+              >
+              <span
+                v-for="(color, date) in trendModal.specialDateColors"
+                :key="date"
+                class="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-slate-200 text-[11px] font-bold text-slate-600 bg-slate-50"
+              >
+                <i
+                  class="inline-block w-2.5 h-2.5 rounded-full"
+                  :style="{ backgroundColor: color }"
+                ></i>
+                {{ date }}
+                <button
+                  @click="removeMailSpecialDateColor(date)"
+                  type="button"
+                  class="text-slate-400 hover:text-rose-500 font-black"
+                  title="移除此日期顏色"
+                >
+                  ×
+                </button>
+              </span>
+            </div>
+
             <div class="text-[11px] font-medium text-slate-400">
               * 系統已鎖定由左至右「左舊右新」排序；總耗時圖可自行設定 Y
               軸上下限
@@ -1982,6 +2033,10 @@
             // 營運總耗時圖表 Y 軸上下限，可直接在趨勢視窗中調整
             durationAxisMin: 240,
             durationAxisMax: 720,
+            // 郵件量趨勢圖：可指定特定日期直條顏色（格式：YYYY-MM-DD）
+            specialDateInput: "",
+            specialColorInput: "#c084fc",
+            specialDateColors: {},
           });
 
           let chartInstance = null;
@@ -2654,6 +2709,29 @@
             });
           };
 
+          const addMailSpecialDateColor = () => {
+            const date = String(trendModal.value.specialDateInput || "").trim();
+            const color = String(
+              trendModal.value.specialColorInput || "#c084fc",
+            ).trim();
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+              alert("請輸入正確日期格式：YYYY-MM-DD");
+              return;
+            }
+            trendModal.value.specialDateColors = {
+              ...trendModal.value.specialDateColors,
+              [date]: color,
+            };
+            nextTick(() => renderChart());
+          };
+
+          const removeMailSpecialDateColor = (date) => {
+            const next = { ...trendModal.value.specialDateColors };
+            delete next[date];
+            trendModal.value.specialDateColors = next;
+            nextTick(() => renderChart());
+          };
+
           const resetDurationAxis = () => {
             trendModal.value.durationAxisMin = 240;
             trendModal.value.durationAxisMax = 720;
@@ -2715,6 +2793,29 @@
                 max: Math.ceil(maxVal + padding),
               };
             };
+
+            const hexToRgba = (hex, alpha = 0.45) => {
+              const safe = String(hex || "").replace("#", "");
+              if (!/^[0-9a-fA-F]{6}$/.test(safe))
+                return `rgba(192, 132, 252, ${alpha})`;
+              const r = parseInt(safe.slice(0, 2), 16);
+              const g = parseInt(safe.slice(2, 4), 16);
+              const b = parseInt(safe.slice(4, 6), 16);
+              return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            };
+
+            const movingAverage = (values, windowSize = 5) =>
+              values.map((_, index, arr) => {
+                const start = Math.max(0, index - windowSize + 1);
+                const slice = arr
+                  .slice(start, index + 1)
+                  .map(Number)
+                  .filter(Number.isFinite);
+                if (!slice.length) return null;
+                return Math.round(
+                  slice.reduce((sum, n) => sum + n, 0) / slice.length,
+                );
+              });
 
             if (type === "trips") {
               chartConfig = {
@@ -2819,7 +2920,34 @@
               const mailValues = raw.map((d) => d.summary.total_mails || 0);
               const tripMailValues = raw.map((d) => d.summary.mail_per_trip);
               const cartMailValues = raw.map((d) => d.summary.mail_per_cart);
-              const mailAxis = calcAxisRange(mailValues, 0.16);
+              const mailTrendValues = movingAverage(
+                mailValues,
+                scale === "daily" ? 5 : 3,
+              );
+              const specialDateColors =
+                trendModal.value.specialDateColors || {};
+              const mailBarColors = raw.map((d) => {
+                const date = String(d.date || "");
+                if (specialDateColors[date])
+                  return hexToRgba(specialDateColors[date], 0.56);
+                const day = new Date(date).getDay();
+                if (scale === "daily" && (day === 0 || day === 6))
+                  return "rgba(251, 191, 36, 0.48)";
+                return "rgba(34, 211, 238, 0.26)";
+              });
+              const mailBarBorderColors = raw.map((d) => {
+                const date = String(d.date || "");
+                if (specialDateColors[date])
+                  return hexToRgba(specialDateColors[date], 0.95);
+                const day = new Date(date).getDay();
+                if (scale === "daily" && (day === 0 || day === 6))
+                  return "rgba(251, 191, 36, 0.95)";
+                return "rgba(34, 211, 238, 0.78)";
+              });
+              const mailAxis = calcAxisRange(
+                [...mailValues, ...mailTrendValues],
+                0.16,
+              );
               const tripMailAxis = calcAxisRange(tripMailValues, 0.2);
               const cartMailAxis = calcAxisRange(cartMailValues, 0.2);
 
@@ -2832,12 +2960,27 @@
                       label: "郵件量(件)",
                       data: mailValues,
                       type: "bar",
-                      backgroundColor: "rgba(34, 211, 238, 0.26)",
-                      borderColor: "rgba(34, 211, 238, 0.78)",
+                      backgroundColor: mailBarColors,
+                      borderColor: mailBarBorderColors,
                       borderWidth: 1,
                       borderRadius: 8,
                       maxBarThickness: 34,
-                      order: 3,
+                      order: 4,
+                      yAxisID: "yMailCount",
+                    },
+                    {
+                      label:
+                        scale === "daily" ? "郵件量5日均線" : "郵件量趨勢線",
+                      data: mailTrendValues,
+                      type: "line",
+                      borderColor: "rgb(244, 114, 182)",
+                      backgroundColor: "rgba(244, 114, 182, 0.12)",
+                      borderWidth: 3,
+                      borderDash: [8, 4],
+                      tension: 0.32,
+                      pointRadius: 0,
+                      pointHoverRadius: 5,
+                      order: 1,
                       yAxisID: "yMailCount",
                     },
                     {
@@ -2871,6 +3014,27 @@
                   responsive: true,
                   maintainAspectRatio: false,
                   interaction: { mode: "index", intersect: false },
+                  plugins: {
+                    tooltip: {
+                      callbacks: {
+                        afterLabel: function (context) {
+                          if (
+                            context.dataset.label !== "郵件量(件)" ||
+                            scale !== "daily"
+                          )
+                            return "";
+                          const date = String(
+                            raw[context.dataIndex]?.date || "",
+                          );
+                          const day = new Date(date).getDay();
+                          if ((trendModal.value.specialDateColors || {})[date])
+                            return "指定日期色";
+                          if (day === 0 || day === 6) return "週六／週日";
+                          return "";
+                        },
+                      },
+                    },
+                  },
                   scales: {
                     x: xAxisConfig,
                     yMailCount: {
@@ -3093,6 +3257,8 @@
             closeTrendModal,
             changeTimeScale,
             renderChart,
+            addMailSpecialDateColor,
+            removeMailSpecialDateColor,
             resetDurationAxis,
             getVehicleTypeLabel,
             getVehicleTypeKey,
