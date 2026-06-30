@@ -80,7 +80,7 @@
       header {
         position: relative;
         overflow: visible !important;
-        z-index: 1;
+        z-index: 100000;
         margin-bottom: 18px !important;
         padding: 24px 28px !important;
         border: 1px solid rgba(56, 189, 248, 0.45) !important;
@@ -970,6 +970,12 @@
       /* === 日期選擇器：只開放 JSON 內有資料的日期 === */
       .date-selector {
         overflow: visible !important;
+        position: relative !important;
+        z-index: 100001 !important;
+      }
+
+      .date-picker-panel {
+        pointer-events: auto !important;
       }
 
       .date-display-btn {
