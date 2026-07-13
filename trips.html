@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#16324f" />
+    <title>車次查詢系統</title>
+    <style>
+      :root {
+        --navy: #16324f;
+        --navy2: #244d70;
+        --blue: #2e6f9e;
+        --sky: #eaf4fb;
+        --ink: #17212b;
+        --muted: #667481;
+        --line: #d9e2e8;
+        --paper: #fff;
+        --bg: #f4f7f9;
+        --ok: #e5f4ec;
+        --ok-ink: #14623d;
+        --shadow: 0 12px 34px rgba(24, 50, 75, 0.1);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        font-family:
+          "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+        color: var(--ink);
+        background: linear-gradient(180deg, #edf5fa 0, #f7f9fb 300px);
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      .wrap {
+        width: min(1180px, calc(100% - 28px));
+        margin: auto;
+      }
+      .hero {
+        padding: 38px 0 74px;
+        background:
+          radial-gradient(
+            circle at 85% 0,
+            rgba(255, 255, 255, 0.18),
+            transparent 34%
+          ),
+          linear-gradient(135deg, var(--navy), var(--navy2));
+        color: white;
+      }
+      .hero-row {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+      }
+      .eyebrow {
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        opacity: 0.72;
+        margin-bottom: 8px;
+      }
+      h1 {
+        font-size: clamp(2rem, 5vw, 3.4rem);
+        line-height: 1.05;
+        margin: 0 0 12px;
+      }
+      .subtitle {
+        margin: 0;
+        opacity: 0.82;
+        max-width: 680px;
+      }
+      .updated {
+        font-size: 0.82rem;
+        opacity: 0.74;
+        white-space: nowrap;
+      }
+      main {
+        margin-top: -44px;
+        padding-bottom: 56px;
+      }
+      .panel {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: var(--shadow);
+        border-radius: var(--radius);
+        padding: 18px;
+      }
+      .search-row {
+        display: grid;
+        grid-template-columns:
+          minmax(220px, 2fr) repeat(2, minmax(150px, 1fr))
+          auto;
+        gap: 12px;
+        align-items: center;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .input-wrap svg {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        opacity: 0.55;
+      }
+      input,
+      select {
+        width: 100%;
+        min-height: 46px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: #fff;
+        padding: 10px 13px;
+        outline: none;
+        color: var(--ink);
+      }
+      .input-wrap input {
+        padding-left: 44px;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(46, 111, 158, 0.12);
+      }
+      .btn {
+        border: 0;
+        border-radius: 12px;
+        min-height: 46px;
+        padding: 0 16px;
+        background: var(--navy);
+        color: white;
+        font-weight: 700;
+      }
+      .btn.ghost {
+        background: #eef3f6;
+        color: var(--navy);
+      }
+      .filter-toggle {
+        display: none;
+      }
+      .advanced {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+      .filter-group h3 {
+        font-size: 0.84rem;
+        margin: 0 0 10px;
+        color: var(--muted);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        border: 1px solid var(--line);
+        background: white;
+        border-radius: 999px;
+        padding: 7px 11px;
+        font-size: 0.84rem;
+        color: #42515e;
+      }
+      .chip.active {
+        background: var(--navy);
+        color: white;
+        border-color: var(--navy);
+      }
+      .summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 22px 2px 12px;
+        gap: 16px;
+      }
+      .count strong {
+        font-size: 1.35rem;
+      }
+      .view-buttons {
+        display: flex;
+        gap: 6px;
+      }
+      .icon-btn {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px 10px;
+        color: var(--muted);
+      }
+      .icon-btn.active {
+        color: var(--navy);
+        background: var(--sky);
+        border-color: #b8d6e9;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+      }
+      .card {
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 5px 18px rgba(24, 50, 75, 0.055);
+        transition: 0.18s ease;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(24, 50, 75, 0.09);
+      }
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: start;
+      }
+      .trip-no {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .number {
+        display: grid;
+        place-items: center;
+        min-width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        background: var(--navy);
+        color: white;
+        font-size: 1.35rem;
+        font-weight: 800;
+      }
+      .time {
+        font-size: 1.18rem;
+        font-weight: 800;
+      }
+      .time-label {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .code {
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-align: right;
+        word-break: break-all;
+      }
+      .destination {
+        font-weight: 700;
+        margin: 15px 0 13px;
+        min-height: 44px;
+        line-height: 1.45;
+      }
+      .section-label {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin: 10px 0 7px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .tag {
+        font-size: 0.76rem;
+        padding: 5px 8px;
+        border-radius: 8px;
+        background: var(--sky);
+        color: #245575;
+      }
+      .tag.content {
+        background: var(--ok);
+        color: var(--ok-ink);
+      }
+      .empty-tag {
+        font-size: 0.78rem;
+        color: #98a3ac;
+      }
+      .note {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--line);
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .table-wrap {
+        display: none;
+        overflow: auto;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 860px;
+      }
+      th,
+      td {
+        padding: 13px 12px;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        background: #f3f7fa;
+        color: #435363;
+        font-size: 0.8rem;
+      }
+      td {
+        font-size: 0.88rem;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .table-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      .empty {
+        display: none;
+        text-align: center;
+        background: #fff;
+        border: 1px dashed #bdcbd4;
+        border-radius: 16px;
+        padding: 50px 20px;
+        color: var(--muted);
+      }
+      .empty .big {
+        font-size: 2.3rem;
+        margin-bottom: 8px;
+      }
+      .footer-note {
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.78rem;
+        margin-top: 22px;
+      }
+      body.table-mode .grid {
+        display: none;
+      }
+      body.table-mode .table-wrap {
+        display: block;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .search-row {
+          grid-template-columns: 1fr 1fr;
+        }
+        .search-row .input-wrap {
+          grid-column: 1/-1;
+        }
+        .advanced {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 620px) {
+        .wrap {
+          width: min(100% - 20px, 1180px);
+        }
+        .hero {
+          padding: 28px 0 66px;
+        }
+        .hero-row {
+          display: block;
+        }
+        .updated {
+          margin-top: 14px;
+        }
+        .panel {
+          padding: 13px;
+          border-radius: 15px;
+        }
+        .search-row {
+          grid-template-columns: 1fr auto;
+        }
+        .search-row select {
+          grid-column: 1/-1;
+        }
+        .filter-toggle {
+          display: block;
+        }
+        .advanced {
+          display: none;
+        }
+        .advanced.open {
+          display: grid;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .summary {
+          align-items: end;
+        }
+        .view-buttons {
+          display: none;
+        }
+        .destination {
+          min-height: 0;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="wrap hero-row">
+        <div>
+          <div class="eyebrow">TAINAN TRANSPORT</div>
+          <h1 id="title">車次查詢系統</h1>
+          <p class="subtitle" id="subtitle"></p>
+        </div>
+        <div class="updated" id="updated"></div>
+      </div>
+    </header>
+    <main class="wrap">
+      <section class="panel" aria-label="查詢條件">
+        <div class="search-row">
+          <div class="input-wrap">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.6-3.6" /></svg
+            ><input
+              id="q"
+              type="search"
+              placeholder="搜尋車次、代碼、接收局、地區或內容物…"
+              autocomplete="off"
+            />
+          </div>
+          <select id="timeFilter" aria-label="發車時間">
+            <option value="">全部發車時間</option>
+            <option value="before21">21:00 前</option>
+            <option value="21to23">21:00–22:59</option>
+            <option value="after23">23:00 後</option>
+          </select>
+          <select id="sort" aria-label="排序">
+            <option value="timeAsc">發車時間：早到晚</option>
+            <option value="timeDesc">發車時間：晚到早</option>
+            <option value="tripAsc">車次：小到大</option>
+            <option value="tripDesc">車次：大到小</option>
+          </select>
+          <button
+            class="btn ghost filter-toggle"
+            id="filterToggle"
+            type="button"
+          >
+            篩選
+          </button>
+          <button class="btn" id="reset" type="button">清除</button>
+        </div>
+        <div class="advanced" id="advanced">
+          <div class="filter-group">
+            <h3>地區（可複選）</h3>
+            <div class="chips" id="regionChips"></div>
+          </div>
+          <div class="filter-group">
+            <h3>內容物（可複選）</h3>
+            <div class="chips" id="contentChips"></div>
+          </div>
+        </div>
+      </section>
+      <div class="summary">
+        <div class="count">共找到 <strong id="count">0</strong> 筆車次</div>
+        <div class="view-buttons">
+          <button class="icon-btn active" data-view="card">卡片</button
+          ><button class="icon-btn" data-view="table">表格</button>
+        </div>
+      </div>
+      <section class="grid" id="grid"></section>
+      <section class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>車次</th>
+              <th>實際發車</th>
+              <th>表定時間</th>
+              <th>接收局</th>
+              <th>地區</th>
+              <th>內容物</th>
+              <th>車次代碼</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </section>
+      <section class="empty" id="empty">
+        <div class="big">⌕</div>
+        <strong>沒有符合條件的車次</strong>
+        <div>換個關鍵字，或清除部分篩選條件。</div>
+      </section>
+      <div class="footer-note">
+        資料由
+        <code>trips.json</code> 驅動；新增車次或欄位後，重新整理即可更新。
+      </div>
+    </main>
+    <script id="fallback-data" type="application/json">
+      {
+        "schemaVersion": "1.0.0",
+        "title": "車次查詢系統",
+        "subtitle": "依車次、時間、接收局、地區與內容物快速查詢",
+        "source": "車次查詢表.xlsx／車次順序表",
+        "lastUpdated": "2026-07-13",
+        "settings": {
+          "defaultSort": { "field": "actualDeparture", "direction": "asc" },
+          "searchFields": [
+            "tripNo",
+            "tripCode",
+            "destination",
+            "regions",
+            "contents",
+            "note"
+          ],
+          "display": {
+            "showScheduledDeparture": true,
+            "showTripCode": true,
+            "pageSize": 12
+          }
+        },
+        "fieldGroups": {
+          "regions": [
+            "台北",
+            "北桃園",
+            "南桃園",
+            "宜花東",
+            "新竹",
+            "台中",
+            "南投"
+          ],
+          "contents": [
+            "國內包裹",
+            "國內快捷",
+            "普掛",
+            "限掛",
+            "限平",
+            "混裝籃車",
+            "國際平件",
+            "國際快捷",
+            "國際航空包裹",
+            "國際航空掛號",
+            "國際水陸包裹",
+            "兩岸郵政速遞"
+          ]
+        },
+        "trips": [
+          {
+            "tripNo": "24",
+            "actualDeparture": "19:00",
+            "scheduledDeparture": "",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720024",
+            "regions": ["台北"],
+            "contents": ["國內包裹", "國內快捷"],
+            "note": ""
+          },
+          {
+            "tripNo": "32",
+            "actualDeparture": "21:15",
+            "scheduledDeparture": "",
+            "destination": "桃園郵局桃園快捷股",
+            "tripCode": "50918720032",
+            "regions": ["北桃園"],
+            "contents": ["國內包裹", "限掛", "限平"],
+            "note": ""
+          },
+          {
+            "tripNo": "30",
+            "actualDeparture": "23:00",
+            "scheduledDeparture": "",
+            "destination": "新竹郵局郵務科快捷股",
+            "tripCode": "50918720030",
+            "regions": ["新竹"],
+            "contents": [
+              "國內包裹",
+              "國內快捷",
+              "普掛",
+              "限掛",
+              "限平",
+              "混裝籃車"
+            ],
+            "note": ""
+          },
+          {
+            "tripNo": "40",
+            "actualDeparture": "23:00",
+            "scheduledDeparture": "",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720040",
+            "regions": ["台北", "宜花東"],
+            "contents": ["國內快捷", "普掛", "限掛", "混裝籃車"],
+            "note": ""
+          },
+          {
+            "tripNo": "26",
+            "actualDeparture": "23:00",
+            "scheduledDeparture": "",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720026",
+            "regions": ["台北"],
+            "contents": ["國內快捷", "普掛", "限掛", "限平", "混裝籃車"],
+            "note": ""
+          },
+          {
+            "tripNo": "28",
+            "actualDeparture": "23:00",
+            "scheduledDeparture": "",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720028",
+            "regions": ["台北", "宜花東"],
+            "contents": [
+              "國內快捷",
+              "限掛",
+              "限平",
+              "混裝籃車",
+              "國際平件",
+              "國際快捷",
+              "國際航空包裹",
+              "國際航空掛號",
+              "國際水陸包裹",
+              "兩岸郵政速遞"
+            ],
+            "note": ""
+          },
+          {
+            "tripNo": "20",
+            "actualDeparture": "21:35",
+            "scheduledDeparture": "",
+            "destination": "台中郵件中心運輸股",
+            "tripCode": "50918720020",
+            "regions": ["台中", "南投"],
+            "contents": ["國內包裹", "國內快捷"],
+            "note": ""
+          },
+          {
+            "tripNo": "22",
+            "actualDeparture": "22:31",
+            "scheduledDeparture": "",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720022",
+            "regions": ["台北"],
+            "contents": ["國內快捷"],
+            "note": ""
+          },
+          {
+            "tripNo": "114",
+            "actualDeparture": "20:15",
+            "scheduledDeparture": "",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720114",
+            "regions": ["台北"],
+            "contents": ["國內快捷"],
+            "note": ""
+          }
+        ]
+      }
+    </script>
+    <script>
+      const $ = (s) => document.querySelector(s),
+        $$ = (s) => [...document.querySelectorAll(s)];
+      let DATA,
+        selectedRegions = new Set(),
+        selectedContents = new Set();
+      const esc = (v) =>
+        String(v ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      async function loadData() {
+        try {
+          const r = await fetch("trips.json", { cache: "no-store" });
+          if (!r.ok) throw Error();
+          DATA = await r.json();
+        } catch {
+          DATA = JSON.parse($("#fallback-data").textContent);
+        }
+        init();
+      }
+      function init() {
+        $("#title").textContent = DATA.title || "車次查詢系統";
+        $("#subtitle").textContent = DATA.subtitle || "";
+        $("#updated").textContent = `資料更新：${DATA.lastUpdated || "—"}`;
+        buildChips("regionChips", DATA.fieldGroups?.regions || [], "region");
+        buildChips("contentChips", DATA.fieldGroups?.contents || [], "content");
+        ["q", "timeFilter", "sort"].forEach((id) =>
+          $("#" + id).addEventListener(id === "q" ? "input" : "change", render),
+        );
+        $("#reset").onclick = reset;
+        $("#filterToggle").onclick = () =>
+          $("#advanced").classList.toggle("open");
+        $$(".icon-btn").forEach(
+          (b) =>
+            (b.onclick = () => {
+              $$(".icon-btn").forEach((x) => x.classList.remove("active"));
+              b.classList.add("active");
+              document.body.classList.toggle(
+                "table-mode",
+                b.dataset.view === "table",
+              );
+            }),
+        );
+        render();
+      }
+      function buildChips(id, items, type) {
+        const box = $("#" + id);
+        box.innerHTML = items
+          .map(
+            (x) =>
+              `<button class="chip" type="button" data-value="${esc(x)}">${esc(x)}</button>`,
+          )
+          .join("");
+        box.onclick = (e) => {
+          const b = e.target.closest(".chip");
+          if (!b) return;
+          const set = type === "region" ? selectedRegions : selectedContents;
+          set.has(b.dataset.value)
+            ? set.delete(b.dataset.value)
+            : set.add(b.dataset.value);
+          b.classList.toggle("active");
+          render();
+        };
+      }
+      function mins(t) {
+        if (!t) return 9999;
+        const [h, m] = t.split(":").map(Number);
+        return h * 60 + m;
+      }
+      function matchesTime(t, filter) {
+        const m = mins(t);
+        return (
+          !filter ||
+          (filter === "before21" && m < 1260) ||
+          (filter === "21to23" && m >= 1260 && m < 1380) ||
+          (filter === "after23" && m >= 1380)
+        );
+      }
+      function filtered() {
+        const q = $("#q").value.trim().toLowerCase(),
+          tf = $("#timeFilter").value;
+        let rows = (DATA.trips || []).filter((x) => {
+          const hay = [
+            x.tripNo,
+            x.tripCode,
+            x.destination,
+            x.note,
+            ...(x.regions || []),
+            ...(x.contents || []),
+          ]
+            .join(" ")
+            .toLowerCase();
+          return (
+            (!q || hay.includes(q)) &&
+            matchesTime(x.actualDeparture, tf) &&
+            (!selectedRegions.size ||
+              [...selectedRegions].every((v) =>
+                (x.regions || []).includes(v),
+              )) &&
+            (!selectedContents.size ||
+              [...selectedContents].every((v) =>
+                (x.contents || []).includes(v),
+              ))
+          );
+        });
+        const sort = $("#sort").value;
+        rows.sort((a, b) =>
+          sort === "timeAsc"
+            ? mins(a.actualDeparture) - mins(b.actualDeparture)
+            : sort === "timeDesc"
+              ? mins(b.actualDeparture) - mins(a.actualDeparture)
+              : sort === "tripAsc"
+                ? Number(a.tripNo) - Number(b.tripNo)
+                : Number(b.tripNo) - Number(a.tripNo),
+        );
+        return rows;
+      }
+      function tags(items, cls = "") {
+        return items?.length
+          ? items
+              .map((x) => `<span class="tag ${cls}">${esc(x)}</span>`)
+              .join("")
+          : '<span class="empty-tag">—</span>';
+      }
+      function card(x) {
+        return `<article class="card"><div class="card-top"><div class="trip-no"><div class="number">${esc(x.tripNo)}</div><div><div class="time">${esc(x.actualDeparture || "—")}</div><div class="time-label">實際發車${x.scheduledDeparture ? ` · 表定 ${esc(x.scheduledDeparture)}` : ""}</div></div></div><div class="code">代碼<br>${esc(x.tripCode || "—")}</div></div><div class="destination">${esc(x.destination || "未填接收局")}</div><div class="section-label">地區</div><div class="tag-row">${tags(x.regions)}</div><div class="section-label">內容物</div><div class="tag-row">${tags(x.contents, "content")}</div>${x.note ? `<div class="note">備註：${esc(x.note)}</div>` : ""}</article>`;
+      }
+      function row(x) {
+        return `<tr><td><strong>${esc(x.tripNo)}</strong></td><td>${esc(x.actualDeparture || "—")}</td><td>${esc(x.scheduledDeparture || "—")}</td><td>${esc(x.destination || "—")}</td><td><div class="table-tags">${tags(x.regions)}</div></td><td><div class="table-tags">${tags(x.contents, "content")}</div></td><td>${esc(x.tripCode || "—")}</td><td>${esc(x.note || "—")}</td></tr>`;
+      }
+      function render() {
+        const rows = filtered();
+        $("#count").textContent = rows.length;
+        $("#grid").innerHTML = rows.map(card).join("");
+        $("#tbody").innerHTML = rows.map(row).join("");
+        $("#empty").style.display = rows.length ? "none" : "block";
+      }
+      function reset() {
+        $("#q").value = "";
+        $("#timeFilter").value = "";
+        $("#sort").value = "timeAsc";
+        selectedRegions.clear();
+        selectedContents.clear();
+        $$(".chip").forEach((x) => x.classList.remove("active"));
+        render();
+      }
+      loadData();
+    </script>
+  </body>
+</html>

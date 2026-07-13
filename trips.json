@@ -1,0 +1,207 @@
+{
+  "schemaVersion": "1.0.0",
+  "title": "車次查詢系統",
+  "subtitle": "依車次、時間、接收局、地區與內容物快速查詢",
+  "source": "車次查詢表.xlsx／車次順序表",
+  "lastUpdated": "2026-07-13",
+  "settings": {
+    "defaultSort": {
+      "field": "actualDeparture",
+      "direction": "asc"
+    },
+    "searchFields": [
+      "tripNo",
+      "tripCode",
+      "destination",
+      "regions",
+      "contents",
+      "note"
+    ],
+    "display": {
+      "showScheduledDeparture": true,
+      "showTripCode": true,
+      "pageSize": 12
+    }
+  },
+  "fieldGroups": {
+    "regions": [
+      "台北",
+      "北桃園",
+      "南桃園",
+      "宜花東",
+      "新竹",
+      "台中",
+      "南投"
+    ],
+    "contents": [
+      "國內包裹",
+      "國內快捷",
+      "普掛",
+      "限掛",
+      "限平",
+      "混裝籃車",
+      "國際平件",
+      "國際快捷",
+      "國際航空包裹",
+      "國際航空掛號",
+      "國際水陸包裹",
+      "兩岸郵政速遞"
+    ]
+  },
+  "trips": [
+    {
+      "tripNo": "24",
+      "actualDeparture": "19:00",
+      "scheduledDeparture": "",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720024",
+      "regions": [
+        "台北"
+      ],
+      "contents": [
+        "國內包裹",
+        "國內快捷"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "32",
+      "actualDeparture": "21:15",
+      "scheduledDeparture": "",
+      "destination": "桃園郵局桃園快捷股",
+      "tripCode": "50918720032",
+      "regions": [
+        "北桃園"
+      ],
+      "contents": [
+        "國內包裹",
+        "限掛",
+        "限平"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "30",
+      "actualDeparture": "23:00",
+      "scheduledDeparture": "",
+      "destination": "新竹郵局郵務科快捷股",
+      "tripCode": "50918720030",
+      "regions": [
+        "新竹"
+      ],
+      "contents": [
+        "國內包裹",
+        "國內快捷",
+        "普掛",
+        "限掛",
+        "限平",
+        "混裝籃車"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "40",
+      "actualDeparture": "23:00",
+      "scheduledDeparture": "",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720040",
+      "regions": [
+        "台北",
+        "宜花東"
+      ],
+      "contents": [
+        "國內快捷",
+        "普掛",
+        "限掛",
+        "混裝籃車"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "26",
+      "actualDeparture": "23:00",
+      "scheduledDeparture": "",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720026",
+      "regions": [
+        "台北"
+      ],
+      "contents": [
+        "國內快捷",
+        "普掛",
+        "限掛",
+        "限平",
+        "混裝籃車"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "28",
+      "actualDeparture": "23:00",
+      "scheduledDeparture": "",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720028",
+      "regions": [
+        "台北",
+        "宜花東"
+      ],
+      "contents": [
+        "國內快捷",
+        "限掛",
+        "限平",
+        "混裝籃車",
+        "國際平件",
+        "國際快捷",
+        "國際航空包裹",
+        "國際航空掛號",
+        "國際水陸包裹",
+        "兩岸郵政速遞"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "20",
+      "actualDeparture": "21:35",
+      "scheduledDeparture": "",
+      "destination": "台中郵件中心運輸股",
+      "tripCode": "50918720020",
+      "regions": [
+        "台中",
+        "南投"
+      ],
+      "contents": [
+        "國內包裹",
+        "國內快捷"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "22",
+      "actualDeparture": "22:31",
+      "scheduledDeparture": "",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720022",
+      "regions": [
+        "台北"
+      ],
+      "contents": [
+        "國內快捷"
+      ],
+      "note": ""
+    },
+    {
+      "tripNo": "114",
+      "actualDeparture": "20:15",
+      "scheduledDeparture": "",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720114",
+      "regions": [
+        "台北"
+      ],
+      "contents": [
+        "國內快捷"
+      ],
+      "note": ""
+    }
+  ]
+}
