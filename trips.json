@@ -1,7 +1,7 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.2.0",
   "title": "車次查詢系統",
-  "subtitle": "依車次、時間、接收局、地區與內容物快速查詢",
+  "subtitle": "依車次、時間、方向、站點、接收局、地區與內容物快速查詢",
   "source": "車次查詢表.xlsx／車次順序表",
   "lastUpdated": "2026-07-13",
   "settings": {
@@ -15,7 +15,15 @@
       "destination",
       "regions",
       "contents",
-      "note"
+      "note",
+      "vehicleType",
+      "company",
+      "driver",
+      "phone",
+      "operation",
+      "direction",
+      "stops",
+      "vehicles"
     ],
     "display": {
       "showScheduledDeparture": true,
@@ -26,6 +34,7 @@
   "fieldGroups": {
     "regions": [
       "台北",
+      "馬祖",
       "北桃園",
       "南桃園",
       "宜花東",
@@ -50,101 +59,84 @@
   },
   "trips": [
     {
+      "tripNo": "20",
+      "actualDeparture": "21:35",
+      "scheduledDeparture": "22:20",
+      "destination": "台中郵件中心運輸股",
+      "tripCode": "50918720020",
+      "regions": ["台中", "南投"],
+      "contents": ["國內包裹", "國內快捷"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中"],
+      "vehicles": []
+    },
+    {
+      "tripNo": "22",
+      "actualDeparture": "22:31",
+      "scheduledDeparture": "23:50",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720022",
+      "regions": ["台北"],
+      "contents": ["國內快捷"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "台北"],
+      "vehicles": []
+    },
+    {
       "tripNo": "24",
       "actualDeparture": "19:00",
-      "scheduledDeparture": "",
+      "scheduledDeparture": "20:00",
       "destination": "台北中心運輸科轉運股",
       "tripCode": "50918720024",
-      "regions": [
-        "台北"
-      ],
-      "contents": [
-        "國內包裹",
-        "國內快捷"
-      ],
-      "note": ""
-    },
-    {
-      "tripNo": "32",
-      "actualDeparture": "21:15",
-      "scheduledDeparture": "",
-      "destination": "桃園郵局桃園快捷股",
-      "tripCode": "50918720032",
-      "regions": [
-        "北桃園"
-      ],
-      "contents": [
-        "國內包裹",
-        "限掛",
-        "限平"
-      ],
-      "note": ""
-    },
-    {
-      "tripNo": "30",
-      "actualDeparture": "23:00",
-      "scheduledDeparture": "",
-      "destination": "新竹郵局郵務科快捷股",
-      "tripCode": "50918720030",
-      "regions": [
-        "新竹"
-      ],
-      "contents": [
-        "國內包裹",
-        "國內快捷",
-        "普掛",
-        "限掛",
-        "限平",
-        "混裝籃車"
-      ],
-      "note": ""
-    },
-    {
-      "tripNo": "40",
-      "actualDeparture": "23:00",
-      "scheduledDeparture": "",
-      "destination": "台北中心運輸科轉運股",
-      "tripCode": "50918720040",
-      "regions": [
-        "台北",
-        "宜花東"
-      ],
-      "contents": [
-        "國內快捷",
-        "普掛",
-        "限掛",
-        "混裝籃車"
-      ],
-      "note": ""
+      "regions": ["台北", "馬祖", "宜花東"],
+      "contents": ["國內包裹", "國內快捷"],
+      "note": "高雄調度:0919-135-237",
+      "vehicleType": "外包車",
+      "company": "沅陽交通股份有限公司",
+      "driver": "詹佑任",
+      "phone": "0922-122-433",
+      "operation": "對開車",
+      "direction": "北上",
+      "stops": ["台南", "台中"],
+      "vehicles": []
     },
     {
       "tripNo": "26",
       "actualDeparture": "23:00",
-      "scheduledDeparture": "",
+      "scheduledDeparture": "23:50",
       "destination": "台北中心運輸科轉運股",
       "tripCode": "50918720026",
-      "regions": [
-        "台北"
-      ],
-      "contents": [
-        "國內快捷",
-        "普掛",
-        "限掛",
-        "限平",
-        "混裝籃車"
-      ],
-      "note": ""
+      "regions": ["台北"],
+      "contents": ["國內快捷", "普掛", "限掛", "限平", "混裝籃車"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "台北"],
+      "vehicles": []
     },
     {
       "tripNo": "28",
       "actualDeparture": "23:00",
-      "scheduledDeparture": "",
+      "scheduledDeparture": "22:30",
       "destination": "台北中心運輸科轉運股",
       "tripCode": "50918720028",
-      "regions": [
-        "台北",
-        "宜花東"
-      ],
+      "regions": ["台北", "宜花東"],
       "contents": [
         "國內快捷",
         "限掛",
@@ -157,51 +149,105 @@
         "國際水陸包裹",
         "兩岸郵政速遞"
       ],
-      "note": ""
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "台北"],
+      "vehicles": []
     },
     {
-      "tripNo": "20",
-      "actualDeparture": "21:35",
-      "scheduledDeparture": "",
-      "destination": "台中郵件中心運輸股",
-      "tripCode": "50918720020",
-      "regions": [
-        "台中",
-        "南投"
-      ],
-      "contents": [
-        "國內包裹",
-        "國內快捷"
-      ],
-      "note": ""
+      "tripNo": "30",
+      "actualDeparture": "23:00",
+      "scheduledDeparture": "23:50",
+      "destination": "新竹郵局郵務科快捷股",
+      "tripCode": "50918720030",
+      "regions": ["新竹"],
+      "contents": ["國內包裹", "國內快捷", "普掛", "限掛", "限平", "混裝籃車"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "新竹"],
+      "vehicles": []
     },
     {
-      "tripNo": "22",
-      "actualDeparture": "22:31",
-      "scheduledDeparture": "",
+      "tripNo": "32",
+      "actualDeparture": "21:15",
+      "scheduledDeparture": "23:15",
+      "destination": "桃園郵局桃園快捷股",
+      "tripCode": "50918720032",
+      "regions": ["北桃園"],
+      "contents": ["國內包裹", "限掛", "限平"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "桃園"],
+      "vehicles": []
+    },
+    {
+      "tripNo": "40",
+      "actualDeparture": "23:00",
+      "scheduledDeparture": "23:20",
+      "destination": "台北中心運輸科轉運股",
+      "tripCode": "50918720040",
+      "regions": ["台北", "宜花東"],
+      "contents": ["國內快捷", "普掛", "限掛", "混裝籃車"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "台北"],
+      "vehicles": []
+    },
+    {
+      "tripNo": "54",
+      "actualDeparture": "",
+      "scheduledDeparture": "23:50",
       "destination": "台北中心運輸科轉運股",
       "tripCode": "50918720022",
-      "regions": [
-        "台北"
-      ],
-      "contents": [
-        "國內快捷"
-      ],
-      "note": ""
+      "regions": ["台北"],
+      "contents": ["國內快捷"],
+      "note": "",
+      "vehicleType": "",
+      "company": "",
+      "driver": "",
+      "phone": "",
+      "operation": "",
+      "direction": "北上",
+      "stops": ["台南", "嘉義", "台中", "台北"],
+      "vehicles": []
     },
     {
       "tripNo": "114",
       "actualDeparture": "20:15",
-      "scheduledDeparture": "",
+      "scheduledDeparture": "20:30",
       "destination": "台北中心運輸科轉運股",
       "tripCode": "50918720114",
-      "regions": [
-        "台北"
-      ],
-      "contents": [
-        "國內快捷"
-      ],
-      "note": ""
+      "regions": ["台北"],
+      "contents": ["國內快捷"],
+      "note": "",
+      "vehicleType": "外包車",
+      "company": "",
+      "driver": "陳國乾",
+      "phone": "0938-093-092",
+      "operation": "對開車",
+      "direction": "北上",
+      "stops": ["台南", "台中"],
+      "vehicles": ["KLA-1319"]
     }
   ]
 }

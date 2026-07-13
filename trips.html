@@ -303,6 +303,184 @@
         font-size: 0.8rem;
         color: var(--muted);
       }
+
+      .meta-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 12px 0 2px;
+      }
+      .meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        min-height: 28px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: #eef3f6;
+        color: var(--navy);
+        font-size: 0.76rem;
+        font-weight: 700;
+      }
+      .meta-badge.operation {
+        background: #fff3d9;
+        color: #7a5310;
+      }
+      .meta-badge.direction {
+        background: #e8eef9;
+        color: #294f86;
+      }
+      .meta-badge.vehicle {
+        background: #eaf7f3;
+        color: #17604d;
+      }
+      .vehicle-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .vehicle-chip {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: #eaf7f3;
+        color: #17604d;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+      .route-summary {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 12px 0 2px;
+        padding: 10px 12px;
+        border: 1px solid #dce7ee;
+        border-radius: 12px;
+        background: #f7fafc;
+        color: #334b5d;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+      .route-summary .arrow {
+        color: var(--blue);
+      }
+      .route-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 7px;
+      }
+      .route-stop {
+        display: inline-flex;
+        align-items: center;
+        min-height: 30px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: var(--sky);
+        color: #245575;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .route-arrow {
+        color: #8aa0af;
+        font-weight: 800;
+      }
+      .card-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--line);
+      }
+      .detail-btn {
+        border: 1px solid #b8d6e9;
+        border-radius: 10px;
+        background: var(--sky);
+        color: var(--navy);
+        min-height: 36px;
+        padding: 0 12px;
+        font-weight: 700;
+      }
+      .detail-btn:hover {
+        background: #dceef9;
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: none;
+        place-items: center;
+        padding: 18px;
+        background: rgba(10, 28, 43, 0.54);
+      }
+      .modal.open {
+        display: grid;
+      }
+      .modal-card {
+        width: min(620px, 100%);
+        max-height: min(82vh, 760px);
+        overflow: auto;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 24px 70px rgba(10, 28, 43, 0.28);
+      }
+      .modal-head {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 20px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--navy), var(--navy2));
+      }
+      .modal-title {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+      .modal-close {
+        width: 38px;
+        height: 38px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.16);
+        color: #fff;
+        font-size: 1.25rem;
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 20px;
+      }
+      .detail-item {
+        padding: 13px 14px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        background: #f9fbfc;
+      }
+      .detail-item.wide {
+        grid-column: 1 / -1;
+      }
+      .detail-label {
+        margin-bottom: 5px;
+        color: var(--muted);
+        font-size: 0.74rem;
+      }
+      .detail-value {
+        font-weight: 700;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+      .phone-link {
+        color: var(--blue);
+        text-decoration: none;
+      }
       .table-wrap {
         display: none;
         overflow: auto;
@@ -423,6 +601,12 @@
         .destination {
           min-height: 0;
         }
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+        .detail-item.wide {
+          grid-column: auto;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         * {
@@ -458,7 +642,7 @@
             ><input
               id="q"
               type="search"
-              placeholder="搜尋車次、代碼、接收局、地區或內容物…"
+              placeholder="搜尋車次、方向、站點、接收局、使用車輛、物種、公司、駕駛、手機或運行…"
               autocomplete="off"
             />
           </div>
@@ -509,11 +693,16 @@
               <th>車次</th>
               <th>實際發車</th>
               <th>表定時間</th>
+              <th>方向</th>
+              <th>起訖站點</th>
               <th>接收局</th>
               <th>地區</th>
               <th>內容物</th>
+              <th>使用車輛</th>
+              <th>物種</th>
+              <th>運行</th>
               <th>車次代碼</th>
-              <th>備註</th>
+              <th>詳情</th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -524,27 +713,63 @@
         <strong>沒有符合條件的車次</strong>
         <div>換個關鍵字，或清除部分篩選條件。</div>
       </section>
+
+      <section
+        class="modal"
+        id="detailModal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+      >
+        <div class="modal-card">
+          <div class="modal-head">
+            <h2 class="modal-title" id="modalTitle">車次詳細資訊</h2>
+            <button
+              class="modal-close"
+              id="modalClose"
+              type="button"
+              aria-label="關閉"
+            >
+              ×
+            </button>
+          </div>
+          <div class="detail-grid" id="modalBody"></div>
+        </div>
+      </section>
       <div class="footer-note">
         資料由
-        <code>trips.json</code> 驅動；新增車次或欄位後，重新整理即可更新。
+        <code>trips_with_vehicles.json</code>
+        驅動；新增車次或欄位後，重新整理即可更新。
       </div>
     </main>
     <script id="fallback-data" type="application/json">
       {
-        "schemaVersion": "1.0.0",
+        "schemaVersion": "1.2.0",
         "title": "車次查詢系統",
-        "subtitle": "依車次、時間、接收局、地區與內容物快速查詢",
+        "subtitle": "依車次、時間、方向、站點、接收局、地區與內容物快速查詢",
         "source": "車次查詢表.xlsx／車次順序表",
         "lastUpdated": "2026-07-13",
         "settings": {
-          "defaultSort": { "field": "actualDeparture", "direction": "asc" },
+          "defaultSort": {
+            "field": "actualDeparture",
+            "direction": "asc"
+          },
           "searchFields": [
             "tripNo",
             "tripCode",
             "destination",
             "regions",
             "contents",
-            "note"
+            "note",
+            "vehicleType",
+            "company",
+            "driver",
+            "phone",
+            "operation",
+            "direction",
+            "stops",
+            "vehicles"
           ],
           "display": {
             "showScheduledDeparture": true,
@@ -555,6 +780,7 @@
         "fieldGroups": {
           "regions": [
             "台北",
+            "馬祖",
             "北桃園",
             "南桃園",
             "宜花東",
@@ -581,27 +807,25 @@
           {
             "tripNo": "24",
             "actualDeparture": "19:00",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "20:00",
             "destination": "台北中心運輸科轉運股",
             "tripCode": "50918720024",
-            "regions": ["台北"],
+            "regions": ["台北", "馬祖", "宜花東"],
             "contents": ["國內包裹", "國內快捷"],
-            "note": ""
-          },
-          {
-            "tripNo": "32",
-            "actualDeparture": "21:15",
-            "scheduledDeparture": "",
-            "destination": "桃園郵局桃園快捷股",
-            "tripCode": "50918720032",
-            "regions": ["北桃園"],
-            "contents": ["國內包裹", "限掛", "限平"],
-            "note": ""
+            "note": "高雄調度:0919-135-237",
+            "vehicleType": "外包車",
+            "company": "沅陽交通股份有限公司",
+            "driver": "詹佑任",
+            "phone": "0922-122-433",
+            "operation": "對開車",
+            "direction": "北上",
+            "stops": ["台南", "台中"],
+            "vehicles": ["KLK-2122", "KEG-1727"]
           },
           {
             "tripNo": "30",
             "actualDeparture": "23:00",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "23:50",
             "destination": "新竹郵局郵務科快捷股",
             "tripCode": "50918720030",
             "regions": ["新竹"],
@@ -613,32 +837,74 @@
               "限平",
               "混裝籃車"
             ],
-            "note": ""
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "新竹"],
+            "vehicles": []
+          },
+          {
+            "tripNo": "32",
+            "actualDeparture": "21:15",
+            "scheduledDeparture": "23:15",
+            "destination": "桃園郵局桃園快捷股",
+            "tripCode": "50918720032",
+            "regions": ["北桃園"],
+            "contents": ["國內包裹", "限掛", "限平"],
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "桃園"],
+            "vehicles": []
           },
           {
             "tripNo": "40",
             "actualDeparture": "23:00",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "23:20",
             "destination": "台北中心運輸科轉運股",
             "tripCode": "50918720040",
             "regions": ["台北", "宜花東"],
             "contents": ["國內快捷", "普掛", "限掛", "混裝籃車"],
-            "note": ""
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "台北"],
+            "vehicles": []
           },
           {
             "tripNo": "26",
             "actualDeparture": "23:00",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "23:50",
             "destination": "台北中心運輸科轉運股",
             "tripCode": "50918720026",
             "regions": ["台北"],
             "contents": ["國內快捷", "普掛", "限掛", "限平", "混裝籃車"],
-            "note": ""
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "台北"],
+            "vehicles": []
           },
           {
             "tripNo": "28",
             "actualDeparture": "23:00",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "22:30",
             "destination": "台北中心運輸科轉運股",
             "tripCode": "50918720028",
             "regions": ["台北", "宜花東"],
@@ -654,37 +920,87 @@
               "國際水陸包裹",
               "兩岸郵政速遞"
             ],
-            "note": ""
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "台北"],
+            "vehicles": []
           },
           {
             "tripNo": "20",
             "actualDeparture": "21:35",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "22:20",
             "destination": "台中郵件中心運輸股",
             "tripCode": "50918720020",
             "regions": ["台中", "南投"],
             "contents": ["國內包裹", "國內快捷"],
-            "note": ""
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中"],
+            "vehicles": []
           },
           {
             "tripNo": "22",
             "actualDeparture": "22:31",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "23:50",
             "destination": "台北中心運輸科轉運股",
             "tripCode": "50918720022",
             "regions": ["台北"],
             "contents": ["國內快捷"],
-            "note": ""
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "台北"],
+            "vehicles": []
+          },
+          {
+            "tripNo": "54",
+            "actualDeparture": "",
+            "scheduledDeparture": "23:50",
+            "destination": "台北中心運輸科轉運股",
+            "tripCode": "50918720022",
+            "regions": ["台北"],
+            "contents": ["國內快捷"],
+            "note": "",
+            "vehicleType": "",
+            "company": "",
+            "driver": "",
+            "phone": "",
+            "operation": "",
+            "direction": "北上",
+            "stops": ["台南", "嘉義", "台中", "台北"],
+            "vehicles": []
           },
           {
             "tripNo": "114",
             "actualDeparture": "20:15",
-            "scheduledDeparture": "",
+            "scheduledDeparture": "20:30",
             "destination": "台北中心運輸科轉運股",
             "tripCode": "50918720114",
             "regions": ["台北"],
             "contents": ["國內快捷"],
-            "note": ""
+            "note": "",
+            "vehicleType": "外包車",
+            "company": "",
+            "driver": "陳國乾",
+            "phone": "0938-093-092",
+            "operation": "對開車",
+            "direction": "北上",
+            "stops": ["台南", "台中"],
+            "vehicles": []
           }
         ]
       }
@@ -709,7 +1025,9 @@
         );
       async function loadData() {
         try {
-          const r = await fetch("trips.json", { cache: "no-store" });
+          const r = await fetch("trips_with_vehicles.json", {
+            cache: "no-store",
+          });
           if (!r.ok) throw Error();
           DATA = await r.json();
         } catch {
@@ -729,6 +1047,15 @@
         $("#reset").onclick = reset;
         $("#filterToggle").onclick = () =>
           $("#advanced").classList.toggle("open");
+        $("#grid").addEventListener("click", handleDetailClick);
+        $("#tbody").addEventListener("click", handleDetailClick);
+        $("#modalClose").onclick = closeModal;
+        $("#detailModal").onclick = (e) => {
+          if (e.target.id === "detailModal") closeModal();
+        };
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") closeModal();
+        });
         $$(".icon-btn").forEach(
           (b) =>
             (b.onclick = () => {
@@ -783,7 +1110,15 @@
             x.tripNo,
             x.tripCode,
             x.destination,
+            x.vehicleType,
+            x.company,
+            x.driver,
+            x.phone,
+            x.operation,
+            x.direction,
             x.note,
+            ...(x.stops || []),
+            ...(x.vehicles || []),
             ...(x.regions || []),
             ...(x.contents || []),
           ]
@@ -821,17 +1156,103 @@
               .join("")
           : '<span class="empty-tag">—</span>';
       }
-      function card(x) {
-        return `<article class="card"><div class="card-top"><div class="trip-no"><div class="number">${esc(x.tripNo)}</div><div><div class="time">${esc(x.actualDeparture || "—")}</div><div class="time-label">實際發車${x.scheduledDeparture ? ` · 表定 ${esc(x.scheduledDeparture)}` : ""}</div></div></div><div class="code">代碼<br>${esc(x.tripCode || "—")}</div></div><div class="destination">${esc(x.destination || "未填接收局")}</div><div class="section-label">地區</div><div class="tag-row">${tags(x.regions)}</div><div class="section-label">內容物</div><div class="tag-row">${tags(x.contents, "content")}</div>${x.note ? `<div class="note">備註：${esc(x.note)}</div>` : ""}</article>`;
+      function compactBadge(value, cls = "") {
+        return value
+          ? `<span class="meta-badge ${cls}">${esc(value)}</span>`
+          : "";
       }
-      function row(x) {
-        return `<tr><td><strong>${esc(x.tripNo)}</strong></td><td>${esc(x.actualDeparture || "—")}</td><td>${esc(x.scheduledDeparture || "—")}</td><td>${esc(x.destination || "—")}</td><td><div class="table-tags">${tags(x.regions)}</div></td><td><div class="table-tags">${tags(x.contents, "content")}</div></td><td>${esc(x.tripCode || "—")}</td><td>${esc(x.note || "—")}</td></tr>`;
+      function routeEnds(x) {
+        const stops = Array.isArray(x.stops) ? x.stops.filter(Boolean) : [];
+        return {
+          start: stops[0] || "—",
+          end: stops[stops.length - 1] || "—",
+        };
+      }
+      function routeDetail(stops) {
+        const list = Array.isArray(stops) ? stops.filter(Boolean) : [];
+        if (!list.length) return "—";
+        return `<div class="route-line">${list
+          .map(
+            (stop, index) =>
+              `${index ? '<span class="route-arrow">→</span>' : ""}<span class="route-stop">${esc(stop)}</span>`,
+          )
+          .join("")}</div>`;
+      }
+      function vehicleSummary(vehicles) {
+        const list = Array.isArray(vehicles) ? vehicles.filter(Boolean) : [];
+        if (!list.length) return "";
+        const extra = list.length > 1 ? ` +${list.length - 1}` : "";
+        return `${list[0]}${extra}`;
+      }
+      function vehicleDetail(vehicles) {
+        const list = Array.isArray(vehicles) ? vehicles.filter(Boolean) : [];
+        if (!list.length) return "—";
+        return `<div class="vehicle-list">${list
+          .map((vehicle) => `<span class="vehicle-chip">${esc(vehicle)}</span>`)
+          .join("")}</div>`;
+      }
+      function card(x, index) {
+        const ends = routeEnds(x);
+        const badges = [
+          compactBadge(x.direction, "direction"),
+          compactBadge(vehicleSummary(x.vehicles), "vehicle"),
+          compactBadge(x.vehicleType),
+          compactBadge(x.operation, "operation"),
+        ].join("");
+        const route =
+          ends.start !== "—" || ends.end !== "—"
+            ? `<div class="route-summary"><span>${esc(ends.start)}</span><span class="arrow">→</span><span>${esc(ends.end)}</span></div>`
+            : "";
+        return `<article class="card"><div class="card-top"><div class="trip-no"><div class="number">${esc(x.tripNo)}</div><div><div class="time">${esc(x.actualDeparture || "—")}</div><div class="time-label">實際發車${x.scheduledDeparture ? ` · 表定 ${esc(x.scheduledDeparture)}` : ""}</div></div></div><div class="code">代碼<br>${esc(x.tripCode || "—")}</div></div><div class="destination">${esc(x.destination || "未填接收局")}</div>${badges ? `<div class="meta-strip">${badges}</div>` : ""}${route}<div class="section-label">地區</div><div class="tag-row">${tags(x.regions)}</div><div class="section-label">內容物</div><div class="tag-row">${tags(x.contents, "content")}</div><div class="card-actions"><button class="detail-btn" type="button" data-detail-index="${index}">查看車次詳情</button></div></article>`;
+      }
+      function row(x, index) {
+        const ends = routeEnds(x);
+        return `<tr><td><strong>${esc(x.tripNo)}</strong></td><td>${esc(x.actualDeparture || "—")}</td><td>${esc(x.scheduledDeparture || "—")}</td><td>${esc(x.direction || "—")}</td><td>${esc(ends.start)} → ${esc(ends.end)}</td><td>${esc(x.destination || "—")}</td><td><div class="table-tags">${tags(x.regions)}</div></td><td><div class="table-tags">${tags(x.contents, "content")}</div></td><td>${esc((x.vehicles || []).join("、") || "—")}</td><td>${esc(x.vehicleType || "—")}</td><td>${esc(x.operation || "—")}</td><td>${esc(x.tripCode || "—")}</td><td><button class="detail-btn" type="button" data-detail-index="${index}">查看</button></td></tr>`;
+      }
+      function detailItem(label, value, wide = false, htmlValue = false) {
+        const shown = value || "—";
+        return `<div class="detail-item${wide ? " wide" : ""}"><div class="detail-label">${esc(label)}</div><div class="detail-value">${htmlValue ? shown : esc(shown)}</div></div>`;
+      }
+      function handleDetailClick(e) {
+        const btn = e.target.closest("[data-detail-index]");
+        if (!btn) return;
+        const rows = filtered();
+        const trip = rows[Number(btn.dataset.detailIndex)];
+        if (trip) openModal(trip);
+      }
+      function openModal(x) {
+        $("#modalTitle").textContent = `${x.tripNo || "—"} 車次詳細資訊`;
+        const phone = x.phone
+          ? `<a class="phone-link" href="tel:${esc(x.phone)}">${esc(x.phone)}</a>`
+          : "—";
+        $("#modalBody").innerHTML = [
+          detailItem("方向", x.direction),
+          detailItem("使用車輛", vehicleDetail(x.vehicles), true, true),
+          detailItem("物種", x.vehicleType),
+          detailItem("運行", x.operation),
+          detailItem("公司", x.company),
+          detailItem("駕駛", x.driver),
+          detailItem("手機", phone, false, true),
+          detailItem("車次代碼", x.tripCode),
+          detailItem("完整站點路線", routeDetail(x.stops), true, true),
+          detailItem("接收局", x.destination, true),
+          detailItem("備註", x.note, true),
+        ].join("");
+        $("#detailModal").classList.add("open");
+        $("#detailModal").setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        $("#modalClose").focus();
+      }
+      function closeModal() {
+        $("#detailModal").classList.remove("open");
+        $("#detailModal").setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
       }
       function render() {
         const rows = filtered();
         $("#count").textContent = rows.length;
-        $("#grid").innerHTML = rows.map(card).join("");
-        $("#tbody").innerHTML = rows.map(row).join("");
+        $("#grid").innerHTML = rows.map((x, i) => card(x, i)).join("");
+        $("#tbody").innerHTML = rows.map((x, i) => row(x, i)).join("");
         $("#empty").style.display = rows.length ? "none" : "block";
       }
       function reset() {
