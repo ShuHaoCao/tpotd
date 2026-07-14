@@ -739,272 +739,10 @@
       </section>
       <div class="footer-note">
         資料由
-        <code>trips_with_vehicles.json</code>
+        <code>trips.json</code>
         驅動；新增車次或欄位後，重新整理即可更新。
       </div>
     </main>
-    <script id="fallback-data" type="application/json">
-      {
-        "schemaVersion": "1.2.0",
-        "title": "車次查詢系統",
-        "subtitle": "依車次、時間、方向、站點、接收局、地區與內容物快速查詢",
-        "source": "車次查詢表.xlsx／車次順序表",
-        "lastUpdated": "2026-07-13",
-        "settings": {
-          "defaultSort": {
-            "field": "actualDeparture",
-            "direction": "asc"
-          },
-          "searchFields": [
-            "tripNo",
-            "tripCode",
-            "destination",
-            "regions",
-            "contents",
-            "note",
-            "vehicleType",
-            "company",
-            "driver",
-            "phone",
-            "operation",
-            "direction",
-            "stops",
-            "vehicles"
-          ],
-          "display": {
-            "showScheduledDeparture": true,
-            "showTripCode": true,
-            "pageSize": 12
-          }
-        },
-        "fieldGroups": {
-          "regions": [
-            "台北",
-            "馬祖",
-            "北桃園",
-            "南桃園",
-            "宜花東",
-            "新竹",
-            "台中",
-            "南投"
-          ],
-          "contents": [
-            "國內包裹",
-            "國內快捷",
-            "普掛",
-            "限掛",
-            "限平",
-            "混裝籃車",
-            "國際平件",
-            "國際快捷",
-            "國際航空包裹",
-            "國際航空掛號",
-            "國際水陸包裹",
-            "兩岸郵政速遞"
-          ]
-        },
-        "trips": [
-          {
-            "tripNo": "24",
-            "actualDeparture": "19:00",
-            "scheduledDeparture": "20:00",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720024",
-            "regions": ["台北", "馬祖", "宜花東"],
-            "contents": ["國內包裹", "國內快捷"],
-            "note": "高雄調度:0919-135-237",
-            "vehicleType": "外包車",
-            "company": "沅陽交通股份有限公司",
-            "driver": "詹佑任",
-            "phone": "0922-122-433",
-            "operation": "對開車",
-            "direction": "北上",
-            "stops": ["台南", "台中"],
-            "vehicles": ["KLK-2122", "KEG-1727"]
-          },
-          {
-            "tripNo": "30",
-            "actualDeparture": "23:00",
-            "scheduledDeparture": "23:50",
-            "destination": "新竹郵局郵務科快捷股",
-            "tripCode": "50918720030",
-            "regions": ["新竹"],
-            "contents": [
-              "國內包裹",
-              "國內快捷",
-              "普掛",
-              "限掛",
-              "限平",
-              "混裝籃車"
-            ],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "新竹"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "32",
-            "actualDeparture": "21:15",
-            "scheduledDeparture": "23:15",
-            "destination": "桃園郵局桃園快捷股",
-            "tripCode": "50918720032",
-            "regions": ["北桃園"],
-            "contents": ["國內包裹", "限掛", "限平"],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "桃園"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "40",
-            "actualDeparture": "23:00",
-            "scheduledDeparture": "23:20",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720040",
-            "regions": ["台北", "宜花東"],
-            "contents": ["國內快捷", "普掛", "限掛", "混裝籃車"],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "台北"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "26",
-            "actualDeparture": "23:00",
-            "scheduledDeparture": "23:50",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720026",
-            "regions": ["台北"],
-            "contents": ["國內快捷", "普掛", "限掛", "限平", "混裝籃車"],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "台北"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "28",
-            "actualDeparture": "23:00",
-            "scheduledDeparture": "22:30",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720028",
-            "regions": ["台北", "宜花東"],
-            "contents": [
-              "國內快捷",
-              "限掛",
-              "限平",
-              "混裝籃車",
-              "國際平件",
-              "國際快捷",
-              "國際航空包裹",
-              "國際航空掛號",
-              "國際水陸包裹",
-              "兩岸郵政速遞"
-            ],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "台北"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "20",
-            "actualDeparture": "21:35",
-            "scheduledDeparture": "22:20",
-            "destination": "台中郵件中心運輸股",
-            "tripCode": "50918720020",
-            "regions": ["台中", "南投"],
-            "contents": ["國內包裹", "國內快捷"],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "22",
-            "actualDeparture": "22:31",
-            "scheduledDeparture": "23:50",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720022",
-            "regions": ["台北"],
-            "contents": ["國內快捷"],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "台北"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "54",
-            "actualDeparture": "",
-            "scheduledDeparture": "23:50",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720022",
-            "regions": ["台北"],
-            "contents": ["國內快捷"],
-            "note": "",
-            "vehicleType": "",
-            "company": "",
-            "driver": "",
-            "phone": "",
-            "operation": "",
-            "direction": "北上",
-            "stops": ["台南", "嘉義", "台中", "台北"],
-            "vehicles": []
-          },
-          {
-            "tripNo": "114",
-            "actualDeparture": "20:15",
-            "scheduledDeparture": "20:30",
-            "destination": "台北中心運輸科轉運股",
-            "tripCode": "50918720114",
-            "regions": ["台北"],
-            "contents": ["國內快捷"],
-            "note": "",
-            "vehicleType": "外包車",
-            "company": "",
-            "driver": "陳國乾",
-            "phone": "0938-093-092",
-            "operation": "對開車",
-            "direction": "北上",
-            "stops": ["台南", "台中"],
-            "vehicles": []
-          }
-        ]
-      }
-    </script>
     <script>
       const $ = (s) => document.querySelector(s),
         $$ = (s) => [...document.querySelectorAll(s)];
@@ -1023,17 +761,64 @@
               "'": "&#39;",
             })[c],
         );
-      async function loadData() {
-        try {
-          const r = await fetch("trips_with_vehicles.json", {
-            cache: "no-store",
-          });
-          if (!r.ok) throw Error();
-          DATA = await r.json();
-        } catch {
-          DATA = JSON.parse($("#fallback-data").textContent);
+      const DATA_FILE = "trips.json";
+      let appInitialized = false;
+      let lastDataSignature = "";
+
+      async function fetchLatestData() {
+        const separator = DATA_FILE.includes("?") ? "&" : "?";
+        const url = `${DATA_FILE}${separator}_=${Date.now()}`;
+        const response = await fetch(url, {
+          method: "GET",
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache, no-store, max-age=0",
+            Pragma: "no-cache",
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`JSON 讀取失敗（HTTP ${response.status}）`);
         }
-        init();
+        return response.json();
+      }
+
+      async function loadData({ silent = false } = {}) {
+        try {
+          const latestData = await fetchLatestData();
+          const signature = JSON.stringify(latestData);
+          DATA = latestData;
+
+          if (!appInitialized) {
+            init();
+            appInitialized = true;
+          } else if (signature !== lastDataSignature) {
+            rebuildFromLatestData();
+          }
+          lastDataSignature = signature;
+        } catch (error) {
+          console.error(error);
+          if (!silent) {
+            $("#updated").textContent = "資料讀取失敗";
+            $("#subtitle").textContent =
+              "無法讀取 trips.json，請確認 HTML 與 JSON 位於同一資料夾，並透過網站伺服器開啟。";
+            $("#empty").style.display = "block";
+            $("#empty").querySelector("strong").textContent =
+              "無法載入車次資料";
+            $("#empty").querySelector("div:last-child").textContent =
+              "請檢查 trips.json 是否存在或格式是否正確。";
+          }
+        }
+      }
+
+      function rebuildFromLatestData() {
+        $("#title").textContent = DATA.title || "車次查詢系統";
+        $("#subtitle").textContent = DATA.subtitle || "";
+        $("#updated").textContent = `資料更新：${DATA.lastUpdated || "—"}`;
+        selectedRegions.clear();
+        selectedContents.clear();
+        buildChips("regionChips", DATA.fieldGroups?.regions || [], "region");
+        buildChips("contentChips", DATA.fieldGroups?.contents || [], "content");
+        render();
       }
       function init() {
         $("#title").textContent = DATA.title || "車次查詢系統";
@@ -1265,6 +1050,15 @@
         render();
       }
       loadData();
+
+      // 回到此分頁時重新檢查 JSON；每 5 分鐘亦自動比對一次。
+      window.addEventListener("focus", () => loadData({ silent: true }));
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          loadData({ silent: true });
+        }
+      });
+      setInterval(() => loadData({ silent: true }), 5 * 60 * 1000);
     </script>
   </body>
 </html>
