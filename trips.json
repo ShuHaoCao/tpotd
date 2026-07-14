@@ -40,7 +40,9 @@
       "宜花東",
       "新竹",
       "台中",
-      "南投"
+      "彰化",
+      "南投",
+      "雲林"
     ],
     "contents": [
       "國內包裹",
@@ -105,12 +107,12 @@
       "note": "高雄調度:0919-135-237",
       "vehicleType": "外包車",
       "company": "沅陽交通股份有限公司",
-      "driver": "詹佑任",
+      "driver": "詹祐任",
       "phone": "0922-122-433",
       "operation": "對開車",
       "direction": "北上",
       "stops": ["台南", "台中"],
-      "vehicles": []
+      "vehicles": ["KLP-5301"]
     },
     {
       "tripNo": "26",
@@ -188,12 +190,12 @@
       "note": "",
       "vehicleType": "",
       "company": "",
-      "driver": "",
-      "phone": "",
+      "driver": "鄭主榮",
+      "phone": "0910-767-014",
       "operation": "",
       "direction": "北上",
       "stops": ["台南", "嘉義", "台中", "桃園"],
-      "vehicles": []
+      "vehicles": ["KLJ-8120"]
     },
     {
       "tripNo": "40",
@@ -226,9 +228,9 @@
       "company": "",
       "driver": "",
       "phone": "",
-      "operation": "",
+      "operation": "對開車",
       "direction": "北上",
-      "stops": ["台南", "嘉義", "台中", "台北"],
+      "stops": ["高雄", "台南", "台中", "台北"],
       "vehicles": []
     },
     {
@@ -237,11 +239,11 @@
       "scheduledDeparture": "20:30",
       "destination": "台北中心運輸科轉運股",
       "tripCode": "50918720114",
-      "regions": ["台北"],
-      "contents": ["國內快捷"],
-      "note": "",
+      "regions": ["台北", "宜花東"],
+      "contents": ["國內快捷", "國內包裹"],
+      "note": "公司電話:02-29000286",
       "vehicleType": "外包車",
-      "company": "",
+      "company": "立勤儲運有限公司",
       "driver": "陳國乾",
       "phone": "0938-093-092",
       "operation": "對開車",
