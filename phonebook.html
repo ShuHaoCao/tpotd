@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>人員與單位電話查詢</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --card: #ffffff;
+      --primary: #2457a6;
+      --primary-dark: #173d78;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #dbe3ef;
+      --highlight: #fff1a8;
+      --danger: #b42318;
+      --tag-bg: #edf4ff;
+      --tag-text: #2457a6;
+      --shadow: 0 12px 32px rgba(34, 70, 120, 0.10);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(36, 87, 166, 0.10), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button, input { font: inherit; }
+
+    .container {
+      width: min(1280px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary), #4d7fc7);
+      color: #fff;
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      letter-spacing: .04em;
+    }
+
+    .hero p {
+      margin: 0;
+      opacity: .92;
+      line-height: 1.8;
+    }
+
+    .search-panel {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(219, 227, 239, .9);
+      position: sticky;
+      top: 10px;
+      z-index: 5;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.15rem;
+      pointer-events: none;
+    }
+
+    #keyword {
+      width: 100%;
+      min-height: 52px;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 0 46px 0 48px;
+      font-size: 1rem;
+      outline: none;
+      transition: .2s ease;
+      background: #fbfdff;
+    }
+
+    #keyword:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(36, 87, 166, .10);
+      background: #fff;
+    }
+
+    .clear-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 1.25rem;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: none;
+    }
+
+    .clear-btn:hover { background: #eef3fa; }
+
+    .tag-filter-section {
+      margin-top: 16px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+    }
+
+    .tag-filter-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .tag-filter-title {
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .reset-tags {
+      border: 0;
+      background: transparent;
+      color: var(--primary);
+      cursor: pointer;
+      font-weight: 700;
+      padding: 5px 8px;
+      border-radius: 8px;
+    }
+
+    .reset-tags:hover { background: var(--tag-bg); }
+
+    .tag-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-filter-btn {
+      border: 1px solid #bfd1ec;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 7px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: .18s ease;
+    }
+
+    .tag-filter-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+    }
+
+    .tag-filter-btn.active {
+      color: #fff;
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(36, 87, 166, .25);
+    }
+
+    .tag-filter-btn .count {
+      opacity: .75;
+      font-size: .84em;
+      margin-left: 3px;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: .92rem;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      margin: 18px 2px 10px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .loading, .error, .empty {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .error { color: var(--danger); }
+
+    .results-table-wrap {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    thead {
+      background: #eaf1fb;
+      color: var(--primary-dark);
+    }
+
+    th, td {
+      padding: 15px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      word-break: break-word;
+    }
+
+    th:nth-child(1) { width: 10%; }
+    th:nth-child(2) { width: 14%; }
+    th:nth-child(3) { width: 11%; }
+    th:nth-child(4) { width: 13%; }
+    th:nth-child(5) { width: 13%; }
+    th:nth-child(6) { width: 18%; }
+    th:nth-child(7) { width: 21%; }
+
+    tbody tr:hover { background: #f8fbff; }
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .name {
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .phone-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .phone-link:hover { text-decoration: underline; }
+
+    mark {
+      background: var(--highlight);
+      color: inherit;
+      padding: 0 .08em;
+      border-radius: 3px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #cbdaf0;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: .86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tag:hover {
+      border-color: var(--primary);
+      background: #dfeaff;
+    }
+
+    .card-list { display: none; }
+
+    .person-card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(34, 70, 120, .08);
+      margin-bottom: 12px;
+    }
+
+    .person-card .card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 10px;
+      padding: 8px 0;
+      border-top: 1px dashed var(--line);
+    }
+
+    .field:first-of-type { border-top: 0; }
+
+    .label {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: .85rem;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        width: min(100% - 20px, 1280px);
+        padding-top: 16px;
+      }
+
+      .hero { padding: 22px; }
+      .search-panel { position: static; }
+      .results-table-wrap { display: none; }
+      .card-list { display: block; }
+      .meta { font-size: .85rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.55rem; }
+      .hero p { font-size: .92rem; }
+      .search-panel { padding: 14px; }
+      #keyword { font-size: 16px; }
+      .field { grid-template-columns: 78px 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <h1>人員與單位電話查詢</h1>
+      <p>輸入任意關鍵字，或點選自訂標籤，即可快速找到人員、單位與聯絡方式。</p>
+    </section>
+
+    <section class="search-panel" aria-label="電話查詢">
+      <div class="search-wrap">
+        <span class="search-icon">🔎</span>
+        <input
+          id="keyword"
+          type="search"
+          placeholder="搜尋姓名、單位、電話、手機、標籤或備註..."
+          autocomplete="off"
+          aria-label="輸入查詢關鍵字"
+        />
+        <button id="clearBtn" class="clear-btn" type="button" title="清除查詢">×</button>
+      </div>
+
+      <div class="tag-filter-section">
+        <div class="tag-filter-head">
+          <div class="tag-filter-title">標籤分類</div>
+          <button id="resetTags" class="reset-tags" type="button">顯示全部</button>
+        </div>
+        <div id="tagFilters" class="tag-filters"></div>
+      </div>
+
+      <div class="meta">
+        <span>可同時輸入多個關鍵字；點選多個標籤時，會顯示符合任一標籤的資料。</span>
+        <span id="updatedAt">資料載入中...</span>
+      </div>
+    </section>
+
+    <div id="status" class="status"></div>
+    <div id="message" class="loading">正在載入電話資料...</div>
+
+    <section id="tableWrap" class="results-table-wrap" hidden>
+      <table>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>單位</th>
+            <th>網路電話</th>
+            <th>市話</th>
+            <th>手機</th>
+            <th>標籤</th>
+            <th>備註</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </section>
+
+    <section id="cardList" class="card-list"></section>
+
+    <footer>資料來源：phonebook.json</footer>
+  </main>
+
+  <script>
+    const DATA_URL = './phonebook.json';
+    const FIELDS = ['name', 'unit', 'networkPhone', 'landline', 'mobile', 'tags', 'note'];
+
+    let phonebook = [];
+    let selectedTags = new Set();
+
+    const keywordInput = document.getElementById('keyword');
+    const clearBtn = document.getElementById('clearBtn');
+    const resetTagsBtn = document.getElementById('resetTags');
+    const tagFilters = document.getElementById('tagFilters');
+    const resultBody = document.getElementById('resultBody');
+    const tableWrap = document.getElementById('tableWrap');
+    const cardList = document.getElementById('cardList');
+    const message = document.getElementById('message');
+    const status = document.getElementById('status');
+    const updatedAt = document.getElementById('updatedAt');
+
+    async function loadData() {
+      try {
+        const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const json = await response.json();
+        phonebook = Array.isArray(json) ? json : (json.records || []);
+
+        if (!Array.isArray(phonebook)) {
+          throw new Error('JSON 格式不正確');
+        }
+
+        phonebook = phonebook.map(record => ({
+          ...record,
+          tags: Array.isArray(record.tags)
+            ? record.tags
+            : String(record.tags || '').split(/[,，、]/).map(tag => tag.trim()).filter(Boolean)
+        }));
+
+        updatedAt.textContent =
+          `${json.updatedAt ? `更新：${json.updatedAt}｜` : ''}共 ${phonebook.length} 筆資料`;
+
+        buildTagFilters();
+        applyFilters();
+      } catch (error) {
+        console.error(error);
+        message.className = 'error';
+        message.innerHTML = `
+          無法載入 <strong>phonebook.json</strong>。<br>
+          請確認 HTML 與 JSON 放在同一資料夾，並透過網頁伺服器開啟。
+        `;
+        status.textContent = '';
+      }
+    }
+
+    function normalize(value) {
+      if (Array.isArray(value)) value = value.join(' ');
+      return String(value ?? '').trim().toLocaleLowerCase('zh-Hant');
+    }
+
+    function getAllTags() {
+      const counts = new Map();
+
+      phonebook.forEach(record => {
+        record.tags.forEach(tag => {
+          counts.set(tag, (counts.get(tag) || 0) + 1);
+        });
+      });
+
+      return [...counts.entries()].sort((a, b) =>
+        a[0].localeCompare(b[0], 'zh-Hant')
+      );
+    }
+
+    function buildTagFilters() {
+      const allTags = getAllTags();
+
+      tagFilters.innerHTML = allTags.length
+        ? allTags.map(([tag, count]) => `
+            <button
+              class="tag-filter-btn"
+              type="button"
+              data-tag="${escapeHtml(tag)}"
+              aria-pressed="false"
+            >
+              ${escapeHtml(tag)}<span class="count">${count}</span>
+            </button>
+          `).join('')
+        : '<span style="color:var(--muted)">目前尚未設定標籤</span>';
+
+      tagFilters.querySelectorAll('.tag-filter-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const tag = button.dataset.tag;
+
+          if (selectedTags.has(tag)) {
+            selectedTags.delete(tag);
+          } else {
+            selectedTags.add(tag);
+          }
+
+          updateTagButtonStates();
+          applyFilters();
+        });
+      });
+    }
+
+    function updateTagButtonStates() {
+      tagFilters.querySelectorAll('.tag-filter-btn').forEach(button => {
+        const active = selectedTags.has(button.dataset.tag);
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    }
+
+    function searchRecords(keyword) {
+      const terms = normalize(keyword).split(/\s+/).filter(Boolean);
+
+      return phonebook.filter(record => {
+        const searchableText = FIELDS
+          .map(field => normalize(record[field]))
+          .join(' ');
+
+        const matchesKeyword =
+          !terms.length || terms.every(term => searchableText.includes(term));
+
+        const matchesTag =
+          selectedTags.size === 0 ||
+          record.tags.some(tag => selectedTags.has(tag));
+
+        return matchesKeyword && matchesTag;
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function highlight(value, keyword) {
+      const safe = escapeHtml(value || '—');
+      const terms = String(keyword ?? '').trim().split(/\s+/).filter(Boolean);
+
+      if (!terms.length || safe === '—') return safe;
+
+      return terms.reduce((text, term) => {
+        const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return text.replace(new RegExp(`(${escapedTerm})`, 'gi'), '<mark>$1</mark>');
+      }, safe);
+    }
+
+    function phoneCell(value, keyword) {
+      const raw = String(value ?? '').trim();
+      if (!raw) return '—';
+      const dial = raw.replace(/[^\d+]/g, '');
+      return `<a class="phone-link" href="tel:${escapeHtml(dial)}">${highlight(raw, keyword)}</a>`;
+    }
+
+    function tagsCell(tags, keyword) {
+      if (!tags?.length) return '—';
+
+      return `
+        <div class="tags">
+          ${tags.map(tag => `
+            <button
+              type="button"
+              class="tag"
+              data-inline-tag="${escapeHtml(tag)}"
+              title="依此標籤篩選"
+            >${highlight(tag, keyword)}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function bindInlineTagButtons() {
+      document.querySelectorAll('[data-inline-tag]').forEach(button => {
+        button.addEventListener('click', () => {
+          selectedTags.add(button.dataset.inlineTag);
+          updateTagButtonStates();
+          applyFilters();
+          document.querySelector('.search-panel').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        });
+      });
+    }
+
+    function renderResults(records, keyword) {
+      message.hidden = true;
+      tableWrap.hidden = false;
+      cardList.innerHTML = '';
+
+      const conditions = [];
+      if (keyword.trim()) conditions.push(`關鍵字「${keyword.trim()}」`);
+      if (selectedTags.size) conditions.push(`標籤：${[...selectedTags].join('、')}`);
+
+      status.textContent = conditions.length
+        ? `${conditions.join('｜')}：找到 ${records.length} 筆資料`
+        : `目前顯示全部 ${records.length} 筆資料`;
+
+      if (!records.length) {
+        tableWrap.hidden = true;
+        message.hidden = false;
+        message.className = 'empty';
+        message.textContent = '找不到符合條件的資料，請調整關鍵字或標籤。';
+        return;
+      }
+
+      resultBody.innerHTML = records.map(record => `
+        <tr>
+          <td class="name">${highlight(record.name, keyword)}</td>
+          <td>${highlight(record.unit, keyword)}</td>
+          <td>${phoneCell(record.networkPhone, keyword)}</td>
+          <td>${phoneCell(record.landline, keyword)}</td>
+          <td>${phoneCell(record.mobile, keyword)}</td>
+          <td>${tagsCell(record.tags, keyword)}</td>
+          <td>${highlight(record.note, keyword)}</td>
+        </tr>
+      `).join('');
+
+      cardList.innerHTML = records.map(record => `
+        <article class="person-card">
+          <div class="card-title">${highlight(record.name, keyword)}</div>
+          <div class="field"><div class="label">單位</div><div>${highlight(record.unit, keyword)}</div></div>
+          <div class="field"><div class="label">網路電話</div><div>${phoneCell(record.networkPhone, keyword)}</div></div>
+          <div class="field"><div class="label">市話</div><div>${phoneCell(record.landline, keyword)}</div></div>
+          <div class="field"><div class="label">手機</div><div>${phoneCell(record.mobile, keyword)}</div></div>
+          <div class="field"><div class="label">標籤</div><div>${tagsCell(record.tags, keyword)}</div></div>
+          <div class="field"><div class="label">備註</div><div>${highlight(record.note, keyword)}</div></div>
+        </article>
+      `).join('');
+
+      bindInlineTagButtons();
+    }
+
+    function applyFilters() {
+      const keyword = keywordInput.value;
+      clearBtn.style.display = keyword ? 'block' : 'none';
+      renderResults(searchRecords(keyword), keyword);
+    }
+
+    keywordInput.addEventListener('input', applyFilters);
+
+    clearBtn.addEventListener('click', () => {
+      keywordInput.value = '';
+      keywordInput.focus();
+      applyFilters();
+    });
+
+    resetTagsBtn.addEventListener('click', () => {
+      selectedTags.clear();
+      updateTagButtonStates();
+      applyFilters();
+    });
+
+    loadData();
+  </script>
+</body>
+</html>

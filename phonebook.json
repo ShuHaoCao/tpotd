@@ -1,0 +1,1013 @@
+{
+  "updatedAt": "2026-07-15",
+  "records": [
+    {
+      "name": "李稽查",
+      "unit": "玉井郵局(臺南89支)",
+      "networkPhone": "86008931",
+      "landline": "06-5742-056",
+      "mobile": "0983-386-125",
+      "note": "玉井芒果聯絡窗口"
+    },
+    {
+      "name": "王昭文",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "86091391",
+      "landline": "06-3015-846",
+      "mobile": "0919-116-210",
+      "note": "股長，辦公室直接機06-2267-445"
+    },
+    {
+      "name": "謝勝勳",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "86091392",
+      "landline": "06-3314-360",
+      "mobile": "0937-577-306",
+      "note": "專員，辦公室直接機06-2267-445"
+    },
+    {
+      "name": "曹書豪",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "86091392",
+      "landline": "",
+      "mobile": "0960-030-707",
+      "note": "專員，辦公室直接機06-2267-445"
+    },
+    {
+      "name": "周峻成",
+      "unit": "永康郵局",
+      "networkPhone": "86001031",
+      "landline": "06-2027-554",
+      "mobile": "0988-186-571",
+      "note": "專員"
+    },
+    {
+      "name": "張永儀",
+      "unit": "外包人員",
+      "networkPhone": "",
+      "landline": "06-2705-085",
+      "mobile": "0918-600-242",
+      "note": "月台刷讀"
+    },
+    {
+      "name": "楊嶸祜",
+      "unit": "外包人員",
+      "networkPhone": "",
+      "landline": "06-2014-510",
+      "mobile": "0910-327-746",
+      "note": ""
+    },
+    {
+      "name": "邱學士",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-6872-998",
+      "mobile": "0937-319-821",
+      "note": "內勤"
+    },
+    {
+      "name": "吳家偉",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0988-592-871",
+      "note": "內檯"
+    },
+    {
+      "name": "蔡綜哲",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2435-186",
+      "mobile": "0938-963-980",
+      "note": "內勤"
+    },
+    {
+      "name": "吳政謙",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2451-282",
+      "mobile": "0908-755-612",
+      "note": "內勤"
+    },
+    {
+      "name": "葉吉順",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2810-166",
+      "mobile": "0978-550-028",
+      "note": "外勤"
+    },
+    {
+      "name": "柯國超",
+      "unit": "外包人員",
+      "networkPhone": "",
+      "landline": "06-2718-538",
+      "mobile": "0937-398-915",
+      "note": "內勤"
+    },
+    {
+      "name": "陳柏宇",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-3589-079",
+      "mobile": "0922-888-079",
+      "note": "外勤"
+    },
+    {
+      "name": "張智雄",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2833-853",
+      "mobile": "0978-083-267",
+      "note": "外勤"
+    },
+    {
+      "name": "林凱勳",
+      "unit": "高雄郵局運輸股",
+      "networkPhone": "87691581#102",
+      "landline": "06-2963-839",
+      "mobile": "0925-081-371",
+      "note": "外勤"
+    },
+    {
+      "name": "陳緯謙",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-3565-242",
+      "mobile": "0919-856-970",
+      "note": "外勤"
+    },
+    {
+      "name": "程世桓",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2475-000",
+      "mobile": "0917-379-177",
+      "note": "外勤"
+    },
+    {
+      "name": "邱俊融",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-3314-785",
+      "mobile": "0910-909-616",
+      "note": "外勤"
+    },
+    {
+      "name": "陳俊瑋",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2153-133",
+      "mobile": "0921-275-877",
+      "note": "外勤"
+    },
+    {
+      "name": "莊景宇",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2438-013",
+      "mobile": "0933-297-879",
+      "note": "外勤"
+    },
+    {
+      "name": "周恆毅",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2552-149",
+      "mobile": "0934-455-469",
+      "note": "外勤"
+    },
+    {
+      "name": "陳柏林",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-5922-105",
+      "mobile": "0921-592-347",
+      "note": "外勤"
+    },
+    {
+      "name": "簡慶富",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2350-792",
+      "mobile": "0911-365-756",
+      "note": "外勤"
+    },
+    {
+      "name": "沈銘展",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-6562-388",
+      "mobile": "0920-187-389",
+      "note": "外勤"
+    },
+    {
+      "name": "葉育宏",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0921-194-445",
+      "note": "外勤"
+    },
+    {
+      "name": "周耀宗",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2712-294",
+      "mobile": "0927-727-770",
+      "note": "外勤"
+    },
+    {
+      "name": "李翊宏",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2696-288",
+      "mobile": "0922-386-333",
+      "note": "外勤"
+    },
+    {
+      "name": "吳佳錚",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0973-079-566",
+      "note": "外勤"
+    },
+    {
+      "name": "許瑞廷",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2812-845",
+      "mobile": "0931-707-179",
+      "note": "外勤"
+    },
+    {
+      "name": "翁志峰",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-5956-402",
+      "mobile": "0915-210-216",
+      "note": "外勤"
+    },
+    {
+      "name": "連志維",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0931-387-359",
+      "note": "外勤"
+    },
+    {
+      "name": "許智勇",
+      "unit": "臺南郵局快捷股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0980-794-768",
+      "note": "外勤"
+    },
+    {
+      "name": "鄭憲鴻",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2376-835",
+      "mobile": "0921-280-140",
+      "note": "外勤"
+    },
+    {
+      "name": "王寶生",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2493-827",
+      "mobile": "0929-786-556",
+      "note": "外勤"
+    },
+    {
+      "name": "鄭主榮",
+      "unit": "明嘉運輸股份有限公司",
+      "networkPhone": "",
+      "landline": "03-4316-060",
+      "mobile": "0910-767-014",
+      "note": "甲線、30車次(新竹)"
+    },
+    {
+      "name": "陳國乾",
+      "unit": "立勤儲運有限公司",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0938-093-092",
+      "note": "114車次"
+    },
+    {
+      "name": "台北郵局轉運股",
+      "unit": "台北郵局轉運股",
+      "networkPhone": "82691581#218-221",
+      "landline": "02-2393-3626",
+      "mobile": "",
+      "note": ""
+    },
+    {
+      "name": "台中運輸股",
+      "unit": "台中運輸股",
+      "networkPhone": "84691163",
+      "landline": "04-2387-0195",
+      "mobile": "",
+      "note": ""
+    },
+    {
+      "name": "高雄運輸股",
+      "unit": "高雄運輸股",
+      "networkPhone": "87691581#102",
+      "landline": "07-3109-622",
+      "mobile": "",
+      "note": ""
+    },
+    {
+      "name": "嘉義快捷股",
+      "unit": "嘉義快捷股",
+      "networkPhone": "85091357",
+      "landline": "05-2840-002",
+      "mobile": "",
+      "note": ""
+    },
+    {
+      "name": "陳賜昌",
+      "unit": "臺南郵局快捷股",
+      "networkPhone": "86091371",
+      "landline": "06-2270-048",
+      "mobile": "0921-567-693",
+      "note": "股長"
+    },
+    {
+      "name": "莊世民",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2870-241",
+      "mobile": "0985-561-239",
+      "note": "外勤"
+    },
+    {
+      "name": "金哲駿",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "06-2055-990",
+      "mobile": "0987-927-798",
+      "note": "外勤"
+    },
+    {
+      "name": "黃憲章",
+      "unit": "臺南郵局快捷股",
+      "networkPhone": "",
+      "landline": "06-6358-257",
+      "mobile": "0912-747-873",
+      "note": "外勤"
+    },
+    {
+      "name": "吳秉修",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0977-065-206",
+      "note": ""
+    },
+    {
+      "name": "A7郵政物流園區",
+      "unit": "台北郵件中心",
+      "networkPhone": "",
+      "landline": "03-3180-700#2512",
+      "mobile": "",
+      "note": ""
+    },
+    {
+      "name": "錢文雄",
+      "unit": "台南郵局第二投遞股",
+      "networkPhone": "86091344",
+      "landline": "06-2246-348",
+      "mobile": "0918-578-639",
+      "note": "股長"
+    },
+    {
+      "name": "陳斌棋",
+      "unit": "臺南郵局郵務科",
+      "networkPhone": "86091341",
+      "landline": "06-2411-671",
+      "mobile": "0937-495-234",
+      "note": "科長"
+    },
+    {
+      "name": "施以平",
+      "unit": "臺南郵局運輸股",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0908-736-809",
+      "note": "外勤"
+    },
+    {
+      "name": "胡運鈴",
+      "unit": "明嘉運輸股份有限公司",
+      "networkPhone": "",
+      "landline": "03-4316-060",
+      "mobile": "0937-406-456",
+      "note": "老闆娘"
+    },
+    {
+      "name": "任大哥",
+      "unit": "新化郵局(臺南85支)",
+      "networkPhone": "86008531",
+      "landline": "06-5902-061#23",
+      "mobile": "0937-664-033",
+      "note": ""
+    },
+    {
+      "name": "湯德全",
+      "unit": "善化郵局(臺南104支)",
+      "networkPhone": "86010431",
+      "landline": "06-5832-496#201",
+      "mobile": "0931-818-683",
+      "note": "專員"
+    },
+    {
+      "name": "黃先生",
+      "unit": "佳里郵局(臺南93支)",
+      "networkPhone": "86009331#23",
+      "landline": "06-7224-392#23",
+      "mobile": "0937-498-392",
+      "note": "1.明峰 2.榮峰 3.敏雄"
+    },
+    {
+      "name": "黃永昇",
+      "unit": "麻豆郵局(臺南101支)",
+      "networkPhone": "86010131",
+      "landline": "06-5722-144",
+      "mobile": "06-5714-165",
+      "note": "郵務稽查"
+    },
+    {
+      "name": "顏東慶",
+      "unit": "泰順物流有限公司",
+      "networkPhone": "",
+      "landline": "04-2336-2298",
+      "mobile": "0932-570-233",
+      "note": "老闆"
+    },
+    {
+      "name": "老闆",
+      "unit": "永騏汽車修配所",
+      "networkPhone": "",
+      "landline": "06-2319-396",
+      "mobile": "0928-373-719",
+      "note": ""
+    },
+    {
+      "name": "嚴君廷",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-2601-189",
+      "mobile": "0972-609-919",
+      "note": "行車紀錄器"
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    },
+    {
+      "name": "",
+      "unit": "",
+      "networkPhone": "",
+      "landline": "06-",
+      "mobile": "09",
+      "note": ""
+    }
+  ]
+}
