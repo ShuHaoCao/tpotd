@@ -667,16 +667,7 @@
           </button>
           <button class="btn" id="reset" type="button">清除</button>
         </div>
-        <div class="advanced" id="advanced">
-          <div class="filter-group">
-            <h3>地區（可複選）</h3>
-            <div class="chips" id="regionChips"></div>
-          </div>
-          <div class="filter-group">
-            <h3>內容物（可複選）</h3>
-            <div class="chips" id="contentChips"></div>
-          </div>
-        </div>
+        <div class="advanced" id="advanced"></div>
       </section>
       <div class="summary">
         <div class="count">共找到 <strong id="count">0</strong> 筆車次</div>
@@ -739,7 +730,7 @@
       </section>
       <div class="footer-note">
         資料由
-        <code>trips.json</code>
+        <code>trips_tags.json</code>
         驅動；新增車次或欄位後，重新整理即可更新。
       </div>
     </main>
@@ -747,8 +738,7 @@
       const $ = (s) => document.querySelector(s),
         $$ = (s) => [...document.querySelectorAll(s)];
       let DATA,
-        selectedRegions = new Set(),
-        selectedContents = new Set();
+        selectedTags = new Map();
       const esc = (v) =>
         String(v ?? "").replace(
           /[&<>"']/g,
@@ -761,7 +751,7 @@
               "'": "&#39;",
             })[c],
         );
-      const DATA_FILE = "trips.json";
+      const DATA_FILE = "trips_tags.json";
       let appInitialized = false;
       let lastDataSignature = "";
 
@@ -800,12 +790,12 @@
           if (!silent) {
             $("#updated").textContent = "資料讀取失敗";
             $("#subtitle").textContent =
-              "無法讀取 trips.json，請確認 HTML 與 JSON 位於同一資料夾，並透過網站伺服器開啟。";
+              "無法讀取 trips_tags.json，請確認 HTML 與 JSON 位於同一資料夾，並透過網站伺服器開啟。";
             $("#empty").style.display = "block";
             $("#empty").querySelector("strong").textContent =
               "無法載入車次資料";
             $("#empty").querySelector("div:last-child").textContent =
-              "請檢查 trips.json 是否存在或格式是否正確。";
+              "請檢查 trips_tags.json 是否存在或格式是否正確。";
           }
         }
       }
@@ -814,18 +804,15 @@
         $("#title").textContent = DATA.title || "車次查詢系統";
         $("#subtitle").textContent = DATA.subtitle || "";
         $("#updated").textContent = `資料更新：${DATA.lastUpdated || "—"}`;
-        selectedRegions.clear();
-        selectedContents.clear();
-        buildChips("regionChips", DATA.fieldGroups?.regions || [], "region");
-        buildChips("contentChips", DATA.fieldGroups?.contents || [], "content");
+        selectedTags.clear();
+        buildTagFilters();
         render();
       }
       function init() {
         $("#title").textContent = DATA.title || "車次查詢系統";
         $("#subtitle").textContent = DATA.subtitle || "";
         $("#updated").textContent = `資料更新：${DATA.lastUpdated || "—"}`;
-        buildChips("regionChips", DATA.fieldGroups?.regions || [], "region");
-        buildChips("contentChips", DATA.fieldGroups?.contents || [], "content");
+        buildTagFilters();
         ["q", "timeFilter", "sort"].forEach((id) =>
           $("#" + id).addEventListener(id === "q" ? "input" : "change", render),
         );
@@ -854,18 +841,46 @@
         );
         render();
       }
-      function buildChips(id, items, type) {
-        const box = $("#" + id);
-        box.innerHTML = items
-          .map(
-            (x) =>
-              `<button class="chip" type="button" data-value="${esc(x)}">${esc(x)}</button>`,
-          )
+      function getTagGroups() {
+        if (DATA.tagGroups) return DATA.tagGroups;
+        return {
+          regions: {
+            label: "地區",
+            filterable: true,
+            displayOnCard: true,
+            options: DATA.fieldGroups?.regions || [],
+          },
+          contents: {
+            label: "內容物",
+            filterable: true,
+            displayOnCard: true,
+            className: "content",
+            options: DATA.fieldGroups?.contents || [],
+          },
+        };
+      }
+      function tripTagValues(trip, key) {
+        if (trip.tags && Array.isArray(trip.tags[key])) return trip.tags[key];
+        if (Array.isArray(trip[key])) return trip[key];
+        return [];
+      }
+      function buildTagFilters() {
+        const box = $("#advanced");
+        const groups = getTagGroups();
+        selectedTags.clear();
+        box.innerHTML = Object.entries(groups)
+          .filter(([, cfg]) => cfg.filterable !== false)
+          .map(([key, cfg]) => {
+            selectedTags.set(key, new Set());
+            const options = Array.isArray(cfg.options) ? cfg.options : [];
+            return `<div class="filter-group" data-tag-group="${esc(key)}"><h3>${esc(cfg.label || key)}（可複選）</h3><div class="chips">${options.map((x) => `<button class="chip" type="button" data-tag-key="${esc(key)}" data-value="${esc(x)}">${esc(x)}</button>`).join("")}</div></div>`;
+          })
           .join("");
         box.onclick = (e) => {
-          const b = e.target.closest(".chip");
+          const b = e.target.closest(".chip[data-tag-key]");
           if (!b) return;
-          const set = type === "region" ? selectedRegions : selectedContents;
+          const set = selectedTags.get(b.dataset.tagKey);
+          if (!set) return;
           set.has(b.dataset.value)
             ? set.delete(b.dataset.value)
             : set.add(b.dataset.value);
@@ -904,6 +919,7 @@
             x.note,
             ...(x.stops || []),
             ...(x.vehicles || []),
+            ...Object.values(x.tags || {}).flat(),
             ...(x.regions || []),
             ...(x.contents || []),
           ]
@@ -912,14 +928,11 @@
           return (
             (!q || hay.includes(q)) &&
             matchesTime(x.actualDeparture, tf) &&
-            (!selectedRegions.size ||
-              [...selectedRegions].every((v) =>
-                (x.regions || []).includes(v),
-              )) &&
-            (!selectedContents.size ||
-              [...selectedContents].every((v) =>
-                (x.contents || []).includes(v),
-              ))
+            [...selectedTags.entries()].every(
+              ([key, set]) =>
+                !set.size ||
+                [...set].every((v) => tripTagValues(x, key).includes(v)),
+            )
           );
         });
         const sort = $("#sort").value;
@@ -976,6 +989,15 @@
           .map((vehicle) => `<span class="vehicle-chip">${esc(vehicle)}</span>`)
           .join("")}</div>`;
       }
+      function cardTagSections(x) {
+        return Object.entries(getTagGroups())
+          .filter(([, cfg]) => cfg.displayOnCard !== false)
+          .map(
+            ([key, cfg]) =>
+              `<div class="section-label">${esc(cfg.label || key)}</div><div class="tag-row">${tags(tripTagValues(x, key), cfg.className || "")}</div>`,
+          )
+          .join("");
+      }
       function card(x, index) {
         const ends = routeEnds(x);
         const badges = [
@@ -988,7 +1010,7 @@
           ends.start !== "—" || ends.end !== "—"
             ? `<div class="route-summary"><span>${esc(ends.start)}</span><span class="arrow">→</span><span>${esc(ends.end)}</span></div>`
             : "";
-        return `<article class="card"><div class="card-top"><div class="trip-no"><div class="number">${esc(x.tripNo)}</div><div><div class="time">${esc(x.actualDeparture || "—")}</div><div class="time-label">實際發車${x.scheduledDeparture ? ` · 表定 ${esc(x.scheduledDeparture)}` : ""}</div></div></div><div class="code">代碼<br>${esc(x.tripCode || "—")}</div></div><div class="destination">${esc(x.destination || "未填接收局")}</div>${badges ? `<div class="meta-strip">${badges}</div>` : ""}${route}<div class="section-label">地區</div><div class="tag-row">${tags(x.regions)}</div><div class="section-label">內容物</div><div class="tag-row">${tags(x.contents, "content")}</div><div class="card-actions"><button class="detail-btn" type="button" data-detail-index="${index}">查看車次詳情</button></div></article>`;
+        return `<article class="card"><div class="card-top"><div class="trip-no"><div class="number">${esc(x.tripNo)}</div><div><div class="time">${esc(x.actualDeparture || "—")}</div><div class="time-label">實際發車${x.scheduledDeparture ? ` · 表定 ${esc(x.scheduledDeparture)}` : ""}</div></div></div><div class="code">代碼<br>${esc(x.tripCode || "—")}</div></div><div class="destination">${esc(x.destination || "未填接收局")}</div>${badges ? `<div class="meta-strip">${badges}</div>` : ""}${route}${cardTagSections(x)}<div class="card-actions"><button class="detail-btn" type="button" data-detail-index="${index}">查看車次詳情</button></div></article>`;
       }
       function row(x, index) {
         const ends = routeEnds(x);
@@ -1021,6 +1043,14 @@
           detailItem("車次代碼", x.tripCode),
           detailItem("完整站點路線", routeDetail(x.stops), true, true),
           detailItem("接收局", x.destination, true),
+          ...Object.entries(getTagGroups()).map(([key, cfg]) =>
+            detailItem(
+              cfg.label || key,
+              tags(tripTagValues(x, key), cfg.className || ""),
+              true,
+              true,
+            ),
+          ),
           detailItem("備註", x.note, true),
         ].join("");
         $("#detailModal").classList.add("open");
@@ -1044,8 +1074,7 @@
         $("#q").value = "";
         $("#timeFilter").value = "";
         $("#sort").value = "timeAsc";
-        selectedRegions.clear();
-        selectedContents.clear();
+        selectedTags.forEach((set) => set.clear());
         $$(".chip").forEach((x) => x.classList.remove("active"));
         render();
       }
