@@ -728,11 +728,7 @@
           <div class="detail-grid" id="modalBody"></div>
         </div>
       </section>
-      <div class="footer-note">
-        資料由
-        <code>trips_tags.json</code>
-        驅動；新增車次或欄位後，重新整理即可更新。
-      </div>
+      <div class="footer-note"></div>
     </main>
     <script>
       const $ = (s) => document.querySelector(s),
@@ -751,7 +747,7 @@
               "'": "&#39;",
             })[c],
         );
-      const DATA_FILE = "trips_tags.json";
+      const DATA_FILE = "trips.json";
       let appInitialized = false;
       let lastDataSignature = "";
 
@@ -767,7 +763,7 @@
           },
         });
         if (!response.ok) {
-          throw new Error(`JSON 讀取失敗（HTTP ${response.status}）`);
+          throw new Error(`資料讀取失敗（HTTP ${response.status}）`);
         }
         return response.json();
       }
@@ -789,13 +785,12 @@
           console.error(error);
           if (!silent) {
             $("#updated").textContent = "資料讀取失敗";
-            $("#subtitle").textContent =
-              "無法讀取 trips_tags.json，請確認 HTML 與 JSON 位於同一資料夾，並透過網站伺服器開啟。";
+            $("#subtitle").textContent = "無法讀取資料";
             $("#empty").style.display = "block";
             $("#empty").querySelector("strong").textContent =
               "無法載入車次資料";
             $("#empty").querySelector("div:last-child").textContent =
-              "請檢查 trips_tags.json 是否存在或格式是否正確。";
+              "請檢查資料檔是否存在或格式是否正確。";
           }
         }
       }
