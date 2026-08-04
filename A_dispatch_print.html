@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MOMO進出口單統計報表列印</title>
+    <title>MOMO進出口統計</title>
     <style>
       :root {
         --ink: #172033;
@@ -528,10 +528,10 @@
   <body>
     <div class="app">
       <section class="toolbar">
-        <h1>台南郵局運輸股｜MOMO 進出口單頁列印表</h1>
+        <h1>MOMO進出口統計表輸出列印</h1>
         <div class="toolbar-row">
           <label class="file-picker">
-            進口 JSON：
+            進口資料檔：
             <input
               id="inboundFile"
               type="file"
@@ -539,7 +539,7 @@
             />
           </label>
           <label class="file-picker">
-            出口 JSON：
+            出口資料檔：
             <input
               id="outboundFile"
               type="file"
@@ -547,24 +547,23 @@
             />
           </label>
           <button class="btn btn-print" type="button" onclick="window.print()">
-            列印單張 A4
+            A4單張列印
           </button>
           <button class="btn btn-clear" type="button" onclick="resetData()">
             清空資料
           </button>
         </div>
         <div class="hint">
-          匯入進口與出口 JSON 後，兩份資料會整合於同一張
-          A4：左側為進口、右側為出口。列印時請選擇 A4、直向、縮放
-          100%，並關閉瀏覽器頁首頁尾。
+          匯入進出口資料檔案後，兩份資料會整合於同一張A4：左側為進口、右側為出口。列印時請選擇
+          A4、直向、縮放100%，並關閉瀏覽器頁首頁尾。
         </div>
       </section>
 
       <main class="paper">
         <header class="report-header">
-          <h1 class="title">MOMO 進出口籃車數作業表</h1>
+          <h1 class="title">MOMO(新市倉SDC+永康倉DC7)進出口籃車數統計表</h1>
           <div class="meta-row">
-            <div>單位：台南郵局運輸股</div>
+            <div>單位：臺南郵局運輸股</div>
             <div class="dateText">日期：—</div>
           </div>
         </header>
@@ -603,7 +602,7 @@
             <textarea
               id="inboundNote"
               class="note-input"
-              placeholder="可手動輸入進口作業備註"
+              placeholder="點擊輸入資料"
             ></textarea>
           </label>
           <label class="summary-card out">
@@ -611,7 +610,7 @@
             <textarea
               id="outboundNote"
               class="note-input"
-              placeholder="可手動輸入出口作業備註"
+              placeholder="點擊輸入資料"
             ></textarea>
           </label>
         </section>
@@ -695,7 +694,7 @@
           box.innerHTML = `
             <section class="block">
               <div class="block-title"><span>進口資料</span><span class="subtotal">尚未匯入</span></div>
-              <div class="warehouse-line empty">請先匯入 momo_dispatch 匯出的 JSON 檔案</div>
+              <div class="warehouse-line empty">請先匯入資料檔案</div>
             </section>`;
           updateInboundTotals(0, 0);
           return;
@@ -726,7 +725,7 @@
           }
 
           const tableHtml = table(
-            ["時間", "車次", "司機", "工作項目", "籃車"],
+            ["時間", "車次", "運務員", "工作項目", "籃車數"],
             rows,
             ["w-in-time", "w-in-car", "w-in-driver", "w-in-work", "w-in-cart"],
             "inbound-table",
@@ -753,7 +752,7 @@
           <section class="block">
             <div class="block-title"><span>新市倉</span><span class="subtotal">第1＋2＋3階段</span></div>
             <div class="warehouse-line">
-              <strong>新市倉運載</strong>
+              <strong>新市倉(SDC)運載</strong>
               <span class="badge">${xinshi.trips} 車次</span>
               <span class="badge">${xinshi.carts} 籃車</span>
             </div>
@@ -764,7 +763,7 @@
           <section class="block">
             <div class="block-title"><span>永康倉</span><span class="subtotal">獨立統計</span></div>
             <div class="warehouse-line">
-              <strong>永康倉運載</strong>
+              <strong>永康倉(DC7)運載</strong>
               <span class="badge">${n(yongkang.trips)} 車次</span>
               <span class="badge">${n(yongkang.carts)} 籃車</span>
             </div>
@@ -841,7 +840,7 @@
           box.innerHTML = `
             <section class="block">
               <div class="block-title"><span>出口資料</span><span class="subtotal">尚未匯入</span></div>
-              <div class="warehouse-line empty">請先匯入 report 匯出的 JSON 檔案</div>
+              <div class="warehouse-line empty">請先匯入出口資料檔案</div>
             </section>`;
           updateOutboundTotals(0, 0);
           return;
@@ -929,7 +928,7 @@
           render();
         } catch (error) {
           console.error(error);
-          alert("JSON 檔案讀取失敗，請確認檔案格式是否正確。");
+          alert("資料檔案讀取失敗，請確認檔案格式是否正確。");
         }
       }
 
