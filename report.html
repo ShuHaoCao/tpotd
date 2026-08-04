@@ -617,7 +617,7 @@
           const status0200_main = ref(0);
           const status0200_east = ref(0);
           const statusSouth = ref(0);
-          const northResponseMeasure = ref("預計交由10:00車次載運");
+          const northResponseMeasure = ref("交10:00車次載運");
 
           const status0200_total = computed(() => {
             return (
@@ -837,7 +837,7 @@
             const payload = {
               schema: "tainan_post_dispatch_print_export.v1",
               source: "report.html",
-              unit: "台南郵局運輸股",
+              unit: "臺南郵局運輸股",
               workDate,
               exportTime: new Date().toISOString(),
               outbound: {
@@ -889,7 +889,7 @@
             text += `       共${northData.tripCount}車次   計${northData.total}台\n\n`;
 
             if (status0000.value === 0 || !status0000.value) {
-              text += `第1階段：全部運清\n`;
+              text += `第1階段：全數運清\n`;
             } else {
               text += `第2階段：尚餘 ${status0000.value} 台\n`;
             }
@@ -899,7 +899,7 @@
             const t = status0200_total.value;
 
             if (m === 0 && e === 0) {
-              text += `第2階段：全部運清\n`;
+              text += `第2階段：全數運清\n`;
             } else if (m === 0 && e > 0) {
               text += `第2階段：尚餘 ${e} 台(宜花東)\n`;
             } else if (m > 0 && e === 0) {
