@@ -1076,6 +1076,68 @@
         border-top: 1px solid rgba(56, 189, 248, 0.18);
       }
 
+      /* === 趨勢圖水平滑動：完整保留資料，避免大量資料擠成一團 === */
+      .trend-chart-scroll-viewport {
+        width: 100%;
+        height: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pan-y;
+        cursor: grab;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(34, 211, 238, 0.72) rgba(15, 23, 42, 0.45);
+      }
+
+      .trend-chart-scroll-viewport.is-dragging {
+        cursor: grabbing;
+        user-select: none;
+      }
+
+      .trend-chart-scroll-viewport::-webkit-scrollbar {
+        height: 10px;
+      }
+
+      .trend-chart-scroll-viewport::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 999px;
+      }
+
+      .trend-chart-scroll-viewport::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, #22d3ee, #34d399);
+        border-radius: 999px;
+        border: 2px solid rgba(2, 6, 23, 0.75);
+      }
+
+      .trend-chart-scroll-content {
+        position: relative;
+        height: 100%;
+        min-width: 100%;
+      }
+
+      .trend-scroll-hint {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 12px 2px;
+        color: #67e8f9;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+      }
+
+      @media (max-width: 768px) {
+        .trend-chart-scroll-viewport::-webkit-scrollbar {
+          height: 6px;
+        }
+
+        .trend-scroll-hint {
+          font-size: 10px;
+          padding-top: 4px;
+        }
+      }
       @media (max-width: 768px) {
         .date-display-btn {
           min-width: 0;
@@ -1997,10 +2059,24 @@
           </div>
 
           <div
-            class="p-3 sm:p-6 overflow-y-auto flex-1 bg-slate-50 flex items-center justify-center min-h-[320px] sm:min-h-[420px]"
+            class="p-3 sm:p-6 overflow-y-auto flex-1 bg-slate-50 min-h-[320px] sm:min-h-[420px]"
           >
-            <div class="w-full h-full relative" style="height: 380px">
-              <canvas id="trendChart"></canvas>
+            <div v-if="trendModal.type === 'mails'" class="trend-scroll-hint">
+              <span class="material-icons text-sm">swipe</span>
+              左右滑動查看較早或較新的完整資料
+            </div>
+            <div class="w-full relative" style="height: 380px">
+              <div
+                id="trendChartScrollViewport"
+                class="trend-chart-scroll-viewport"
+              >
+                <div
+                  id="trendChartScrollContent"
+                  class="trend-chart-scroll-content"
+                >
+                  <canvas id="trendChart"></canvas>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -2046,6 +2122,84 @@
           });
 
           let chartInstance = null;
+          let trendScrollerCleanup = null;
+
+          const setupTrendChartScroller = (scrollToLatest = false) => {
+            if (trendScrollerCleanup) {
+              trendScrollerCleanup();
+              trendScrollerCleanup = null;
+            }
+
+            const viewport = document.getElementById(
+              "trendChartScrollViewport",
+            );
+            if (!viewport) return;
+
+            let dragging = false;
+            let startX = 0;
+            let startScrollLeft = 0;
+            let moved = false;
+
+            const onPointerDown = (event) => {
+              // 滑鼠左鍵或觸控筆可直接拖曳；手機仍保留原生慣性滑動
+              if (event.pointerType === "mouse" && event.button !== 0) return;
+              dragging = true;
+              moved = false;
+              startX = event.clientX;
+              startScrollLeft = viewport.scrollLeft;
+              viewport.classList.add("is-dragging");
+              viewport.setPointerCapture?.(event.pointerId);
+            };
+
+            const onPointerMove = (event) => {
+              if (!dragging) return;
+              const delta = event.clientX - startX;
+              if (Math.abs(delta) > 3) moved = true;
+              viewport.scrollLeft = startScrollLeft - delta;
+              if (moved) event.preventDefault();
+            };
+
+            const stopDragging = (event) => {
+              if (!dragging) return;
+              dragging = false;
+              viewport.classList.remove("is-dragging");
+              try {
+                viewport.releasePointerCapture?.(event.pointerId);
+              } catch (_) {}
+            };
+
+            const onWheel = (event) => {
+              // 在圖表上滾動滾輪時，可自然橫向瀏覽；Shift+滾輪亦適用
+              if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+                viewport.scrollLeft += event.deltaY;
+                event.preventDefault();
+              }
+            };
+
+            viewport.addEventListener("pointerdown", onPointerDown);
+            viewport.addEventListener("pointermove", onPointerMove, {
+              passive: false,
+            });
+            viewport.addEventListener("pointerup", stopDragging);
+            viewport.addEventListener("pointercancel", stopDragging);
+            viewport.addEventListener("mouseleave", stopDragging);
+            viewport.addEventListener("wheel", onWheel, { passive: false });
+
+            trendScrollerCleanup = () => {
+              viewport.removeEventListener("pointerdown", onPointerDown);
+              viewport.removeEventListener("pointermove", onPointerMove);
+              viewport.removeEventListener("pointerup", stopDragging);
+              viewport.removeEventListener("pointercancel", stopDragging);
+              viewport.removeEventListener("mouseleave", stopDragging);
+              viewport.removeEventListener("wheel", onWheel);
+            };
+
+            if (scrollToLatest) {
+              requestAnimationFrame(() => {
+                viewport.scrollLeft = viewport.scrollWidth;
+              });
+            }
+          };
           let bucketTripChart = null;
           let bucketCartChart = null;
 
@@ -2751,6 +2905,10 @@
               chartInstance.destroy();
               chartInstance = null;
             }
+            if (trendScrollerCleanup) {
+              trendScrollerCleanup();
+              trendScrollerCleanup = null;
+            }
             trendModal.value.show = false;
           };
 
@@ -2765,6 +2923,24 @@
 
             // 完美對齊：不論日、週、月、年，labels 與 raw 都是純正的 [左舊右新] 推進序列
             const { labels, raw } = getAggregatedData(scale);
+
+            // 郵件量日趨勢採固定「每筆資料寬度」，資料越多就延伸畫布，不再壓縮。
+            // 其他圖表維持原有版面寬度與配置。
+            const viewport = document.getElementById(
+              "trendChartScrollViewport",
+            );
+            const content = document.getElementById("trendChartScrollContent");
+            if (viewport && content) {
+              const isScrollableMailChart =
+                type === "mails" && scale === "daily";
+              const pointWidth = window.innerWidth <= 768 ? 44 : 58;
+              const minimumWidth = Math.max(viewport.clientWidth || 0, 320);
+              const desiredWidth = isScrollableMailChart
+                ? Math.max(minimumWidth, labels.length * pointWidth)
+                : minimumWidth;
+              content.style.width = `${desiredWidth}px`;
+              content.style.minWidth = `${desiredWidth}px`;
+            }
 
             let chartConfig = {};
 
@@ -3108,6 +3284,7 @@
             }
 
             chartInstance = new Chart(ctx, chartConfig);
+            setupTrendChartScroller(type === "mails" && scale === "daily");
           };
 
           const parseMinsOnly = (str) => {
