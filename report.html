@@ -584,6 +584,7 @@
             "臺中120車次",
             "臺中122車次",
             "臺中郵局車",
+            "高雄郵局車",
           ]);
 
           const southCarOptions = ref([
@@ -616,7 +617,7 @@
           const status0200_main = ref(0);
           const status0200_east = ref(0);
           const statusSouth = ref(0);
-          const northResponseMeasure = ref("預計由796、快8及其他北上車次載運");
+          const northResponseMeasure = ref("預計交由10:00車次載運");
 
           const status0200_total = computed(() => {
             return (
@@ -888,9 +889,9 @@
             text += `       共${northData.tripCount}車次   計${northData.total}台\n\n`;
 
             if (status0000.value === 0 || !status0000.value) {
-              text += `00:00 以前郵件全數運完\n`;
+              text += `第1階段：全部運清\n`;
             } else {
-              text += `00:00 以前郵件尚留${status0000.value}台\n`;
+              text += `第2階段：尚餘 ${status0000.value} 台\n`;
             }
 
             const m = Number(status0200_main.value) || 0;
@@ -898,13 +899,13 @@
             const t = status0200_total.value;
 
             if (m === 0 && e === 0) {
-              text += `02:00 北上郵件全數運完\n`;
+              text += `第2階段：全部運清\n`;
             } else if (m === 0 && e > 0) {
-              text += `02:00 北上郵件尚留${e}台(宜花東)\n`;
+              text += `第2階段：尚餘 ${e} 台(宜花東)\n`;
             } else if (m > 0 && e === 0) {
-              text += `02:00 北上郵件尚留${m}台\n`;
+              text += `第2階段：尚餘 ${m} 台\n`;
             } else if (m > 0 && e > 0) {
-              text += `02:00 北上郵件尚留${m}+${e}(宜花東)=${t}台\n`;
+              text += `第2階段：尚餘 ${m}+${e}(宜花東)=${t} 台\n`;
             }
 
             const hasNorthRemaining =
@@ -926,7 +927,7 @@
             text += `       共${southData.tripCount}車次   計${southData.total}台\n\n`;
 
             if (statusSouth.value === 0 || !statusSouth.value) {
-              text += `南下郵件全數運完`;
+              text += `南下郵件全數運清`;
             } else {
               text += `南下郵件尚留${statusSouth.value}台`;
             }
