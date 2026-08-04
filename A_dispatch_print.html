@@ -3,46 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>台南郵局運輸股｜MOMO進出口列印表</title>
+    <title>MOMO進出口單統計報表列印</title>
     <style>
+      :root {
+        --ink: #172033;
+        --muted: #667085;
+        --line: #25324a;
+        --soft-line: #b8c2d1;
+        --paper: #ffffff;
+        --page-bg: #e9eef5;
+        --green: #176b45;
+        --green-soft: #e8f4ee;
+        --blue: #245e9f;
+        --blue-soft: #eaf1fa;
+      }
+
       * {
         box-sizing: border-box;
       }
+
+      html,
       body {
         margin: 0;
-        background: #eef2f7;
-        color: #111827;
-        font-family: "Microsoft JhengHei", Arial, sans-serif;
+        min-height: 100%;
+        color: var(--ink);
+        background: var(--page-bg);
+        font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
       }
+
       .app {
-        max-width: 1100px;
+        max-width: 1180px;
         margin: 0 auto;
         padding: 22px;
       }
+
       .toolbar {
-        background: #fff;
-        border: 1px solid #d9e2ec;
-        border-radius: 14px;
-        padding: 16px;
         margin-bottom: 16px;
-        box-shadow: 0 8px 24px #0001;
+        padding: 16px;
+        border: 1px solid #d6deea;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
       }
+
       .toolbar h1 {
+        margin: 0 0 12px;
         font-size: 22px;
-        margin: 0 0 10px;
       }
-      .toolbar .row {
+
+      .toolbar-row {
         display: flex;
-        gap: 10px;
         flex-wrap: wrap;
+        gap: 10px;
         align-items: center;
       }
-      .file {
+
+      .file-picker {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 12px;
         border: 1px dashed #94a3b8;
         border-radius: 10px;
-        padding: 10px;
         background: #f8fafc;
+        font-size: 14px;
+        font-weight: 700;
       }
+
       .btn {
         border: 0;
         border-radius: 10px;
@@ -50,330 +77,776 @@
         font-weight: 800;
         cursor: pointer;
       }
-      .print {
-        background: #14532d;
+
+      .btn-print {
         color: #fff;
+        background: var(--green);
       }
-      .clear {
-        background: #334155;
+
+      .btn-clear {
         color: #fff;
+        background: #475467;
       }
+
       .hint {
-        font-size: 13px;
-        color: #64748b;
         margin-top: 10px;
-        line-height: 1.6;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.65;
       }
+
       .paper {
-        background: #fff;
         width: 210mm;
         min-height: 297mm;
         margin: 0 auto;
-        padding: 10mm;
+        padding: 9mm 9mm 8mm;
         border: 1px solid #cbd5e1;
-        box-shadow: 0 14px 35px #0002;
+        background: var(--paper);
+        box-shadow: 0 16px 40px rgb(15 23 42 / 15%);
       }
-      .top {
+
+      .report-header {
+        margin-bottom: 5mm;
+      }
+
+      .title {
+        margin: 0;
+        text-align: center;
+        font-size: 23px;
+        font-weight: 900;
+        letter-spacing: 0.13em;
+      }
+
+      .meta-row {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
-        margin-bottom: 8px;
-        font-size: 18px;
+        gap: 16px;
+        margin-top: 3mm;
+        padding-bottom: 2.5mm;
+        border-bottom: 1.5px solid var(--line);
+        font-size: 13.5px;
         font-weight: 800;
       }
-      .title {
-        font-size: 26px;
-        text-align: center;
-        font-weight: 900;
+
+      .columns {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+        gap: 4mm;
+        align-items: start;
+      }
+
+      .report-column {
+        min-width: 0;
+        border: 1.5px solid var(--line);
+        border-radius: 3mm;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .column-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 13mm;
+        padding: 2.5mm 3mm;
+        color: #fff;
+      }
+
+      .inbound .column-heading {
+        background: var(--green);
+      }
+
+      .outbound .column-heading {
+        background: var(--blue);
+      }
+
+      .heading-main {
+        display: flex;
+        align-items: baseline;
+        gap: 2mm;
+      }
+
+      .heading-main strong {
+        font-size: 18px;
         letter-spacing: 0.18em;
-        margin: 4px 0 10px;
       }
-      .section {
-        border: 2px solid #111827;
-        margin-bottom: 10px;
+
+      .heading-main span {
+        font-size: 10.5px;
+        font-weight: 700;
+        opacity: 0.88;
+        letter-spacing: 0.05em;
       }
-      .section-title {
-        background: #e5e7eb;
-        border-bottom: 2px solid #111827;
-        padding: 6px 10px;
-        font-size: 20px;
+
+      .heading-total {
+        padding: 1.2mm 2.2mm;
+        border: 1px solid rgb(255 255 255 / 55%);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 13%);
+        font-size: 11px;
         font-weight: 900;
-        letter-spacing: 0.12em;
+        white-space: nowrap;
       }
-      .stage-title {
-        background: #f3f4f6;
-        border-top: 1px solid #111827;
-        border-bottom: 1px solid #111827;
-        padding: 5px 8px;
+
+      .content {
+        padding: 2.3mm;
+      }
+
+      .block {
+        margin-bottom: 2.2mm;
+        border: 1px solid var(--soft-line);
+        border-radius: 2mm;
+        overflow: hidden;
+      }
+
+      .block:last-child {
+        margin-bottom: 0;
+      }
+
+      .block-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 3mm;
+        min-height: 7.5mm;
+        padding: 1.5mm 2.2mm;
+        background: #f3f5f8;
+        border-bottom: 1px solid var(--soft-line);
+        font-size: 12px;
         font-weight: 900;
       }
-      .stage-title:first-child {
-        border-top: 0;
+
+      .inbound .block-title {
+        background: var(--green-soft);
       }
-      .subline {
-        text-align: right;
-        font-weight: 800;
-        padding: 4px 8px;
-        border-top: 1px solid #111827;
+
+      .outbound .block-title {
+        background: var(--blue-soft);
       }
-      .total {
-        background: #f8fafc;
-        text-align: right;
-        font-size: 18px;
+
+      .subtotal {
+        color: #344054;
+        font-size: 10.5px;
         font-weight: 900;
-        padding: 6px 10px;
-        border-top: 2px solid #111827;
+        white-space: nowrap;
       }
+
       table {
         width: 100%;
         border-collapse: collapse;
         table-layout: fixed;
       }
+
       th,
       td {
-        border: 1px solid #111827;
-        padding: 5px 6px;
+        height: 7.2mm;
+        padding: 1.15mm 1.25mm;
+        border-right: 1px solid var(--soft-line);
+        border-bottom: 1px solid var(--soft-line);
         text-align: center;
-        font-size: 14px;
-        height: 30px;
+        vertical-align: middle;
+        font-size: 10.4px;
+        line-height: 1.18;
+        word-break: normal;
+        overflow-wrap: anywhere;
       }
+
+      .inbound-table th:nth-child(2),
+      .inbound-table td:nth-child(2) {
+        white-space: nowrap;
+        word-break: keep-all;
+        overflow-wrap: normal;
+        font-size: 9.8px;
+      }
+
+      .outbound-table th:nth-child(2),
+      .outbound-table td:nth-child(2) {
+        text-align: left;
+        padding-left: 2mm;
+        white-space: nowrap;
+        word-break: keep-all;
+        overflow-wrap: normal;
+      }
+
+      .outbound-table th,
+      .outbound-table td {
+        padding-left: 0.8mm;
+        padding-right: 0.8mm;
+        font-size: 9.6px;
+      }
+
+      .outbound-table th {
+        font-size: 9.2px;
+        line-height: 1.12;
+      }
+
+      .package-input {
+        display: block;
+        width: 100%;
+        height: 5.6mm;
+        padding: 0.4mm 0.6mm;
+        border: 1px solid #9fb0c7;
+        border-radius: 1.2mm;
+        background: #fff;
+        color: var(--ink);
+        text-align: center;
+        font: inherit;
+        font-size: 9.8px;
+        font-weight: 800;
+        outline: none;
+      }
+
+      .package-input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 1px rgb(36 94 159 / 18%);
+      }
+
+      .momo-value,
+      .total-cart-value {
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      th:last-child,
+      td:last-child {
+        border-right: 0;
+      }
+
       th {
-        background: #f9fafb;
+        height: 6.7mm;
+        background: #fafbfc;
+        font-size: 10px;
         font-weight: 900;
       }
-      .left {
+
+      td.left {
         text-align: left;
       }
+
       .empty {
-        color: #9ca3af;
+        color: #98a2b3;
       }
+
+      .warehouse-line {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 2mm;
+        align-items: center;
+        min-height: 9mm;
+        padding: 1.8mm 2.2mm;
+        font-size: 11px;
+      }
+
+      .warehouse-line strong {
+        font-size: 11.5px;
+      }
+
+      .badge {
+        min-width: 18mm;
+        padding: 1mm 1.8mm;
+        border-radius: 999px;
+        background: #eef2f6;
+        text-align: center;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .summary-strip {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 4mm;
+        margin-top: 4mm;
+      }
+
+      .summary-card {
+        display: block;
+        min-height: 19mm;
+        padding: 2.2mm 3mm;
+        border: 1.5px solid var(--line);
+        border-radius: 2.5mm;
+        font-weight: 900;
+      }
+
+      .summary-card.in {
+        background: var(--green-soft);
+      }
+
+      .summary-card.out {
+        background: var(--blue-soft);
+      }
+
+      .summary-label {
+        display: block;
+        margin-bottom: 1.2mm;
+        font-size: 11.5px;
+        letter-spacing: 0.08em;
+      }
+
+      .note-input {
+        display: block;
+        width: 100%;
+        min-height: 10mm;
+        resize: vertical;
+        padding: 1.5mm 1.8mm;
+        border: 1px solid #9aa7b8;
+        border-radius: 1.5mm;
+        background: rgb(255 255 255 / 72%);
+        color: var(--ink);
+        font: inherit;
+        font-size: 10.5px;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .note-input::placeholder {
+        color: #98a2b3;
+        font-weight: 500;
+      }
+
       .footer {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12mm;
+        margin-top: 8mm;
+        padding-top: 1mm;
+        font-size: 12px;
         font-weight: 800;
       }
+
       .sign {
-        width: 32%;
-        border-top: 1px solid #111827;
-        padding-top: 8px;
+        min-height: 11mm;
+        padding-top: 2mm;
+        border-top: 1px solid var(--line);
       }
-      .w-time {
-        width: 16%;
+
+      .w-in-time {
+        width: 13%;
       }
-      .w-car {
-        width: 14%;
+      .w-in-car {
+        width: 25%;
       }
-      .w-driver {
-        width: 16%;
+      .w-in-driver {
+        width: 15%;
       }
-      .w-item {
+      .w-in-work {
         width: 36%;
       }
-      .w-cart {
-        width: 12%;
+      .w-in-cart {
+        width: 11%;
       }
+      .w-out-time {
+        width: 17%;
+      }
+      .w-out-car {
+        width: 39%;
+      }
+      .w-out-momo {
+        width: 14%;
+      }
+      .w-out-package {
+        width: 16%;
+      }
+      .w-out-total {
+        width: 14%;
+      }
+
+      @media (max-width: 900px) {
+        .app {
+          padding: 12px;
+        }
+
+        .paper {
+          width: 100%;
+          min-height: auto;
+          padding: 16px;
+        }
+
+        .columns,
+        .summary-strip {
+          grid-template-columns: 1fr;
+        }
+      }
+
       @media print {
+        html,
         body {
+          width: 210mm;
+          height: 297mm;
           background: #fff;
         }
+
         .app {
-          padding: 0;
+          width: 100%;
           max-width: none;
+          padding: 0;
         }
+
         .toolbar {
-          display: none;
+          display: none !important;
         }
+
         .paper {
-          width: auto;
-          min-height: auto;
+          width: 100%;
+          min-height: 0;
           margin: 0;
+          padding: 0;
           border: 0;
           box-shadow: none;
-          padding: 8mm;
         }
+
+        .report-column,
+        .block,
+        .summary-card {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+
+        .note-input {
+          resize: none;
+          overflow: hidden;
+        }
+
+        .package-input {
+          border-color: #7f8da3;
+          background: #fff;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
         @page {
           size: A4 portrait;
-          margin: 8mm;
-        }
-        .section {
-          break-inside: avoid;
-        }
-        th,
-        td {
-          font-size: 12px;
-          padding: 3px 4px;
-          height: 24px;
-        }
-        .title {
-          font-size: 22px;
-        }
-        .top {
-          font-size: 15px;
-        }
-        .section-title {
-          font-size: 17px;
+          margin: 7mm;
         }
       }
     </style>
   </head>
+
   <body>
     <div class="app">
-      <div class="toolbar">
-        <h1>台南郵局運輸股｜MOMO進出口列印表</h1>
-        <div class="row">
-          <label class="file"
-            >進口 JSON（momo_dispatch）：<input
+      <section class="toolbar">
+        <h1>台南郵局運輸股｜MOMO 進出口單頁列印表</h1>
+        <div class="toolbar-row">
+          <label class="file-picker">
+            進口 JSON：
+            <input
               id="inboundFile"
               type="file"
               accept=".json,application/json"
-          /></label>
-          <label class="file"
-            >出口 JSON（report）：<input
+            />
+          </label>
+          <label class="file-picker">
+            出口 JSON：
+            <input
               id="outboundFile"
               type="file"
               accept=".json,application/json"
-          /></label>
-          <button class="btn print" onclick="window.print()">列印</button>
-          <button class="btn clear" onclick="resetData()">清空</button>
+            />
+          </label>
+          <button class="btn btn-print" type="button" onclick="window.print()">
+            列印單張 A4
+          </button>
+          <button class="btn btn-clear" type="button" onclick="resetData()">
+            清空資料
+          </button>
         </div>
         <div class="hint">
-          先在 momo_dispatch.html 與 report.html
-          按「匯出json」，再回本頁匯入。列印時會自動隱藏上方操作區。
+          匯入進口與出口 JSON 後，兩份資料會整合於同一張
+          A4：左側為進口、右側為出口。列印時請選擇 A4、直向、縮放
+          100%，並關閉瀏覽器頁首頁尾。
         </div>
-      </div>
+      </section>
 
-      <main class="paper" id="paper">
-        <div class="top">
-          <div>單位：台南郵局運輸股</div>
-          <div id="dateText">日期：—</div>
-        </div>
-        <div class="title">MOMO 進出口籃車數作業表</div>
+      <main class="paper">
+        <header class="report-header">
+          <h1 class="title">MOMO 進出口籃車數作業表</h1>
+          <div class="meta-row">
+            <div>單位：台南郵局運輸股</div>
+            <div class="dateText">日期：—</div>
+          </div>
+        </header>
 
-        <section class="section" id="inboundSection">
-          <div class="section-title">進口</div>
-          <div id="inboundContent"></div>
-          <div class="total" id="inboundTotal">進口總計：0 車次／0 籃車</div>
+        <section class="columns">
+          <article class="report-column inbound">
+            <div class="column-heading">
+              <div class="heading-main">
+                <strong>進口</strong>
+                <span>INBOUND</span>
+              </div>
+              <div class="heading-total" id="inboundHeadingTotal">
+                0 車次／0 籃車
+              </div>
+            </div>
+            <div class="content" id="inboundContent"></div>
+          </article>
+
+          <article class="report-column outbound">
+            <div class="column-heading">
+              <div class="heading-main">
+                <strong>出口</strong>
+                <span>OUTBOUND</span>
+              </div>
+              <div class="heading-total" id="outboundHeadingTotal">
+                0 車次／0 籃車
+              </div>
+            </div>
+            <div class="content" id="outboundContent"></div>
+          </article>
         </section>
 
-        <section class="section" id="outboundSection">
-          <div class="section-title">出口</div>
-          <div id="outboundContent"></div>
-          <div class="total" id="outboundTotal">出口總計：0 車次／0 籃車</div>
+        <section class="summary-strip">
+          <label class="summary-card in">
+            <span class="summary-label">進口備註</span>
+            <textarea
+              id="inboundNote"
+              class="note-input"
+              placeholder="可手動輸入進口作業備註"
+            ></textarea>
+          </label>
+          <label class="summary-card out">
+            <span class="summary-label">出口備註</span>
+            <textarea
+              id="outboundNote"
+              class="note-input"
+              placeholder="可手動輸入出口作業備註"
+            ></textarea>
+          </label>
         </section>
 
-        <div class="footer">
+        <footer class="footer">
           <div class="sign">製表：</div>
           <div class="sign">覆核：</div>
           <div class="sign">主管：</div>
-        </div>
+        </footer>
       </main>
     </div>
+
     <script>
-      const state = { inbound: null, outbound: null };
+      const state = { inbound: null, outbound: null, outboundPackages: {} };
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+
       function todayRoc() {
         const d = new Date();
-        // 顯示前一天
         d.setDate(d.getDate() - 1);
-
         return `${d.getFullYear() - 1911}年${d.getMonth() + 1}月${d.getDate()}日星期${weekdays[d.getDay()]}`;
       }
+
+      function n(value) {
+        return Number(value) || 0;
+      }
+
+      function esc(value) {
+        return String(value ?? "").replace(
+          /[&<>\"]/g,
+          (char) =>
+            ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char],
+        );
+      }
+
       function setDateText() {
-        const roc =
+        const rocDate =
           state.inbound?.workDate?.rocDate ||
           state.outbound?.workDate?.rocDate ||
           todayRoc();
-        document.getElementById("dateText").textContent = "日期：" + roc;
+
+        document.querySelectorAll(".dateText").forEach((element) => {
+          element.textContent = `日期：${rocDate}`;
+        });
       }
-      function n(v) {
-        return Number(v) || 0;
+
+      function table(headers, rows, widths, tableClass = "") {
+        const head = headers
+          .map(
+            (header, index) =>
+              `<th class="${widths[index] || ""}">${esc(header)}</th>`,
+          )
+          .join("");
+        return `<table class="${tableClass}"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table>`;
       }
-      function esc(s) {
-        return String(s ?? "").replace(
-          /[&<>"]/g,
-          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[m],
-        );
+
+      function cells(values) {
+        return `<tr>${values
+          .map(
+            (item) =>
+              `<td class="${item.className || ""}">${esc(item.value === 0 ? 0 : item.value || "")}</td>`,
+          )
+          .join("")}</tr>`;
       }
-      function rowCells(cols) {
-        return (
-          "<tr>" +
-          cols
-            .map((c) => `<td class="${c.cls || ""}">${esc(c.v || "")}</td>`)
-            .join("") +
-          "</tr>"
-        );
+
+      function block(title, subtotalTrips, subtotalCarts, tableHtml) {
+        return `
+          <section class="block">
+            <div class="block-title">
+              <span>${esc(title)}</span>
+              <span class="subtotal">${n(subtotalTrips)} 車／${n(subtotalCarts)} 籃</span>
+            </div>
+            ${tableHtml}
+          </section>`;
       }
-      function table(headers, rows, widths = []) {
-        return `<table><thead><tr>${headers.map((h, i) => `<th class="${widths[i] || ""}">${h}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
-      }
+
       function renderInbound() {
         const box = document.getElementById("inboundContent");
         const data = state.inbound?.inbound;
+
         if (!data) {
-          box.innerHTML =
-            '<div class="stage-title empty">尚未匯入進口 JSON</div>';
-          document.getElementById("inboundTotal").textContent =
-            "進口總計：0 車次／0 籃車";
+          box.innerHTML = `
+            <section class="block">
+              <div class="block-title"><span>進口資料</span><span class="subtotal">尚未匯入</span></div>
+              <div class="warehouse-line empty">請先匯入 momo_dispatch 匯出的 JSON 檔案</div>
+            </section>`;
+          updateInboundTotals(0, 0);
           return;
         }
+
         let html = "";
-        (data.stages || []).forEach((st, idx) => {
-          let rows = (st.rows || [])
-            .map((r) =>
-              rowCells([
-                { v: r.time },
-                { v: r.carNo },
-                { v: r.driver },
-                { v: r.workItem, cls: "left" },
-                { v: n(r.carts) },
+        (data.stages || []).forEach((stage, index) => {
+          let rows = (stage.rows || [])
+            .map((row) =>
+              cells([
+                { value: row.time },
+                { value: row.carNo },
+                { value: row.driver },
+                { value: row.workItem, className: "left" },
+                { value: n(row.carts) },
               ]),
             )
             .join("");
-          if (!rows)
-            rows = rowCells([
-              { v: "" },
-              { v: "" },
-              { v: "" },
-              { v: "（無資料）", cls: "left empty" },
-              { v: "" },
+
+          if (!rows) {
+            rows = cells([
+              { value: "" },
+              { value: "" },
+              { value: "" },
+              { value: "（無資料）", className: "left empty" },
+              { value: "" },
             ]);
-          html +=
-            `<div class="stage-title">${esc(st.stageName || `第${idx + 1}階段`)}</div>` +
-            table(["時間", "車次", "司機", "工作項目", "籃車數"], rows, [
-              "w-time",
-              "w-car",
-              "w-driver",
-              "w-item",
-              "w-cart",
-            ]) +
-            `<div class="subline">小計：${n(st.subtotalTrips)} 車次／${n(st.subtotalCarts)} 籃車</div>`;
-        });
-        const y = data.yongkang || { trips: 0, carts: 0 };
-        html +=
-          `<div class="stage-title">永康倉</div>` +
-          table(
-            ["項目", "車次", "籃車數"],
-            rowCells([
-              { v: "永康倉", cls: "left" },
-              { v: n(y.trips) },
-              { v: n(y.carts) },
-            ]),
+          }
+
+          const tableHtml = table(
+            ["時間", "車次", "司機", "工作項目", "籃車"],
+            rows,
+            ["w-in-time", "w-in-car", "w-in-driver", "w-in-work", "w-in-cart"],
+            "inbound-table",
           );
+
+          html += block(
+            stage.stageName || `第${index + 1}階段`,
+            stage.subtotalTrips,
+            stage.subtotalCarts,
+            tableHtml,
+          );
+        });
+
+        const stages = data.stages || [];
+        const xinshi = stages.reduce(
+          (sum, stage) => ({
+            trips: sum.trips + n(stage.subtotalTrips),
+            carts: sum.carts + n(stage.subtotalCarts),
+          }),
+          { trips: 0, carts: 0 },
+        );
+
+        html += `
+          <section class="block">
+            <div class="block-title"><span>新市倉</span><span class="subtotal">第1＋2＋3階段</span></div>
+            <div class="warehouse-line">
+              <strong>新市倉運載</strong>
+              <span class="badge">${xinshi.trips} 車次</span>
+              <span class="badge">${xinshi.carts} 籃車</span>
+            </div>
+          </section>`;
+
+        const yongkang = data.yongkang || { trips: 0, carts: 0 };
+        html += `
+          <section class="block">
+            <div class="block-title"><span>永康倉</span><span class="subtotal">獨立統計</span></div>
+            <div class="warehouse-line">
+              <strong>永康倉運載</strong>
+              <span class="badge">${n(yongkang.trips)} 車次</span>
+              <span class="badge">${n(yongkang.carts)} 籃車</span>
+            </div>
+          </section>`;
+
         box.innerHTML = html;
-        document.getElementById("inboundTotal").textContent =
-          `進口總計：${n(data.totalTrips)} 車次／${n(data.totalCarts)} 籃車`;
+        updateInboundTotals(data.totalTrips, data.totalCarts);
       }
+
+      function packageKey(direction, rowIndex) {
+        return `${direction}-${rowIndex}`;
+      }
+
+      function normalizePackageValue(value, total) {
+        if (value === "" || value === null || value === undefined) return "";
+        const parsed = Math.max(0, Math.floor(Number(value) || 0));
+        return Math.min(parsed, n(total));
+      }
+
+      function outboundRow(direction, row, rowIndex) {
+        const total = n(row.carts);
+        const key = packageKey(direction, rowIndex);
+        const stored = state.outboundPackages[key];
+        const packageCarts = normalizePackageValue(stored, total);
+        const momoCarts = total - (packageCarts === "" ? 0 : packageCarts);
+
+        return `
+          <tr>
+            <td>${esc(row.time)}</td>
+            <td class="left">${esc(row.carNo)}</td>
+            <td class="momo-value" id="momo-${key}">${momoCarts}</td>
+            <td>
+              <input
+                class="package-input"
+                type="number"
+                inputmode="numeric"
+                min="0"
+                max="${total}"
+                step="1"
+                value="${packageCarts}"
+                aria-label="${esc(row.carNo)}包裹籃車數"
+                data-package-key="${key}"
+                data-total="${total}"
+                oninput="updatePackageSplit(this)"
+              />
+            </td>
+            <td class="total-cart-value">${total}</td>
+          </tr>`;
+      }
+
+      function updatePackageSplit(input) {
+        const key = input.dataset.packageKey;
+        const total = n(input.dataset.total);
+        let value = input.value;
+
+        if (value !== "") {
+          value = normalizePackageValue(value, total);
+          input.value = value;
+          state.outboundPackages[key] = value;
+        } else {
+          delete state.outboundPackages[key];
+        }
+
+        const packageCarts = value === "" ? 0 : n(value);
+        const momoCell = document.getElementById(`momo-${key}`);
+        if (momoCell) momoCell.textContent = Math.max(0, total - packageCarts);
+      }
+
       function renderOutbound() {
         const box = document.getElementById("outboundContent");
         const data = state.outbound?.outbound;
+
         if (!data) {
-          box.innerHTML =
-            '<div class="stage-title empty">尚未匯入出口 JSON</div>';
-          document.getElementById("outboundTotal").textContent =
-            "出口總計：0 車次／0 籃車";
+          box.innerHTML = `
+            <section class="block">
+              <div class="block-title"><span>出口資料</span><span class="subtotal">尚未匯入</span></div>
+              <div class="warehouse-line empty">請先匯入 report 匯出的 JSON 檔案</div>
+            </section>`;
+          updateOutboundTotals(0, 0);
           return;
         }
+
         let html = "";
         [
           ["北上", "north"],
@@ -381,54 +854,97 @@
         ].forEach(([label, key]) => {
           const part = data[key] || { rows: [] };
           let rows = (part.rows || [])
-            .map((r) =>
-              rowCells([{ v: r.time }, { v: r.carNo }, { v: n(r.carts) }]),
-            )
+            .map((row, rowIndex) => outboundRow(key, row, rowIndex))
             .join("");
-          if (!rows)
-            rows = rowCells([
-              { v: "" },
-              { v: "（無資料）", cls: "empty" },
-              { v: "" },
+
+          if (!rows) {
+            rows = cells([
+              { value: "" },
+              { value: "（無資料）", className: "empty" },
+              { value: "" },
+              { value: "" },
+              { value: "" },
             ]);
-          html +=
-            `<div class="stage-title">${label}</div>` +
-            table(["時間", "車次", "籃車數"], rows, ["w-time", "", "w-cart"]) +
-            `<div class="subline">小計：${n(part.subtotalTrips)} 車次／${n(part.subtotalCarts)} 籃車</div>`;
+          }
+
+          const tableHtml = table(
+            ["時間", "車次", "MOMO", "包裹", "合計"],
+            rows,
+            [
+              "w-out-time",
+              "w-out-car",
+              "w-out-momo",
+              "w-out-package",
+              "w-out-total",
+            ],
+            "outbound-table",
+          );
+
+          html += block(
+            label,
+            part.subtotalTrips,
+            part.subtotalCarts,
+            tableHtml,
+          );
         });
+
         box.innerHTML = html;
-        document.getElementById("outboundTotal").textContent =
-          `出口總計：${n(data.totalTrips)} 車次／${n(data.totalCarts)} 籃車`;
+        updateOutboundTotals(data.totalTrips, data.totalCarts);
       }
+
+      function updateInboundTotals(trips, carts) {
+        const text = `${n(trips)} 車次／${n(carts)} 籃車`;
+        document.getElementById("inboundHeadingTotal").textContent = text;
+      }
+
+      function updateOutboundTotals(trips, carts) {
+        const text = `${n(trips)} 車次／${n(carts)} 籃車`;
+        document.getElementById("outboundHeadingTotal").textContent = text;
+      }
+
       function render() {
         setDateText();
         renderInbound();
         renderOutbound();
       }
+
       function resetData() {
         state.inbound = null;
         state.outbound = null;
+        state.outboundPackages = {};
         document.getElementById("inboundFile").value = "";
         document.getElementById("outboundFile").value = "";
+        document.getElementById("inboundNote").value = "";
+        document.getElementById("outboundNote").value = "";
         render();
       }
+
       async function loadFile(file, type) {
         if (!file) return;
-        const data = JSON.parse(await file.text());
-        if (type === "inbound") state.inbound = data;
-        else state.outbound = data;
-        render();
+
+        try {
+          const data = JSON.parse(await file.text());
+          state[type] = data;
+          if (type === "outbound") state.outboundPackages = {};
+          render();
+        } catch (error) {
+          console.error(error);
+          alert("JSON 檔案讀取失敗，請確認檔案格式是否正確。");
+        }
       }
+
       document
         .getElementById("inboundFile")
-        .addEventListener("change", (e) =>
-          loadFile(e.target.files[0], "inbound"),
-        );
+        .addEventListener("change", (event) => {
+          loadFile(event.target.files[0], "inbound");
+        });
+
       document
         .getElementById("outboundFile")
-        .addEventListener("change", (e) =>
-          loadFile(e.target.files[0], "outbound"),
-        );
+        .addEventListener("change", (event) => {
+          loadFile(event.target.files[0], "outbound");
+        });
+
       render();
     </script>
   </body>
