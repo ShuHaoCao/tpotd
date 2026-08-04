@@ -1138,6 +1138,131 @@
           padding-top: 4px;
         }
       }
+      /* === 趨勢圖平均統計資訊 === */
+      .trend-title-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .trend-overall-stats {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+
+      .trend-overall-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        color: #ecfeff !important;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(103, 232, 249, 0.38);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        font-size: 11px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .trend-overall-chip b {
+        color: #5eead4 !important;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .trend-weekday-panel {
+        padding: 10px 12px 12px;
+        border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+        background: linear-gradient(
+          180deg,
+          rgba(7, 27, 45, 0.9),
+          rgba(2, 6, 23, 0.84)
+        );
+      }
+
+      .trend-weekday-title {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 8px;
+        color: #7dd3fc;
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 0.04em;
+      }
+
+      .trend-weekday-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .trend-weekday-card {
+        min-width: 0;
+        padding: 8px 7px;
+        border-radius: 10px;
+        text-align: center;
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(56, 189, 248, 0.24);
+      }
+
+      .trend-weekday-card .weekday-name {
+        color: #cbd5e1;
+        font-size: 10px;
+        font-weight: 900;
+      }
+
+      .trend-weekday-card .weekday-value {
+        margin-top: 5px;
+        color: #f8fafc;
+        font-size: 11px;
+        font-weight: 950;
+        line-height: 1.4;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .trend-weekday-card .weekday-value-line {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .trend-weekday-card .weekday-value-line + .weekday-value-line {
+        margin-top: 2px;
+      }
+
+      .trend-weekday-card.weekend {
+        border-color: rgba(251, 191, 36, 0.42);
+        background: rgba(120, 53, 15, 0.2);
+      }
+
+      @media (max-width: 768px) {
+        .trend-title-row {
+          align-items: flex-start;
+        }
+        .trend-overall-stats {
+          width: 100%;
+        }
+        .trend-overall-chip {
+          font-size: 10px;
+          padding: 4px 8px;
+        }
+        .trend-weekday-grid {
+          display: flex;
+          overflow-x: auto;
+          gap: 7px;
+          padding-bottom: 3px;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: thin;
+        }
+        .trend-weekday-card {
+          flex: 0 0 112px;
+        }
+      }
+
       @media (max-width: 768px) {
         .date-display-btn {
           min-width: 0;
@@ -1934,12 +2059,28 @@
           <div
             class="bg-slate-900 text-white p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
           >
-            <h3 class="font-bold flex items-center gap-2 text-sm sm:text-base">
-              <span class="material-icons text-emerald-400"
-                >stacked_line_chart</span
+            <div class="trend-title-row">
+              <h3
+                class="font-bold flex items-center gap-2 text-sm sm:text-base"
               >
-              {{ trendModal.title }}
-            </h3>
+                <span class="material-icons text-emerald-400"
+                  >stacked_line_chart</span
+                >
+                {{ trendModal.title }}
+              </h3>
+              <div
+                v-if="['trips', 'duration', 'mails'].includes(trendModal.type)"
+                class="trend-overall-stats"
+              >
+                <span
+                  v-for="item in trendStatistics.overall"
+                  :key="item.label"
+                  class="trend-overall-chip"
+                >
+                  {{ item.label }}：<b>{{ item.value }}</b>
+                </span>
+              </div>
+            </div>
             <button
               @click="closeTrendModal"
               class="text-slate-400 hover:text-white transition-colors self-end sm:self-auto"
@@ -2059,9 +2200,43 @@
           </div>
 
           <div
+            v-if="['trips', 'duration', 'mails'].includes(trendModal.type)"
+            class="trend-weekday-panel"
+          >
+            <div class="trend-weekday-title">
+              <span class="material-icons text-sm">calendar_view_week</span>
+              依星期統計平均值（以全部每日資料計算）
+            </div>
+            <div class="trend-weekday-grid">
+              <div
+                v-for="item in trendStatistics.weekdays"
+                :key="item.dayIndex"
+                :class="['trend-weekday-card', item.dayIndex === 0 || item.dayIndex === 6 ? 'weekend' : '']"
+              >
+                <div class="weekday-name">星期{{ item.name }}</div>
+                <div class="weekday-value">
+                  <template v-if="item.lines && item.lines.length">
+                    <div
+                      v-for="(line, lineIndex) in item.lines"
+                      :key="`${item.dayIndex}-${lineIndex}`"
+                      class="weekday-value-line"
+                    >
+                      {{ line }}
+                    </div>
+                  </template>
+                  <template v-else>{{ item.value }}</template>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
             class="p-3 sm:p-6 overflow-y-auto flex-1 bg-slate-50 min-h-[320px] sm:min-h-[420px]"
           >
-            <div v-if="trendModal.type === 'mails'" class="trend-scroll-hint">
+            <div
+              v-if="['mails', 'duration', 'trips'].includes(trendModal.type) && trendModal.scale === 'daily'"
+              class="trend-scroll-hint"
+            >
               <span class="material-icons text-sm">swipe</span>
               左右滑動查看較早或較新的完整資料
             </div>
@@ -2845,6 +3020,117 @@
             return isNaN(n) ? 0 : n;
           };
 
+          const formatAverageDuration = (minutes) => {
+            const total = Math.round(Number(minutes) || 0);
+            const hours = Math.floor(total / 60);
+            const mins = total % 60;
+            return `${hours}小時${mins}分鐘`;
+          };
+
+          // 趨勢視窗統計：一律以全部「每日原始資料」計算，
+          // 不受目前按日／週／月／年的顯示尺度影響。
+          const trendStatistics = computed(() => {
+            const type = trendModal.value.type;
+            const rows = (mockData.value || []).filter(
+              (item) => item && item.summary && item.date,
+            );
+            const dayNames = ["日", "一", "二", "三", "四", "五", "六"];
+            const buckets = dayNames.map((name, dayIndex) => ({
+              name,
+              dayIndex,
+              rows: [],
+            }));
+
+            rows.forEach((item) => {
+              const parts = String(item.date).split("-").map(Number);
+              if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n)))
+                return;
+              const dayIndex = new Date(
+                parts[0],
+                parts[1] - 1,
+                parts[2],
+              ).getDay();
+              buckets[dayIndex].rows.push(item);
+            });
+
+            const average = (items, getter) => {
+              const nums = items
+                .map(getter)
+                .map(Number)
+                .filter(Number.isFinite);
+              return nums.length
+                ? nums.reduce((sum, value) => sum + value, 0) / nums.length
+                : 0;
+            };
+
+            const getTrips = (item) => valCheck(item.summary.total_trips);
+            const getCarts = (item) => valCheck(item.summary.total_carts);
+            const getDuration = (item) =>
+              parseMinsOnly(item.summary.total_duration);
+            const getMails = (item) => valCheck(item.summary.total_mails);
+
+            let overall = [];
+            let formatWeekday = () => "—";
+
+            if (type === "trips") {
+              overall = [
+                {
+                  label: "累計平均車次",
+                  value: `${average(rows, getTrips).toFixed(1)} 次`,
+                },
+                {
+                  label: "累計平均籃車數",
+                  value: `${average(rows, getCarts).toFixed(1)} 台`,
+                },
+              ];
+              formatWeekday = (items) =>
+                items.length
+                  ? `車次 ${average(items, getTrips).toFixed(1)}｜籃車 ${average(items, getCarts).toFixed(1)}`
+                  : "無資料";
+            } else if (type === "duration") {
+              overall = [
+                {
+                  label: "平均作業時間",
+                  value: formatAverageDuration(average(rows, getDuration)),
+                },
+              ];
+              formatWeekday = (items) =>
+                items.length
+                  ? formatAverageDuration(average(items, getDuration))
+                  : "無資料";
+            } else if (type === "mails") {
+              overall = [
+                {
+                  label: "平均郵件量",
+                  value: `${Math.round(average(rows, getMails)).toLocaleString("zh-TW")} 件`,
+                },
+              ];
+              formatWeekday = (items) =>
+                items.length
+                  ? `${Math.round(average(items, getMails)).toLocaleString("zh-TW")} 件`
+                  : "無資料";
+            }
+
+            return {
+              overall,
+              weekdays: buckets.map((bucket) => {
+                const value = formatWeekday(bucket.rows);
+                return {
+                  name: bucket.name,
+                  dayIndex: bucket.dayIndex,
+                  value,
+                  lines:
+                    type === "trips" && bucket.rows.length
+                      ? [
+                          `車次 ${average(bucket.rows, getTrips).toFixed(1)}`,
+                          `籃車 ${average(bucket.rows, getCarts).toFixed(1)}`,
+                        ]
+                      : [value],
+                };
+              }),
+            };
+          });
+
           // ─── 【歷史趨勢控制器】 ───
           const openTrendModal = (type) => {
             const titles = {
@@ -2924,22 +3210,33 @@
             // 完美對齊：不論日、週、月、年，labels 與 raw 都是純正的 [左舊右新] 推進序列
             const { labels, raw } = getAggregatedData(scale);
 
-            // 郵件量日趨勢採固定「每筆資料寬度」，資料越多就延伸畫布，不再壓縮。
-            // 其他圖表維持原有版面寬度與配置。
+            // 「郵件量、作業時間、車次／籃車數」的按日趨勢圖，
+            // 採固定每筆資料寬度：資料越多就向右延伸，不再全部壓縮擠在同一畫面。
+            // 週、月、年及其他圖表仍維持原有版面寬度。
             const viewport = document.getElementById(
               "trendChartScrollViewport",
             );
             const content = document.getElementById("trendChartScrollContent");
+            const scrollableDailyTypes = ["mails", "duration", "trips"];
+            const isScrollableDailyChart =
+              scale === "daily" && scrollableDailyTypes.includes(type);
+
             if (viewport && content) {
-              const isScrollableMailChart =
-                type === "mails" && scale === "daily";
-              const pointWidth = window.innerWidth <= 768 ? 44 : 58;
+              const isMobile = window.innerWidth <= 768;
+              const pointWidthMap = {
+                mails: isMobile ? 44 : 58,
+                duration: isMobile ? 48 : 62,
+                trips: isMobile ? 48 : 62,
+              };
+              const pointWidth = pointWidthMap[type] || (isMobile ? 44 : 58);
               const minimumWidth = Math.max(viewport.clientWidth || 0, 320);
-              const desiredWidth = isScrollableMailChart
+              const desiredWidth = isScrollableDailyChart
                 ? Math.max(minimumWidth, labels.length * pointWidth)
                 : minimumWidth;
+
               content.style.width = `${desiredWidth}px`;
               content.style.minWidth = `${desiredWidth}px`;
+              viewport.scrollLeft = 0;
             }
 
             let chartConfig = {};
@@ -3284,7 +3581,7 @@
             }
 
             chartInstance = new Chart(ctx, chartConfig);
-            setupTrendChartScroller(type === "mails" && scale === "daily");
+            setupTrendChartScroller(isScrollableDailyChart);
           };
 
           const parseMinsOnly = (str) => {
@@ -3436,6 +3733,7 @@
             timeBucketStats,
             ganttHours,
             trendModal,
+            trendStatistics,
             openTrendModal,
             closeTrendModal,
             changeTimeScale,
