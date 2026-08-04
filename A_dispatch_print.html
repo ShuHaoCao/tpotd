@@ -510,11 +510,71 @@
           overflow: hidden;
         }
 
+        html,
+        body,
+        .paper,
+        .report-column,
+        .block,
+        .block-title,
+        .column-heading,
+        .summary-card,
+        th,
+        td {
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+
+        .columns {
+          display: grid !important;
+          grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr) !important;
+          gap: 4mm !important;
+          align-items: start !important;
+        }
+
+        .summary-strip {
+          display: grid !important;
+          grid-template-columns: 1.08fr 0.92fr !important;
+          gap: 4mm !important;
+        }
+
         .package-input {
-          border-color: #7f8da3;
-          background: #fff;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
+          appearance: textfield;
+          -moz-appearance: textfield;
+          width: 100%;
+          height: auto;
+          min-height: 0;
+          margin: 0;
+          padding: 0;
+          border: 0 !important;
+          border-radius: 0;
+          background: transparent !important;
+          box-shadow: none !important;
+          outline: 0 !important;
+          color: var(--ink);
+          text-align: center;
+          font: inherit;
+          font-size: 9.6px;
+          font-weight: 800;
+        }
+
+        .package-input::-webkit-inner-spin-button,
+        .package-input::-webkit-outer-spin-button {
+          margin: 0;
+          -webkit-appearance: none;
+        }
+
+        .note-input {
+          min-height: 10mm;
+          padding: 0;
+          border: 0 !important;
+          border-radius: 0;
+          background: transparent !important;
+          box-shadow: none !important;
+          outline: 0 !important;
+        }
+
+        .note-input::placeholder {
+          color: transparent !important;
         }
 
         @page {
@@ -974,6 +1034,12 @@
         .addEventListener("change", (event) => {
           loadFile(event.target.files[0], "outbound");
         });
+
+      window.addEventListener("beforeprint", () => {
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
+      });
 
       render();
     </script>
