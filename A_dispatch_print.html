@@ -830,6 +830,8 @@
         const packageCarts = value === "" ? 0 : n(value);
         const momoCell = document.getElementById(`momo-${key}`);
         if (momoCell) momoCell.textContent = Math.max(0, total - packageCarts);
+
+        updateOutboundNote();
       }
 
       function renderOutbound() {
@@ -889,6 +891,7 @@
 
         box.innerHTML = html;
         updateOutboundTotals(data.totalTrips, data.totalCarts);
+        updateOutboundNote();
       }
 
       function updateInboundTotals(trips, carts) {
@@ -899,6 +902,34 @@
       function updateOutboundTotals(trips, carts) {
         const text = `${n(trips)} 車次／${n(carts)} 籃車`;
         document.getElementById("outboundHeadingTotal").textContent = text;
+      }
+
+      function updateOutboundNote() {
+        const note = document.getElementById("outboundNote");
+        const data = state.outbound?.outbound;
+
+        if (!data) {
+          note.value = "";
+          return;
+        }
+
+        let packageTotal = 0;
+        let momoTotal = 0;
+
+        ["north", "south"].forEach((direction) => {
+          (data[direction]?.rows || []).forEach((row, rowIndex) => {
+            const total = n(row.carts);
+            const key = packageKey(direction, rowIndex);
+            const stored = state.outboundPackages[key];
+            const packageValue = normalizePackageValue(stored, total);
+            const packageCarts = packageValue === "" ? 0 : n(packageValue);
+
+            packageTotal += packageCarts;
+            momoTotal += Math.max(0, total - packageCarts);
+          });
+        });
+
+        note.value = `包裹出口：${packageTotal}台。\nMOMO出口：${momoTotal}台。`;
       }
 
       function render() {
