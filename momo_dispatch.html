@@ -596,6 +596,55 @@
           inset 0 1px 0 rgba(255, 255, 255, 0.14);
       }
 
+      /* 單位車次：明嘉／郵局／運輸／快捷各自使用不同顏色 */
+      .stage-trip-pill.mingjia {
+        background: linear-gradient(
+          135deg,
+          rgba(37, 99, 235, 0.92),
+          rgba(14, 165, 233, 0.76)
+        ) !important;
+        border-color: rgba(125, 211, 252, 0.68) !important;
+        box-shadow:
+          0 0 16px rgba(56, 189, 248, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      }
+
+      .stage-trip-pill.post {
+        background: linear-gradient(
+          135deg,
+          rgba(34, 197, 94, 0.9),
+          rgba(6, 95, 70, 0.84)
+        ) !important;
+        border-color: rgba(134, 239, 172, 0.62) !important;
+        box-shadow:
+          0 0 16px rgba(34, 197, 94, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      }
+
+      .stage-trip-pill.transport {
+        background: linear-gradient(
+          135deg,
+          rgba(147, 51, 234, 0.92),
+          rgba(91, 33, 182, 0.84)
+        ) !important;
+        border-color: rgba(216, 180, 254, 0.66) !important;
+        box-shadow:
+          0 0 16px rgba(192, 132, 252, 0.24),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      }
+
+      .stage-trip-pill.express {
+        background: linear-gradient(
+          135deg,
+          rgba(245, 158, 11, 0.94),
+          rgba(194, 65, 12, 0.86)
+        ) !important;
+        border-color: rgba(253, 186, 116, 0.7) !important;
+        box-shadow:
+          0 0 16px rgba(251, 146, 60, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.14);
+      }
+
       .stage-trip-pill.unknown {
         background: linear-gradient(
           135deg,
@@ -1641,7 +1690,8 @@
                     </div>
                   </td>
                   <td class="px-6 py-4">
-                    <span :class="['stage-trip-pill', getVehicleTypeKey(car)]"
+                    <span
+                      :class="['stage-trip-pill', getStageTripColorKey(car)]"
                       >{{ car.trip_no || '—' }}</span
                     >
                   </td>
@@ -1755,7 +1805,7 @@
                     >車次編號</span
                   >
                   <span
-                    :class="['stage-trip-pill', getVehicleTypeKey(car), 'truncate block max-w-[96px]']"
+                    :class="['stage-trip-pill', getStageTripColorKey(car), 'truncate block max-w-[96px]']"
                     >{{ car.trip_no || '—' }}</span
                   >
                 </div>
@@ -2819,6 +2869,19 @@
             return "unknown";
           };
 
+          // 階段檢視「單位車次」專用配色：依名稱直接區分四種單位
+          const getStageTripColorKey = (car) => {
+            const text = [car.trip_no, car.car_name, car.display_name]
+              .filter(Boolean)
+              .join(" ");
+
+            if (/明嘉/.test(text)) return "mingjia";
+            if (/郵局/.test(text)) return "post";
+            if (/運輸/.test(text)) return "transport";
+            if (/快捷/.test(text)) return "express";
+            return "unknown";
+          };
+
           const getVehicleTypeClass = (car) => {
             const key = getVehicleTypeKey(car);
             if (key === "post") return "timeline-post";
@@ -3743,6 +3806,7 @@
             resetDurationAxis,
             getVehicleTypeLabel,
             getVehicleTypeKey,
+            getStageTripColorKey,
             getVehicleTypeClass,
             getPrepDurationMins,
             getGanttStyle,
