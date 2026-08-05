@@ -124,13 +124,13 @@
         margin-top: 2.5mm;
         padding-bottom: 2mm;
         border-bottom: 1.5px solid var(--line);
-        font-size: 14.2px;
+        font-size: 14px;
         font-weight: 800;
       }
 
       .columns {
         display: grid;
-        grid-template-columns: minmax(0, 1.09fr) minmax(0, 0.91fr);
+        grid-template-columns: 1.09fr 0.91fr;
         gap: 3.2mm;
         align-items: start;
       }
@@ -172,7 +172,7 @@
       }
 
       .heading-main span {
-        font-size: 11.2px;
+        font-size: 12px;
         font-weight: 700;
         opacity: 0.88;
         letter-spacing: 0.05em;
@@ -272,8 +272,8 @@
         padding-left: 1.2mm;
       }
 
-      .outbound-table th:nth-child(2),
-      .outbound-table td:nth-child(2) {
+      .outbound-table th:nth-child(3),
+      .outbound-table td:nth-child(3) {
         text-align: left;
         padding-left: 1.2mm;
         white-space: nowrap;
@@ -293,6 +293,46 @@
         line-height: 1.08;
       }
 
+      /* 欄位對齊設定：編輯版與列印版共用 */
+      .inbound-table th:nth-child(1),
+      .inbound-table td:nth-child(1),
+      .inbound-table th:nth-child(2),
+      .inbound-table td:nth-child(2),
+      .inbound-table th:nth-child(4),
+      .inbound-table td:nth-child(4),
+      .inbound-table th:nth-child(5),
+      .inbound-table td:nth-child(5) {
+        text-align: center;
+      }
+
+      .inbound-table th:nth-child(3),
+      .inbound-table td:nth-child(3) {
+        text-align: left;
+        padding-left: 1.2mm;
+      }
+
+      .outbound-table th:nth-child(1),
+      .outbound-table td:nth-child(1),
+      .outbound-table th:nth-child(2),
+      .outbound-table td:nth-child(2),
+      .outbound-table th:nth-child(4),
+      .outbound-table td:nth-child(4),
+      .outbound-table th:nth-child(5),
+      .outbound-table td:nth-child(5),
+      .outbound-table th:nth-child(6),
+      .outbound-table td:nth-child(6) {
+        text-align: center;
+      }
+
+      .outbound-table th:nth-child(3),
+      .outbound-table td:nth-child(3) {
+        text-align: left;
+        padding-left: 1.2mm;
+        white-space: nowrap;
+        word-break: keep-all;
+        overflow-wrap: normal;
+      }
+
       .package-input {
         display: block;
         width: 100%;
@@ -304,7 +344,7 @@
         color: var(--ink);
         text-align: center;
         font: inherit;
-        font-size: 10.8px;
+        font-size: 13px;
         font-weight: 800;
         outline: none;
       }
@@ -358,7 +398,7 @@
         display: block;
         margin-bottom: 0.8mm;
         color: #475467;
-        font-size: 10.2px;
+        font-size: 10px;
         font-weight: 800;
         line-height: 1.15;
         white-space: nowrap;
@@ -392,7 +432,7 @@
       th {
         height: 6.5mm;
         background: #fafbfc;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 900;
       }
 
@@ -411,11 +451,11 @@
         align-items: center;
         min-height: 8.5mm;
         padding: 1.4mm 1.7mm;
-        font-size: 12.7px;
+        font-size: 13px;
       }
 
       .warehouse-line strong {
-        font-size: 12.2px;
+        font-size: 13px;
       }
 
       .badge {
@@ -455,7 +495,7 @@
       .summary-label {
         display: block;
         margin-bottom: 0.8mm;
-        font-size: 12.2px;
+        font-size: 13px;
         letter-spacing: 0.08em;
       }
 
@@ -470,7 +510,7 @@
         background: rgb(255 255 255 / 72%);
         color: var(--ink);
         font: inherit;
-        font-size: 11.2px;
+        font-size: 13px;
         font-weight: 700;
         line-height: 1.28;
       }
@@ -486,7 +526,7 @@
         gap: 10mm;
         margin-top: 6mm;
         padding-top: 1mm;
-        font-size: 12.7px;
+        font-size: 13px;
         font-weight: 800;
       }
 
@@ -503,25 +543,28 @@
         width: 15%;
       }
       .w-in-driver {
-        width: 25%;
+        width: 30%;
       }
       .w-in-work {
         width: 20%;
       }
       .w-in-cart {
-        width: 25%;
+        width: 20%;
+      }
+      .w-out-seq {
+        width: 8%;
       }
       .w-out-time {
-        width: 16%;
+        width: 14%;
       }
       .w-out-car {
-        width: 38%;
+        width: 29%;
       }
       .w-out-momo {
-        width: 15%;
+        width: 20%;
       }
       .w-out-package {
-        width: 16%;
+        width: 14%;
       }
       .w-out-total {
         width: 15%;
@@ -616,9 +659,10 @@
 
         .inbound-table th:nth-child(4),
         .inbound-table td:nth-child(4) {
-          padding-left: 0.7mm;
+          padding-left: 3mm;
           padding-right: 0.7mm;
           font-size: 13px;
+          text-align: center;
         }
 
         .summary-strip {
@@ -643,7 +687,7 @@
           color: var(--ink);
           text-align: center;
           font: inherit;
-          font-size: 10.65px;
+          font-size: 13px;
           font-weight: 800;
         }
 
@@ -671,7 +715,7 @@
           color: var(--ink);
           text-align: center;
           font: inherit;
-          font-size: 14px !important;
+          font-size: 13px !important;
           font-weight: 900 !important;
           line-height: 1.15 !important;
           font-variant-numeric: tabular-nums;
@@ -707,19 +751,19 @@
         }
 
         .heading-main span {
-          font-size: 11px !important;
+          font-size: 13px !important;
         }
 
         .heading-total {
-          font-size: 11.7px !important;
+          font-size: 13px !important;
         }
 
         .block-title {
-          font-size: 12.7px !important;
+          font-size: 13px !important;
         }
 
         .subtotal {
-          font-size: 11.1px !important;
+          font-size: 13px !important;
         }
 
         th,
@@ -732,21 +776,23 @@
 
         .inbound-table th,
         .inbound-table td {
-          font-size: 11.15px !important;
+          font-size: 12px !important;
         }
 
         .inbound-table th:nth-child(2),
         .inbound-table td:nth-child(2) {
-          font-size: 10.65px !important;
+          font-size: 13px !important;
           padding-left: 0.45mm !important;
           padding-right: 0.45mm !important;
+          text-align: center;
         }
 
         .inbound-table th:nth-child(3),
         .inbound-table td:nth-child(3) {
-          font-size: 10.35px !important;
-          padding-left: 0.35mm !important;
-          padding-right: 0.35mm !important;
+          font-size: 13px !important;
+          padding-left: 0.8mm !important;
+          padding-right: 0.8mm !important;
+          text-align: left;
         }
 
         .inbound-table td:nth-child(3) {
@@ -756,7 +802,7 @@
 
         .inbound-table th:nth-child(4),
         .inbound-table td:nth-child(4) {
-          font-size: 10.65px !important;
+          font-size: 13px !important;
           padding-left: 0.4mm !important;
           padding-right: 0.4mm !important;
           white-space: nowrap !important;
@@ -765,30 +811,71 @@
         }
 
         .outbound-table th {
-          font-size: 10.15px !important;
+          font-size: 13px !important;
         }
 
         .outbound-table td {
-          font-size: 10.55px !important;
+          font-size: 13px !important;
         }
 
-        .outbound-table th:nth-child(2),
-        .outbound-table td:nth-child(2) {
+        .outbound-table th:nth-child(3),
+        .outbound-table td:nth-child(3) {
           padding-left: 0.8mm !important;
           padding-right: 0.35mm !important;
         }
 
+        /* 列印版欄位對齊：明確覆蓋一般樣式 */
+        .inbound-table th:nth-child(1),
+        .inbound-table td:nth-child(1),
+        .inbound-table th:nth-child(2),
+        .inbound-table td:nth-child(2),
+        .inbound-table th:nth-child(4),
+        .inbound-table td:nth-child(4),
+        .inbound-table th:nth-child(5),
+        .inbound-table td:nth-child(5) {
+          text-align: center !important;
+        }
+
+        .inbound-table th:nth-child(3),
+        .inbound-table td:nth-child(3) {
+          text-align: left !important;
+          padding-left: 1.2mm !important;
+        }
+
+        .outbound-table th:nth-child(1),
+        .outbound-table td:nth-child(1),
+        .outbound-table th:nth-child(2),
+        .outbound-table td:nth-child(2),
+        .outbound-table th:nth-child(4),
+        .outbound-table td:nth-child(4),
+        .outbound-table th:nth-child(5),
+        .outbound-table td:nth-child(5),
+        .outbound-table th:nth-child(6),
+        .outbound-table td:nth-child(6) {
+          text-align: center !important;
+        }
+
+        .outbound-table th:nth-child(3),
+        .outbound-table td:nth-child(3) {
+          text-align: left !important;
+          padding-left: 1.2mm !important;
+          padding-right: 0.35mm !important;
+          white-space: nowrap !important;
+          word-break: keep-all !important;
+          overflow-wrap: normal !important;
+        }
+
         .warehouse-line {
-          font-size: 11.6px !important;
+          font-size: 13px !important;
         }
 
         .warehouse-line strong {
-          font-size: 12px !important;
+          font-size: 13px !important;
           white-space: nowrap;
         }
 
         .outbound-stat-label {
-          font-size: 9.7px !important;
+          font-size: 10px !important;
         }
 
         .outbound-stat-value {
@@ -796,20 +883,20 @@
         }
 
         .badge {
-          font-size: 11.3px !important;
+          font-size: 13px !important;
         }
 
         .summary-label {
-          font-size: 12.2px !important;
+          font-size: 12px !important;
         }
 
         .note-input {
-          font-size: 11.5px !important;
+          font-size: 13px !important;
           line-height: 1.25 !important;
         }
 
         .footer {
-          font-size: 12.5px !important;
+          font-size: 13px !important;
         }
 
         @page {
@@ -930,7 +1017,7 @@
       function todayRoc() {
         const d = new Date();
         d.setDate(d.getDate() - 1);
-        return `${d.getFullYear() - 1911}年${d.getMonth() + 1}月${d.getDate()}日星期${weekdays[d.getDay()]}`;
+        return `${d.getFullYear() - 1911}年${d.getMonth() + 1}月${d.getDate()}日 星期${weekdays[d.getDay()]}`;
       }
 
       function n(value) {
@@ -961,10 +1048,13 @@
       }
 
       function setDateText() {
-        const rocDate =
+        let rocDate =
           state.inbound?.workDate?.rocDate ||
           state.outbound?.workDate?.rocDate ||
           todayRoc();
+
+        // 自動將「日星期」改成「日 星期」
+        rocDate = rocDate.replace(/日星期/g, "日 星期");
 
         document.querySelectorAll(".dateText").forEach((element) => {
           element.textContent = `日期：${rocDate}`;
@@ -1034,13 +1124,14 @@
               { value: "" },
               { value: "" },
               { value: "" },
+              { value: "" },
               { value: "（無資料）", className: "left empty" },
               { value: "" },
             ]);
           }
 
           const tableHtml = table(
-            ["時間", "車次", "運務員", "工作項目", "籃車數"],
+            ["時間", "車次", "運務員", "單位車次", "籃車數"],
             rows,
             ["w-in-time", "w-in-car", "w-in-driver", "w-in-work", "w-in-cart"],
             "inbound-table",
@@ -1107,6 +1198,7 @@
 
         return `
           <tr>
+            <td>${rowIndex + 1}</td>
             <td>${esc(row.time)}</td>
             <td class="left">${esc(row.carNo)}</td>
             <td class="momo-value" id="momo-${key}">${momoCarts}</td>
@@ -1184,9 +1276,10 @@
           }
 
           const tableHtml = table(
-            ["時間", "車次", "MOMO", "包裹", "合計"],
+            ["序", "時間", "車次", "MOMO", "包裹", "合計"],
             rows,
             [
+              "w-out-seq",
               "w-out-time",
               "w-out-car",
               "w-out-momo",
