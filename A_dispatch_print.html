@@ -99,39 +99,39 @@
         width: 210mm;
         min-height: 297mm;
         margin: 0 auto;
-        padding: 9mm 9mm 8mm;
+        padding: 8mm 8mm 7mm;
         border: 1px solid #cbd5e1;
         background: var(--paper);
         box-shadow: 0 16px 40px rgb(15 23 42 / 15%);
       }
 
       .report-header {
-        margin-bottom: 5mm;
+        margin-bottom: 4mm;
       }
 
       .title {
         margin: 0;
         text-align: center;
-        font-size: 23px;
+        font-size: 25px;
         font-weight: 900;
-        letter-spacing: 0.13em;
+        letter-spacing: 0.105em;
       }
 
       .meta-row {
         display: flex;
         justify-content: space-between;
         gap: 16px;
-        margin-top: 3mm;
-        padding-bottom: 2.5mm;
+        margin-top: 2.5mm;
+        padding-bottom: 2mm;
         border-bottom: 1.5px solid var(--line);
-        font-size: 13.5px;
+        font-size: 14.2px;
         font-weight: 800;
       }
 
       .columns {
         display: grid;
-        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-        gap: 4mm;
+        grid-template-columns: minmax(0, 1.09fr) minmax(0, 0.91fr);
+        gap: 3.2mm;
         align-items: start;
       }
 
@@ -147,8 +147,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        min-height: 13mm;
-        padding: 2.5mm 3mm;
+        min-height: 12mm;
+        padding: 2.1mm 2.5mm;
         color: #fff;
       }
 
@@ -167,33 +167,33 @@
       }
 
       .heading-main strong {
-        font-size: 18px;
+        font-size: 20px;
         letter-spacing: 0.18em;
       }
 
       .heading-main span {
-        font-size: 10.5px;
+        font-size: 11.2px;
         font-weight: 700;
         opacity: 0.88;
         letter-spacing: 0.05em;
       }
 
       .heading-total {
-        padding: 1.2mm 2.2mm;
+        padding: 0.8mm 1.2mm;
         border: 1px solid rgb(255 255 255 / 55%);
         border-radius: 999px;
         background: rgb(255 255 255 / 13%);
-        font-size: 11px;
+        font-size: 16px;
         font-weight: 900;
         white-space: nowrap;
       }
 
       .content {
-        padding: 2.3mm;
+        padding: 1.8mm;
       }
 
       .block {
-        margin-bottom: 2.2mm;
+        margin-bottom: 1.7mm;
         border: 1px solid var(--soft-line);
         border-radius: 2mm;
         overflow: hidden;
@@ -208,11 +208,11 @@
         justify-content: space-between;
         align-items: center;
         gap: 3mm;
-        min-height: 7.5mm;
-        padding: 1.5mm 2.2mm;
+        min-height: 7mm;
+        padding: 1.25mm 1.8mm;
         background: #f3f5f8;
         border-bottom: 1px solid var(--soft-line);
-        font-size: 12px;
+        font-size: 12.7px;
         font-weight: 900;
       }
 
@@ -226,7 +226,7 @@
 
       .subtotal {
         color: #344054;
-        font-size: 10.5px;
+        font-size: 11.2px;
         font-weight: 900;
         white-space: nowrap;
       }
@@ -239,16 +239,16 @@
 
       th,
       td {
-        height: 7.2mm;
-        padding: 1.15mm 1.25mm;
+        height: 7mm;
+        padding: 0.75mm 0.85mm;
         border-right: 1px solid var(--soft-line);
         border-bottom: 1px solid var(--soft-line);
         text-align: center;
         vertical-align: middle;
-        font-size: 10.4px;
-        line-height: 1.18;
+        font-size: 11.35px;
+        line-height: 1.08;
         word-break: normal;
-        overflow-wrap: anywhere;
+        overflow-wrap: normal;
       }
 
       .inbound-table th:nth-child(2),
@@ -256,13 +256,26 @@
         white-space: nowrap;
         word-break: keep-all;
         overflow-wrap: normal;
-        font-size: 9.8px;
+        font-size: 10.8px;
+      }
+
+      .inbound-table th:nth-child(3),
+      .inbound-table td:nth-child(3) {
+        white-space: nowrap;
+        word-break: keep-all;
+        overflow-wrap: normal;
+        font-size: 10.65px;
+      }
+
+      .inbound-table td:nth-child(3) {
+        text-align: left;
+        padding-left: 1.2mm;
       }
 
       .outbound-table th:nth-child(2),
       .outbound-table td:nth-child(2) {
         text-align: left;
-        padding-left: 2mm;
+        padding-left: 1.2mm;
         white-space: nowrap;
         word-break: keep-all;
         overflow-wrap: normal;
@@ -270,35 +283,93 @@
 
       .outbound-table th,
       .outbound-table td {
-        padding-left: 0.8mm;
-        padding-right: 0.8mm;
-        font-size: 9.6px;
+        padding-left: 0.55mm;
+        padding-right: 0.55mm;
+        font-size: 10.65px;
       }
 
       .outbound-table th {
-        font-size: 9.2px;
-        line-height: 1.12;
+        font-size: 10.25px;
+        line-height: 1.08;
       }
 
       .package-input {
         display: block;
         width: 100%;
-        height: 5.6mm;
-        padding: 0.4mm 0.6mm;
+        height: 5.4mm;
+        padding: 0.25mm 0.35mm;
         border: 1px solid #9fb0c7;
         border-radius: 1.2mm;
         background: #fff;
         color: var(--ink);
         text-align: center;
         font: inherit;
-        font-size: 9.8px;
+        font-size: 10.8px;
         font-weight: 800;
         outline: none;
       }
 
-      .package-input:focus {
+      .package-input:focus,
+      .mail-count-input:focus {
         border-color: var(--blue);
         box-shadow: 0 0 0 1px rgb(36 94 159 / 18%);
+      }
+
+      .mail-count-input {
+        display: block;
+        width: 100%;
+        height: 6mm;
+        padding: 0.3mm 0.6mm;
+        border: 1px solid #9fb0c7;
+        border-radius: 1.2mm;
+        background: #fff;
+        color: var(--ink);
+        text-align: center;
+        font: inherit;
+        font-size: 11px;
+        font-weight: 900;
+        outline: none;
+      }
+
+      .outbound-stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .outbound-stat-item {
+        min-width: 0;
+        min-height: 12mm;
+        padding: 1.25mm 1.5mm;
+        border-right: 1px solid var(--soft-line);
+        border-bottom: 1px solid var(--soft-line);
+      }
+
+      .outbound-stat-item:nth-child(2n) {
+        border-right: 0;
+      }
+
+      .outbound-stat-item:nth-last-child(-n + 2) {
+        border-bottom: 0;
+      }
+
+      .outbound-stat-label {
+        display: block;
+        margin-bottom: 0.8mm;
+        color: #475467;
+        font-size: 10.2px;
+        font-weight: 800;
+        line-height: 1.15;
+        white-space: nowrap;
+      }
+
+      .outbound-stat-value {
+        display: block;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 900;
+        line-height: 1.15;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
       }
 
       .momo-value,
@@ -317,9 +388,9 @@
       }
 
       th {
-        height: 6.7mm;
+        height: 6.5mm;
         background: #fafbfc;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 900;
       }
 
@@ -336,18 +407,18 @@
         grid-template-columns: 1fr auto auto;
         gap: 2mm;
         align-items: center;
-        min-height: 9mm;
-        padding: 1.8mm 2.2mm;
-        font-size: 11px;
+        min-height: 8.5mm;
+        padding: 1.4mm 1.7mm;
+        font-size: 12.7px;
       }
 
       .warehouse-line strong {
-        font-size: 11.5px;
+        font-size: 12.2px;
       }
 
       .badge {
-        min-width: 18mm;
-        padding: 1mm 1.8mm;
+        min-width: 16mm;
+        padding: 0.8mm 1.2mm;
         border-radius: 999px;
         background: #eef2f6;
         text-align: center;
@@ -358,14 +429,14 @@
       .summary-strip {
         display: grid;
         grid-template-columns: 1.08fr 0.92fr;
-        gap: 4mm;
-        margin-top: 4mm;
+        gap: 3.2mm;
+        margin-top: 3mm;
       }
 
       .summary-card {
         display: block;
-        min-height: 19mm;
-        padding: 2.2mm 3mm;
+        min-height: 18mm;
+        padding: 1.8mm 2.4mm;
         border: 1.5px solid var(--line);
         border-radius: 2.5mm;
         font-weight: 900;
@@ -381,25 +452,25 @@
 
       .summary-label {
         display: block;
-        margin-bottom: 1.2mm;
-        font-size: 11.5px;
+        margin-bottom: 0.8mm;
+        font-size: 12.2px;
         letter-spacing: 0.08em;
       }
 
       .note-input {
         display: block;
         width: 100%;
-        min-height: 10mm;
+        min-height: 9.5mm;
         resize: vertical;
-        padding: 1.5mm 1.8mm;
+        padding: 1.1mm 1.4mm;
         border: 1px solid #9aa7b8;
         border-radius: 1.5mm;
         background: rgb(255 255 255 / 72%);
         color: var(--ink);
         font: inherit;
-        font-size: 10.5px;
-        font-weight: 600;
-        line-height: 1.4;
+        font-size: 11.2px;
+        font-weight: 700;
+        line-height: 1.28;
       }
 
       .note-input::placeholder {
@@ -410,48 +481,48 @@
       .footer {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 12mm;
-        margin-top: 8mm;
+        gap: 10mm;
+        margin-top: 6mm;
         padding-top: 1mm;
-        font-size: 12px;
+        font-size: 12.7px;
         font-weight: 800;
       }
 
       .sign {
-        min-height: 11mm;
-        padding-top: 2mm;
+        min-height: 10mm;
+        padding-top: 1.5mm;
         border-top: 1px solid var(--line);
       }
 
       .w-in-time {
-        width: 13%;
+        width: 12%;
       }
       .w-in-car {
-        width: 25%;
-      }
-      .w-in-driver {
-        width: 15%;
-      }
-      .w-in-work {
-        width: 36%;
-      }
-      .w-in-cart {
-        width: 11%;
-      }
-      .w-out-time {
         width: 17%;
       }
+      .w-in-driver {
+        width: 31%;
+      }
+      .w-in-work {
+        width: 30%;
+      }
+      .w-in-cart {
+        width: 10%;
+      }
+      .w-out-time {
+        width: 16%;
+      }
       .w-out-car {
-        width: 39%;
+        width: 38%;
       }
       .w-out-momo {
-        width: 14%;
+        width: 15%;
       }
       .w-out-package {
         width: 16%;
       }
       .w-out-total {
-        width: 14%;
+        width: 15%;
       }
 
       @media (max-width: 900px) {
@@ -531,6 +602,23 @@
           align-items: start !important;
         }
 
+        .inbound-table th:nth-child(3),
+        .inbound-table td:nth-child(3) {
+          white-space: nowrap !important;
+          word-break: keep-all !important;
+          overflow-wrap: normal !important;
+          font-size: 10.35px;
+          padding-left: 0.7mm;
+          padding-right: 0.7mm;
+        }
+
+        .inbound-table th:nth-child(4),
+        .inbound-table td:nth-child(4) {
+          padding-left: 0.7mm;
+          padding-right: 0.7mm;
+          font-size: 10.65px;
+        }
+
         .summary-strip {
           display: grid !important;
           grid-template-columns: 1.08fr 0.92fr !important;
@@ -553,18 +641,40 @@
           color: var(--ink);
           text-align: center;
           font: inherit;
-          font-size: 9.6px;
+          font-size: 10.65px;
           font-weight: 800;
         }
 
         .package-input::-webkit-inner-spin-button,
-        .package-input::-webkit-outer-spin-button {
+        .package-input::-webkit-outer-spin-button,
+        .mail-count-input::-webkit-inner-spin-button,
+        .mail-count-input::-webkit-outer-spin-button {
           margin: 0;
           -webkit-appearance: none;
         }
 
+        .mail-count-input {
+          appearance: textfield;
+          -moz-appearance: textfield;
+          width: 100%;
+          height: auto;
+          min-height: 0;
+          margin: 0;
+          padding: 0;
+          border: 0 !important;
+          border-radius: 0;
+          background: transparent !important;
+          box-shadow: none !important;
+          outline: 0 !important;
+          color: var(--ink);
+          text-align: center;
+          font: inherit;
+          font-size: 11.3px;
+          font-weight: 900;
+        }
+
         .note-input {
-          min-height: 10mm;
+          min-height: 9.5mm;
           padding: 0;
           border: 0 !important;
           border-radius: 0;
@@ -575,6 +685,127 @@
 
         .note-input::placeholder {
           color: transparent !important;
+        }
+
+        /* 列印大字最佳化：僅影響實際列印 */
+        .title {
+          font-size: 25px !important;
+          line-height: 1.12;
+          white-space: nowrap;
+        }
+
+        .meta-row {
+          font-size: 14.2px !important;
+        }
+
+        .heading-main strong {
+          font-size: 20px !important;
+        }
+
+        .heading-main span {
+          font-size: 11px !important;
+        }
+
+        .heading-total {
+          font-size: 11.7px !important;
+        }
+
+        .block-title {
+          font-size: 12.7px !important;
+        }
+
+        .subtotal {
+          font-size: 11.1px !important;
+        }
+
+        th,
+        td {
+          height: 7mm !important;
+          padding-top: 0.7mm !important;
+          padding-bottom: 0.7mm !important;
+          line-height: 1.08 !important;
+        }
+
+        .inbound-table th,
+        .inbound-table td {
+          font-size: 11.15px !important;
+        }
+
+        .inbound-table th:nth-child(2),
+        .inbound-table td:nth-child(2) {
+          font-size: 10.65px !important;
+          padding-left: 0.45mm !important;
+          padding-right: 0.45mm !important;
+        }
+
+        .inbound-table th:nth-child(3),
+        .inbound-table td:nth-child(3) {
+          font-size: 10.35px !important;
+          padding-left: 0.35mm !important;
+          padding-right: 0.35mm !important;
+        }
+
+        .inbound-table td:nth-child(3) {
+          text-align: left !important;
+          padding-left: 0.8mm !important;
+        }
+
+        .inbound-table th:nth-child(4),
+        .inbound-table td:nth-child(4) {
+          font-size: 10.65px !important;
+          padding-left: 0.4mm !important;
+          padding-right: 0.4mm !important;
+          white-space: nowrap !important;
+          word-break: keep-all !important;
+          overflow-wrap: normal !important;
+        }
+
+        .outbound-table th {
+          font-size: 10.15px !important;
+        }
+
+        .outbound-table td {
+          font-size: 10.55px !important;
+        }
+
+        .outbound-table th:nth-child(2),
+        .outbound-table td:nth-child(2) {
+          padding-left: 0.8mm !important;
+          padding-right: 0.35mm !important;
+        }
+
+        .warehouse-line {
+          font-size: 11.6px !important;
+        }
+
+        .warehouse-line strong {
+          font-size: 12px !important;
+          white-space: nowrap;
+        }
+
+        .outbound-stat-label {
+          font-size: 9.7px !important;
+        }
+
+        .outbound-stat-value {
+          font-size: 11.6px !important;
+        }
+
+        .badge {
+          font-size: 11.3px !important;
+        }
+
+        .summary-label {
+          font-size: 12.2px !important;
+        }
+
+        .note-input {
+          font-size: 11.5px !important;
+          line-height: 1.25 !important;
+        }
+
+        .footer {
+          font-size: 12.5px !important;
         }
 
         @page {
@@ -684,7 +915,12 @@
     </div>
 
     <script>
-      const state = { inbound: null, outbound: null, outboundPackages: {} };
+      const state = {
+        inbound: null,
+        outbound: null,
+        outboundPackages: {},
+        outboundMailCount: "",
+      };
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
 
       function todayRoc() {
@@ -695,6 +931,21 @@
 
       function n(value) {
         return Number(value) || 0;
+      }
+
+      function shortInboundCarNo(value) {
+        const text = String(value ?? "").trim();
+        if (!text) return "";
+        const match = text.match(/第\s*(\d+)\s*車/);
+        return match ? `第${match[1]}車` : text;
+      }
+
+      function formatLoad(value) {
+        return Number.isFinite(value) ? `${value.toFixed(1)} 件` : "—";
+      }
+
+      function formatRatio(value) {
+        return Number.isFinite(value) ? `${value.toFixed(2)} 倍` : "—";
       }
 
       function esc(value) {
@@ -766,7 +1017,7 @@
             .map((row) =>
               cells([
                 { value: row.time },
-                { value: row.carNo },
+                { value: shortInboundCarNo(row.carNo) },
                 { value: row.driver },
                 { value: row.workItem, className: "left" },
                 { value: n(row.carts) },
@@ -891,7 +1142,7 @@
         const momoCell = document.getElementById(`momo-${key}`);
         if (momoCell) momoCell.textContent = Math.max(0, total - packageCarts);
 
-        updateOutboundNote();
+        updateOutboundSummary();
       }
 
       function renderOutbound() {
@@ -949,9 +1200,62 @@
           );
         });
 
+        html += `
+          <section class="block">
+            <div class="block-title">
+              <span>出口分類統計</span>
+              <span class="subtotal">依各車次包裹欄位自動彙整</span>
+            </div>
+            <div class="warehouse-line">
+              <strong>包裹出口</strong>
+              <span class="badge" id="packageExportTotal">0 籃車</span>
+              <span class="badge">包裹</span>
+            </div>
+            <div class="warehouse-line" style="border-top: 1px solid var(--soft-line)">
+              <strong>MOMO出口</strong>
+              <span class="badge" id="momoExportTotal">0 籃車</span>
+              <span class="badge">MOMO</span>
+            </div>
+          </section>
+
+          <section class="block">
+            <div class="block-title">
+              <span>出口裝載統計</span>
+              <span class="subtotal">自動計算</span>
+            </div>
+            <div class="outbound-stat-grid">
+              <label class="outbound-stat-item">
+                <span class="outbound-stat-label">出口郵件數量</span>
+                <input
+                  id="outboundMailCount"
+                  class="mail-count-input"
+                  type="number"
+                  inputmode="numeric"
+                  min="0"
+                  step="1"
+                  value="${esc(state.outboundMailCount)}"
+                  placeholder="手動輸入"
+                  oninput="updateOutboundMailCount(this)"
+                />
+              </label>
+              <div class="outbound-stat-item">
+                <span class="outbound-stat-label">籃車裝載量</span>
+                <span class="outbound-stat-value" id="cartLoadValue">—</span>
+              </div>
+              <div class="outbound-stat-item">
+                <span class="outbound-stat-label">車次裝載量</span>
+                <span class="outbound-stat-value" id="tripLoadValue">—</span>
+              </div>
+              <div class="outbound-stat-item">
+                <span class="outbound-stat-label">進轉出籃車比</span>
+                <span class="outbound-stat-value" id="cartRatioValue">—</span>
+              </div>
+            </div>
+          </section>`;
+
         box.innerHTML = html;
         updateOutboundTotals(data.totalTrips, data.totalCarts);
-        updateOutboundNote();
+        updateOutboundSummary();
       }
 
       function updateInboundTotals(trips, carts) {
@@ -964,17 +1268,12 @@
         document.getElementById("outboundHeadingTotal").textContent = text;
       }
 
-      function updateOutboundNote() {
-        const note = document.getElementById("outboundNote");
+      function calculateOutboundSplit() {
         const data = state.outbound?.outbound;
-
-        if (!data) {
-          note.value = "";
-          return;
-        }
-
         let packageTotal = 0;
         let momoTotal = 0;
+
+        if (!data) return { packageTotal, momoTotal };
 
         ["north", "south"].forEach((direction) => {
           (data[direction]?.rows || []).forEach((row, rowIndex) => {
@@ -989,19 +1288,62 @@
           });
         });
 
-        note.value = `包裹出口：${packageTotal}台。\nMOMO出口：${momoTotal}台。`;
+        return { packageTotal, momoTotal };
+      }
+
+      function updateOutboundMailCount(input) {
+        const value = input.value;
+        state.outboundMailCount =
+          value === "" ? "" : Math.max(0, Math.floor(Number(value) || 0));
+        if (value !== "") input.value = state.outboundMailCount;
+        updateOutboundSummary();
+      }
+
+      function updateOutboundSummary() {
+        const outboundData = state.outbound?.outbound;
+        const inboundData = state.inbound?.inbound;
+        const { packageTotal, momoTotal } = calculateOutboundSplit();
+
+        const packageTotalElement =
+          document.getElementById("packageExportTotal");
+        const momoTotalElement = document.getElementById("momoExportTotal");
+        if (packageTotalElement)
+          packageTotalElement.textContent = `${packageTotal} 籃車`;
+        if (momoTotalElement)
+          momoTotalElement.textContent = `${momoTotal} 籃車`;
+
+        const mailCount =
+          state.outboundMailCount === "" ? NaN : n(state.outboundMailCount);
+        const outboundCarts = n(outboundData?.totalCarts);
+        const outboundTrips = n(outboundData?.totalTrips);
+        const inboundCarts = n(inboundData?.totalCarts);
+
+        const cartLoad = outboundCarts > 0 ? mailCount / outboundCarts : NaN;
+        const tripLoad = outboundTrips > 0 ? mailCount / outboundTrips : NaN;
+        const cartRatio = inboundCarts > 0 ? outboundCarts / inboundCarts : NaN;
+
+        const cartLoadElement = document.getElementById("cartLoadValue");
+        const tripLoadElement = document.getElementById("tripLoadValue");
+        const cartRatioElement = document.getElementById("cartRatioValue");
+
+        if (cartLoadElement) cartLoadElement.textContent = formatLoad(cartLoad);
+        if (tripLoadElement) tripLoadElement.textContent = formatLoad(tripLoad);
+        if (cartRatioElement)
+          cartRatioElement.textContent = formatRatio(cartRatio);
       }
 
       function render() {
         setDateText();
         renderInbound();
         renderOutbound();
+        updateOutboundSummary();
       }
 
       function resetData() {
         state.inbound = null;
         state.outbound = null;
         state.outboundPackages = {};
+        state.outboundMailCount = "";
         document.getElementById("inboundFile").value = "";
         document.getElementById("outboundFile").value = "";
         document.getElementById("inboundNote").value = "";
@@ -1015,7 +1357,10 @@
         try {
           const data = JSON.parse(await file.text());
           state[type] = data;
-          if (type === "outbound") state.outboundPackages = {};
+          if (type === "outbound") {
+            state.outboundPackages = {};
+            state.outboundMailCount = "";
+          }
           render();
         } catch (error) {
           console.error(error);
