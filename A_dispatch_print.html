@@ -107,25 +107,57 @@
 
       .report-header {
         margin-bottom: 4mm;
+        padding-bottom: 1.6mm;
+        border-bottom: 1.5px solid var(--blue);
       }
 
-      .title {
-        margin: 0;
-        text-align: center;
+      .title-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 2.2mm;
+        min-width: 0;
+      }
+
+      .title-momo {
+        flex: 0 0 auto;
+        font-size: 34px;
+        font-weight: 900;
+        line-height: 0.9;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+
+      .title-warehouse {
+        flex: 0 0 auto;
+        min-width: 22mm;
+        padding-left: 2mm;
+        border-left: 1.5px solid var(--blue);
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.05;
+        white-space: nowrap;
+      }
+
+      .title-main {
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-left: 0.5mm;
         font-size: 25px;
         font-weight: 900;
-        letter-spacing: 0.105em;
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        white-space: nowrap;
       }
 
-      .meta-row {
+      .title-meta {
         display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        margin-top: 2.5mm;
-        padding-bottom: 2mm;
-        border-bottom: 1.5px solid var(--line);
-        font-size: 14px;
-        font-weight: 800;
+        flex: 0 0 auto;
+        align-items: baseline;
+        gap: 4mm;
+        padding-bottom: 0.4mm;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
       }
 
       .columns {
@@ -736,14 +768,20 @@
         }
 
         /* 列印大字最佳化：僅影響實際列印 */
-        .title {
-          font-size: 25px !important;
-          line-height: 1.12;
-          white-space: nowrap;
+        .title-momo {
+          font-size: 34px !important;
         }
 
-        .meta-row {
-          font-size: 14.2px !important;
+        .title-warehouse {
+          font-size: 11px !important;
+        }
+
+        .title-main {
+          font-size: 25px !important;
+        }
+
+        .title-meta {
+          font-size: 11px !important;
         }
 
         .heading-main strong {
@@ -943,10 +981,14 @@
 
       <main class="paper">
         <header class="report-header">
-          <h1 class="title">MOMO(新市倉SDC+永康倉DC7)進出口籃車數統計表</h1>
-          <div class="meta-row">
-            <div>單位：臺南郵局運輸股</div>
-            <div class="dateText">日期：—</div>
+          <div class="title-row">
+            <div class="title-momo">MOMO</div>
+            <div class="title-warehouse">新市倉SDC<br />永康倉DC7</div>
+            <div class="title-main">進出口統計表</div>
+            <div class="title-meta">
+              <span>臺南郵局運輸股</span>
+              <span class="dateText">—</span>
+            </div>
           </div>
         </header>
 
@@ -998,9 +1040,9 @@
         </section>
 
         <footer class="footer">
-          <div class="sign">製表：</div>
-          <div class="sign">覆核：</div>
-          <div class="sign">主管：</div>
+          <div class="sign">報表製作：曹書豪</div>
+          <div class="sign">值班專員：曹書豪</div>
+          <div class="sign">單位主管：王昭文</div>
         </footer>
       </main>
     </div>
@@ -1057,7 +1099,7 @@
         rocDate = rocDate.replace(/日星期/g, "日 星期");
 
         document.querySelectorAll(".dateText").forEach((element) => {
-          element.textContent = `日期：${rocDate}`;
+          element.textContent = rocDate;
         });
       }
 
