@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MOMO進出口統計詳情表</title>
+    <style>
+      :root {
+        --ink: #172033;
+        --muted: #667085;
+        --line: #25324a;
+        --soft: #b8c2d1;
+        --paper: #fff;
+        --bg: #e9eef5;
+        --green: #176b45;
+        --green-soft: #e8f4ee;
+        --blue: #245e9f;
+        --blue-soft: #eaf1fa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--bg);
+        font-family: "Microsoft JhengHei", "Noto Sans TC", Arial, sans-serif;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.94);
+        border-bottom: 1px solid #d6deea;
+        backdrop-filter: blur(10px);
+      }
+      .topbar select,
+      .topbar button {
+        min-height: 42px;
+        padding: 0 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #fff;
+        font: inherit;
+        font-weight: 800;
+      }
+      .topbar button {
+        color: #fff;
+        background: #475467;
+        cursor: pointer;
+      }
+      .status {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .shell {
+        padding: 22px;
+      }
+      .paper {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 8mm 8mm 7mm;
+        background: var(--paper);
+        border: 1px solid #cbd5e1;
+        box-shadow: 0 16px 40px rgb(15 23 42 / 15%);
+      }
+      .report-header {
+        margin-bottom: 4mm;
+        padding-bottom: 1.6mm;
+        border-bottom: 1.5px solid var(--blue);
+      }
+      .title-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 2.2mm;
+      }
+      .title-momo {
+        font-size: 34px;
+        font-weight: 900;
+        line-height: 0.9;
+      }
+      .title-warehouse {
+        min-width: 22mm;
+        padding-left: 2mm;
+        border-left: 1.5px solid var(--blue);
+        font-size: 11px;
+        line-height: 1.05;
+      }
+      .title-main {
+        flex: 1;
+        font-size: 25px;
+        font-weight: 900;
+        line-height: 0.95;
+        white-space: nowrap;
+      }
+      .title-meta {
+        display: flex;
+        gap: 4mm;
+        padding-bottom: 0.4mm;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+      .columns {
+        display: grid;
+        grid-template-columns: 1.09fr 0.91fr;
+        gap: 3.2mm;
+        align-items: start;
+      }
+      .report-column {
+        border: 1.5px solid var(--line);
+        border-radius: 3mm;
+        overflow: hidden;
+        background: #fff;
+      }
+      .column-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 12mm;
+        padding: 2.1mm 2.5mm;
+        color: #fff;
+      }
+      .inbound .column-heading {
+        background: var(--green);
+      }
+      .outbound .column-heading {
+        background: var(--blue);
+      }
+      .heading-main {
+        display: flex;
+        align-items: baseline;
+        gap: 2mm;
+      }
+      .heading-main strong {
+        font-size: 20px;
+        letter-spacing: 0.18em;
+      }
+      .heading-main span {
+        font-size: 12px;
+        font-weight: 700;
+        opacity: 0.88;
+      }
+      .heading-total {
+        padding: 0.8mm 1.2mm;
+        border: 1px solid rgb(255 255 255 / 55%);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 13%);
+        font-size: 13px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .content {
+        padding: 1.8mm;
+      }
+      .block {
+        margin-bottom: 1.7mm;
+        border: 1px solid var(--soft);
+        border-radius: 2mm;
+        overflow: hidden;
+      }
+      .block:last-child {
+        margin-bottom: 0;
+      }
+      .block-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 7mm;
+        padding: 1.25mm 1.8mm;
+        border-bottom: 1px solid var(--soft);
+        font-size: 12.7px;
+        font-weight: 900;
+      }
+      .inbound .block-title {
+        background: var(--green-soft);
+      }
+      .outbound .block-title {
+        background: var(--blue-soft);
+      }
+      .subtotal {
+        font-size: 11.2px;
+        white-space: nowrap;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+      th,
+      td {
+        height: 7mm;
+        padding: 0.75mm 0.85mm;
+        border-right: 1px solid var(--soft);
+        border-bottom: 1px solid var(--soft);
+        text-align: center;
+        vertical-align: middle;
+        font-size: 13px;
+        line-height: 1.08;
+      }
+      th {
+        height: 6.5mm;
+        background: #fafbfc;
+        font-weight: 900;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      th:last-child,
+      td:last-child {
+        border-right: 0;
+      }
+      .left {
+        text-align: left !important;
+        padding-left: 1.2mm !important;
+      }
+      .warehouse-line {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 2mm;
+        align-items: center;
+        min-height: 8.5mm;
+        padding: 1.4mm 1.7mm;
+        font-size: 13px;
+      }
+      .badge {
+        min-width: 16mm;
+        padding: 0.8mm 1.2mm;
+        border-radius: 999px;
+        background: #eef2f6;
+        text-align: center;
+        font-weight: 900;
+      }
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .stat {
+        padding: 1.25mm 1.5mm;
+        border-right: 1px solid var(--soft);
+        border-bottom: 1px solid var(--soft);
+        text-align: center;
+      }
+      .stat:nth-child(2n) {
+        border-right: 0;
+      }
+      .stat:nth-last-child(-n + 2) {
+        border-bottom: 0;
+      }
+      .stat small {
+        display: block;
+        color: #475467;
+        font-weight: 800;
+      }
+      .stat strong {
+        font-size: 14px;
+      }
+      .summary-strip {
+        display: grid;
+        grid-template-columns: 1.08fr 0.92fr;
+        gap: 3.2mm;
+        margin-top: 3mm;
+      }
+      .summary-card {
+        min-height: 18mm;
+        padding: 1.8mm 2.4mm;
+        border: 1.5px solid var(--line);
+        border-radius: 2.5mm;
+      }
+      .summary-card.in {
+        background: var(--green-soft);
+      }
+      .summary-card.out {
+        background: var(--blue-soft);
+      }
+      .summary-label {
+        display: block;
+        margin-bottom: 0.8mm;
+        font-size: 13px;
+        font-weight: 900;
+      }
+      .note {
+        white-space: pre-wrap;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .footer {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10mm;
+        margin-top: 6mm;
+        padding-top: 1mm;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .sign {
+        min-height: 10mm;
+        padding-top: 1.5mm;
+        border-top: 1px solid var(--line);
+      }
+      .mobile-report {
+        display: none;
+      }
+      .empty-state {
+        max-width: 720px;
+        margin: 60px auto;
+        padding: 30px;
+        border-radius: 18px;
+        background: #fff;
+        text-align: center;
+        box-shadow: 0 15px 35px rgb(15 23 42 / 12%);
+      }
+      @media (max-width: 700px) {
+        .shell {
+          padding: 10px;
+        }
+        .paper {
+          display: none;
+        }
+        .mobile-report {
+          display: block;
+        }
+        .mobile-head {
+          padding: 18px;
+          border-radius: 18px;
+          background: linear-gradient(135deg, #0f5132, #245e9f);
+          color: #fff;
+          box-shadow: 0 12px 30px rgb(15 23 42 / 18%);
+        }
+        .mobile-head h1 {
+          margin: 0 0 8px;
+          font-size: 22px;
+        }
+        .mobile-head p {
+          margin: 3px 0;
+          font-size: 14px;
+        }
+        .mobile-section {
+          margin-top: 14px;
+        }
+        .mobile-section-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          padding: 12px 14px;
+          border-radius: 14px;
+          color: #fff;
+          font-weight: 900;
+        }
+        .mobile-section.in .mobile-section-title {
+          background: var(--green);
+        }
+        .mobile-section.out .mobile-section-title {
+          background: var(--blue);
+        }
+        .mobile-card {
+          margin-bottom: 10px;
+          padding: 14px;
+          border: 1px solid #d7dfeb;
+          border-radius: 14px;
+          background: #fff;
+          box-shadow: 0 6px 18px rgb(15 23 42 / 7%);
+        }
+        .mobile-card h3 {
+          margin: 0 0 10px;
+          font-size: 16px;
+        }
+        .mobile-row {
+          display: grid;
+          grid-template-columns: 72px 1fr;
+          gap: 8px;
+          padding: 8px 0;
+          border-top: 1px dashed #d6deea;
+          font-size: 14px;
+        }
+        .mobile-row:first-of-type {
+          border-top: 0;
+        }
+        .mobile-row dt {
+          color: var(--muted);
+          font-weight: 800;
+        }
+        .mobile-row dd {
+          margin: 0;
+          font-weight: 800;
+          word-break: break-word;
+        }
+        .mobile-kpis {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        .mobile-kpi {
+          padding: 12px;
+          border-radius: 12px;
+          background: #f4f7fb;
+          text-align: center;
+        }
+        .mobile-kpi small {
+          display: block;
+          color: var(--muted);
+          font-weight: 800;
+        }
+        .mobile-kpi strong {
+          display: block;
+          margin-top: 4px;
+          font-size: 18px;
+        }
+        .topbar {
+          position: static;
+        }
+        .topbar select {
+          max-width: 100%;
+        }
+      }
+      @media print {
+        .topbar {
+          display: none !important;
+        }
+        .shell {
+          padding: 0;
+        }
+        .paper {
+          display: block;
+          width: 100%;
+          min-height: 0;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          box-shadow: none;
+        }
+        .mobile-report {
+          display: none !important;
+        }
+        body {
+          background: #fff;
+        }
+        @page {
+          size: A4 portrait;
+          margin: 7mm;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <strong>詳情表日期</strong>
+      <select id="dateSelect" aria-label="選擇報表日期"></select>
+      <button type="button" onclick="window.print()">列印 A4</button>
+      <span id="status" class="status">讀取 details.json 中…</span>
+    </div>
+    <div class="shell">
+      <div id="desktopReport" class="paper" hidden></div>
+      <div id="mobileReport" class="mobile-report" hidden></div>
+      <div id="emptyState" class="empty-state" hidden>
+        <h2>目前沒有可顯示的詳情資料</h2>
+        <p>
+          請確認 details.html 與 details.json
+          位於同一資料夾，並透過網站伺服器開啟。
+        </p>
+      </div>
+    </div>
+    <script>
+      const esc = (v) =>
+        String(v ?? "").replace(
+          /[&<>\"]/g,
+          (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+        );
+      const n = (v) => Number(v) || 0;
+      const fmt = (v) =>
+        v === null || v === undefined || !Number.isFinite(Number(v))
+          ? "—"
+          : Number(v).toFixed(1);
+      let database = null;
+      function dateLabel(report, key) {
+        return (
+          report.rocDate ||
+          `${key} ${report.weekday ? `星期${report.weekday}` : ""}`
+        );
+      }
+      function desktopTable(headers, rows, widths = []) {
+        return `<table><thead><tr>${headers.map((h, i) => `<th style="width:${widths[i] || "auto"}">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows || `<tr><td colspan="${headers.length}">無資料</td></tr>`}</tbody></table>`;
+      }
+      function block(title, trips, carts, body) {
+        return `<section class="block"><div class="block-title"><span>${esc(title)}</span><span class="subtotal">${n(trips)} 車／${n(carts)} 籃</span></div>${body}</section>`;
+      }
+      function renderDesktop(r) {
+        const inStages = (r.inbound?.stages || [])
+          .map((s, i) => {
+            const rows = (s.rows || [])
+              .map(
+                (x) =>
+                  `<tr><td>${esc(x.time)}</td><td>${esc(x.carNo)}</td><td class="left">${esc(x.driver)}</td><td>${esc(x.workItem)}</td><td>${n(x.carts)}</td></tr>`,
+              )
+              .join("");
+            return block(
+              s.stageName || `第${i + 1}階段`,
+              s.subtotalTrips,
+              s.subtotalCarts,
+              desktopTable(
+                ["時間", "車次", "運務員", "單位車次", "籃車數"],
+                rows,
+                ["15%", "15%", "30%", "20%", "20%"],
+              ),
+            );
+          })
+          .join("");
+        const stages = r.inbound?.stages || [];
+        const xs = stages.reduce(
+          (a, s) => ({
+            trips: a.trips + n(s.subtotalTrips),
+            carts: a.carts + n(s.subtotalCarts),
+          }),
+          { trips: 0, carts: 0 },
+        );
+        const yk = r.inbound?.yongkang || {};
+        const inboundHtml =
+          inStages +
+          `<section class="block"><div class="block-title"><span>新市倉</span><span class="subtotal">第1＋2＋3階段</span></div><div class="warehouse-line"><strong>新市倉(SDC)運載</strong><span class="badge">${xs.trips} 車次</span><span class="badge">${xs.carts} 籃車</span></div></section><section class="block"><div class="block-title"><span>永康倉</span><span class="subtotal">獨立統計</span></div><div class="warehouse-line"><strong>永康倉(DC7)運載</strong><span class="badge">${n(yk.trips)} 車次</span><span class="badge">${n(yk.carts)} 籃車</span></div></section>`;
+        const dir = (label, key) => {
+          const p = r.outbound?.[key] || {};
+          const rows = (p.rows || [])
+            .map(
+              (x) =>
+                `<tr><td>${n(x.sequence)}</td><td>${esc(x.time)}</td><td class="left">${esc(x.carNo)}</td><td>${n(x.momoCarts)}</td><td>${n(x.packageCarts)}</td><td>${n(x.totalCarts)}</td></tr>`,
+            )
+            .join("");
+          return block(
+            label,
+            p.subtotalTrips,
+            p.subtotalCarts,
+            desktopTable(["序", "時間", "車次", "MOMO", "包裹", "合計"], rows, [
+              "8%",
+              "14%",
+              "29%",
+              "20%",
+              "14%",
+              "15%",
+            ]),
+          );
+        };
+        const o = r.outbound || {};
+        const stats = `<section class="block"><div class="block-title"><span>出口分類統計</span><span class="subtotal">依籃車用途</span></div><div class="stat-grid"><div class="stat"><small>MOMO出口</small><strong>${n(o.momoTotal)} 籃車</strong></div><div class="stat"><small>包裹出口</small><strong>${n(o.packageTotal)} 籃車</strong></div><div class="stat"><small>出口郵件數量</small><strong>${o.mailCount == null ? "—" : n(o.mailCount) + " 件"}</strong></div><div class="stat"><small>每籃平均</small><strong>${fmt(o.averagePerCart)} 件</strong></div><div class="stat"><small>每車次平均</small><strong>${fmt(o.averagePerTrip)} 件</strong></div><div class="stat"><small>出口／進口籃車比</small><strong>${o.outboundInboundRatio == null ? "—" : Number(o.outboundInboundRatio).toFixed(2) + " 倍"}</strong></div></div></section>`;
+        const s = r.signatures || {};
+        document.getElementById("desktopReport").innerHTML =
+          `<header class="report-header"><div class="title-row"><div class="title-momo">MOMO</div><div class="title-warehouse">新市倉SDC<br>永康倉DC7</div><div class="title-main">進出口統計表</div><div class="title-meta"><span>${esc(r.unit || "臺南郵局運輸股")}</span><span>${esc(dateLabel(r, r.date))}</span></div></div></header><section class="columns"><article class="report-column inbound"><div class="column-heading"><div class="heading-main"><strong>進口</strong><span>INBOUND</span></div><div class="heading-total">${n(r.inbound?.totalTrips)} 車次／${n(r.inbound?.totalCarts)} 籃車</div></div><div class="content">${inboundHtml}</div></article><article class="report-column outbound"><div class="column-heading"><div class="heading-main"><strong>出口</strong><span>OUTBOUND</span></div><div class="heading-total">${n(o.totalTrips)} 車次／${n(o.totalCarts)} 籃車</div></div><div class="content">${dir("北上", "north")}${dir("南下", "south")}${stats}</div></article></section><section class="summary-strip"><div class="summary-card in"><span class="summary-label">進口備註</span><div class="note">${esc(r.inbound?.note || "")}</div></div><div class="summary-card out"><span class="summary-label">出口備註</span><div class="note">${esc(o.note || "")}</div></div></section><footer class="footer"><div class="sign">報表製作：${esc(s.maker || "")}</div><div class="sign">值班專員：${esc(s.dutyOfficer || "")}</div><div class="sign">單位主管：${esc(s.supervisor || "")}</div></footer>`;
+      }
+      function mobileRows(rows, type) {
+        if (!rows?.length) return `<div class="mobile-card">無資料</div>`;
+        return rows
+          .map((x, i) =>
+            type === "in"
+              ? `<div class="mobile-card"><h3>${esc(x.time || "未填時間")}｜${esc(x.carNo || "未填車次")}</h3><dl><div class="mobile-row"><dt>運務員</dt><dd>${esc(x.driver || "—")}</dd></div><div class="mobile-row"><dt>單位車次</dt><dd>${esc(x.workItem || "—")}</dd></div><div class="mobile-row"><dt>籃車數</dt><dd>${n(x.carts)} 籃</dd></div></dl></div>`
+              : `<div class="mobile-card"><h3>${n(x.sequence) || i + 1}. ${esc(x.time || "未填時間")}｜${esc(x.carNo || "未填車次")}</h3><div class="mobile-kpis"><div class="mobile-kpi"><small>MOMO</small><strong>${n(x.momoCarts)}</strong></div><div class="mobile-kpi"><small>包裹</small><strong>${n(x.packageCarts)}</strong></div><div class="mobile-kpi"><small>合計</small><strong>${n(x.totalCarts)}</strong></div><div class="mobile-kpi"><small>單位</small><strong>籃車</strong></div></div></div>`,
+          )
+          .join("");
+      }
+      function renderMobile(r) {
+        const o = r.outbound || {};
+        const stages = (r.inbound?.stages || [])
+          .map(
+            (s) =>
+              `<div class="mobile-card"><h3>${esc(s.stageName)}｜${n(s.subtotalTrips)} 車／${n(s.subtotalCarts)} 籃</h3></div>${mobileRows(s.rows, "in")}`,
+          )
+          .join("");
+        const yk = r.inbound?.yongkang || {};
+        document.getElementById("mobileReport").innerHTML =
+          `<header class="mobile-head"><h1>MOMO進出口統計表</h1><p>${esc(r.unit || "臺南郵局運輸股")}</p><p>${esc(dateLabel(r, r.date))}</p></header><section class="mobile-section in"><div class="mobile-section-title"><span>進口</span><span>${n(r.inbound?.totalTrips)} 車／${n(r.inbound?.totalCarts)} 籃</span></div>${stages}<div class="mobile-card"><h3>永康倉（DC7）</h3><div class="mobile-kpis"><div class="mobile-kpi"><small>車次</small><strong>${n(yk.trips)}</strong></div><div class="mobile-kpi"><small>籃車</small><strong>${n(yk.carts)}</strong></div></div></div><div class="mobile-card"><h3>進口備註</h3><div class="note">${esc(r.inbound?.note || "—")}</div></div></section><section class="mobile-section out"><div class="mobile-section-title"><span>出口</span><span>${n(o.totalTrips)} 車／${n(o.totalCarts)} 籃</span></div><div class="mobile-card"><h3>出口總覽</h3><div class="mobile-kpis"><div class="mobile-kpi"><small>MOMO</small><strong>${n(o.momoTotal)} 籃</strong></div><div class="mobile-kpi"><small>包裹</small><strong>${n(o.packageTotal)} 籃</strong></div><div class="mobile-kpi"><small>郵件</small><strong>${o.mailCount == null ? "—" : n(o.mailCount)}</strong></div><div class="mobile-kpi"><small>每籃平均</small><strong>${fmt(o.averagePerCart)}</strong></div></div></div><div class="mobile-card"><h3>北上｜${n(o.north?.subtotalTrips)} 車／${n(o.north?.subtotalCarts)} 籃</h3></div>${mobileRows(o.north?.rows, "out")}<div class="mobile-card"><h3>南下｜${n(o.south?.subtotalTrips)} 車／${n(o.south?.subtotalCarts)} 籃</h3></div>${mobileRows(o.south?.rows, "out")}<div class="mobile-card"><h3>出口備註</h3><div class="note">${esc(o.note || "—")}</div></div></section>`;
+      }
+      function showReport(key) {
+        const r = database?.reports?.[key];
+        if (!r) return;
+        renderDesktop(r);
+        renderMobile(r);
+        document.getElementById("desktopReport").hidden = false;
+        document.getElementById("mobileReport").hidden = false;
+        document.getElementById("emptyState").hidden = true;
+        document.title = `${key} MOMO進出口統計詳情表`;
+        history.replaceState(null, "", `?date=${encodeURIComponent(key)}`);
+      }
+      async function init() {
+        try {
+          const res = await fetch(`details.json?ts=${Date.now()}`, {
+            cache: "no-store",
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          database = await res.json();
+          const dates = Object.keys(database.reports || {})
+            .sort()
+            .reverse();
+          if (!dates.length) throw new Error("沒有報表資料");
+          const select = document.getElementById("dateSelect");
+          select.innerHTML = dates
+            .map(
+              (d) =>
+                `<option value="${esc(d)}">${esc(dateLabel(database.reports[d], d))}</option>`,
+            )
+            .join("");
+          const requested = new URLSearchParams(location.search).get("date");
+          const target = dates.includes(requested) ? requested : dates[0];
+          select.value = target;
+          select.addEventListener("change", (e) => showReport(e.target.value));
+          showReport(target);
+          document.getElementById("status").textContent =
+            `共 ${dates.length} 日資料`;
+        } catch (err) {
+          console.error(err);
+          document.getElementById("status").textContent = "讀取失敗";
+          document.getElementById("emptyState").hidden = false;
+        }
+      }
+      init();
+    </script>
+  </body>
+</html>

@@ -88,6 +88,11 @@
         background: #475467;
       }
 
+      .btn-details {
+        color: #fff;
+        background: #7c3aed;
+      }
+
       .hint {
         margin-top: 10px;
         color: var(--muted);
@@ -966,8 +971,23 @@
               accept=".json,application/json"
             />
           </label>
+          <label class="file-picker">
+            既有詳情資料庫（選填）：
+            <input
+              id="detailsDatabaseFile"
+              type="file"
+              accept=".json,application/json"
+            />
+          </label>
           <button class="btn btn-print" type="button" onclick="window.print()">
             A4單張列印
+          </button>
+          <button
+            class="btn btn-details"
+            type="button"
+            onclick="exportDetailsDatabase()"
+          >
+            更新詳情資料庫
           </button>
           <button class="btn btn-clear" type="button" onclick="resetData()">
             清空資料
@@ -975,7 +995,8 @@
         </div>
         <div class="hint">
           匯入進出口資料檔案後，兩份資料會整合於同一張A4：左側為進口、右側為出口。列印時請選擇
-          A4、直向、縮放100%，並關閉瀏覽器頁首頁尾。
+          A4、直向、縮放100%，並關閉瀏覽器頁首頁尾。若要更新網頁詳情，先選擇既有
+          details.json（第一次可不選），再按「更新詳情資料庫」；系統會保留舊日期並新增或覆蓋當天資料。
         </div>
       </section>
 
@@ -1053,6 +1074,7 @@
         outbound: null,
         outboundPackages: {},
         outboundMailCount: "",
+        detailsDatabase: null,
       };
       const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
 
@@ -1476,6 +1498,209 @@
         updateOutboundSummary();
       }
 
+      function getReportDate() {
+        const date =
+          state.inbound?.workDate?.date || state.outbound?.workDate?.date || "";
+        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+
+        const roc =
+          state.inbound?.workDate?.rocDate ||
+          state.outbound?.workDate?.rocDate ||
+          "";
+        const match = String(roc).match(/(\d+)年(\d+)月(\d+)日/);
+        if (!match) return "";
+        const year = Number(match[1]) + 1911;
+        return `${year}-${String(match[2]).padStart(2, "0")}-${String(match[3]).padStart(2, "0")}`;
+      }
+
+      function buildDetailsRecord() {
+        const date = getReportDate();
+        if (!date) throw new Error("找不到報表日期");
+        if (!state.inbound?.inbound && !state.outbound?.outbound) {
+          throw new Error("尚未匯入進出口資料");
+        }
+
+        const inbound = state.inbound?.inbound || {
+          stages: [],
+          yongkang: { trips: 0, carts: 0 },
+          totalTrips: 0,
+          totalCarts: 0,
+        };
+        const outbound = state.outbound?.outbound || {
+          north: { rows: [], subtotalTrips: 0, subtotalCarts: 0 },
+          south: { rows: [], subtotalTrips: 0, subtotalCarts: 0 },
+          totalTrips: 0,
+          totalCarts: 0,
+        };
+
+        const exportDirection = (direction) => {
+          const part = outbound[direction] || { rows: [] };
+          const rows = (part.rows || []).map((row, rowIndex) => {
+            const total = n(row.carts);
+            const stored =
+              state.outboundPackages[packageKey(direction, rowIndex)];
+            const normalized = normalizePackageValue(stored, total);
+            const packageCarts = normalized === "" ? 0 : n(normalized);
+            return {
+              sequence: rowIndex + 1,
+              time: row.time || "",
+              carNo: row.carNo || "",
+              momoCarts: Math.max(0, total - packageCarts),
+              packageCarts,
+              totalCarts: total,
+            };
+          });
+          return {
+            rows,
+            subtotalTrips: n(part.subtotalTrips) || rows.length,
+            subtotalCarts:
+              n(part.subtotalCarts) ||
+              rows.reduce((sum, row) => sum + row.totalCarts, 0),
+          };
+        };
+
+        const north = exportDirection("north");
+        const south = exportDirection("south");
+        const { packageTotal, momoTotal } = calculateOutboundSplit();
+        const mailCount =
+          state.outboundMailCount === "" ? null : n(state.outboundMailCount);
+        const outboundCarts = n(outbound.totalCarts);
+        const outboundTrips = n(outbound.totalTrips);
+        const inboundCarts = n(inbound.totalCarts);
+
+        return {
+          date,
+          rocDate:
+            state.inbound?.workDate?.rocDate ||
+            state.outbound?.workDate?.rocDate ||
+            "",
+          weekday:
+            state.inbound?.workDate?.weekday ||
+            state.outbound?.workDate?.weekday ||
+            "",
+          unit: "臺南郵局運輸股",
+          title: "MOMO進出口統計表",
+          generatedAt: new Date().toISOString(),
+          inbound: {
+            stages: (inbound.stages || []).map((stage, index) => ({
+              stageName: stage.stageName || `第${index + 1}階段`,
+              rows: (stage.rows || []).map((row) => ({
+                time: row.time || "",
+                carNo: shortInboundCarNo(row.carNo),
+                driver: row.driver || "",
+                workItem: row.workItem || "",
+                carts: n(row.carts),
+              })),
+              subtotalTrips: n(stage.subtotalTrips),
+              subtotalCarts: n(stage.subtotalCarts),
+            })),
+            yongkang: {
+              trips: n(inbound.yongkang?.trips),
+              carts: n(inbound.yongkang?.carts),
+            },
+            totalTrips: n(inbound.totalTrips),
+            totalCarts: n(inbound.totalCarts),
+            note: document.getElementById("inboundNote").value.trim(),
+          },
+          outbound: {
+            north,
+            south,
+            totalTrips: n(outbound.totalTrips),
+            totalCarts: outboundCarts,
+            momoTotal,
+            packageTotal,
+            mailCount,
+            averagePerCart: Number.isFinite(mailCount / outboundCarts)
+              ? mailCount / outboundCarts
+              : null,
+            averagePerTrip: Number.isFinite(mailCount / outboundTrips)
+              ? mailCount / outboundTrips
+              : null,
+            outboundInboundRatio: Number.isFinite(outboundCarts / inboundCarts)
+              ? outboundCarts / inboundCarts
+              : null,
+            note: document.getElementById("outboundNote").value.trim(),
+          },
+          signatures: {
+            maker: "曹書豪",
+            dutyOfficer: "曹書豪",
+            supervisor: "王昭文",
+          },
+        };
+      }
+
+      function downloadJson(data, filename) {
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json;charset=utf-8",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function exportDetailsDatabase() {
+        try {
+          const record = buildDetailsRecord();
+          const source =
+            state.detailsDatabase && typeof state.detailsDatabase === "object"
+              ? state.detailsDatabase
+              : {};
+          const database = {
+            schema: "tainan_post_momo_details.v1",
+            title: "MOMO進出口統計詳情資料庫",
+            updatedAt: new Date().toISOString(),
+            reports: {
+              ...(source.reports && typeof source.reports === "object"
+                ? source.reports
+                : {}),
+              [record.date]: record,
+            },
+          };
+          const sortedReports = {};
+          Object.keys(database.reports)
+            .sort()
+            .forEach((key) => (sortedReports[key] = database.reports[key]));
+          database.reports = sortedReports;
+          downloadJson(database, "details.json");
+          alert(
+            `已更新 ${record.date} 詳情資料。請以新下載的 details.json 覆蓋網站上的舊檔。`,
+          );
+        } catch (error) {
+          console.error(error);
+          alert(error.message || "詳情資料匯出失敗");
+        }
+      }
+
+      async function loadDetailsDatabase(file) {
+        if (!file) {
+          state.detailsDatabase = null;
+          return;
+        }
+        try {
+          const data = JSON.parse(await file.text());
+          if (
+            !data ||
+            typeof data !== "object" ||
+            !data.reports ||
+            typeof data.reports !== "object"
+          ) {
+            throw new Error("不是有效的 details.json");
+          }
+          state.detailsDatabase = data;
+        } catch (error) {
+          state.detailsDatabase = null;
+          console.error(error);
+          alert(
+            "既有詳情資料庫讀取失敗，請確認是否為正確的 details.json。\n若是第一次建立，可不選擇此檔案。",
+          );
+        }
+      }
+
       function resetData() {
         state.inbound = null;
         state.outbound = null;
@@ -1483,6 +1708,8 @@
         state.outboundMailCount = "";
         document.getElementById("inboundFile").value = "";
         document.getElementById("outboundFile").value = "";
+        document.getElementById("detailsDatabaseFile").value = "";
+        state.detailsDatabase = null;
         document.getElementById("inboundNote").value = "";
         document.getElementById("outboundNote").value = "";
         render();
@@ -1515,6 +1742,12 @@
         .getElementById("outboundFile")
         .addEventListener("change", (event) => {
           loadFile(event.target.files[0], "outbound");
+        });
+
+      document
+        .getElementById("detailsDatabaseFile")
+        .addEventListener("change", (event) => {
+          loadDetailsDatabase(event.target.files[0]);
         });
 
       window.addEventListener("beforeprint", () => {
