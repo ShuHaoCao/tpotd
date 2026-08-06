@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MOMO進出口統計詳情表</title>
+    <title>MOMO進出口統計詳情表 v1.1</title>
     <style>
       :root {
         --ink: #172033;
@@ -41,6 +41,7 @@
         backdrop-filter: blur(10px);
       }
       .topbar select,
+      .topbar input,
       .topbar button {
         min-height: 42px;
         padding: 0 14px;
@@ -217,6 +218,30 @@
         border-right: 0;
       }
       .left {
+        text-align: left !important;
+        padding-left: 1.2mm !important;
+      }
+
+      /* 進口：時間、車次、單位車次、籃車數置中；運務員靠左 */
+      .inbound table th,
+      .inbound table td {
+        text-align: center;
+      }
+
+      .inbound table th:nth-child(3),
+      .inbound table td:nth-child(3) {
+        text-align: left !important;
+        padding-left: 1.2mm !important;
+      }
+
+      /* 出口：序、時間、MOMO、包裹、合計置中；車次靠左 */
+      .outbound table th,
+      .outbound table td {
+        text-align: center;
+      }
+
+      .outbound table th:nth-child(3),
+      .outbound table td:nth-child(3) {
         text-align: left !important;
         padding-left: 1.2mm !important;
       }
@@ -417,7 +442,8 @@
         .topbar {
           position: static;
         }
-        .topbar select {
+        .topbar select,
+        .topbar input {
           max-width: 100%;
         }
       }
@@ -453,7 +479,7 @@
   <body>
     <div class="topbar">
       <strong>詳情表日期</strong>
-      <select id="dateSelect" aria-label="選擇報表日期"></select>
+      <input id="dateSelect" type="date" aria-label="選擇報表日期" />
       <button type="button" onclick="window.print()">列印 A4</button>
       <span id="status" class="status">讀取 details.json 中…</span>
     </div>
@@ -481,10 +507,28 @@
           : Number(v).toFixed(1);
       let database = null;
       function dateLabel(report, key) {
-        return (
-          report.rocDate ||
-          `${key} ${report.weekday ? `星期${report.weekday}` : ""}`
-        );
+        const weekday = String(report.weekday || "")
+          .replace(/^星期/, "")
+          .replace(/^週/, "");
+
+        if (report.rocDate) {
+          const rocDate = String(report.rocDate)
+            .replace(/\s+/g, "")
+            .replace(/星期週/g, "星期")
+            .replace(/星期星期/g, "星期")
+            .replace(/週/g, "");
+
+          const match = rocDate.match(
+            /^(.*?日)(?:星期)?([一二三四五六日天])?$/,
+          );
+          if (match) {
+            const day = match[2] || weekday;
+            return `${match[1]}${day ? ` 星期${day === "天" ? "日" : day}` : ""}`;
+          }
+          return rocDate;
+        }
+
+        return `${key}${weekday ? ` 星期${weekday === "天" ? "日" : weekday}` : ""}`;
       }
       function desktopTable(headers, rows, widths = []) {
         return `<table><thead><tr>${headers.map((h, i) => `<th style="width:${widths[i] || "auto"}">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows || `<tr><td colspan="${headers.length}">無資料</td></tr>`}</tbody></table>`;
@@ -597,17 +641,30 @@
             .sort()
             .reverse();
           if (!dates.length) throw new Error("沒有報表資料");
-          const select = document.getElementById("dateSelect");
-          select.innerHTML = dates
-            .map(
-              (d) =>
-                `<option value="${esc(d)}">${esc(dateLabel(database.reports[d], d))}</option>`,
-            )
-            .join("");
+          const dateInput = document.getElementById("dateSelect");
           const requested = new URLSearchParams(location.search).get("date");
           const target = dates.includes(requested) ? requested : dates[0];
-          select.value = target;
-          select.addEventListener("change", (e) => showReport(e.target.value));
+
+          dateInput.min = dates[dates.length - 1];
+          dateInput.max = dates[0];
+          dateInput.value = target;
+          let currentDate = target;
+
+          dateInput.addEventListener("change", (e) => {
+            const selectedDate = e.target.value;
+            if (dates.includes(selectedDate)) {
+              currentDate = selectedDate;
+              showReport(selectedDate);
+              document.getElementById("status").textContent =
+                `共 ${dates.length} 日資料`;
+              return;
+            }
+
+            e.target.value = currentDate;
+            document.getElementById("status").textContent =
+              "此日期沒有詳情資料，請選擇其他日期";
+          });
+
           showReport(target);
           document.getElementById("status").textContent =
             `共 ${dates.length} 日資料`;
