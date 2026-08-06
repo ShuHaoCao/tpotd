@@ -11,7 +11,7 @@
     },
     "mental_leave": ["3/23","3/24"],
     "official_leave": {
-      "debt": 1.5
+      "debt": 1.9
     },
     "statistics": {
       "rate": 0.0,
@@ -29,7 +29,7 @@
       "used": 0.0,
       "remaining": 30.0
     },
-    "mental_leave": [],
+    "mental_leave": ["7/21","7/22","7/23"],
     "official_leave": {
       "debt": 0.0
     },
@@ -51,7 +51,7 @@
     },
     "mental_leave": [],
     "official_leave": {
-      "debt": 1.4
+      "debt": 0.6
     },
     "statistics": {
       "rate": 37.5,
@@ -65,16 +65,16 @@
       "quota": 14.5,
       "extend_114": 5.0,
       "total": 19.5,
-      "monthly": [1.0,2.0,2.0,1.0,2.5,2.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 10.5,
-      "remaining": 9.0
+      "monthly": [1.0,2.0,2.0,1.0,2.5,2.0,1.5,0.0,0.0,0.0,0.0,0.0],
+      "used": 12.0,
+      "remaining": 7.5
     },
     "mental_leave": [],
     "official_leave": {
       "debt": 1.0
     },
     "statistics": {
-      "rate": 72.4,
+      "rate": 82.8,
       "rank_string": "",
       "beat_string": ""
     }
@@ -85,16 +85,16 @@
       "quota": 30.0,
       "extend_114": 0.0,
       "total": 30.0,
-      "monthly": [0.0,0.0,0.0,3.0,1.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 6.0,
-      "remaining": 24.0
+      "monthly": [0.0,0.0,0.0,3.0,1.0,2.0,2.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 8.0,
+      "remaining": 22.0
     },
     "mental_leave": ["2/5","2/6","5/21"],
     "official_leave": {
       "debt": 0.0
     },
     "statistics": {
-      "rate": 20.0,
+      "rate": 26.7,
       "rank_string": "",
       "beat_string": ""
     }
@@ -105,16 +105,16 @@
       "quota": 29.0,
       "extend_114": 14.0,
       "total": 43.0,
-      "monthly": [1.0,1.0,1.0,0.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 8.0,
-      "remaining": 35.0
+      "monthly": [1.0,1.0,1.0,0.0,0.0,0.0,5.0,4.0,0.0,0.0,0.0,0.0],
+      "used": 12.0,
+      "remaining": 31.0
     },
-    "mental_leave": ["3/17","3/19"],
+    "mental_leave": ["3/17","3/19","6/6"],
     "official_leave": {
       "debt": 1.0
     },
     "statistics": {
-      "rate": 27.6,
+      "rate": 41.4,
       "rank_string": "",
       "beat_string": ""
     }
@@ -125,16 +125,16 @@
       "quota": 13.0,
       "extend_114": 5.8,
       "total": 18.8,
-      "monthly": [0.0,1.0,6.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 7.0,
-      "remaining": 11.8
+      "monthly": [0.0,1.0,6.0,0.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 9.0,
+      "remaining": 9.8
     },
-    "mental_leave": ["4/22"],
+    "mental_leave": ["4/22","7/27","7/28"],
     "official_leave": {
-      "debt": 2.0
+      "debt": -2.0
     },
     "statistics": {
-      "rate": 53.8,
+      "rate": 69.2,
       "rank_string": "",
       "beat_string": ""
     }
@@ -145,16 +145,16 @@
       "quota": 12.0,
       "extend_114": 0.0,
       "total": 12.0,
-      "monthly": [1.0,0.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 3.0,
-      "remaining": 9.0
+      "monthly": [1.0,0.0,1.0,1.0,0.0,0.0,0.0,4.0,0.0,0.0,0.0,0.0],
+      "used": 7.0,
+      "remaining": 5.0
     },
     "mental_leave": ["4/14"],
     "official_leave": {
-      "debt": 3.0
+      "debt": 2.0
     },
     "statistics": {
-      "rate": 25.0,
+      "rate": 58.3,
       "rank_string": "",
       "beat_string": ""
     }
@@ -165,16 +165,16 @@
       "quota": 30.0,
       "extend_114": 0.0,
       "total": 30.0,
-      "monthly": [0.0,1.0,3.0,1.0,1.0,0.0,7.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 13.0,
-      "remaining": 17.0
+      "monthly": [0.0,1.0,3.0,1.0,1.0,0.0,9.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 15.0,
+      "remaining": 15.0
     },
-    "mental_leave": [],
+    "mental_leave": ["8/11","8/12"],
     "official_leave": {
       "debt": 1.0
     },
     "statistics": {
-      "rate": 43.3,
+      "rate": 50.0,
       "rank_string": "",
       "beat_string": ""
     }
@@ -185,16 +185,16 @@
       "quota": 15.0,
       "extend_114": 0.0,
       "total": 15.0,
-      "monthly": [0.0,0.0,0.0,0.0,0.0,6.0,4.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 10.0,
-      "remaining": 5.0
+      "monthly": [0.0,0.0,0.0,0.0,0.0,6.0,5.0,6.0,0.0,0.0,0.0,0.0],
+      "used": 17.0,
+      "remaining": -2.0
     },
     "mental_leave": ["3/27","3/30","4/20"],
     "official_leave": {
-      "debt": 1.0
+      "debt": 0.0
     },
     "statistics": {
-      "rate": 66.7,
+      "rate": 1.1,
       "rank_string": "",
       "beat_string": ""
     }
@@ -225,16 +225,16 @@
       "quota": 27.0,
       "extend_114": 0.0,
       "total": 27.0,
-      "monthly": [4.0,0.0,1.0,1.0,0.0,0.0,2.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 8.0,
-      "remaining": 19.0
+      "monthly": [4.0,0.0,1.0,1.0,0.0,0.0,2.0,4.0,0.0,0.0,0.0,0.0],
+      "used": 12.0,
+      "remaining": 15.0
     },
     "mental_leave": ["1/7","1/8","1/9"],
     "official_leave": {
-      "debt": 1.0
+      "debt": -1.0
     },
     "statistics": {
-      "rate": 29.6,
+      "rate": 44.4,
       "rank_string": "",
       "beat_string": ""
     }
@@ -245,16 +245,16 @@
       "quota": 25.5,
       "extend_114": 0.0,
       "total": 25.5,
-      "monthly": [2.0,2.0,1.0,0.0,2.0,8.0,3.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 18.0,
-      "remaining": 7.5
+      "monthly": [2.0,2.0,1.0,0.0,2.0,8.0,6.0,2.0,0.0,0.0,0.0,0.0],
+      "used": 23.0,
+      "remaining": 2.5
     },
     "mental_leave": ["4/9","5/22","5/25"],
     "official_leave": {
-      "debt": 0.7
+      "debt": 1.7
     },
     "statistics": {
-      "rate": 70.6,
+      "rate": 90.2,
       "rank_string": "",
       "beat_string": ""
     }
@@ -269,7 +269,7 @@
       "used": 10.0,
       "remaining": 11.1
     },
-    "mental_leave": ["7/10"],
+    "mental_leave": ["8/21","8/27","8/28"],
     "official_leave": {
       "debt": 1.0
     },
@@ -285,16 +285,16 @@
       "quota": 13.0,
       "extend_114": 0.0,
       "total": 13.0,
-      "monthly": [0.0,1.0,1.0,0.0,2.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 5.0,
-      "remaining": 8.0
+      "monthly": [0.0,1.0,1.0,0.0,2.0,0.0,2.0,1.0,0.0,0.0,0.0,0.0],
+      "used": 7.0,
+      "remaining": 6.0
     },
     "mental_leave": ["3/27","4/22","5/27"],
     "official_leave": {
-      "debt": 0.0
+      "debt": -1.0
     },
     "statistics": {
-      "rate": 38.5,
+      "rate": 53.8,
       "rank_string": "",
       "beat_string": ""
     }
@@ -305,16 +305,16 @@
       "quota": 15.0,
       "extend_114": 0.0,
       "total": 15.0,
-      "monthly": [1.0,2.5,0.0,1.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 5.5,
-      "remaining": 9.5
+      "monthly": [1.0,2.5,0.0,1.0,0.0,0.0,1.0,3.0,0.0,0.0,0.0,0.0],
+      "used": 8.5,
+      "remaining": 6.5
     },
     "mental_leave": ["6/24"],
     "official_leave": {
       "debt": 0.0
     },
     "statistics": {
-      "rate": 36.7,
+      "rate": 56.7,
       "rank_string": "",
       "beat_string": ""
     }
@@ -325,16 +325,16 @@
       "quota": 30.0,
       "extend_114": 0.0,
       "total": 30.0,
-      "monthly": [4.0,5.0,1.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 15.0,
-      "remaining": 15.0
+      "monthly": [4.0,5.0,1.0,0.0,0.0,5.0,0.0,3.0,0.0,0.0,0.0,0.0],
+      "used": 18.0,
+      "remaining": 12.0
     },
     "mental_leave": ["7/2","7/3"],
     "official_leave": {
-      "debt": 2.0
+      "debt": -1.0
     },
     "statistics": {
-      "rate": 50.0,
+      "rate": 60.0,
       "rank_string": "",
       "beat_string": ""
     }
@@ -345,16 +345,16 @@
       "quota": 30.0,
       "extend_114": 0.0,
       "total": 30.0,
-      "monthly": [0.0,0.5,5.0,1.0,1.5,1.0,2.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 11.0,
-      "remaining": 19.0
+      "monthly": [0.0,0.5,5.0,1.0,1.5,1.0,1.0,2.0,0.0,0.0,0.0,0.0],
+      "used": 12.0,
+      "remaining": 18.0
     },
     "mental_leave": ["4/28","4/29","4/30"],
     "official_leave": {
-      "debt": 0.5
+      "debt": -0.5
     },
     "statistics": {
-      "rate": 36.7,
+      "rate": 40.0,
       "rank_string": "",
       "beat_string": ""
     }
@@ -371,7 +371,7 @@
     },
     "mental_leave": ["1/14","1/15","1/16"],
     "official_leave": {
-      "debt": 2.0
+      "debt": 1.0
     },
     "statistics": {
       "rate": 6.1,
@@ -385,16 +385,16 @@
       "quota": 15.0,
       "extend_114": 7.0,
       "total": 22.0,
-      "monthly": [6.0,0.0,3.0,4.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 13.0,
-      "remaining": 9.0
+      "monthly": [6.0,0.0,3.0,4.0,0.0,0.0,0.0,5.0,0.0,0.0,0.0,0.0],
+      "used": 18.0,
+      "remaining": 4.0
     },
     "mental_leave": ["3/11","3/12","3/13"],
     "official_leave": {
-      "debt": 5.0
+      "debt": 4.0
     },
     "statistics": {
-      "rate": 86.7,
+      "rate": 1.2,
       "rank_string": "",
       "beat_string": ""
     }
@@ -405,16 +405,16 @@
       "quota": 24.0,
       "extend_114": 7.0,
       "total": 31.0,
-      "monthly": [0.0,3.0,5.0,0.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 11.0,
-      "remaining": 20.0
+      "monthly": [0.0,3.0,5.0,0.0,0.0,0.0,3.0,5.0,0.0,0.0,0.0,0.0],
+      "used": 16.0,
+      "remaining": 15.0
     },
     "mental_leave": ["5/14","6/30"],
     "official_leave": {
-      "debt": 1.6
+      "debt": 0.6
     },
     "statistics": {
-      "rate": 45.8,
+      "rate": 66.7,
       "rank_string": "",
       "beat_string": ""
     }
@@ -425,16 +425,16 @@
       "quota": 18.5,
       "extend_114": 0.0,
       "total": 18.5,
-      "monthly": [0.0,0.0,3.0,1.0,1.0,2.0,1.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 8.0,
-      "remaining": 10.5
+      "monthly": [0.0,0.0,3.0,1.0,1.0,2.0,1.0,5.0,0.0,0.0,0.0,0.0],
+      "used": 13.0,
+      "remaining": 5.5
     },
     "mental_leave": ["6/10","6/11","6/12"],
     "official_leave": {
       "debt": -1.0
     },
     "statistics": {
-      "rate": 43.2,
+      "rate": 70.3,
       "rank_string": "",
       "beat_string": ""
     }
@@ -445,16 +445,16 @@
       "quota": 14.0,
       "extend_114": 2.0,
       "total": 16.0,
-      "monthly": [0.0,1.0,2.0,1.0,2.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 7.0,
-      "remaining": 9.0
+      "monthly": [0.0,1.0,2.0,1.0,2.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0],
+      "used": 9.0,
+      "remaining": 7.0
     },
-    "mental_leave": [],
+    "mental_leave": ["8/20","8/21"],
     "official_leave": {
-      "debt": 3.0
+      "debt": 2.4
     },
     "statistics": {
-      "rate": 50.0,
+      "rate": 64.3,
       "rank_string": "",
       "beat_string": ""
     }
@@ -465,16 +465,16 @@
       "quota": 29.0,
       "extend_114": 3.0,
       "total": 32.0,
-      "monthly": [1.0,4.0,2.0,3.0,0.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 12.0,
-      "remaining": 20.0
+      "monthly": [1.0,4.0,2.0,3.0,0.0,2.0,4.0,2.0,0.0,0.0,0.0,0.0],
+      "used": 18.0,
+      "remaining": 14.0
     },
     "mental_leave": [],
     "official_leave": {
-      "debt": 0.0
+      "debt": 0.3
     },
     "statistics": {
-      "rate": 41.4,
+      "rate": 62.1,
       "rank_string": "",
       "beat_string": ""
     }
@@ -489,9 +489,9 @@
       "used": 4.0,
       "remaining": 26.0
     },
-    "mental_leave": [],
+    "mental_leave": ["7/11","7/15","7/17"],
     "official_leave": {
-      "debt": 2.0
+      "debt": 0.0
     },
     "statistics": {
       "rate": 13.3,
@@ -505,16 +505,16 @@
       "quota": 18.0,
       "extend_114": 0.0,
       "total": 18.0,
-      "monthly": [0.0,0.0,3.0,0.0,1.0,5.0,2.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 11.0,
-      "remaining": 7.0
+      "monthly": [0.0,0.0,3.0,0.0,1.0,5.0,3.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 12.0,
+      "remaining": 6.0
     },
     "mental_leave": ["3/9","3/10","3/16"],
     "official_leave": {
-      "debt": 1.1
+      "debt": 3.7
     },
     "statistics": {
-      "rate": 61.1,
+      "rate": 66.7,
       "rank_string": "",
       "beat_string": ""
     }
@@ -525,16 +525,16 @@
       "quota": 15.0,
       "extend_114": 4.0,
       "total": 19.0,
-      "monthly": [0.0,0.0,4.0,0.0,0.0,1.0,2.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 7.0,
-      "remaining": 12.0
+      "monthly": [0.0,0.0,4.0,0.0,0.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 6.0,
+      "remaining": 13.0
     },
     "mental_leave": [],
     "official_leave": {
-      "debt": 3.0
+      "debt": 4.9
     },
     "statistics": {
-      "rate": 46.7,
+      "rate": 40.0,
       "rank_string": "",
       "beat_string": ""
     }
@@ -565,16 +565,16 @@
       "quota": 15.0,
       "extend_114": 0.0,
       "total": 15.0,
-      "monthly": [0.0,0.0,0.0,0.0,0.0,2.0,4.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 6.0,
-      "remaining": 9.0
+      "monthly": [0.0,0.0,0.0,0.0,0.0,2.0,5.0,2.0,0.0,0.0,0.0,0.0],
+      "used": 9.0,
+      "remaining": 6.0
     },
     "mental_leave": [],
     "official_leave": {
-      "debt": 1.0
+      "debt": 0.0
     },
     "statistics": {
-      "rate": 40.0,
+      "rate": 60.0,
       "rank_string": "",
       "beat_string": ""
     }
@@ -585,16 +585,16 @@
       "quota": 15.0,
       "extend_114": 0.0,
       "total": 15.0,
-      "monthly": [0.0,0.0,0.0,0.0,4.0,0.0,10.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 14.0,
-      "remaining": 1.0
+      "monthly": [0.0,0.0,0.0,0.0,4.0,0.0,10.0,1.0,0.0,0.0,0.0,0.0],
+      "used": 15.0,
+      "remaining": 0.0
     },
     "mental_leave": ["3/6"],
     "official_leave": {
-      "debt": 1.0
+      "debt": 1.5
     },
     "statistics": {
-      "rate": 93.3,
+      "rate": 100.0,
       "rank_string": "",
       "beat_string": ""
     }
@@ -605,13 +605,13 @@
       "quota": 0.0,
       "extend_114": 0.0,
       "total": 0.0,
-      "monthly": [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 0.0,
-      "remaining": 0.0
+      "monthly": [0.0,0.0,0.0,0.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 3.0,
+      "remaining": -3.0
     },
     "mental_leave": ["5/21"],
     "official_leave": {
-      "debt": 1.0
+      "debt": 3.2
     },
     "statistics": {
       "rate": 0.0,
@@ -631,7 +631,7 @@
     },
     "mental_leave": ["5/21"],
     "official_leave": {
-      "debt": 0.0
+      "debt": 2.0
     },
     "statistics": {
       "rate": 0.0,
@@ -645,16 +645,16 @@
       "quota": 18.5,
       "extend_114": 0.0,
       "total": 18.5,
-      "monthly": [0.0,0.0,1.0,1.0,4.0,1.0,4.0,0.0,0.0,0.0,0.0,0.0],
-      "used": 11.0,
-      "remaining": 7.5
+      "monthly": [0.0,0.0,1.0,1.0,4.0,1.0,6.0,0.0,0.0,0.0,0.0,0.0],
+      "used": 13.0,
+      "remaining": 5.5
     },
-    "mental_leave": [],
+    "mental_leave": ["8/26","8/27","8/28"],
     "official_leave": {
       "debt": 0.5
     },
     "statistics": {
-      "rate": 59.5,
+      "rate": 70.3,
       "rank_string": "",
       "beat_string": ""
     }
@@ -671,7 +671,7 @@
     },
     "mental_leave": [],
     "official_leave": {
-      "debt": 5.8
+      "debt": 7.0
     },
     "statistics": {
       "rate": 56.0,
