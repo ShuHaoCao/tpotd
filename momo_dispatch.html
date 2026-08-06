@@ -1322,6 +1322,94 @@
           transform: translateX(-50%);
         }
       }
+
+      /* === 頁內詳情表：避免另開視窗與瀏覽器彈出視窗封鎖 === */
+      .details-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000000;
+        display: none;
+        flex-direction: column;
+        background: #e9eef5;
+      }
+
+      .details-overlay.is-open {
+        display: flex;
+      }
+
+      .details-overlay-head {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 64px;
+        padding: 10px 18px;
+        color: #f8fafc;
+        background: linear-gradient(135deg, #071b2d, #082f49);
+        border-bottom: 1px solid rgba(56, 189, 248, 0.42);
+        box-shadow: 0 8px 24px rgba(2, 6, 23, 0.28);
+      }
+
+      .details-overlay-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+        font-weight: 950;
+        letter-spacing: 0.04em;
+      }
+
+      .details-overlay-title span:last-child {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .details-close-btn {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 42px;
+        padding: 8px 14px;
+        border: 1px solid rgba(125, 211, 252, 0.55);
+        border-radius: 11px;
+        color: #e0f2fe;
+        background: rgba(15, 23, 42, 0.72);
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .details-close-btn:hover {
+        color: #fff;
+        background: rgba(14, 116, 144, 0.55);
+      }
+
+      .details-frame {
+        width: 100%;
+        flex: 1 1 auto;
+        min-height: 0;
+        border: 0;
+        background: #e9eef5;
+      }
+
+      @media (max-width: 640px) {
+        .details-overlay-head {
+          min-height: 56px;
+          padding: 8px 10px;
+        }
+
+        .details-overlay-title {
+          font-size: 14px;
+        }
+
+        .details-close-btn {
+          min-height: 40px;
+          padding: 7px 10px;
+        }
+      }
     </style>
   </head>
   <body
@@ -1343,90 +1431,103 @@
           </p>
         </div>
 
-        <div
-          class="date-selector relative flex items-center justify-between w-full md:w-auto bg-white shadow-sm border border-slate-200 rounded-xl p-1.5"
-        >
+        <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
           <button
-            @click="showDatePicker = !showDatePicker"
-            class="date-display-btn w-full md:w-auto px-4 sm:px-6 py-2.5 font-bold text-slate-800 text-sm sm:text-base rounded-lg transition-colors flex items-center justify-center gap-2"
+            @click="openDetails"
             type="button"
+            class="px-4 py-2.5 rounded-xl font-black flex items-center justify-center gap-2"
+            title="在目前頁面顯示當日完整報表"
           >
-            <span
-              >日期：{{ currentData.date }} ({{ currentData.weekday }})</span
-            >
-            <span class="material-icons text-base">expand_more</span>
+            <span class="material-icons text-base">description</span>
+            詳情表
           </button>
-
           <div
-            v-if="showDatePicker"
-            class="date-picker-panel absolute right-0 top-[calc(100%+10px)] z-[99999] w-[300px] max-w-[calc(100vw-24px)] rounded-xl border shadow-2xl p-3"
+            class="date-selector relative flex items-center justify-between w-full md:w-auto bg-white shadow-sm border border-slate-200 rounded-xl p-1.5"
           >
-            <div class="flex items-center justify-between mb-3">
-              <button
-                @click="movePickerMonth(-1)"
-                type="button"
-                class="date-nav-btn p-2 rounded-lg"
+            <button
+              @click="showDatePicker = !showDatePicker"
+              class="date-display-btn w-full md:w-auto px-4 sm:px-6 py-2.5 font-bold text-slate-800 text-sm sm:text-base rounded-lg transition-colors flex items-center justify-center gap-2"
+              type="button"
+            >
+              <span
+                >日期：{{ currentData.date }} ({{ currentData.weekday }})</span
               >
-                <span class="material-icons text-base">keyboard_arrow_up</span>
-              </button>
-              <div class="date-picker-title font-black text-sm">
-                {{ pickerTitle }}
-              </div>
-              <button
-                @click="movePickerMonth(1)"
-                type="button"
-                class="date-nav-btn p-2 rounded-lg"
-              >
-                <span class="material-icons text-base"
-                  >keyboard_arrow_down</span
-                >
-              </button>
-            </div>
+              <span class="material-icons text-base">expand_more</span>
+            </button>
 
             <div
-              class="grid grid-cols-7 gap-1 text-center text-xs font-bold mb-1 date-weekdays"
+              v-if="showDatePicker"
+              class="date-picker-panel absolute right-0 top-[calc(100%+10px)] z-[99999] w-[300px] max-w-[calc(100vw-24px)] rounded-xl border shadow-2xl p-3"
             >
-              <div v-for="w in ['日','一','二','三','四','五','六']" :key="w">
-                {{ w }}
+              <div class="flex items-center justify-between mb-3">
+                <button
+                  @click="movePickerMonth(-1)"
+                  type="button"
+                  class="date-nav-btn p-2 rounded-lg"
+                >
+                  <span class="material-icons text-base"
+                    >keyboard_arrow_up</span
+                  >
+                </button>
+                <div class="date-picker-title font-black text-sm">
+                  {{ pickerTitle }}
+                </div>
+                <button
+                  @click="movePickerMonth(1)"
+                  type="button"
+                  class="date-nav-btn p-2 rounded-lg"
+                >
+                  <span class="material-icons text-base"
+                    >keyboard_arrow_down</span
+                  >
+                </button>
               </div>
-            </div>
 
-            <div class="grid grid-cols-7 gap-1 text-center">
-              <button
-                v-for="day in calendarDays"
-                :key="day.key"
-                @click="selectDate(day.dateStr)"
-                type="button"
-                :disabled="!day.available"
-                :class="[
+              <div
+                class="grid grid-cols-7 gap-1 text-center text-xs font-bold mb-1 date-weekdays"
+              >
+                <div v-for="w in ['日','一','二','三','四','五','六']" :key="w">
+                  {{ w }}
+                </div>
+              </div>
+
+              <div class="grid grid-cols-7 gap-1 text-center">
+                <button
+                  v-for="day in calendarDays"
+                  :key="day.key"
+                  @click="selectDate(day.dateStr)"
+                  type="button"
+                  :disabled="!day.available"
+                  :class="[
                   'calendar-day-btn rounded-lg text-sm font-bold transition-all',
                   day.inMonth ? '' : 'other-month',
                   day.available ? 'available' : 'disabled',
                   day.dateStr === currentData.date ? 'selected' : ''
                 ]"
-              >
-                {{ day.day }}
-              </button>
-            </div>
+                >
+                  {{ day.day }}
+                </button>
+              </div>
 
-            <div
-              class="flex justify-between items-center pt-3 mt-2 text-xs font-bold date-picker-foot"
-            >
-              <button
-                @click="showDatePicker = false"
-                type="button"
-                class="date-link-btn"
+              <div
+                class="flex justify-between items-center pt-3 mt-2 text-xs font-bold date-picker-foot"
               >
-                關閉
-              </button>
-              <button
-                @click="selectDate(latestDate)"
-                type="button"
-                class="date-link-btn"
-                :disabled="!latestDate"
-              >
-                最新日期
-              </button>
+                <button
+                  @click="showDatePicker = false"
+                  type="button"
+                  class="date-link-btn"
+                >
+                  關閉
+                </button>
+                <button
+                  @click="selectDate(latestDate)"
+                  type="button"
+                  class="date-link-btn"
+                  :disabled="!latestDate"
+                >
+                  最新日期
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2318,6 +2419,35 @@
         </div>
       </div>
     </div>
+
+    <section
+      id="detailsOverlay"
+      class="details-overlay"
+      aria-hidden="true"
+      aria-label="MOMO進出口詳情表"
+    >
+      <div class="details-overlay-head">
+        <div class="details-overlay-title">
+          <span class="material-icons">description</span>
+          <span id="detailsOverlayTitle">MOMO進出口詳情表</span>
+        </div>
+        <button
+          id="detailsCloseBtn"
+          class="details-close-btn"
+          type="button"
+          aria-label="關閉詳情表"
+        >
+          <span class="material-icons">arrow_back</span>
+          返回看板
+        </button>
+      </div>
+      <iframe
+        id="detailsFrame"
+        class="details-frame"
+        title="MOMO進出口統計詳情表"
+        loading="eager"
+      ></iframe>
+    </section>
 
     <script>
       const { createApp, ref, computed, nextTick, watch, onMounted } = Vue;
@@ -3767,6 +3897,44 @@
             );
           };
 
+          const openDetails = () => {
+            const date = currentData.value?.date || "";
+            const query = date
+              ? `?date=${encodeURIComponent(date)}&embedded=1`
+              : "?embedded=1";
+            const overlay = document.getElementById("detailsOverlay");
+            const frame = document.getElementById("detailsFrame");
+            const title = document.getElementById("detailsOverlayTitle");
+            if (!overlay || !frame) return;
+            frame.src = `details.html${query}`;
+            if (title) {
+              title.textContent = date
+                ? `MOMO進出口詳情表｜${date}`
+                : "MOMO進出口詳情表";
+            }
+            overlay.classList.add("is-open");
+            overlay.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+          };
+
+          const closeDetails = () => {
+            const overlay = document.getElementById("detailsOverlay");
+            const frame = document.getElementById("detailsFrame");
+            if (!overlay) return;
+            overlay.classList.remove("is-open");
+            overlay.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+            if (frame) frame.src = "about:blank";
+          };
+
+          document
+            .getElementById("detailsCloseBtn")
+            ?.addEventListener("click", closeDetails);
+
+          document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape") closeDetails();
+          });
+
           const nextDay = () => {
             if (currentIndex.value < mockData.value.length - 1) {
               currentIndex.value++;
@@ -3817,6 +3985,7 @@
             formatInt,
             formatDurationDisplay,
             exportJson,
+            openDetails,
           };
         },
       }).mount("#app");
