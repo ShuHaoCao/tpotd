@@ -764,9 +764,24 @@
               }
             });
 
+            // 以等寬字元概念補空白，讓「時間／車次／台數」在文字報表中更整齊。
+            // 中文全形字元約佔 2 格，英數字約佔 1 格。
+            const visualWidth = (text) =>
+              Array.from(String(text)).reduce(
+                (width, ch) => width + (/[^\x00-\xff]/.test(ch) ? 2 : 1),
+                0,
+              );
+            const padVisualEnd = (text, targetWidth) => {
+              const str = String(text);
+              return (
+                str + " ".repeat(Math.max(1, targetWidth - visualWidth(str)))
+              );
+            };
+
             let lines = validRows.map((row) => {
               const timeStr = row.time ? row.time : "00:00";
-              return `${timeStr} ${row.carType}  ${row.count}台`;
+              const carStr = padVisualEnd(row.carType, 16);
+              return `${timeStr} ${carStr}${row.count}台`;
             });
 
             const total = validRows.reduce(
@@ -879,14 +894,15 @@
 
             let text = `臺南郵局\n${yyyy}/${mm}/${dd}（${dayName}）（凌晨作業）\n\n`;
 
-            text += `北上郵件轉運\n`;
+            text += `《北上郵件轉運》\n`;
+            text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
             if (northData.lines.length > 0) {
               text += northData.lines.join("\n") + "\n";
             } else {
               text += `（無轉運資料）\n`;
             }
             text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
-            text += `       共${northData.tripCount}車次   計${northData.total}台\n\n`;
+            text += `共${northData.tripCount}車次              計${northData.total}台\n\n`;
 
             if (status0000.value === 0 || !status0000.value) {
               text += `第1階段：全數運清\n`;
@@ -917,14 +933,15 @@
               text += `\n`;
             }
 
-            text += `南下郵件載運\n`;
+            text += `《南下郵件載運》\n`;
+            text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
             if (southData.lines.length > 0) {
               text += southData.lines.join("\n") + "\n";
             } else {
               text += `（無載運資料）\n`;
             }
             text += `＝＝＝＝＝＝＝＝＝＝＝＝\n`;
-            text += `       共${southData.tripCount}車次   計${southData.total}台\n\n`;
+            text += `共${southData.tripCount}車次               計${southData.total}台\n\n`;
 
             if (statusSouth.value === 0 || !statusSouth.value) {
               text += `南下郵件全數運清`;
