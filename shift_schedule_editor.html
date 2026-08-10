@@ -3,17 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>運輸股-班表資料編輯器</title>
-    <script
-      type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=sw9sUiuPye0esUbXkV39QewuomzTvkn6jU3KYgpdlrsugws61qT9n8X_hrcthhbzKi4lmPppZ_UMOpxDFQpsoK9C0CGxyez_gYFGdxkbV-SrlHWPZjyuiiju3bqdrLAqY3Gi602a1ielyXnV0U2BKfrsgJfZ2kL3fm5Cco5Ij-AVGNNFelxLrjCLagtO3HtIVqG5T7ioOtD9INF5wlXEc9xYZRB-tCDBxmUqk-ayQrUNmJpw32crzo-_zQGTX5H58JW7heHtY6ETXcY6oYn8XBH5gZukBs-0t9BVT9reP55iAbY16r2jsLMugeHnuxHLCSJ8pvYAgHTkhFqaAByyNS-qOPYF8beD6sB7poyeSP8"
-      charset="UTF-8"
-    ></script>
-    <link
-      rel="stylesheet"
-      crossorigin="anonymous"
-      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDJkZGM4MjA2YjQzZjYzNWUzODgzZWNiZSZmbj1zaGlmdF9zY2hlZHVsZV9lZGl0b3Jfb3JnYW5pemVkX3YyLmh0bWwmY2Q9YXR0YWNobWVudCZ0cz00OTYyMTcmcD1mcyZjaWQ9MSZzaWc9N2QzNjFmODA1OWExYjFkNTQ5YzBmNzQzNWFiNTg5N2ZmNjI3YTlmMDYzYTUwZDA0OGYyOTBkOTQ2MTBiNzVhZCZ2PTA"
-    />
+    <title>班表資料編輯器</title>
     <style>
       :root {
         --primary-color: #4a69bd;
@@ -390,7 +380,7 @@
   </head>
   <body>
     <div class="container">
-      <h2>運輸股-班表資料編輯器 v2.0</h2>
+      <h2>班表資料編輯器 v2.0</h2>
 
       <div class="section">
         <span class="section-title">第1步：載入來源</span>
@@ -435,6 +425,50 @@
     <script>
       let scheduleData = {};
       let allStaff = [];
+
+      // ==========================================================
+      // 人工設定人員名單
+      // 之後若有人員新增、離職、調整，請只修改這個陣列即可。
+      // 即使重複輸入，程式也會自動去除重複姓名。
+      // ==========================================================
+      const MANUAL_STAFF_LIST = [
+        "吳佳錚",
+        "吳家偉",
+        "吳政謙",
+        "吳秉修",
+        "周恆毅",
+        "周耀宗",
+        "張智雄",
+        "張正德",
+        "施以平",
+        "曹書豪",
+        "李翊宏",
+        "楊嶸祜",
+        "沈銘展",
+        "王寶生",
+        "王昭文",
+        "程世桓",
+        "簡慶富",
+        "翁志峰",
+        "莊世明",
+        "莊景宇",
+        "葉吉順",
+        "葉育宏",
+        "蔡綜哲",
+        "許瑞廷",
+        "謝勝勳",
+        "連志維",
+        "邱俊融",
+        "邱學士",
+        "邱嶸祜",
+        "鄭憲鴻",
+        "金哲駿",
+        "陳俊瑋",
+        "陳柏宇",
+        "陳柏林",
+        "陳緯謙",
+        "黃憲章",
+      ];
 
       // 這裡可以根據你的需求自定義特定班別的清單
       const staffConfig = {
@@ -1122,27 +1156,23 @@
       }
 
       function extractAllStaff() {
-        const staffSet = new Set();
-
-        getNewStructureDates().forEach((date) => {
-          Object.values(scheduleData[date]).forEach((item) => {
-            const name =
-              item && typeof item.name === "string" ? item.name.trim() : "";
-
-            if (
-              name &&
-              name !== "-" &&
-              name !== "未排班" &&
-              name !== "#溢出!"
-            ) {
-              staffSet.add(name);
-            }
-          });
-        });
-
-        allStaff = Array.from(staffSet).sort((a, b) =>
-          a.localeCompare(b, "zh-Hant"),
-        );
+        // 人員選單完全採用人工設定，不再從 JSON 自動擷取姓名。
+        allStaff = [
+          ...new Set(
+            MANUAL_STAFF_LIST.filter((name) => typeof name === "string")
+              .map((name) => name.trim())
+              .filter(
+                (name) =>
+                  name &&
+                  name !== "-" &&
+                  name !== "未排班" &&
+                  name !== "(空白)" &&
+                  name !== "#溢出!" &&
+                  name !== "OK" &&
+                  name !== "V",
+              ),
+          ),
+        ].sort((a, b) => a.localeCompare(b, "zh-Hant"));
       }
 
       function createBlankDayTemplate() {
@@ -1272,23 +1302,15 @@
             const currentName =
               typeof item.name === "string" ? item.name.trim() : "";
 
-            let configured = staffConfig[shift];
-            let names = Array.isArray(configured)
-              ? configured
-                  .filter((v) => typeof v === "string")
-                  .map((v) => v.trim())
-                  .filter(
-                    (v) =>
-                      v &&
-                      v !== "-" &&
-                      v !== "(空白)" &&
-                      v !== "未排班" &&
-                      v !== "#溢出!",
-                  )
-              : [...allStaff];
+            // 所有班別的人員下拉選單都使用人工設定的 MANUAL_STAFF_LIST，並自動去重。
+            let names = [...allStaff];
 
-            if (currentName && !names.includes(currentName))
+            // 若目前班別已有姓名，但因資料範圍等原因不在名單內，
+            // 仍保留目前姓名，避免載入後無法顯示。
+            if (currentName && !names.includes(currentName)) {
               names.unshift(currentName);
+            }
+
             names = [...new Set(names)];
 
             const unassigned = document.createElement("option");
