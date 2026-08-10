@@ -1048,9 +1048,9 @@
         "totalCarts": 146,
         "momoTotal": 146,
         "packageTotal": 0,
-        "mailCount": null,
-        "averagePerCart": 0,
-        "averagePerTrip": 0,
+        "mailCount": 4995,
+        "averagePerCart": 34.2,
+        "averagePerTrip": 624.4,
         "outboundInboundRatio": 0.9125,
         "note": ""
       },
