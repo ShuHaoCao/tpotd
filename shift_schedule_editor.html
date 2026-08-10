@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>運輸股-班表資料編輯器</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=sw9sUiuPye0esUbXkV39QewuomzTvkn6jU3KYgpdlrsugws61qT9n8X_hrcthhbzKi4lmPppZ_UMOpxDFQpsoK9C0CGxyez_gYFGdxkbV-SrlHWPZjyuiiju3bqdrLAqY3Gi602a1ielyXnV0U2BKfrsgJfZ2kL3fm5Cco5Ij-AVGNNFelxLrjCLagtO3HtIVqG5T7ioOtD9INF5wlXEc9xYZRB-tCDBxmUqk-ayQrUNmJpw32crzo-_zQGTX5H58JW7heHtY6ETXcY6oYn8XBH5gZukBs-0t9BVT9reP55iAbY16r2jsLMugeHnuxHLCSJ8pvYAgHTkhFqaAByyNS-qOPYF8beD6sB7poyeSP8"
+      charset="UTF-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin="anonymous"
+      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDJkZGM4MjA2YjQzZjYzNWUzODgzZWNiZSZmbj1zaGlmdF9zY2hlZHVsZV9lZGl0b3Jfb3JnYW5pemVkX3YyLmh0bWwmY2Q9YXR0YWNobWVudCZ0cz00OTYyMTcmcD1mcyZjaWQ9MSZzaWc9N2QzNjFmODA1OWExYjFkNTQ5YzBmNzQzNWFiNTg5N2ZmNjI3YTlmMDYzYTUwZDA0OGYyOTBkOTQ2MTBiNzVhZCZ2PTA"
+    />
     <style>
       :root {
         --primary-color: #4a69bd;
@@ -172,11 +182,215 @@
         font-size: 0.85em;
         color: #999;
       }
+
+      .shift-edit-group {
+        width: 100%;
+      }
+
+      .shift-main-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .shift-main-row label {
+        flex: 0 0 100px;
+      }
+
+      .status-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 8px 0 4px 112px;
+      }
+
+      .status-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .status-item span {
+        font-size: 0.85rem;
+        color: #57606f;
+        white-space: nowrap;
+      }
+
+      .status-item select {
+        width: 100%;
+        padding: 7px 30px 7px 8px;
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 600px) {
+        .shift-main-row {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 6px;
+        }
+
+        .shift-main-row label {
+          flex: none;
+          width: 100%;
+        }
+
+        .status-row {
+          margin-left: 0;
+          grid-template-columns: 1fr;
+        }
+
+        .status-item {
+          display: grid;
+          grid-template-columns: 52px 1fr;
+        }
+      }
+
+      /* ===== 分區與修改追蹤 ===== */
+      #fieldsContainer {
+        display: block;
+      }
+
+      .shift-section {
+        border: 1px solid #d9e2ec;
+        border-radius: 14px;
+        margin: 16px 0;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .shift-section-header {
+        padding: 14px 18px;
+        font-size: 1.08rem;
+        font-weight: 800;
+        background: #f4f7fb;
+        border-bottom: 1px solid #d9e2ec;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .shift-section-count {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #6b7280;
+      }
+
+      .shift-section-body {
+        padding: 0 16px;
+      }
+
+      .edit-row {
+        position: relative;
+        transition:
+          background-color 0.18s ease,
+          box-shadow 0.18s ease;
+      }
+
+      .edit-row.is-modified {
+        background: #fff7d6;
+        box-shadow: inset 5px 0 0 #f39c12;
+        border-radius: 8px;
+        padding-left: 10px;
+        padding-right: 8px;
+      }
+
+      .edit-row.is-modified::after {
+        content: "已修改";
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 800;
+        background: #f39c12;
+        color: white;
+        pointer-events: none;
+      }
+
+      .field-modified {
+        border: 2px solid #f39c12 !important;
+        background: #fffaf0 !important;
+      }
+
+      .change-summary {
+        display: none;
+        margin: 14px 0 4px;
+        padding: 12px 14px;
+        border: 1px solid #f4c36a;
+        border-radius: 10px;
+        background: #fff8e8;
+        color: #6b4b00;
+        font-weight: 700;
+      }
+
+      .change-summary.show {
+        display: block;
+      }
+
+      .change-summary small {
+        display: block;
+        margin-top: 4px;
+        font-weight: 500;
+        color: #7b6b47;
+      }
+
+      .toolbar-note {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 600px) {
+        .shift-section-body {
+          padding: 0 10px;
+        }
+        .edit-row.is-modified::after {
+          position: static;
+          display: inline-block;
+          margin: 6px 0 4px;
+        }
+      }
+
+      .shift-label-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 0 100px;
+      }
+
+      .shift-label-wrap label {
+        flex: 1 1 auto;
+        margin: 0;
+      }
+
+      .btn-clear-shift {
+        border: 1px solid #e57373;
+        background: #fff5f5;
+        color: #c0392b;
+        border-radius: 7px;
+        padding: 5px 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .btn-clear-shift:hover {
+        background: #ffe6e6;
+      }
+
+      @media (max-width: 600px) {
+        .shift-label-wrap {
+          flex: none;
+          width: 100%;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
-      <h2>運輸股-班表資料編輯器 v1.0</h2>
+      <h2>運輸股-班表資料編輯器 v2.0</h2>
 
       <div class="section">
         <span class="section-title">第1步：載入來源</span>
@@ -198,16 +412,20 @@
 
         <div class="section">
           <span class="section-title">第3步：編輯人員</span>
+          <div id="changeSummary" class="change-summary">
+            ✏️ 本日期已有修改
+            <small id="changeSummaryText"></small>
+          </div>
           <div id="fieldsContainer"></div>
         </div>
 
         <div class="sticky-footer">
           <div class="btn-group">
-            <button class="btn btn-save" onclick="saveToMemory()">
-              暫存修改
+            <button class="btn btn-save" type="button" disabled>
+              自動更新記憶體
             </button>
             <button class="btn btn-export" onclick="exportJSON()">
-              匯出下載
+              匯出完整 JSON
             </button>
           </div>
         </div>
@@ -647,41 +865,305 @@
         "見　習 2": [, "-"],
       };
 
+      let loadedFileName = "schedule_data.json";
+      let currentDate = "";
+      let isDirty = false;
+      let originalSnapshot = {};
+      let modifiedByDate = {};
+
+      function deepClone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      }
+
+      function classifyShift(shift) {
+        const s = String(shift);
+
+        if (
+          s.includes("股長") ||
+          s.includes("專員") ||
+          s.includes("內檯") ||
+          s.includes("空袋")
+        )
+          return "管理／內勤";
+
+        if (
+          s.includes("早") ||
+          s.includes("新營") ||
+          s.includes("自運") ||
+          s.includes("嘉義")
+        )
+          return "早班";
+
+        if (
+          s.includes("中班") ||
+          /^中\d/.test(s) ||
+          s.includes("771") ||
+          s.includes("772")
+        )
+          return "中班";
+
+        if (
+          s.includes("夜") ||
+          s.includes("大夜") ||
+          s.includes("127") ||
+          s.includes("128")
+        )
+          return "晚班／大夜";
+
+        return "其他班別";
+      }
+
+      function getOriginalValue(date, shift, fieldKey) {
+        const day = originalSnapshot?.[date];
+        if (!day || !day[shift]) return undefined;
+
+        if (fieldKey === "人員") {
+          return typeof day[shift].name === "string" ? day[shift].name : "";
+        }
+
+        return day[shift].status &&
+          typeof day[shift].status[fieldKey] === "string"
+          ? day[shift].status[fieldKey]
+          : "";
+      }
+
+      function getCurrentValue(date, shift, fieldKey) {
+        const day = scheduleData?.[date];
+        if (!day || !day[shift]) return undefined;
+
+        if (fieldKey === "人員") {
+          return typeof day[shift].name === "string" ? day[shift].name : "";
+        }
+
+        return day[shift].status &&
+          typeof day[shift].status[fieldKey] === "string"
+          ? day[shift].status[fieldKey]
+          : "";
+      }
+
+      function isFieldActuallyModified(date, shift, fieldKey) {
+        return (
+          getCurrentValue(date, shift, fieldKey) !==
+          getOriginalValue(date, shift, fieldKey)
+        );
+      }
+
+      function syncModifiedState(date, shift, fieldKey, element) {
+        if (!modifiedByDate[date]) modifiedByDate[date] = new Set();
+
+        const token = `${shift}｜${fieldKey}`;
+        const changed = isFieldActuallyModified(date, shift, fieldKey);
+
+        if (changed) {
+          modifiedByDate[date].add(token);
+          if (element) element.classList.add("field-modified");
+        } else {
+          modifiedByDate[date].delete(token);
+          if (element) element.classList.remove("field-modified");
+        }
+
+        if (modifiedByDate[date].size === 0) {
+          delete modifiedByDate[date];
+        }
+
+        const row = element ? element.closest(".edit-row") : null;
+        if (row) {
+          const rowChanged = [...(modifiedByDate[date] || [])].some((x) =>
+            x.startsWith(`${shift}｜`),
+          );
+
+          row.classList.toggle("is-modified", rowChanged);
+        }
+
+        refreshChangeSummary(date);
+      }
+
+      function refreshChangeSummary(date) {
+        const box = document.getElementById("changeSummary");
+        const text = document.getElementById("changeSummaryText");
+        if (!box || !text) return;
+
+        const changes = modifiedByDate[date];
+        const count = changes ? changes.size : 0;
+
+        if (!count) {
+          box.classList.remove("show");
+          text.textContent = "";
+          return;
+        }
+
+        box.classList.add("show");
+        text.textContent = `目前共 ${count} 個欄位與原始載入資料不同；若改回原值，標記會自動取消。`;
+      }
+
+      function isDateKey(key) {
+        return (
+          /^\d{4}-\d{2}-\d{2}$/.test(key) &&
+          scheduleData[key] &&
+          typeof scheduleData[key] === "object" &&
+          !Array.isArray(scheduleData[key])
+        );
+      }
+
+      function getDateKeys() {
+        return Object.keys(scheduleData).filter(isDateKey).sort();
+      }
+
+      function isNewStructureDay(day) {
+        if (!day || typeof day !== "object" || Array.isArray(day)) return false;
+
+        const values = Object.values(day);
+        if (!values.length) return false;
+
+        return values.every(
+          (item) =>
+            item &&
+            typeof item === "object" &&
+            !Array.isArray(item) &&
+            Object.prototype.hasOwnProperty.call(item, "name") &&
+            item.status &&
+            typeof item.status === "object" &&
+            !Array.isArray(item.status),
+        );
+      }
+
+      function getNewStructureDates() {
+        return getDateKeys().filter((date) =>
+          isNewStructureDay(scheduleData[date]),
+        );
+      }
+
+      function getStatusOptions() {
+        const values = new Set(["", "OK", "V"]);
+
+        getNewStructureDates().forEach((date) => {
+          Object.values(scheduleData[date]).forEach((item) => {
+            Object.values(item.status || {}).forEach((status) => {
+              if (typeof status === "string") values.add(status);
+            });
+          });
+        });
+
+        return Array.from(values);
+      }
+
       function loadFile() {
         const file = document.getElementById("fileInput").files[0];
         if (!file) return alert("請先選擇 JSON 檔案");
 
+        loadedFileName = file.name || "schedule_data.json";
+
         const reader = new FileReader();
         reader.onload = function (e) {
           try {
-            scheduleData = JSON.parse(e.target.result);
-            extractAllStaff();
-            document.getElementById("editorArea").style.display = "block";
-            document.getElementById("status").innerText = "✅ 讀取成功";
+            const parsed = JSON.parse(e.target.result.replace(/^\uFEFF/, ""));
 
-            // 預設選取最新的一天
-            const dates = Object.keys(scheduleData)
-              .filter((k) => k !== "lastUpdated")
-              .sort();
-            document.getElementById("datePicker").value =
-              dates[dates.length - 1];
+            if (
+              !parsed ||
+              typeof parsed !== "object" ||
+              Array.isArray(parsed)
+            ) {
+              throw new Error("JSON 根節點必須是物件");
+            }
+
+            scheduleData = parsed;
+            originalSnapshot = deepClone(parsed);
+            modifiedByDate = {};
+
+            const dates = getDateKeys();
+            const newDates = getNewStructureDates();
+
+            if (!dates.length) {
+              throw new Error("找不到 YYYY-MM-DD 格式的日期資料");
+            }
+
+            if (!newDates.length) {
+              throw new Error("找不到新版 name/status 班表資料");
+            }
+
+            extractAllStaff();
+
+            document.getElementById("editorArea").style.display = "block";
+            document.getElementById("status").innerText =
+              `✅ 已完整載入 ${dates.length} 天資料；可編輯新版資料 ${newDates.length} 天`;
+            document.getElementById("status").style.color = "green";
+
+            const picker = document.getElementById("datePicker");
+            picker.min = newDates[0];
+            picker.removeAttribute("max");
+            picker.value = newDates[newDates.length - 1];
+
+            currentDate = "";
+            isDirty = false;
             loadDateData();
           } catch (err) {
-            alert("檔案格式錯誤，請確認是否為正確的 JSON");
+            console.error(err);
+            alert("檔案格式錯誤：" + err.message);
           }
         };
-        reader.readAsText(file);
+        reader.readAsText(file, "utf-8");
+      }
+
+      function getShiftName(value) {
+        if (typeof value === "string") {
+          return value === "-" ? "" : value;
+        }
+
+        if (
+          value &&
+          typeof value === "object" &&
+          !Array.isArray(value) &&
+          typeof value.name === "string"
+        ) {
+          return value.name === "-" ? "" : value.name;
+        }
+
+        return "";
       }
 
       function extractAllStaff() {
-        let staffSet = new Set(["-", ""]);
-        Object.keys(scheduleData).forEach((date) => {
-          if (date === "lastUpdated") return;
-          Object.values(scheduleData[date]).forEach((name) => {
-            if (name && name !== "#溢出!") staffSet.add(name);
+        const staffSet = new Set();
+
+        getNewStructureDates().forEach((date) => {
+          Object.values(scheduleData[date]).forEach((item) => {
+            const name =
+              item && typeof item.name === "string" ? item.name.trim() : "";
+
+            if (
+              name &&
+              name !== "-" &&
+              name !== "未排班" &&
+              name !== "#溢出!"
+            ) {
+              staffSet.add(name);
+            }
           });
         });
-        allStaff = Array.from(staffSet);
+
+        allStaff = Array.from(staffSet).sort((a, b) =>
+          a.localeCompare(b, "zh-Hant"),
+        );
+      }
+
+      function createBlankDayTemplate() {
+        const newDates = getNewStructureDates();
+        if (!newDates.length) return {};
+
+        const source = scheduleData[newDates[newDates.length - 1]];
+
+        const blank = JSON.parse(JSON.stringify(source));
+
+        Object.values(blank).forEach((item) => {
+          item.name = "";
+
+          if (item.status && typeof item.status === "object") {
+            Object.keys(item.status).forEach((region) => {
+              item.status[region] = "";
+            });
+          }
+        });
+
+        return blank;
       }
 
       function loadDateData() {
@@ -691,98 +1173,360 @@
         container.innerHTML = "";
 
         if (!selectedDate) return;
+        currentDate = selectedDate;
 
         let dayData = scheduleData[selectedDate];
-        const isNew = !dayData;
+        const exists = !!dayData;
 
-        if (isNew) {
-          dateStatus.innerText = "ℹ️ 此日期無資料，儲存後將新增。";
+        if (exists && !isNewStructureDay(dayData)) {
+          dateStatus.innerText =
+            "ℹ️ 此日期為舊版歷史資料；資料會保留在 JSON 中，但新版編輯器不修改它。";
+          dateStatus.style.color = "#7f8c8d";
+          refreshChangeSummary(selectedDate);
+          return;
+        }
+
+        if (!exists) {
+          dayData = createBlankDayTemplate();
+          dateStatus.innerText =
+            "ℹ️ 此日期尚無資料；第一次修改時會用新版結構建立。";
           dateStatus.style.color = "orange";
-          // 抓取最近一天的鍵值作為模板
-          const keys = Object.keys(scheduleData).filter(
-            (k) => k !== "lastUpdated",
-          );
-          const template = scheduleData[keys[keys.length - 1]];
-          dayData = {};
-          Object.keys(template).forEach((k) => (dayData[k] = "-"));
         } else {
-          dateStatus.innerText = "✅ 已載入現有資料";
+          dateStatus.innerText = "✅ 已載入新版資料；所有修改會立即更新記憶體";
           dateStatus.style.color = "green";
         }
 
+        const availableStatuses = getStatusOptions();
+        const sectionOrder = [
+          "管理／內勤",
+          "早班",
+          "中班",
+          "晚班／大夜",
+          "其他班別",
+        ];
+        const sections = {};
+
+        sectionOrder.forEach((name) => {
+          sections[name] = [];
+        });
+
         Object.keys(dayData).forEach((shift) => {
-          const div = document.createElement("div");
-          div.className = "edit-row";
+          const category = classifyShift(shift);
+          sections[category].push(shift);
+        });
 
-          const label = document.createElement("label");
-          label.innerText = shift;
+        sectionOrder.forEach((sectionName) => {
+          const shifts = sections[sectionName];
+          if (!shifts.length) return;
 
-          const select = document.createElement("select");
-          select.dataset.shift = shift;
+          const section = document.createElement("section");
+          section.className = "shift-section";
 
-          let options = staffConfig[shift] ? staffConfig[shift] : allStaff;
-          if (!options.includes(dayData[shift]))
-            options = [dayData[shift], ...options];
+          const header = document.createElement("div");
+          header.className = "shift-section-header";
 
-          options.forEach((name) => {
-            const opt = document.createElement("option");
-            opt.value = name;
-            opt.text = name || "(空白)";
-            if (name === dayData[shift]) opt.selected = true;
-            select.appendChild(opt);
+          const title = document.createElement("span");
+          title.textContent = sectionName;
+
+          const count = document.createElement("span");
+          count.className = "shift-section-count";
+          count.textContent = `${shifts.length} 個班別`;
+
+          header.appendChild(title);
+          header.appendChild(count);
+
+          const body = document.createElement("div");
+          body.className = "shift-section-body";
+
+          shifts.forEach((shift) => {
+            const item = dayData[shift];
+            if (!item || typeof item !== "object" || Array.isArray(item))
+              return;
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "edit-row";
+            wrapper.dataset.shift = shift;
+
+            const group = document.createElement("div");
+            group.className = "shift-edit-group";
+
+            const mainRow = document.createElement("div");
+            mainRow.className = "shift-main-row";
+
+            const labelWrap = document.createElement("div");
+            labelWrap.className = "shift-label-wrap";
+
+            const label = document.createElement("label");
+            label.innerText = shift;
+
+            const clearBtn = document.createElement("button");
+            clearBtn.type = "button";
+            clearBtn.className = "btn-clear-shift";
+            clearBtn.textContent = "清除";
+            clearBtn.title = `清除 ${shift} 的人員與地區狀態`;
+
+            labelWrap.appendChild(label);
+            labelWrap.appendChild(clearBtn);
+
+            const personSelect = document.createElement("select");
+            const currentName =
+              typeof item.name === "string" ? item.name.trim() : "";
+
+            let configured = staffConfig[shift];
+            let names = Array.isArray(configured)
+              ? configured
+                  .filter((v) => typeof v === "string")
+                  .map((v) => v.trim())
+                  .filter(
+                    (v) =>
+                      v &&
+                      v !== "-" &&
+                      v !== "(空白)" &&
+                      v !== "未排班" &&
+                      v !== "#溢出!",
+                  )
+              : [...allStaff];
+
+            if (currentName && !names.includes(currentName))
+              names.unshift(currentName);
+            names = [...new Set(names)];
+
+            const unassigned = document.createElement("option");
+            unassigned.value = "";
+            unassigned.textContent = "未排班";
+            unassigned.selected = currentName === "";
+            personSelect.appendChild(unassigned);
+
+            names.forEach((name) => {
+              const opt = document.createElement("option");
+              opt.value = name;
+              opt.textContent = name;
+              opt.selected = name === currentName;
+              personSelect.appendChild(opt);
+            });
+
+            mainRow.appendChild(labelWrap);
+            mainRow.appendChild(personSelect);
+            group.appendChild(mainRow);
+
+            const statusRow = document.createElement("div");
+            statusRow.className = "status-row";
+            const statusObj = item.status || {};
+            const statusSelectMap = {};
+
+            Object.keys(statusObj).forEach((region) => {
+              const statusItem = document.createElement("div");
+              statusItem.className = "status-item";
+
+              const regionLabel = document.createElement("span");
+              regionLabel.textContent = region;
+
+              const statusSelect = document.createElement("select");
+              statusSelectMap[region] = statusSelect;
+
+              const currentStatus =
+                typeof statusObj[region] === "string" ? statusObj[region] : "";
+
+              const options = [...availableStatuses];
+              if (!options.includes(currentStatus)) options.push(currentStatus);
+
+              options.forEach((value) => {
+                const opt = document.createElement("option");
+                opt.value = value;
+                opt.textContent = value === "" ? "未設定" : value;
+                opt.selected = value === currentStatus;
+                statusSelect.appendChild(opt);
+              });
+
+              statusSelect.addEventListener("change", function () {
+                updateStatusMemory(selectedDate, shift, region, this.value);
+                syncModifiedState(selectedDate, shift, region, this);
+              });
+
+              statusItem.appendChild(regionLabel);
+              statusItem.appendChild(statusSelect);
+              statusRow.appendChild(statusItem);
+            });
+
+            personSelect.addEventListener("change", function () {
+              updateMemory(selectedDate, shift, this.value);
+              syncModifiedState(selectedDate, shift, "人員", this);
+            });
+
+            clearBtn.addEventListener("click", function () {
+              clearShiftData(
+                selectedDate,
+                shift,
+                personSelect,
+                statusSelectMap,
+              );
+            });
+
+            group.appendChild(statusRow);
+            wrapper.appendChild(group);
+            body.appendChild(wrapper);
+
+            // 依「實際與原始資料差異」重新套用標記
+            if (isFieldActuallyModified(selectedDate, shift, "人員")) {
+              syncModifiedState(selectedDate, shift, "人員", personSelect);
+            }
+
+            Object.keys(statusSelectMap).forEach((region) => {
+              if (isFieldActuallyModified(selectedDate, shift, region)) {
+                syncModifiedState(
+                  selectedDate,
+                  shift,
+                  region,
+                  statusSelectMap[region],
+                );
+              }
+            });
           });
 
-          div.appendChild(label);
-          div.appendChild(select);
-          container.appendChild(div);
+          section.appendChild(header);
+          section.appendChild(body);
+          container.appendChild(section);
         });
+
+        refreshChangeSummary(selectedDate);
       }
 
+      function updateMemory(date, shift, value) {
+        if (!scheduleData[date]) {
+          scheduleData[date] = createBlankDayTemplate();
+        }
+
+        const item = scheduleData[date][shift];
+
+        if (
+          !item ||
+          typeof item !== "object" ||
+          Array.isArray(item) ||
+          !Object.prototype.hasOwnProperty.call(item, "name")
+        ) {
+          alert("此日期不是新版班表結構，無法編輯人員。");
+          return;
+        }
+
+        item.name = value;
+        isDirty = true;
+
+        const dateStatus = document.getElementById("dateStatus");
+        dateStatus.innerText = "💾 人員／地區狀態已更新記憶體，尚未匯出 JSON";
+        dateStatus.style.color = "#d35400";
+      }
+
+      function updateStatusMemory(date, shift, region, value) {
+        if (!scheduleData[date]) {
+          scheduleData[date] = createBlankDayTemplate();
+        }
+
+        const item = scheduleData[date][shift];
+
+        if (
+          !item ||
+          typeof item !== "object" ||
+          Array.isArray(item) ||
+          !item.status ||
+          typeof item.status !== "object" ||
+          Array.isArray(item.status)
+        ) {
+          alert("此日期不是新版班表結構，無法編輯地區狀態。");
+          return;
+        }
+
+        item.status[region] = value;
+        isDirty = true;
+
+        const dateStatus = document.getElementById("dateStatus");
+        dateStatus.innerText = "💾 人員／地區狀態已更新記憶體，尚未匯出 JSON";
+        dateStatus.style.color = "#d35400";
+      }
+
+      function clearShiftData(date, shift, personSelect, statusSelectMap) {
+        if (!scheduleData[date]) {
+          scheduleData[date] = createBlankDayTemplate();
+        }
+
+        const item = scheduleData[date][shift];
+
+        if (!item || typeof item !== "object" || Array.isArray(item)) {
+          alert("此班別不是新版結構，無法清除。");
+          return;
+        }
+
+        item.name = "";
+
+        if (
+          item.status &&
+          typeof item.status === "object" &&
+          !Array.isArray(item.status)
+        ) {
+          Object.keys(item.status).forEach((region) => {
+            item.status[region] = "";
+          });
+        }
+
+        if (personSelect) {
+          personSelect.value = "";
+          syncModifiedState(date, shift, "人員", personSelect);
+        }
+
+        Object.keys(statusSelectMap || {}).forEach((region) => {
+          const select = statusSelectMap[region];
+          select.value = "";
+          syncModifiedState(date, shift, region, select);
+        });
+
+        isDirty = true;
+
+        const dateStatus = document.getElementById("dateStatus");
+        dateStatus.innerText = `🧹 已清除「${shift}」的人員與地區狀態，並更新記憶體`;
+        dateStatus.style.color = "#c0392b";
+      }
       function saveToMemory() {
-        const selectedDate = document.getElementById("datePicker").value;
-        const selects = document.querySelectorAll("#fieldsContainer select");
-        let newDayData = {};
-        selects.forEach((s) => (newDayData[s.dataset.shift] = s.value));
-
-        scheduleData[selectedDate] = newDayData;
-
-        const now = new Date();
-        scheduleData.lastUpdated =
-          now.getFullYear() +
-          "-" +
-          (now.getMonth() + 1) +
-          "-" +
-          now.getDate() +
-          " " +
-          now.getHours() +
-          ":" +
-          now.getMinutes();
-
-        alert(
-          "已暫存 " + selectedDate + " 的修改內容。記得最後要按匯出下載檔案。",
-        );
-        loadDateData();
+        // 相容保留：現在每次 change 都已自動寫入記憶體。
       }
 
       function exportJSON() {
-        const sorted = {};
-        if (scheduleData.lastUpdated)
-          sorted.lastUpdated = scheduleData.lastUpdated;
-        Object.keys(scheduleData)
-          .filter((k) => k !== "lastUpdated")
-          .sort()
-          .forEach((d) => (sorted[d] = scheduleData[d]));
+        if (!scheduleData || typeof scheduleData !== "object") {
+          return alert("尚未載入 JSON 檔案");
+        }
 
-        const blob = new Blob([JSON.stringify(sorted, null, 2)], {
-          type: "application/json",
+        const blob = new Blob([JSON.stringify(scheduleData, null, 2)], {
+          type: "application/json;charset=utf-8",
         });
+
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "schedule_data.json";
+        a.download = loadedFileName;
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        isDirty = false;
+        originalSnapshot = deepClone(scheduleData);
+        modifiedByDate = {};
+        refreshChangeSummary(currentDate);
+        document
+          .querySelectorAll(".field-modified")
+          .forEach((el) => el.classList.remove("field-modified"));
+        document
+          .querySelectorAll(".is-modified")
+          .forEach((el) => el.classList.remove("is-modified"));
+        document.getElementById("status").innerText =
+          `✅ 已匯出完整 JSON：${loadedFileName}`;
+        document.getElementById("status").style.color = "green";
       }
+
+      window.addEventListener("beforeunload", function (e) {
+        if (!isDirty) return;
+        e.preventDefault();
+        e.returnValue = "";
+      });
     </script>
     <footer>
       <div>© 2025 臺南郵局運輸股</div>
