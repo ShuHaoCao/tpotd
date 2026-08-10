@@ -105,7 +105,8 @@
         display: flex;
         gap: 4mm;
         padding-bottom: 0.4mm;
-        font-size: 11px;
+        font-size: 13px;
+        font-weight: 700;
         white-space: nowrap;
       }
       .columns {
@@ -487,11 +488,8 @@
       <div id="desktopReport" class="paper" hidden></div>
       <div id="mobileReport" class="mobile-report" hidden></div>
       <div id="emptyState" class="empty-state" hidden>
-        <h2>目前沒有可顯示的詳情資料</h2>
-        <p>
-          請確認 details.html 與 details.json
-          位於同一資料夾，並透過網站伺服器開啟。
-        </p>
+        <h2>目前沒有可顯示的資料</h2>
+        <p>請確認資料檔是否存在。</p>
       </div>
     </div>
     <script>
@@ -662,7 +660,7 @@
 
             e.target.value = currentDate;
             document.getElementById("status").textContent =
-              "此日期沒有詳情資料，請選擇其他日期";
+              "此日期沒有資料，請選擇其他日期";
           });
 
           showReport(target);
