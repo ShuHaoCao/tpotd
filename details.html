@@ -566,7 +566,7 @@
         const yk = r.inbound?.yongkang || {};
         const inboundHtml =
           inStages +
-          `<section class="block"><div class="block-title"><span>新市倉</span><span class="subtotal">第1＋2＋3階段</span></div><div class="warehouse-line"><strong>新市倉(SDC)運載</strong><span class="badge">${xs.trips} 車次</span><span class="badge">${xs.carts} 籃車</span></div></section><section class="block"><div class="block-title"><span>永康倉</span><span class="subtotal">獨立統計</span></div><div class="warehouse-line"><strong>永康倉(DC7)運載</strong><span class="badge">${n(yk.trips)} 車次</span><span class="badge">${n(yk.carts)} 籃車</span></div></section>`;
+          `<section class="block"><div class="block-title"><span>新市倉</span><span class="subtotal">第1＋2＋3階段</span></div><div class="warehouse-line"><strong>新市倉(SDC)運載</strong><span class="badge">${xs.trips} 車次</span><span class="badge">${xs.carts} 籃車</span></div></section><section class="block"><div class="block-title"><span>永康倉</span><span class="subtotal">第1＋2階段</span></div><div class="warehouse-line"><strong>永康倉(DC7)運載</strong><span class="badge">${n(yk.trips)} 車次</span><span class="badge">${n(yk.carts)} 籃車</span></div></section>`;
         const dir = (label, key) => {
           const p = r.outbound?.[key] || {};
           const rows = (p.rows || [])
