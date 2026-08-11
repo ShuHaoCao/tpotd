@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-08-11T21:54:35.123Z",
+  "updatedAt": "2026-08-11T22:34:04.520Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -1286,7 +1286,7 @@
       "weekday": "週二",
       "unit": "臺南郵局運輸股",
       "title": "MOMO進出口統計表",
-      "generatedAt": "2026-08-11T21:54:35.123Z",
+      "generatedAt": "2026-08-11T22:34:04.520Z",
       "inbound": {
         "stages": [
           {
@@ -1405,13 +1405,21 @@
             {
               "sequence": 4,
               "time": "01:33",
-              "carNo": "臺北外包車",
+              "carNo": "臺中120車次",
               "momoCarts": 18,
               "packageCarts": 0,
               "totalCarts": 18
             },
             {
               "sequence": 5,
+              "time": "01:35",
+              "carNo": "臺北外包車",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 6,
               "time": "03:25",
               "carNo": "臺中122車次",
               "momoCarts": 10,
@@ -1419,7 +1427,7 @@
               "totalCarts": 10
             },
             {
-              "sequence": 6,
+              "sequence": 7,
               "time": "03:30",
               "carNo": "臺北外包車",
               "momoCarts": 13,
@@ -1427,7 +1435,7 @@
               "totalCarts": 13
             },
             {
-              "sequence": 7,
+              "sequence": 8,
               "time": "03:50",
               "carNo": "桃園外包車",
               "momoCarts": 18,
@@ -1435,7 +1443,7 @@
               "totalCarts": 18
             },
             {
-              "sequence": 8,
+              "sequence": 9,
               "time": "05:12",
               "carNo": "高雄郵局車",
               "momoCarts": 18,
@@ -1443,8 +1451,8 @@
               "totalCarts": 18
             }
           ],
-          "subtotalTrips": 8,
-          "subtotalCarts": 115
+          "subtotalTrips": 9,
+          "subtotalCarts": 133
         },
         "south": {
           "rows": [
@@ -1476,14 +1484,14 @@
           "subtotalTrips": 3,
           "subtotalCarts": 39
         },
-        "totalTrips": 11,
-        "totalCarts": 154,
-        "momoTotal": 119,
+        "totalTrips": 12,
+        "totalCarts": 172,
+        "momoTotal": 137,
         "packageTotal": 35,
         "mailCount": 4634,
-        "averagePerCart": 30.09090909090909,
-        "averagePerTrip": 421.27272727272725,
-        "outboundInboundRatio": 1.0547945205479452,
+        "averagePerCart": 26.941860465116278,
+        "averagePerTrip": 386.1666666666667,
+        "outboundInboundRatio": 1.178082191780822,
         "note": ""
       },
       "signatures": {
