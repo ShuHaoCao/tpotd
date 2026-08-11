@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-08-10T22:28:39.831Z",
+  "updatedAt": "2026-08-11T21:54:35.123Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -1272,6 +1272,218 @@
         "averagePerCart": 29.34536082474227,
         "averagePerTrip": 474.4166666666667,
         "outboundInboundRatio": 1.204968944099379,
+        "note": ""
+      },
+      "signatures": {
+        "maker": "曹書豪",
+        "dutyOfficer": "曹書豪",
+        "supervisor": "王昭文"
+      }
+    },
+    "2026-08-11": {
+      "date": "2026-08-11",
+      "rocDate": "115年8月11日星期週二",
+      "weekday": "週二",
+      "unit": "臺南郵局運輸股",
+      "title": "MOMO進出口統計表",
+      "generatedAt": "2026-08-11T21:54:35.123Z",
+      "inbound": {
+        "stages": [
+          {
+            "stageName": "第1階段",
+            "rows": [
+              {
+                "time": "23:00",
+                "carNo": "第1車",
+                "driver": "黃憲章(快)",
+                "workItem": "快捷第1車",
+                "carts": 18
+              },
+              {
+                "time": "23:45",
+                "carNo": "第2車",
+                "driver": "陳柏林(124)",
+                "workItem": "運輸第1車",
+                "carts": 18
+              },
+              {
+                "time": "00:05",
+                "carNo": "第3車",
+                "driver": "莊世民(夜1)",
+                "workItem": "運輸第2車",
+                "carts": 18
+              },
+              {
+                "time": "00:50",
+                "carNo": "第4車",
+                "driver": "黃憲章(快)",
+                "workItem": "快捷第2車",
+                "carts": 18
+              }
+            ],
+            "subtotalTrips": 4,
+            "subtotalCarts": 72
+          },
+          {
+            "stageName": "第2階段",
+            "rows": [
+              {
+                "time": "02:10",
+                "carNo": "第1車",
+                "driver": "陳國乾(立勤)",
+                "workItem": "外包第1車",
+                "carts": 14
+              },
+              {
+                "time": "02:20",
+                "carNo": "第2車",
+                "driver": "葉吉順(夜3)",
+                "workItem": "運輸第3車",
+                "carts": 12
+              }
+            ],
+            "subtotalTrips": 2,
+            "subtotalCarts": 26
+          },
+          {
+            "stageName": "第3階段",
+            "rows": [
+              {
+                "time": "04:25",
+                "carNo": "第1車",
+                "driver": "黃憲章(快)",
+                "workItem": "快捷第3車",
+                "carts": 18
+              },
+              {
+                "time": "04:55",
+                "carNo": "第2車",
+                "driver": "莊世民(夜1)",
+                "workItem": "運輸第4車",
+                "carts": 14
+              }
+            ],
+            "subtotalTrips": 2,
+            "subtotalCarts": 32
+          }
+        ],
+        "yongkang": {
+          "trips": 2,
+          "carts": 16
+        },
+        "totalTrips": 10,
+        "totalCarts": 146,
+        "note": ""
+      },
+      "outbound": {
+        "north": {
+          "rows": [
+            {
+              "sequence": 1,
+              "time": "23:13",
+              "carNo": "桃園124車次",
+              "momoCarts": 0,
+              "packageCarts": 18,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 2,
+              "time": "23:45",
+              "carNo": "桃園外包車",
+              "momoCarts": 2,
+              "packageCarts": 0,
+              "totalCarts": 2
+            },
+            {
+              "sequence": 3,
+              "time": "01:20",
+              "carNo": "臺南128車次",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 4,
+              "time": "01:33",
+              "carNo": "臺北外包車",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 5,
+              "time": "03:25",
+              "carNo": "臺中122車次",
+              "momoCarts": 10,
+              "packageCarts": 0,
+              "totalCarts": 10
+            },
+            {
+              "sequence": 6,
+              "time": "03:30",
+              "carNo": "臺北外包車",
+              "momoCarts": 13,
+              "packageCarts": 0,
+              "totalCarts": 13
+            },
+            {
+              "sequence": 7,
+              "time": "03:50",
+              "carNo": "桃園外包車",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 8,
+              "time": "05:12",
+              "carNo": "高雄郵局車",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            }
+          ],
+          "subtotalTrips": 8,
+          "subtotalCarts": 115
+        },
+        "south": {
+          "rows": [
+            {
+              "sequence": 1,
+              "time": "02:05",
+              "carNo": "高雄27車次",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 2,
+              "time": "03:30",
+              "carNo": "高雄41車次",
+              "momoCarts": 1,
+              "packageCarts": 17,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 3,
+              "time": "04:15",
+              "carNo": "高雄25車次",
+              "momoCarts": 3,
+              "packageCarts": 0,
+              "totalCarts": 3
+            }
+          ],
+          "subtotalTrips": 3,
+          "subtotalCarts": 39
+        },
+        "totalTrips": 11,
+        "totalCarts": 154,
+        "momoTotal": 119,
+        "packageTotal": 35,
+        "mailCount": 4634,
+        "averagePerCart": 30.09090909090909,
+        "averagePerTrip": 421.27272727272725,
+        "outboundInboundRatio": 1.0547945205479452,
         "note": ""
       },
       "signatures": {
