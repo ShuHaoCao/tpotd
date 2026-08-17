@@ -1,0 +1,1736 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>車次預測輔助系統</title>
+    <style>
+      :root {
+        --bg: #f4f6f8;
+        --card: #fff;
+        --ink: #1e293b;
+        --muted: #64748b;
+        --line: #dfe5eb;
+        --accent: #0f766e;
+        --accent2: #155e75;
+        --good: #15803d;
+        --warn: #b45309;
+        --bad: #b91c1c;
+        --soft: #ecfeff;
+        --shadow: 0 8px 28px rgba(15, 23, 42, 0.07);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          "Noto Sans TC",
+          "Microsoft JhengHei",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      .app {
+        max-width: 1440px;
+        margin: auto;
+        padding: 18px;
+      }
+      .hero {
+        background: linear-gradient(135deg, #0f172a, #164e63);
+        color: #fff;
+        border-radius: 24px;
+        padding: 24px 26px;
+        box-shadow: var(--shadow);
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: clamp(24px, 3vw, 38px);
+        letter-spacing: 0.04em;
+      }
+      .hero p {
+        margin: 0;
+        color: #cbd5e1;
+        line-height: 1.7;
+      }
+      .status-pill {
+        white-space: nowrap;
+        padding: 9px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 13px;
+      }
+      .toolbar {
+        margin-top: 14px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        box-shadow: var(--shadow);
+      }
+      .btn {
+        border: 0;
+        border-radius: 11px;
+        padding: 10px 14px;
+        cursor: pointer;
+        font-weight: 800;
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+      .btn.primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn.secondary {
+        background: var(--accent2);
+        color: #fff;
+      }
+      .btn.ghost {
+        background: #fff;
+        border: 1px solid var(--line);
+      }
+      .btn:hover {
+        filter: brightness(0.98);
+        transform: translateY(-1px);
+      }
+      .file-name {
+        font-size: 13px;
+        color: var(--muted);
+        max-width: 320px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .filters {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(130px, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .field {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+      .field label {
+        display: block;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .field select,
+      .field input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: var(--ink);
+        font-weight: 700;
+        min-height: 28px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: var(--shadow);
+      }
+      .span-12 {
+        grid-column: span 12;
+      }
+      .span-8 {
+        grid-column: span 8;
+      }
+      .span-7 {
+        grid-column: span 7;
+      }
+      .span-6 {
+        grid-column: span 6;
+      }
+      .span-5 {
+        grid-column: span 5;
+      }
+      .span-4 {
+        grid-column: span 4;
+      }
+      .span-3 {
+        grid-column: span 3;
+      }
+      .card h2 {
+        font-size: 18px;
+        margin: 0 0 12px;
+      }
+      .card h3 {
+        font-size: 15px;
+        margin: 0 0 10px;
+        color: #334155;
+      }
+      .sub {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+      }
+      .kpi {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 13px;
+        background: linear-gradient(180deg, #fff, #f8fafc);
+      }
+      .kpi .v {
+        font-size: 26px;
+        font-weight: 900;
+        margin-top: 4px;
+      }
+      .kpi .l {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .stepper {
+        display: grid;
+        grid-template-columns: 1fr 40px 1fr 40px 1fr;
+        gap: 8px;
+        align-items: center;
+      }
+      .stagebox {
+        border: 2px solid #dbe4ea;
+        border-radius: 16px;
+        padding: 16px;
+        background: #f8fafc;
+        min-height: 152px;
+      }
+      .stagebox.active {
+        border-color: #0f766e;
+        background: #f0fdfa;
+      }
+      .stagebox .n {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .stagebox .big {
+        font-size: 34px;
+        font-weight: 950;
+        margin: 8px 0;
+      }
+      .arrow {
+        text-align: center;
+        font-size: 24px;
+        color: #94a3b8;
+      }
+      .inputs {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .inputs .field {
+        padding: 8px 10px;
+      }
+      .prediction-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 14px;
+        margin-bottom: 12px;
+      }
+      .recommend {
+        font-size: 38px;
+        font-weight: 950;
+        color: var(--accent);
+        line-height: 1;
+      }
+      .recommend small {
+        font-size: 14px;
+        color: var(--muted);
+        font-weight: 700;
+      }
+      .rank {
+        display: grid;
+        gap: 9px;
+      }
+      .rank-row {
+        display: grid;
+        grid-template-columns: 52px 70px 1fr 74px;
+        gap: 10px;
+        align-items: center;
+      }
+      .rank-no {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 800;
+      }
+      .trip {
+        font-weight: 900;
+      }
+      .bar {
+        height: 12px;
+        background: #e8eef2;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #0f766e, #0891b2);
+        border-radius: 999px;
+      }
+      .pct {
+        text-align: right;
+        font-weight: 900;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 5px 9px;
+        font-size: 12px;
+        font-weight: 800;
+        background: #e2e8f0;
+        color: #334155;
+      }
+      .tag.good {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .tag.mid {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .tag.low {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        padding: 10px;
+        border-bottom: 1px solid var(--line);
+        text-align: left;
+      }
+      th {
+        color: #475569;
+        background: #f8fafc;
+        position: sticky;
+        top: 0;
+      }
+      td.num,
+      th.num {
+        text-align: right;
+      }
+      .table-wrap {
+        max-height: 430px;
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+      .tree {
+        overflow: auto;
+        padding: 6px;
+      }
+      .tree-root {
+        display: inline-block;
+        min-width: 100%;
+      }
+      .tree-node {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 12px;
+        padding: 10px 12px;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+      }
+      .tree-branches {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .branch {
+        position: relative;
+      }
+      .branch:before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: -18px;
+        width: 1px;
+        height: 18px;
+        background: #cbd5e1;
+      }
+      .branch .children {
+        display: grid;
+        gap: 8px;
+        margin-top: 9px;
+      }
+      .mini {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .insight {
+        border-left: 4px solid var(--accent);
+        padding: 11px 13px;
+        background: #f0fdfa;
+        border-radius: 0 12px 12px 0;
+        line-height: 1.7;
+        font-size: 14px;
+      }
+      .empty {
+        padding: 34px;
+        text-align: center;
+        color: var(--muted);
+        border: 1px dashed #cbd5e1;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+      .foot {
+        font-size: 12px;
+        color: #64748b;
+        text-align: center;
+        padding: 20px 0 6px;
+      }
+      .switch {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+        font-size: 13px;
+        color: #475569;
+      }
+      .switch input {
+        width: auto;
+      }
+      .danger {
+        color: var(--bad);
+      }
+      @media (max-width: 1050px) {
+        .filters {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .span-8,
+        .span-7,
+        .span-6,
+        .span-5,
+        .span-4,
+        .span-3 {
+          grid-column: span 12;
+        }
+        .kpis {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 680px) {
+        .app {
+          padding: 10px;
+        }
+        .hero {
+          padding: 18px;
+          display: block;
+        }
+        .status-pill {
+          display: inline-block;
+          margin-top: 12px;
+        }
+        .filters {
+          grid-template-columns: 1fr 1fr;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .stepper {
+          grid-template-columns: 1fr;
+        }
+        .arrow {
+          transform: rotate(90deg);
+        }
+        .inputs {
+          grid-template-columns: 1fr;
+        }
+        .rank-row {
+          grid-template-columns: 38px 58px 1fr 58px;
+        }
+        .prediction-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .tree-branches {
+          grid-template-columns: 1fr;
+        }
+        .branch:before {
+          display: none;
+        }
+      }
+      @media print {
+        body {
+          background: #fff;
+        }
+        .toolbar,
+        .filters,
+        .foot {
+          display: none;
+        }
+        .app {
+          max-width: none;
+          padding: 0;
+        }
+        .card,
+        .hero {
+          box-shadow: none;
+          break-inside: avoid;
+        }
+        .grid {
+          gap: 8px;
+        }
+        .hero {
+          border-radius: 0;
+        }
+      }
+
+      /* ===== Tech UI Enhancement ===== */
+      :root {
+        --bg: #07111f;
+        --card: rgba(12, 25, 43, 0.82);
+        --ink: #e8f3ff;
+        --muted: #8ea6bd;
+        --line: rgba(99, 179, 237, 0.16);
+        --accent: #22d3ee;
+        --accent2: #6366f1;
+        --soft: #082f49;
+        --shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+        --radius: 20px;
+      }
+      body {
+        background:
+          radial-gradient(
+            circle at 12% 5%,
+            rgba(34, 211, 238, 0.13),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 88% 8%,
+            rgba(99, 102, 241, 0.14),
+            transparent 24%
+          ),
+          linear-gradient(180deg, #07111f 0%, #091525 48%, #07101c 100%);
+        background-attachment: fixed;
+      }
+      body:before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.22;
+        background-image:
+          linear-gradient(rgba(125, 211, 252, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(125, 211, 252, 0.06) 1px, transparent 1px);
+        background-size: 32px 32px;
+        mask-image: linear-gradient(to bottom, black, transparent 75%);
+      }
+      .app {
+        max-width: 1480px;
+        padding: 22px;
+        position: relative;
+      }
+      .hero {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(103, 232, 249, 0.22);
+        background: linear-gradient(
+          120deg,
+          rgba(7, 20, 38, 0.96),
+          rgba(10, 50, 70, 0.92) 52%,
+          rgba(49, 46, 129, 0.75)
+        );
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.35),
+          inset 0 1px rgba(255, 255, 255, 0.06);
+      }
+      .hero:after {
+        content: "FORECAST / DECISION INTELLIGENCE";
+        position: absolute;
+        right: 24px;
+        bottom: 14px;
+        font: 700 10px/1 monospace;
+        letter-spacing: 0.22em;
+        color: rgba(165, 243, 252, 0.34);
+      }
+      .hero h1 {
+        background: linear-gradient(90deg, #fff, #a5f3fc 55%, #c7d2fe);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 35px rgba(34, 211, 238, 0.12);
+      }
+      .status-pill {
+        border-color: rgba(103, 232, 249, 0.28);
+        background: rgba(8, 47, 73, 0.55);
+        box-shadow: inset 0 0 18px rgba(34, 211, 238, 0.08);
+        color: #cffafe;
+      }
+      .toolbar,
+      .field,
+      .card {
+        background: linear-gradient(
+          145deg,
+          rgba(15, 29, 49, 0.88),
+          rgba(9, 21, 37, 0.82)
+        );
+        border-color: var(--line);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .toolbar {
+        box-shadow: 0 14px 45px rgba(0, 0, 0, 0.22);
+      }
+      .btn {
+        transition: 0.22s ease;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+      }
+      .btn.primary {
+        background: linear-gradient(135deg, #0891b2, #06b6d4);
+        color: #ecfeff;
+      }
+      .btn.secondary {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      }
+      .btn.ghost {
+        background: rgba(15, 23, 42, 0.7);
+        color: #dbeafe;
+        border-color: rgba(148, 163, 184, 0.2);
+      }
+      .btn:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(34, 211, 238, 0.12);
+      }
+      .field label,
+      .sub,
+      .mini,
+      .file-name,
+      .foot {
+        color: var(--muted);
+      }
+      .field select,
+      .field input {
+        color: var(--ink);
+        color-scheme: dark;
+      }
+      .card {
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .card:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(103, 232, 249, 0.45),
+          transparent
+        );
+      }
+      .card h2 {
+        color: #f0f9ff;
+        letter-spacing: 0.025em;
+      }
+      .card h2:after {
+        content: "";
+        display: block;
+        width: 34px;
+        height: 2px;
+        margin-top: 8px;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        border-radius: 9px;
+      }
+      .card h3 {
+        color: #cbd5e1;
+      }
+      .kpi {
+        background: linear-gradient(
+          145deg,
+          rgba(13, 31, 51, 0.9),
+          rgba(10, 23, 39, 0.9)
+        );
+        border-color: rgba(56, 189, 248, 0.15);
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.035);
+      }
+      .kpi .v {
+        color: #e0f2fe;
+        text-shadow: 0 0 24px rgba(34, 211, 238, 0.12);
+      }
+      .stagebox {
+        background: rgba(8, 23, 39, 0.7);
+        border-color: rgba(100, 116, 139, 0.25);
+      }
+      .stagebox.active {
+        border-color: rgba(34, 211, 238, 0.65);
+        background: linear-gradient(
+          145deg,
+          rgba(8, 47, 73, 0.75),
+          rgba(15, 23, 42, 0.8)
+        );
+        box-shadow:
+          0 0 35px rgba(34, 211, 238, 0.09),
+          inset 0 0 25px rgba(34, 211, 238, 0.04);
+      }
+      .stagebox .big,
+      .recommend {
+        color: #67e8f9;
+        text-shadow: 0 0 22px rgba(34, 211, 238, 0.18);
+      }
+      .arrow {
+        color: #38bdf8;
+        text-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+      }
+      .prediction-head {
+        border-color: var(--line);
+      }
+      .bar {
+        background: #17263a;
+      }
+      .bar i {
+        background: linear-gradient(90deg, #06b6d4, #6366f1);
+        box-shadow: 0 0 12px rgba(34, 211, 238, 0.35);
+      }
+      .tag {
+        background: rgba(30, 41, 59, 0.85);
+        color: #cbd5e1;
+        border: 1px solid rgba(148, 163, 184, 0.12);
+      }
+      .tag.good {
+        background: rgba(22, 101, 52, 0.3);
+        color: #86efac;
+      }
+      .tag.mid {
+        background: rgba(146, 64, 14, 0.3);
+        color: #fcd34d;
+      }
+      .tag.low {
+        background: rgba(153, 27, 27, 0.28);
+        color: #fca5a5;
+      }
+      .table-wrap {
+        border-color: var(--line);
+        background: rgba(3, 12, 24, 0.28);
+      }
+      th {
+        background: #0d1c2f;
+        color: #9fb6ca;
+      }
+      th,
+      td {
+        border-color: rgba(100, 116, 139, 0.18);
+      }
+      tbody tr:hover {
+        background: rgba(34, 211, 238, 0.045);
+      }
+      .tree-node {
+        background: linear-gradient(145deg, #102239, #0a1728);
+        border-color: rgba(56, 189, 248, 0.18);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      }
+      .branch:before {
+        background: rgba(56, 189, 248, 0.35);
+      }
+      .insight {
+        border-left-color: #22d3ee;
+        background: linear-gradient(
+          90deg,
+          rgba(8, 47, 73, 0.5),
+          rgba(15, 23, 42, 0.4)
+        );
+        color: #dbeafe;
+      }
+      .empty {
+        background: rgba(15, 23, 42, 0.48);
+        border-color: rgba(125, 211, 252, 0.18);
+        color: #829ab1;
+      }
+      ::selection {
+        background: #0e7490;
+        color: white;
+      }
+      @media print {
+        :root {
+          --ink: #1e293b;
+          --muted: #64748b;
+          --line: #dfe5eb;
+        }
+        .card,
+        .field {
+          background: #fff !important;
+          color: #1e293b !important;
+        }
+        .card h2,
+        .card h3,
+        .field select,
+        .field input {
+          color: #1e293b !important;
+        }
+        body:before {
+          display: none;
+        }
+      }
+
+      /* ===== Responsive enhancements ===== */
+      html,
+      body {
+        width: 100%;
+        overflow-x: hidden;
+      }
+      img,
+      svg,
+      canvas {
+        max-width: 100%;
+      }
+      .app {
+        width: 100%;
+      }
+      .toolbar > * {
+        min-width: 0;
+      }
+      .field,
+      .card,
+      .stagebox,
+      .prediction-head,
+      .rank-row {
+        min-width: 0;
+      }
+      .table-wrap {
+        -webkit-overflow-scrolling: touch;
+      }
+      .table-wrap table {
+        min-width: 620px;
+      }
+      .tree {
+        -webkit-overflow-scrolling: touch;
+      }
+
+      @media (max-width: 1180px) {
+        .app {
+          padding: 14px;
+        }
+        .filters {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .kpis {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 900px) {
+        .hero {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .status-pill {
+          align-self: flex-start;
+        }
+        .toolbar {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .toolbar .file-name {
+          grid-column: 1 / -1;
+          max-width: none;
+        }
+        .filters {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .stepper {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+        .arrow {
+          transform: rotate(90deg);
+        }
+        .prediction-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .recommend {
+          font-size: clamp(30px, 7vw, 40px);
+        }
+        .rank-row {
+          grid-template-columns: 42px 62px minmax(90px, 1fr) 60px;
+        }
+        .tree-branches {
+          grid-template-columns: repeat(2, minmax(220px, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .app {
+          padding: 8px;
+        }
+        .hero {
+          padding: 16px;
+          border-radius: 18px;
+        }
+        .hero h1 {
+          font-size: clamp(23px, 8vw, 30px);
+          line-height: 1.25;
+        }
+        .hero p {
+          font-size: 13px;
+          line-height: 1.6;
+        }
+        .status-pill {
+          white-space: normal;
+        }
+        .toolbar {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+        .btn {
+          width: 100%;
+          min-height: 44px;
+        }
+        .file-name {
+          white-space: normal;
+          word-break: break-word;
+          line-height: 1.5;
+        }
+        .filters {
+          grid-template-columns: 1fr;
+        }
+        .field {
+          padding: 9px 10px;
+        }
+        .grid {
+          gap: 10px;
+          margin-top: 10px;
+        }
+        .card {
+          padding: 14px;
+          border-radius: 16px;
+        }
+        .card h2 {
+          font-size: 17px;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+        }
+        .kpi {
+          padding: 10px;
+        }
+        .kpi .v {
+          font-size: 21px;
+          line-height: 1.25;
+          word-break: break-word;
+        }
+        .stagebox {
+          padding: 14px;
+          min-height: auto;
+        }
+        .stagebox .big {
+          font-size: 29px;
+        }
+        .inputs {
+          grid-template-columns: 1fr;
+        }
+        .rank {
+          gap: 10px;
+        }
+        .rank-row {
+          grid-template-columns: 34px 54px minmax(70px, 1fr) 54px;
+          gap: 7px;
+          font-size: 12px;
+        }
+        .bar {
+          height: 10px;
+        }
+        .pct {
+          font-size: 12px;
+        }
+        .meta-row {
+          gap: 6px;
+        }
+        .tag {
+          white-space: normal;
+          line-height: 1.35;
+        }
+        .table-wrap {
+          max-height: 360px;
+          border-radius: 12px;
+        }
+        .table-wrap table {
+          min-width: 560px;
+          font-size: 12px;
+        }
+        th,
+        td {
+          padding: 8px;
+        }
+        .tree-branches {
+          grid-template-columns: 1fr;
+        }
+        .branch:before {
+          display: none;
+        }
+        .tree-node {
+          padding: 9px 10px;
+        }
+        .sub,
+        .insight {
+          font-size: 13px;
+        }
+        .foot {
+          padding-left: 6px;
+          padding-right: 6px;
+          line-height: 1.6;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .kpis {
+          grid-template-columns: 1fr;
+        }
+        .rank-row {
+          grid-template-columns: 30px 50px minmax(60px, 1fr) 50px;
+          gap: 6px;
+        }
+        .recommend {
+          font-size: 28px;
+        }
+        .prediction-head {
+          padding-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <section class="hero">
+        <div>
+          <h1>車次預測輔助系統</h1>
+          <p>
+            依歷史三階段車次資料，動態推估下一階段需求。資料愈多，模型自行重新計算，不固定日期、樣本數、車次範圍或機率。
+          </p>
+        </div>
+        <div class="status-pill" id="loadStatus">尚未載入資料</div>
+      </section>
+
+      <div class="toolbar">
+        <button class="btn primary" id="autoLoadBtn">重新讀取資料檔</button>
+        <button class="btn secondary" id="chooseBtn">手動選擇 JSON</button>
+        <input
+          id="fileInput"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        />
+        <button class="btn ghost" onclick="window.print()">
+          列印 / 另存 PDF
+        </button>
+        <span class="file-name" id="fileName">預設檔名:momo_dispatch_data</span>
+      </div>
+
+      <section class="filters">
+        <div class="field">
+          <label>分析期間</label
+          ><select id="period">
+            <option value="all">全部歷史</option>
+            <option value="30">最近30天</option>
+            <option value="90">最近90天</option>
+            <option value="180">最近180天</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>星期條件</label
+          ><select id="weekday">
+            <option value="all">不限星期</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>權重模式</label
+          ><select id="weightMode">
+            <option value="equal">每筆等權</option>
+            <option value="recent">近期資料加權</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>最小精細樣本</label
+          ><select id="minSample">
+            <option>3</option>
+            <option selected>5</option>
+            <option>8</option>
+            <option>10</option>
+            <option>15</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>自訂起日</label><input id="startDate" type="date" />
+        </div>
+        <div class="field">
+          <label>自訂迄日</label><input id="endDate" type="date" />
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card span-12">
+          <h2>資料概況</h2>
+          <div class="kpis" id="kpis"></div>
+        </div>
+
+        <div class="card span-12">
+          <h2>逐階段決策</h2>
+          <div class="sub">
+            先輸入已知階段，系統才預測下一階段；若條件過細導致樣本不足，會自動退階到較穩定的歷史條件。
+          </div>
+          <div class="stepper" style="margin-top: 14px">
+            <div class="stagebox active">
+              <div class="n">STEP 1｜第1階段已知</div>
+              <div class="big" id="s1Big">— 車</div>
+              <div class="inputs">
+                <div class="field">
+                  <label>實際車次</label
+                  ><select id="s1Trips">
+                    <option value="">請選擇</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>籃車數（選填）</label
+                  ><input
+                    id="s1Carts"
+                    type="number"
+                    min="0"
+                    placeholder="例：68"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stagebox" id="s2Box">
+              <div class="n">STEP 2｜第2階段</div>
+              <div class="big" id="s2Big">待預測</div>
+              <div class="inputs">
+                <div class="field">
+                  <label>實際車次（完成後填）</label
+                  ><select id="s2Trips">
+                    <option value="">尚未確定</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>籃車數（選填）</label
+                  ><input
+                    id="s2Carts"
+                    type="number"
+                    min="0"
+                    placeholder="例：32"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="stagebox" id="s3Box">
+              <div class="n">STEP 3｜第3階段</div>
+              <div class="big" id="s3Big">待預測</div>
+              <div class="sub">依第1＋第2階段實際結果更新。</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card span-6">
+          <h2>第2階段預測</h2>
+          <div id="pred2">
+            <div class="empty">請先選擇第1階段實際車次。</div>
+          </div>
+        </div>
+        <div class="card span-6">
+          <h2>第3階段預測</h2>
+          <div id="pred3">
+            <div class="empty">請先輸入第1、2階段實際車次。</div>
+          </div>
+        </div>
+
+        <div class="card span-12">
+          <h2>情境樹</h2>
+          <div class="sub">
+            以目前第1階段為根節點，展開最可能的第2階段與各自的第3階段結果。
+          </div>
+          <div id="tree" class="tree">
+            <div class="empty">選擇第1階段車次後，自動建立情境樹。</div>
+          </div>
+        </div>
+
+        <div class="card span-7">
+          <h2>歷史完整路徑排行</h2>
+          <div class="sub">
+            統計「第1階段 → 第2階段 →
+            第3階段」完整組合，依目前篩選期間與權重即時計算。
+          </div>
+          <div class="table-wrap" style="margin-top: 12px">
+            <table>
+              <thead>
+                <tr>
+                  <th>排名</th>
+                  <th>路徑</th>
+                  <th class="num">筆數</th>
+                  <th class="num">加權占比</th>
+                </tr>
+              </thead>
+              <tbody id="pathRows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card span-5">
+          <h2>模型說明</h2>
+          <div id="modelNote" class="insight">載入資料後顯示。</div>
+          <h3 style="margin-top: 18px">可信度原則</h3>
+          <div class="sub">
+            可信度同時考量有效樣本數與最高機率集中度。若某個超精細條件只有少數紀錄，即使歷史比例為100%，也不會顯示成高可信度。
+          </div>
+          <h3 style="margin-top: 18px">近期加權</h3>
+          <div class="sub">
+            最近30天×1.5、31–90天×1.2、91–180天×1.0、180天以前×0.8；權重僅影響機率，不改變原始筆數。
+          </div>
+        </div>
+      </section>
+
+      <div class="foot">
+        本工具為歷史資料決策輔助，不代表保證結果；實際派車仍應結合當日郵件量、作業進度、人車資源與現場判斷。
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        "use strict";
+        const DEFAULT_FILE = "momo_dispatch_data.json";
+        let rawData = [];
+        let rows = [];
+
+        const $ = (id) => document.getElementById(id);
+        const els = [
+          "loadStatus",
+          "fileName",
+          "period",
+          "weekday",
+          "weightMode",
+          "minSample",
+          "startDate",
+          "endDate",
+          "kpis",
+          "s1Trips",
+          "s2Trips",
+          "s1Carts",
+          "s2Carts",
+          "s1Big",
+          "s2Big",
+          "s3Big",
+          "s2Box",
+          "s3Box",
+          "pred2",
+          "pred3",
+          "tree",
+          "pathRows",
+          "modelNote",
+        ].reduce((o, id) => ((o[id] = $(id)), o), {});
+
+        function parseDate(s) {
+          const d = new Date(s + "T00:00:00");
+          return isNaN(d) ? null : d;
+        }
+        function fmtDate(s) {
+          if (!s) return "—";
+          const d = parseDate(s);
+          return d
+            ? `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`
+            : s;
+        }
+        function stageOf(day, name) {
+          return Array.isArray(day.stages)
+            ? day.stages.find((s) => s && s.stage_name === name)
+            : null;
+        }
+        function extractRows(data) {
+          return data
+            .map((day, idx) => {
+              const get = (n) => {
+                const s = stageOf(day, `第${n}階段`);
+                const cars = Array.isArray(s?.cars) ? s.cars : [];
+                return {
+                  trips: cars.length,
+                  carts: cars.reduce(
+                    (a, c) => a + (Number(c?.loaded_carts) || 0),
+                    0,
+                  ),
+                };
+              };
+              const a = get(1),
+                b = get(2),
+                c = get(3);
+              return {
+                idx,
+                date: day.date || "",
+                weekday: day.weekday || "",
+                s1: a.trips,
+                s2: b.trips,
+                s3: c.trips,
+                c1: a.carts,
+                c2: b.carts,
+                c3: c.carts,
+                source: day,
+              };
+            })
+            .filter(
+              (r) =>
+                r.date &&
+                Number.isFinite(r.s1) &&
+                Number.isFinite(r.s2) &&
+                Number.isFinite(r.s3),
+            );
+        }
+
+        function currentRows() {
+          if (!rows.length) return [];
+          let out = [...rows];
+          const maxD = new Date(
+            Math.max(...out.map((r) => parseDate(r.date)?.getTime() || 0)),
+          );
+          const p = els.period.value;
+          if (p !== "all") {
+            const days = Number(p),
+              cut = new Date(maxD);
+            cut.setDate(cut.getDate() - days + 1);
+            out = out.filter((r) => parseDate(r.date) >= cut);
+          }
+          const sd = els.startDate.value,
+            ed = els.endDate.value;
+          if (sd) out = out.filter((r) => r.date >= sd);
+          if (ed) out = out.filter((r) => r.date <= ed);
+          return out;
+        }
+
+        function rowWeight(r, refDate) {
+          if (els.weightMode.value !== "recent") return 1;
+          const d = parseDate(r.date),
+            ref = parseDate(refDate);
+          if (!d || !ref) return 1;
+          const age = Math.floor((ref - d) / 86400000);
+          if (age <= 30) return 1.5;
+          if (age <= 90) return 1.2;
+          if (age <= 180) return 1.0;
+          return 0.8;
+        }
+
+        function weightedDist(data, key) {
+          if (!data.length) return [];
+          const ref = data.reduce(
+            (m, r) => (r.date > m ? r.date : m),
+            data[0].date,
+          );
+          const map = new Map();
+          let total = 0;
+          data.forEach((r) => {
+            const v = r[key];
+            if (!Number.isFinite(v)) return;
+            const w = rowWeight(r, ref);
+            total += w;
+            map.set(v, (map.get(v) || 0) + w);
+          });
+          return [...map]
+            .map(([value, w]) => ({
+              value,
+              weight: w,
+              prob: total ? w / total : 0,
+              count: data.filter((r) => r[key] === value).length,
+            }))
+            .sort((a, b) => b.prob - a.prob || a.value - b.value);
+        }
+        function expected(dist) {
+          return dist.reduce((s, x) => s + x.value * x.prob, 0);
+        }
+        function confidence(n, top) {
+          const score =
+            Math.min(1, n / 20) * 0.65 + Math.min(1, top / 0.75) * 0.35;
+          if (score >= 0.78) return { label: "高", cls: "good" };
+          if (score >= 0.55) return { label: "中", cls: "mid" };
+          return { label: "低", cls: "low" };
+        }
+        function closeCarts(actual, historical) {
+          if (
+            actual === "" ||
+            actual == null ||
+            !Number.isFinite(Number(actual))
+          )
+            return true;
+          const a = Number(actual);
+          return Math.abs(historical - a) <= Math.max(12, a * 0.2);
+        }
+
+        function selectModel(target, s1, s2, c1, c2) {
+          const base = currentRows();
+          const wd = els.weekday.value;
+          const min = Number(els.minSample.value) || 5;
+          if (!base.length) return { data: [], level: "無資料" };
+          const sameWd = (r) => wd === "all" || r.weekday === wd;
+          let levels = [];
+          if (target === "s2") {
+            levels = [
+              {
+                name: "星期＋第1階段車次＋相近籃車量",
+                fn: (r) => sameWd(r) && r.s1 === s1 && closeCarts(c1, r.c1),
+              },
+              {
+                name: "星期＋第1階段車次",
+                fn: (r) => sameWd(r) && r.s1 === s1,
+              },
+              { name: "第1階段車次", fn: (r) => r.s1 === s1 },
+              { name: "全部歷史", fn: (r) => true },
+            ];
+          } else {
+            levels = [
+              {
+                name: "星期＋前2階段車次＋相近籃車量",
+                fn: (r) =>
+                  sameWd(r) &&
+                  r.s1 === s1 &&
+                  r.s2 === s2 &&
+                  closeCarts(c1, r.c1) &&
+                  closeCarts(c2, r.c2),
+              },
+              {
+                name: "星期＋前2階段車次",
+                fn: (r) => sameWd(r) && r.s1 === s1 && r.s2 === s2,
+              },
+              {
+                name: "第1＋第2階段車次",
+                fn: (r) => r.s1 === s1 && r.s2 === s2,
+              },
+              { name: "第2階段車次", fn: (r) => r.s2 === s2 },
+              { name: "全部歷史", fn: (r) => true },
+            ];
+          }
+          let chosen = null;
+          for (const lv of levels) {
+            const d = base.filter(lv.fn);
+            if (d.length >= min) {
+              chosen = { data: d, level: lv.name };
+              break;
+            }
+          }
+          if (!chosen) {
+            const last = levels[levels.length - 1];
+            chosen = { data: base.filter(last.fn), level: last.name };
+          }
+          return chosen;
+        }
+
+        function predHtml(model, key) {
+          const dist = weightedDist(model.data, key);
+          if (!dist.length)
+            return '<div class="empty">沒有足夠可計算資料。</div>';
+          const top = dist[0],
+            exp = expected(dist),
+            conf = confidence(model.data.length, top.prob);
+          const rowsHtml = dist
+            .slice(0, 6)
+            .map(
+              (x, i) =>
+                `<div class="rank-row"><div class="rank-no">#${i + 1}</div><div class="trip">${x.value} 車</div><div class="bar"><i style="width:${(x.prob * 100).toFixed(2)}%"></i></div><div class="pct">${(x.prob * 100).toFixed(1)}%</div></div>`,
+            )
+            .join("");
+          return `<div class="prediction-head"><div><div class="sub">建議準備</div><div class="recommend">${top.value} 車 <small>／期望值 ${exp.toFixed(2)} 車</small></div></div><span class="tag ${conf.cls}">可信度：${conf.label}</span></div><div class="rank">${rowsHtml}</div><div class="meta-row"><span class="tag">有效樣本 ${model.data.length} 日</span><span class="tag">採用條件：${model.level}</span><span class="tag">最高機率 ${(top.prob * 100).toFixed(1)}%</span></div>`;
+        }
+
+        function allTripValues(key) {
+          return [...new Set(rows.map((r) => r[key]))].sort((a, b) => a - b);
+        }
+        function fillSelect(sel, values, placeholder, keep) {
+          sel.innerHTML =
+            `<option value="">${placeholder}</option>` +
+            values
+              .map(
+                (v) =>
+                  `<option value="${v}" ${String(v) === String(keep) ? "selected" : ""}>${v} 車</option>`,
+              )
+              .join("");
+        }
+
+        function renderKpis() {
+          const d = currentRows();
+          if (!d.length) {
+            els.kpis.innerHTML =
+              '<div class="empty" style="grid-column:1/-1">目前篩選條件沒有資料。</div>';
+            return;
+          }
+          const dates = d.map((x) => x.date).sort(),
+            all1 = d.map((x) => x.s1),
+            all2 = d.map((x) => x.s2),
+            all3 = d.map((x) => x.s3);
+          const avg = (k) =>
+            (d.reduce((s, r) => s + r[k], 0) / d.length).toFixed(2);
+          const cards = [
+            ["有效樣本", `${d.length} 日`],
+            ["資料期間", `${fmtDate(dates[0])}～${fmtDate(dates.at(-1))}`],
+            ["第1階段平均", `${avg("s1")} 車`],
+            ["第2階段平均", `${avg("s2")} 車`],
+            ["第3階段平均", `${avg("s3")} 車`],
+          ];
+          els.kpis.innerHTML = cards
+            .map(
+              ([l, v]) =>
+                `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`,
+            )
+            .join("");
+        }
+
+        function renderPaths() {
+          const d = currentRows();
+          if (!d.length) {
+            els.pathRows.innerHTML = '<tr><td colspan="4">無資料</td></tr>';
+            return;
+          }
+          const ref = d.reduce((m, r) => (r.date > m ? r.date : m), d[0].date),
+            map = new Map();
+          let tw = 0;
+          d.forEach((r) => {
+            const w = rowWeight(r, ref),
+              k = `${r.s1} → ${r.s2} → ${r.s3}`;
+            tw += w;
+            if (!map.has(k)) map.set(k, { n: 0, w: 0 });
+            const x = map.get(k);
+            x.n++;
+            x.w += w;
+          });
+          const arr = [...map]
+            .map(([path, x]) => ({ path, ...x, p: x.w / tw }))
+            .sort((a, b) => b.p - a.p || b.n - a.n);
+          els.pathRows.innerHTML = arr
+            .map(
+              (x, i) =>
+                `<tr><td>${i + 1}</td><td><b>${x.path}</b></td><td class="num">${x.n}</td><td class="num"><b>${(x.p * 100).toFixed(2)}%</b></td></tr>`,
+            )
+            .join("");
+        }
+
+        function renderTree() {
+          const s1 = Number(els.s1Trips.value);
+          if (!Number.isFinite(s1) || els.s1Trips.value === "") {
+            els.tree.innerHTML =
+              '<div class="empty">選擇第1階段車次後，自動建立情境樹。</div>';
+            return;
+          }
+          const m2 = selectModel("s2", s1, null, els.s1Carts.value, null),
+            d2 = weightedDist(m2.data, "s2").slice(0, 4);
+          if (!d2.length) {
+            els.tree.innerHTML =
+              '<div class="empty">目前無法建立情境樹。</div>';
+            return;
+          }
+          const branches = d2
+            .map((x) => {
+              const m3 = selectModel("s3", s1, x.value, els.s1Carts.value, ""),
+                d3 = weightedDist(m3.data, "s3").slice(0, 4);
+              return `<div class="branch"><div class="tree-node"><b>第2階段 ${x.value}車</b><div class="mini">${(x.prob * 100).toFixed(1)}%｜N=${m2.data.length}</div></div><div class="children">${d3.map((y) => `<div class="tree-node"><b>第3階段 ${y.value}車</b><div class="mini">條件機率 ${(y.prob * 100).toFixed(1)}%｜N=${m3.data.length}</div></div>`).join("")}</div></div>`;
+            })
+            .join("");
+          els.tree.innerHTML = `<div class="tree-root"><div class="tree-node" style="max-width:240px;margin:auto;text-align:center;background:#f0fdfa;border-color:#99f6e4"><b>第1階段 ${s1}車</b><div class="mini">目前已知</div></div><div class="tree-branches">${branches}</div></div>`;
+        }
+
+        function renderPredictions() {
+          const s1v = els.s1Trips.value,
+            s2v = els.s2Trips.value;
+          const s1 = Number(s1v),
+            s2 = Number(s2v);
+          els.s1Big.textContent = s1v !== "" ? `${s1} 車` : "— 車";
+          if (s1v !== "") {
+            const m2 = selectModel("s2", s1, null, els.s1Carts.value, null),
+              d2 = weightedDist(m2.data, "s2");
+            els.pred2.innerHTML = predHtml(m2, "s2");
+            els.s2Big.textContent =
+              s2v !== ""
+                ? `${s2} 車`
+                : d2[0]
+                  ? `預測 ${d2[0].value} 車`
+                  : "待預測";
+            els.s2Box.classList.add("active");
+          } else {
+            els.pred2.innerHTML =
+              '<div class="empty">請先選擇第1階段實際車次。</div>';
+            els.s2Big.textContent = "待預測";
+            els.s2Box.classList.remove("active");
+          }
+          if (s1v !== "" && s2v !== "") {
+            const m3 = selectModel(
+                "s3",
+                s1,
+                s2,
+                els.s1Carts.value,
+                els.s2Carts.value,
+              ),
+              d3 = weightedDist(m3.data, "s3");
+            els.pred3.innerHTML = predHtml(m3, "s3");
+            els.s3Big.textContent = d3[0] ? `預測 ${d3[0].value} 車` : "待預測";
+            els.s3Box.classList.add("active");
+          } else {
+            els.pred3.innerHTML =
+              '<div class="empty">請先輸入第1、2階段實際車次。</div>';
+            els.s3Big.textContent = "待預測";
+            els.s3Box.classList.remove("active");
+          }
+          renderTree();
+        }
+
+        function renderModelNote() {
+          const d = currentRows();
+          if (!d.length) {
+            els.modelNote.textContent = "目前篩選條件沒有資料。";
+            return;
+          }
+          const wd =
+            els.weekday.value === "all" ? "不限星期" : els.weekday.value;
+          els.modelNote.innerHTML = `目前以 <b>${d.length}</b> 日有效資料計算；星期條件為 <b>${wd}</b>，權重為 <b>${els.weightMode.value === "recent" ? "近期加權" : "每筆等權"}</b>。預測會先嘗試精細條件，若樣本少於 <b>${els.minSample.value}</b> 筆，便自動退階，避免用極少數樣本製造「看似100%」的假確定性。`;
+        }
+
+        function renderAll() {
+          renderKpis();
+          renderPaths();
+          renderPredictions();
+          renderModelNote();
+        }
+
+        function populateControls() {
+          const old1 = els.s1Trips.value,
+            old2 = els.s2Trips.value;
+          fillSelect(els.s1Trips, allTripValues("s1"), "請選擇", old1);
+          fillSelect(els.s2Trips, allTripValues("s2"), "尚未確定", old2);
+          const wds = [...new Set(rows.map((r) => r.weekday).filter(Boolean))];
+          const order = [
+            "週一",
+            "週二",
+            "週三",
+            "週四",
+            "週五",
+            "週六",
+            "週日",
+          ];
+          wds.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+          const keep = els.weekday.value;
+          els.weekday.innerHTML =
+            '<option value="all">不限星期</option>' +
+            wds
+              .map(
+                (w) => `<option ${w === keep ? "selected" : ""}>${w}</option>`,
+              )
+              .join("");
+        }
+
+        function setData(data, name) {
+          if (!Array.isArray(data)) throw new Error("JSON 最外層必須是陣列。");
+          rawData = data;
+          rows = extractRows(data);
+          if (!rows.length) throw new Error("找不到有效的三階段資料。");
+          const dates = rows.map((r) => r.date).sort();
+          els.startDate.min = dates[0];
+          els.startDate.max = dates.at(-1);
+          els.endDate.min = dates[0];
+          els.endDate.max = dates.at(-1);
+          els.loadStatus.textContent = `已載入 ${rows.length} 日｜${fmtDate(dates[0])}～${fmtDate(dates.at(-1))}`;
+          els.fileName.textContent = `資料來源：${name}`;
+          populateControls();
+          renderAll();
+        }
+
+        async function autoLoad() {
+          els.loadStatus.textContent = "讀取資料中…";
+          try {
+            const res = await fetch(`${DEFAULT_FILE}?v=${Date.now()}`, {
+              cache: "no-store",
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const text = await res.text();
+            setData(JSON.parse(text.replace(/^\uFEFF/, "")), DEFAULT_FILE);
+          } catch (err) {
+            els.loadStatus.textContent = "自動載入失敗，請手動選擇資料檔";
+            els.fileName.textContent = `無法直接讀取 ${DEFAULT_FILE}（若以 file:// 開啟，瀏覽器通常會阻擋 fetch）`;
+          }
+        }
+        async function loadFile(file) {
+          const text = await file.text();
+          setData(JSON.parse(text.replace(/^\uFEFF/, "")), file.name);
+        }
+
+        $("autoLoadBtn").addEventListener("click", autoLoad);
+        $("chooseBtn").addEventListener("click", () => $("fileInput").click());
+        $("fileInput").addEventListener("change", async (e) => {
+          if (e.target.files[0])
+            try {
+              await loadFile(e.target.files[0]);
+            } catch (err) {
+              alert("資料讀取失敗：" + err.message);
+            }
+        });
+        [
+          "period",
+          "weekday",
+          "weightMode",
+          "minSample",
+          "startDate",
+          "endDate",
+          "s1Trips",
+          "s2Trips",
+          "s1Carts",
+          "s2Carts",
+        ].forEach((id) => $(id).addEventListener("change", renderAll));
+        ["s1Carts", "s2Carts"].forEach((id) =>
+          $(id).addEventListener("input", renderAll),
+        );
+
+        autoLoad();
+      })();
+    </script>
+  </body>
+</html>
