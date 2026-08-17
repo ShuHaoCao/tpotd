@@ -3,15 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>月班表行事曆｜Neo Shift Calendar</title>
+    <meta
+      http-equiv="Cache-Control"
+      content="no-store, no-cache, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>班表-月行事曆</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap"
       rel="stylesheet"
     />
-
     <style>
       :root {
         --bg: #09111f;
@@ -318,28 +323,455 @@
         gap: 8px;
       }
 
+      /* ===== 班別標籤：漸層水晶按鈕 ===== */
       .shift-tag {
+        --shift-bg-1: rgba(34, 197, 94, 0.86);
+        --shift-bg-2: rgba(6, 182, 212, 0.76);
+        --shift-border: rgba(134, 239, 172, 0.62);
+        --shift-accent: #86efac;
+        --shift-glow: rgba(74, 222, 128, 0.24);
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 9px;
+        min-height: 43px;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.18) 0%,
+            rgba(255, 255, 255, 0.04) 42%,
+            rgba(0, 0, 0, 0.12) 100%
+          ),
+          linear-gradient(118deg, var(--shift-bg-1) 0%, var(--shift-bg-2) 100%);
+        border: 1px solid var(--shift-border);
+        color: #fff;
+        padding: 9px 13px;
+        border-radius: 16px;
+        font-weight: 900;
+        text-align: left;
+        letter-spacing: 0.55px;
+        backdrop-filter: blur(12px) saturate(135%);
+        -webkit-backdrop-filter: blur(12px) saturate(135%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.38),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.18),
+          0 7px 18px rgba(0, 0, 0, 0.22),
+          0 0 18px var(--shift-glow);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+        transition:
+          transform 0.2s ease,
+          filter 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .shift-tag::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        inset: 1px 2px auto 2px;
+        height: 48%;
+        border-radius: 14px 14px 46% 46%;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.32),
+          rgba(255, 255, 255, 0.04)
+        );
+        opacity: 0.72;
+        pointer-events: none;
+      }
+
+      .shift-tag::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        width: 44%;
+        height: 170%;
+        top: -50%;
+        left: -34%;
+        transform: rotate(24deg);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.18),
+          transparent
+        );
+        opacity: 0.55;
+        pointer-events: none;
+      }
+
+      .shift-tag:hover {
+        transform: translateY(-1px);
+        filter: saturate(1.08) brightness(1.05);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.46),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.16),
+          0 9px 22px rgba(0, 0, 0, 0.26),
+          0 0 24px var(--shift-glow);
+      }
+
+      .shift-icon {
+        width: 27px;
+        height: 27px;
+        flex: 0 0 27px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 9px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.24),
+          rgba(255, 255, 255, 0.08)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.24),
+          0 2px 6px rgba(0, 0, 0, 0.12);
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .shift-name {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .shift-tag.shift-early {
+        --shift-bg-1: rgba(250, 204, 21, 0.9);
+        --shift-bg-2: rgba(249, 115, 22, 0.82);
+        --shift-border: rgba(253, 224, 71, 0.72);
+        --shift-accent: #fde047;
+        --shift-glow: rgba(250, 204, 21, 0.28);
+      }
+
+      .shift-tag.shift-day {
+        --shift-bg-1: rgba(34, 197, 94, 0.86);
+        --shift-bg-2: rgba(45, 212, 191, 0.76);
+        --shift-border: rgba(74, 222, 128, 0.68);
+        --shift-accent: #86efac;
+        --shift-glow: rgba(34, 197, 94, 0.25);
+      }
+
+      .shift-tag.shift-mid {
+        --shift-bg-1: rgba(6, 182, 212, 0.9);
+        --shift-bg-2: rgba(59, 130, 246, 0.82);
+        --shift-border: rgba(103, 232, 249, 0.7);
+        --shift-accent: #67e8f9;
+        --shift-glow: rgba(56, 189, 248, 0.28);
+      }
+
+      .shift-tag.shift-night {
+        --shift-bg-1: rgba(79, 70, 229, 0.9);
+        --shift-bg-2: rgba(147, 51, 234, 0.82);
+        --shift-border: rgba(196, 181, 253, 0.68);
+        --shift-accent: #c4b5fd;
+        --shift-glow: rgba(139, 92, 246, 0.29);
+      }
+
+      .shift-tag.shift-special {
+        --shift-bg-1: rgba(236, 72, 153, 0.9);
+        --shift-bg-2: rgba(168, 85, 247, 0.8);
+        --shift-border: rgba(249, 168, 212, 0.7);
+        --shift-accent: #f9a8d4;
+        --shift-glow: rgba(236, 72, 153, 0.27);
+      }
+
+      .shift-tag.shift-field {
+        --shift-bg-1: rgba(249, 115, 22, 0.9);
+        --shift-bg-2: rgba(239, 68, 68, 0.78);
+        --shift-border: rgba(253, 186, 116, 0.7);
+        --shift-accent: #fdba74;
+        --shift-glow: rgba(249, 115, 22, 0.27);
+      }
+
+      .shift-tag.shift-office {
+        --shift-bg-1: rgba(13, 148, 136, 0.9);
+        --shift-bg-2: rgba(6, 182, 212, 0.8);
+        --shift-border: rgba(94, 234, 212, 0.68);
+        --shift-accent: #5eead4;
+        --shift-glow: rgba(45, 212, 191, 0.25);
+      }
+
+      .shift-tag.shift-lead {
+        --shift-bg-1: rgba(245, 158, 11, 0.92);
+        --shift-bg-2: rgba(239, 68, 68, 0.78);
+        --shift-border: rgba(253, 230, 138, 0.72);
+        --shift-accent: #fde68a;
+        --shift-glow: rgba(245, 158, 11, 0.29);
+      }
+
+      .shift-tag.shift-default {
+        --shift-bg-1: rgba(71, 85, 105, 0.9);
+        --shift-bg-2: rgba(30, 41, 59, 0.86);
+        --shift-border: rgba(203, 213, 225, 0.48);
+        --shift-accent: #e2e8f0;
+        --shift-glow: rgba(148, 163, 184, 0.18);
+      }
+
+      /* ===== 日期資訊：國曆 / 農曆 / 節氣 ===== */
+      .date-row {
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .date-meta {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        min-width: 0;
+        flex-wrap: wrap;
+      }
+
+      .lunar-date {
+        color: rgba(226, 232, 240, 0.72);
+        font-size: 0.73rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+
+      .solar-term {
+        display: inline-flex;
+        align-items: center;
+        min-height: 22px;
+        padding: 3px 7px;
+        border-radius: 999px;
+        color: #bbf7d0;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.2);
+        font-size: 0.68rem;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      }
+
+      /* 國定假日改用較具書法感的字體，讓假日名稱和一般標籤明顯區隔 */
+      .holiday-tag {
+        font-family: "Noto Serif TC", "BiauKai", "DFKai-SB", serif;
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        color: #ffd5dc;
         background: linear-gradient(
           135deg,
-          rgba(74, 222, 128, 0.16),
-          rgba(56, 189, 248, 0.16)
+          rgba(244, 63, 94, 0.22),
+          rgba(190, 24, 93, 0.12)
         );
-        border: 1px solid rgba(74, 222, 128, 0.2);
-        color: white;
-        padding: 10px 12px;
+        border: 1px solid rgba(251, 113, 133, 0.38);
+        box-shadow:
+          0 5px 16px rgba(190, 24, 93, 0.12),
+          inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        text-shadow: 0 0 12px rgba(251, 113, 133, 0.2);
+      }
+
+      .day-card.holiday .date-number {
+        color: #ff9bab;
+        text-shadow: 0 0 18px rgba(251, 113, 133, 0.18);
+      }
+
+      /* ===== 今日好運提醒 ===== */
+      .fortune-button {
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 14px;
         border-radius: 14px;
-        font-weight: 800;
-        text-align: center;
-        letter-spacing: 1px;
-        backdrop-filter: blur(8px);
+        font-size: 0.88rem;
+        background: linear-gradient(
+          135deg,
+          rgba(168, 85, 247, 0.28),
+          rgba(251, 146, 60, 0.26)
+        );
+        border: 1px solid rgba(253, 186, 116, 0.35);
+        box-shadow: 0 8px 22px rgba(124, 58, 237, 0.14);
+      }
+
+      .fortune-button:hover {
+        background: linear-gradient(
+          135deg,
+          rgba(168, 85, 247, 0.38),
+          rgba(251, 146, 60, 0.34)
+        );
+        box-shadow: 0 10px 26px rgba(124, 58, 237, 0.22);
+      }
+
+      .fortune-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: none;
+        place-items: center;
+        padding: 18px;
+        background: rgba(2, 6, 23, 0.72);
+        backdrop-filter: blur(12px);
+      }
+
+      .fortune-modal.show {
+        display: grid;
+      }
+
+      .fortune-dialog {
+        position: relative;
+        width: min(520px, 100%);
+        border-radius: 26px;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            circle at 15% 10%,
+            rgba(168, 85, 247, 0.22),
+            transparent 32%
+          ),
+          radial-gradient(
+            circle at 90% 90%,
+            rgba(251, 146, 60, 0.18),
+            transparent 32%
+          ),
+          linear-gradient(145deg, rgba(18, 28, 48, 0.98), rgba(8, 15, 29, 0.98));
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow:
+          0 30px 90px rgba(0, 0, 0, 0.55),
+          0 0 50px rgba(168, 85, 247, 0.1);
+      }
+
+      .fortune-dialog::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          115deg,
+          transparent 15%,
+          rgba(255, 255, 255, 0.045) 50%,
+          transparent 85%
+        );
+      }
+
+      .fortune-head {
+        position: relative;
+        padding: 24px 56px 16px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .fortune-kicker {
+        color: #c4b5fd;
+        font-size: 0.74rem;
+        font-weight: 900;
+        letter-spacing: 0.18em;
+      }
+
+      .fortune-title {
+        margin-top: 5px;
+        font-size: 1.45rem;
+        font-weight: 900;
+      }
+
+      .fortune-close {
+        position: absolute;
+        top: 17px;
+        right: 17px;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+        font-size: 1.1rem;
+      }
+
+      .fortune-body {
+        position: relative;
+        padding: 24px;
+      }
+
+      .fortune-date {
+        color: #94a3b8;
+        font-size: 0.82rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+
+      .fortune-theme {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 11px;
+        margin-bottom: 14px;
+        border-radius: 999px;
+        color: #fde68a;
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.22);
+        font-size: 0.8rem;
+        font-weight: 900;
+      }
+
+      .fortune-content {
+        color: #e2e8f0;
+        font-size: 1rem;
+        line-height: 1.9;
+        white-space: pre-line;
+      }
+
+      .fortune-note {
+        margin-top: 18px;
+        padding-top: 14px;
+        border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        color: #64748b;
+        font-size: 0.76rem;
+        line-height: 1.7;
+      }
+
+      @media (max-width: 1280px) {
+        .lunar-date {
+          font-size: 0.68rem;
+        }
+        .solar-term {
+          font-size: 0.64rem;
+          padding-inline: 6px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .date-row {
+          align-items: flex-start;
+        }
+        .date-meta {
+          gap: 4px;
+        }
+        .lunar-date {
+          font-size: 0.66rem;
+        }
+        .solar-term {
+          min-height: 20px;
+          font-size: 0.61rem;
+        }
       }
 
       .empty-text {
         margin-top: auto;
-        color: rgba(255, 255, 255, 0.25);
-        font-size: 0.9rem;
+        flex: 1;
+        min-height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.92);
+        font-family: "Noto Serif TC", "Noto Sans TC", serif;
+        font-size: clamp(3.8rem, 5.2vw, 6.2rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0.08em;
         text-align: center;
-        padding-bottom: 10px;
+        padding: 6px 0 14px;
+        text-shadow: 0 4px 18px rgba(0, 0, 0, 0.28);
+        user-select: none;
       }
 
       .footer-note {
@@ -395,6 +827,625 @@
           min-height: 150px;
         }
       }
+
+      /* =========================================================
+         三段式響應設計
+         Desktop ≥ 1200px：完整 7 欄月曆
+         Tablet  769–1199px：3 欄日期卡
+         Mobile  ≤ 768px：單欄行程卡
+         ========================================================= */
+      .date-main {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .responsive-weekday {
+        display: none;
+        font-size: 0.76rem;
+        font-weight: 800;
+        color: rgba(226, 232, 240, 0.62);
+        white-space: nowrap;
+      }
+
+      .responsive-weekday.weekend {
+        color: #ffb4c1;
+      }
+
+      /* 桌機：保留原始月曆視覺，不出現橫向捲動 */
+      @media (min-width: 1200px) {
+        .calendar-shell {
+          overflow: hidden;
+        }
+        .week-header,
+        .calendar-grid {
+          min-width: 0;
+        }
+        .calendar-grid {
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+        }
+      }
+
+      /* 平板：取消 7 欄硬塞，改成 3 欄資訊卡 */
+      @media (min-width: 769px) and (max-width: 1199px) {
+        body {
+          padding: 16px;
+        }
+
+        .app {
+          max-width: 1100px;
+        }
+
+        .hero {
+          padding: 22px;
+          border-radius: 26px;
+        }
+
+        .hero-top {
+          align-items: stretch;
+        }
+
+        .title-area {
+          flex: 1 1 58%;
+        }
+
+        .title-area h1 {
+          font-size: clamp(2rem, 4vw, 3rem);
+        }
+
+        .clock-box {
+          flex: 0 1 280px;
+          min-width: 250px;
+        }
+
+        .controls {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .calendar-shell {
+          padding: 16px;
+          overflow: hidden;
+        }
+
+        .week-header {
+          display: none;
+        }
+
+        .calendar-grid {
+          min-width: 0 !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .day-card {
+          min-height: 178px;
+          padding: 14px;
+          border-radius: 20px;
+        }
+
+        .day-card.other {
+          display: none;
+        }
+
+        .responsive-weekday {
+          display: inline-flex;
+        }
+
+        .date-row {
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .date-meta {
+          margin-left: auto;
+          max-width: 62%;
+        }
+
+        .shift-tag {
+          min-height: 40px;
+          padding: 8px 10px;
+        }
+      }
+
+      /* 手機：單欄卡片，資訊由左到右自然閱讀 */
+      @media (max-width: 768px) {
+        body {
+          padding: 8px;
+          overflow-x: hidden;
+        }
+
+        .app {
+          width: 100%;
+        }
+
+        .hero {
+          padding: 16px;
+          margin-bottom: 12px;
+          border-radius: 20px;
+        }
+
+        .hero-top {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+
+        .title-area h1 {
+          font-size: clamp(1.75rem, 8vw, 2.25rem);
+          letter-spacing: 1px;
+        }
+
+        .title-area p {
+          margin-top: 7px;
+          font-size: 0.86rem;
+          line-height: 1.65;
+        }
+
+        .clock-box {
+          width: 100%;
+          min-width: 0;
+          padding: 13px 14px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          grid-template-areas:
+            "date fortune"
+            "time fortune";
+          gap: 2px 12px;
+          text-align: left;
+          align-items: center;
+        }
+
+        #liveDate {
+          grid-area: date;
+          font-size: 0.78rem;
+          color: var(--sub);
+        }
+        #liveClock {
+          grid-area: time;
+          font-size: 1.65rem;
+        }
+
+        .fortune-button {
+          grid-area: fortune;
+          width: auto;
+          margin-top: 0;
+          padding: 10px 12px;
+          font-size: 0.78rem;
+          white-space: nowrap;
+        }
+
+        .controls {
+          margin-top: 14px;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 9px;
+        }
+
+        .control-card {
+          padding: 10px;
+          border-radius: 15px;
+        }
+
+        .control-card label {
+          margin-bottom: 6px;
+          font-size: 0.72rem;
+        }
+
+        select,
+        button {
+          min-height: 43px;
+          padding: 10px 11px;
+          border-radius: 12px;
+          font-size: 0.86rem;
+        }
+
+        select {
+          padding-right: 34px;
+          background-position:
+            calc(100% - 18px) 50%,
+            calc(100% - 13px) 50%;
+          background-size:
+            5px 5px,
+            5px 5px;
+        }
+
+        .calendar-shell {
+          padding: 8px;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+
+        .week-header {
+          display: none;
+        }
+
+        .calendar-grid {
+          min-width: 0 !important;
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .day-card,
+        .day-card:hover {
+          min-height: 0;
+          padding: 12px;
+          border-radius: 17px;
+          transform: none;
+        }
+
+        .day-card.other {
+          display: none;
+        }
+
+        .date-row {
+          min-height: 34px;
+          margin-bottom: 9px;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .date-main {
+          flex: 0 0 auto;
+          align-items: center;
+          gap: 7px;
+        }
+
+        .date-number {
+          font-size: 1.55rem;
+          line-height: 1;
+        }
+
+        .responsive-weekday {
+          display: inline-flex;
+          font-size: 0.75rem;
+        }
+
+        .date-meta {
+          margin-left: auto;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+
+        .lunar-date {
+          font-size: 0.65rem;
+        }
+
+        .solar-term {
+          min-height: 19px;
+          padding: 2px 6px;
+          font-size: 0.59rem;
+        }
+
+        .holiday-tag {
+          padding: 3px 7px;
+          font-size: 0.68rem;
+        }
+
+        .shift-area {
+          margin-top: 0;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 7px;
+        }
+
+        .shift-tag {
+          min-height: 38px;
+          padding: 7px 8px;
+          border-radius: 11px;
+          gap: 7px;
+          font-size: 0.84rem;
+        }
+
+        .shift-icon {
+          width: 23px;
+          height: 23px;
+          flex-basis: 23px;
+          border-radius: 7px;
+          font-size: 12px;
+        }
+
+        .empty-text {
+          margin-top: 4px;
+          min-height: 64px;
+          padding: 8px 0 10px;
+          justify-content: center;
+          text-align: center;
+          font-size: clamp(3rem, 10vw, 4.6rem);
+        }
+
+        .fortune-modal {
+          padding: 10px;
+          align-items: end;
+        }
+
+        .fortune-dialog {
+          width: 100%;
+          max-width: none;
+          border-radius: 22px 22px 14px 14px;
+          max-height: min(82vh, 680px);
+          overflow-y: auto;
+        }
+
+        .fortune-head,
+        .fortune-body {
+          padding-left: 18px;
+          padding-right: 18px;
+        }
+
+        .footer-note {
+          margin-top: 12px;
+          font-size: 0.72rem;
+        }
+      }
+
+      /* 極窄手機：控制列與班別再收成單欄 */
+      @media (max-width: 430px) {
+        .controls {
+          grid-template-columns: 1fr;
+        }
+        .shift-area {
+          grid-template-columns: 1fr;
+        }
+
+        .clock-box {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "date"
+            "time"
+            "fortune";
+        }
+
+        .fortune-button {
+          width: 100%;
+          margin-top: 8px;
+        }
+      }
+
+      /* ===== 任務 / 檔期圖示列 ===== */
+      .date-main {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .day-info-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+      }
+
+      .task-icons {
+        display: inline-flex;
+        align-items: center;
+        gap: clamp(2px, 0.28vw, 5px);
+        min-width: 0;
+        max-width: min(104px, 42%);
+        flex: 0 1 auto;
+        overflow: visible;
+      }
+
+      .task-icon {
+        position: relative;
+        width: clamp(15px, 1.45vw, 22px);
+        height: clamp(15px, 1.45vw, 22px);
+        min-width: 14px;
+        flex: 0 1 clamp(15px, 1.45vw, 22px);
+        padding: 2px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 7px;
+        background: linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.12),
+          rgba(255, 255, 255, 0.045)
+        );
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.16),
+          0 3px 9px rgba(0, 0, 0, 0.18);
+        display: inline-grid;
+        place-items: center;
+        cursor: pointer;
+        transition:
+          transform 0.18s ease,
+          border-color 0.18s ease,
+          box-shadow 0.18s ease;
+        z-index: 3;
+      }
+
+      .task-icon:hover,
+      .task-icon:focus-visible {
+        transform: translateY(-2px) scale(1.08);
+        border-color: rgba(125, 211, 252, 0.58);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.22),
+          0 6px 16px rgba(14, 165, 233, 0.18);
+        outline: none;
+        z-index: 20;
+      }
+
+      .task-icon img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        border-radius: 4px;
+        pointer-events: none;
+      }
+
+      .task-icon .task-emoji {
+        font-size: clamp(10px, 1vw, 15px);
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .task-icon::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: 50%;
+        bottom: calc(100% + 9px);
+        transform: translate(-50%, 5px);
+        width: max-content;
+        max-width: 250px;
+        padding: 7px 9px;
+        border-radius: 9px;
+        color: #eef8ff;
+        background: rgba(6, 13, 27, 0.96);
+        border: 1px solid rgba(125, 211, 252, 0.24);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        font-size: 0.7rem;
+        font-weight: 700;
+        line-height: 1.45;
+        letter-spacing: 0.02em;
+        white-space: normal;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.15s ease,
+          transform 0.15s ease,
+          visibility 0.15s ease;
+      }
+
+      .task-icon:hover::after,
+      .task-icon:focus-visible::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, 0);
+      }
+
+      /* 日期右側農曆 / 節氣保留自己的空間，任務圖示只在左側自動縮放 */
+      .date-row {
+        overflow: visible;
+      }
+      .date-meta {
+        flex: 0 0 auto;
+      }
+
+      .task-popover {
+        position: fixed;
+        inset: 0;
+        z-index: 10020;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 14px;
+        background: rgba(2, 6, 23, 0.62);
+        backdrop-filter: blur(9px);
+      }
+      .task-popover.show {
+        display: flex;
+      }
+      .task-popover-card {
+        width: min(440px, 100%);
+        position: relative;
+        padding: 18px 18px 20px;
+        border-radius: 22px;
+        background: linear-gradient(
+          145deg,
+          rgba(20, 31, 52, 0.98),
+          rgba(7, 14, 27, 0.98)
+        );
+        border: 1px solid rgba(125, 211, 252, 0.18);
+        box-shadow:
+          0 24px 70px rgba(0, 0, 0, 0.48),
+          inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      }
+      .task-popover-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-right: 42px;
+      }
+      .task-popover-image {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        object-fit: contain;
+        padding: 5px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .task-popover-title {
+        font-size: 1.06rem;
+        font-weight: 900;
+        color: #f8fbff;
+      }
+      .task-popover-period {
+        margin-top: 3px;
+        color: #7dd3fc;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+      .task-popover-text {
+        margin-top: 14px;
+        color: #dbeafe;
+        font-size: 0.9rem;
+        line-height: 1.75;
+        white-space: pre-line;
+      }
+      .task-popover-close {
+        position: absolute;
+        top: 13px;
+        right: 13px;
+        width: 34px;
+        height: 34px;
+        min-height: 0;
+        padding: 0;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: none;
+      }
+
+      @media (max-width: 1199px) {
+        .task-icons {
+          max-width: 92px;
+          gap: 3px;
+        }
+        .task-icon {
+          width: 19px;
+          height: 19px;
+          flex-basis: 19px;
+          border-radius: 6px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .day-info-line {
+          gap: 4px;
+        }
+        .task-icons {
+          max-width: 82px;
+          gap: 2px;
+        }
+        .task-icon {
+          width: 17px;
+          height: 17px;
+          flex-basis: 17px;
+          padding: 1px;
+          border-radius: 5px;
+        }
+        /* 手機改用點擊資訊卡，不顯示 hover tooltip */
+        .task-icon::after {
+          display: none;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .task-icons {
+          max-width: 72px;
+        }
+        .task-icon {
+          width: 15px;
+          height: 15px;
+          flex-basis: 15px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -409,6 +1460,14 @@
           <div class="clock-box">
             <div id="liveDate">2026 / 05 / 26</div>
             <div class="time" id="liveClock">00:00:00</div>
+            <button
+              class="fortune-button"
+              type="button"
+              onclick="openFortune()"
+              title="查看今日好運小方法"
+            >
+              <span aria-hidden="true">✦</span> 今日好運提醒
+            </button>
           </div>
         </div>
 
@@ -439,13 +1498,13 @@
 
       <section class="calendar-shell">
         <div class="week-header">
-          <div class="weekend">SUN</div>
-          <div>MON</div>
-          <div>TUE</div>
-          <div>WED</div>
-          <div>THU</div>
-          <div>FRI</div>
-          <div class="weekend">SAT</div>
+          <div>星期一</div>
+          <div>星期二</div>
+          <div>星期三</div>
+          <div>星期四</div>
+          <div>星期五</div>
+          <div class="weekend">星期六</div>
+          <div class="weekend">星期日</div>
         </div>
 
         <div class="calendar-grid" id="calendarGrid"></div>
@@ -453,19 +1512,104 @@
 
       <div class="footer-note">
         Neo Shift Calendar ・ Responsive UI ・ Glassmorphism × Dashboard Style
+        ・ 假日資料可於程式碼 holidays 區塊直接維護
+      </div>
+    </div>
+
+    <div
+      class="fortune-modal"
+      id="fortuneModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="fortuneTitle"
+    >
+      <div class="fortune-dialog">
+        <div class="fortune-head">
+          <div class="fortune-kicker">TODAY'S LUCKY NOTE</div>
+          <div class="fortune-title" id="fortuneTitle">今日好運小方法</div>
+          <button
+            class="fortune-close"
+            type="button"
+            onclick="closeFortune()"
+            aria-label="關閉"
+          >
+            ×
+          </button>
+        </div>
+        <div class="fortune-body">
+          <div class="fortune-date" id="fortuneDate"></div>
+          <div class="fortune-theme" id="fortuneTheme">✦ 今日主題</div>
+          <div class="fortune-content" id="fortuneContent">
+            尚未設定今日資料。
+          </div>
+          <div class="fortune-note">
+            內容由
+            <strong>fortune_data.json</strong>
+            載入。你可以日後自行依日期填入文字；若當日沒有資料，系統會顯示預設備註。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="task-popover"
+      id="taskPopover"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="taskPopoverTitle"
+    >
+      <div class="task-popover-card">
+        <button
+          class="task-popover-close"
+          type="button"
+          onclick="closeTaskPopover()"
+          aria-label="關閉"
+        >
+          ×
+        </button>
+        <div class="task-popover-head">
+          <img class="task-popover-image" id="taskPopoverImage" alt="" />
+          <div>
+            <div class="task-popover-title" id="taskPopoverTitle">任務提醒</div>
+            <div class="task-popover-period" id="taskPopoverPeriod"></div>
+          </div>
+        </div>
+        <div class="task-popover-text" id="taskPopoverText"></div>
       </div>
     </div>
 
     <script>
       let scheduleData = {};
-
+      let fortuneData = {};
+      let taskData = [];
+      // ============================================================
+      // 國定假日設定區｜每年只要在這裡直接增修即可
+      // 格式："YYYY-MM-DD": "假日名稱",
+      // 例如："2026-09-28": "教師節",
+      // 若政府公告新增補假，只要照相同格式加一行即可。
+      // ============================================================
       const holidays = {
         "2026-01-01": "元旦",
-        "2026-02-28": "228紀念日",
+        "2026-02-16": "春節(除夕)",
+        "2026-02-17": "春節(大年初一)",
+        "2026-02-18": "春節(大年初二)",
+        "2026-02-19": "春節(大年初三)",
+        "2026-02-20": "春節(大年初四)",
+        "2026-02-27": "補假1日",
+        "2026-02-28": "和平紀念日",
+        "2026-03-03": "元宵節",
+        "2026-04-03": "補假1日",
         "2026-04-04": "兒童節",
         "2026-04-05": "清明節",
+        "2026-04-06": "補假1日",
         "2026-05-01": "勞動節",
+        "2026-06-19": "端午節",
+        "2026-09-25": "中秋節",
+        "2026-09-28": "教師節",
+        "2026-10-09": "補假1日",
         "2026-10-10": "國慶日",
+        "2026-10-25": "光復節",
+        "2026-10-26": "補假1日",
         "2026-12-25": "行憲紀念日",
       };
 
@@ -475,6 +1619,123 @@
       const calendarGrid = document.getElementById("calendarGrid");
 
       const now = new Date();
+
+      // 二十四節氣：以 1900 年基準分鐘數估算，適用一般月曆顯示。
+      const solarTermNames = [
+        "小寒",
+        "大寒",
+        "立春",
+        "雨水",
+        "驚蟄",
+        "春分",
+        "清明",
+        "穀雨",
+        "立夏",
+        "小滿",
+        "芒種",
+        "夏至",
+        "小暑",
+        "大暑",
+        "立秋",
+        "處暑",
+        "白露",
+        "秋分",
+        "寒露",
+        "霜降",
+        "立冬",
+        "小雪",
+        "大雪",
+        "冬至",
+      ];
+
+      const solarTermMinutes = [
+        0, 21208, 42467, 63836, 85337, 107014, 128867, 150921, 173149, 195551,
+        218072, 240693, 263343, 285989, 308563, 331033, 353350, 375494, 397447,
+        419210, 440795, 462224, 483532, 504758,
+      ];
+
+      function getSolarTerm(year, month, day) {
+        const terms = [];
+        for (let i = month * 2; i <= month * 2 + 1; i++) {
+          const utc =
+            31556925974.7 * (year - 1900) +
+            solarTermMinutes[i] * 60000 +
+            Date.UTC(1900, 0, 6, 2, 5);
+          const termDate = new Date(utc);
+          // 轉成臺灣時區日期，避免跨日顯示。
+          const tw = new Date(termDate.getTime() + 8 * 60 * 60 * 1000);
+          if (tw.getUTCDate() === day) terms.push(solarTermNames[i]);
+        }
+        return terms.join("・");
+      }
+
+      function getLunarDate(dateObj) {
+        try {
+          const formatter = new Intl.DateTimeFormat("zh-TW-u-ca-chinese", {
+            month: "long",
+            day: "numeric",
+          });
+          let lunar = formatter
+            .format(dateObj)
+            .replace(/\s+/g, "")
+            .replace(/月(\d+)日?/, "月$1");
+          return lunar;
+        } catch (err) {
+          return "";
+        }
+      }
+
+      function getFortuneKey(dateObj) {
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+        const d = String(dateObj.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+
+      function findFortuneForDate(dateObj) {
+        const fullKey = getFortuneKey(dateObj);
+        const recurringKey = fullKey.slice(5); // MM-DD，可每年沿用
+        return (
+          fortuneData[fullKey] ||
+          fortuneData[recurringKey] ||
+          fortuneData._default ||
+          null
+        );
+      }
+
+      function openFortune() {
+        const modal = document.getElementById("fortuneModal");
+        const dateEl = document.getElementById("fortuneDate");
+        const themeEl = document.getElementById("fortuneTheme");
+        const contentEl = document.getElementById("fortuneContent");
+        const today = new Date();
+        const fortune = findFortuneForDate(today);
+
+        dateEl.textContent = today.toLocaleDateString("zh-TW", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          weekday: "long",
+        });
+
+        if (fortune) {
+          themeEl.textContent = `✦ ${fortune.theme || "今日主題"}`;
+          contentEl.textContent =
+            fortune.content || fortune.tip || "尚未設定今日內容。";
+        } else {
+          themeEl.textContent = "✦ 今日主題";
+          contentEl.textContent =
+            "今天的好運小方法尚未設定。請在 fortune_data.json 中新增今天的資料。";
+        }
+
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeFortune() {
+        document.getElementById("fortuneModal").classList.remove("show");
+        document.body.style.overflow = "";
+      }
 
       async function init() {
         for (let y = 2025; y <= 2028; y++) {
@@ -489,12 +1750,39 @@
         monthSelect.value = now.getMonth();
 
         try {
-          const response = await fetch("schedule_data.json");
+          const response = await fetch("schedule_data.json?t=" + Date.now(), {
+            cache: "no-store",
+          });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           scheduleData = await response.json();
           populateStaff(scheduleData);
         } catch (err) {
           console.warn("schedule_data.json 讀取失敗", err);
+        }
+
+        try {
+          const response = await fetch("fortune_data.json?t=" + Date.now(), {
+            cache: "no-store",
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          fortuneData = await response.json();
+        } catch (err) {
+          console.warn("fortune_data.json 讀取失敗", err);
+          fortuneData = {};
+        }
+
+        try {
+          const response = await fetch("task_icons.json?t=" + Date.now(), {
+            cache: "no-store",
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const rawTaskData = await response.json();
+          taskData = Array.isArray(rawTaskData)
+            ? rawTaskData
+            : rawTaskData.tasks || [];
+        } catch (err) {
+          console.warn("task_icons.json 讀取失敗", err);
+          taskData = [];
         }
 
         [yearSelect, monthSelect, staffSelect].forEach((el) => {
@@ -586,6 +1874,214 @@
         renderCalendar();
       }
 
+      function getShiftStyle(shiftName) {
+        const name = String(shiftName || "").trim();
+
+        // 同一家族共用同一主色系；再依班別編號／名稱產生固定色階。
+        // 例如：中班1、中班2、中班8都屬藍色系，但每個班別的藍會不同。
+        const rules = [
+          {
+            test: /股長/,
+            className: "shift-lead",
+            icon: "★",
+            hue: 42,
+            span: 12,
+          },
+          {
+            test: /專員/,
+            className: "shift-special",
+            icon: "◆",
+            hue: 318,
+            span: 20,
+          },
+          {
+            test: /大夜|夜班|夜\d|127|128|大夜進口|大夜出口/,
+            className: "shift-night",
+            icon: "☾",
+            hue: 258,
+            span: 28,
+          },
+          {
+            test: /中班|中\d|771|772/,
+            className: "shift-mid",
+            icon: "◐",
+            hue: 210,
+            span: 30,
+          },
+          {
+            test: /早班|早\d/,
+            className: "shift-early",
+            icon: "☀",
+            hue: 34,
+            span: 24,
+          },
+          {
+            test: /自運|嘉義|新營|接送/,
+            className: "shift-field",
+            icon: "▣",
+            hue: 22,
+            span: 22,
+          },
+          {
+            test: /內檯|空袋檯/,
+            className: "shift-office",
+            icon: "▤",
+            hue: 174,
+            span: 22,
+          },
+          {
+            test: /日班|白班/,
+            className: "shift-day",
+            icon: "●",
+            hue: 142,
+            span: 22,
+          },
+        ];
+
+        const rule = rules.find((item) => item.test.test(name)) || {
+          className: "shift-default",
+          icon: "•",
+          hue: 215,
+          span: 18,
+        };
+
+        const numberMatch = name.match(/(?:班|中|早|夜)?\s*[（(]?\s*(\d{1,3})/);
+        const numericSeed = numberMatch ? parseInt(numberMatch[1], 10) : null;
+
+        // 沒有編號的班別用名稱雜湊，確保同名永遠取得相同色階。
+        let hash = 0;
+        for (const ch of name) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+        const seed = numericSeed ?? (hash % 17) + 1;
+
+        // hue 只在家族主色附近小幅偏移，所以仍能一眼辨識為同一類。
+        const hueOffset = ((seed * 7) % (rule.span * 2 + 1)) - rule.span;
+        const hue = rule.hue + hueOffset;
+        const lightness = 58 + ((seed * 5) % 13) - 6;
+        const saturation = 78 + ((seed * 3) % 11) - 5;
+
+        const inlineStyle = [
+          `--shift-bg-1: hsla(${hue}, ${saturation}%, ${Math.min(64, lightness + 2)}%, .92)`,
+          `--shift-bg-2: hsla(${hue + 14}, ${Math.max(62, saturation - 9)}%, ${Math.max(40, lightness - 11)}%, .82)`,
+          `--shift-border: hsla(${hue}, ${Math.min(95, saturation + 5)}%, ${Math.min(82, lightness + 15)}%, .72)`,
+          `--shift-accent: hsl(${hue}, ${Math.min(96, saturation + 7)}%, ${Math.min(84, lightness + 16)}%)`,
+          `--shift-glow: hsla(${hue}, ${saturation}%, ${Math.min(70, lightness + 6)}%, .28)`,
+        ].join("; ");
+
+        return { ...rule, inlineStyle };
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function renderShiftTag(shift) {
+        const style = getShiftStyle(shift);
+        return `<div class="shift-tag ${style.className}" style="${style.inlineStyle}" title="${escapeHtml(shift)}">
+          <span class="shift-icon" aria-hidden="true">${style.icon}</span>
+          <span class="shift-name">${escapeHtml(shift)}</span>
+        </div>`;
+      }
+
+      function normalizeTaskDate(value) {
+        const digits = String(value || "").replace(/\D/g, "");
+        if (digits.length !== 8) return "";
+        return `${digits.slice(0, 4)}-${digits.slice(4, 6)}-${digits.slice(6, 8)}`;
+      }
+
+      function getTasksForDate(dateStr) {
+        return taskData
+          .filter((task) => {
+            if (!task || task.enabled === false) return false;
+            const start = normalizeTaskDate(
+              task.start || task.startDate || task.起,
+            );
+            const end = normalizeTaskDate(
+              task.end ||
+                task.endDate ||
+                task.訖 ||
+                task.start ||
+                task.startDate ||
+                task.起,
+            );
+            return start && end && dateStr >= start && dateStr <= end;
+          })
+          .slice(0, 5);
+      }
+
+      function formatTaskPeriod(task) {
+        const start = normalizeTaskDate(
+          task.start || task.startDate || task.起,
+        );
+        const end = normalizeTaskDate(
+          task.end ||
+            task.endDate ||
+            task.訖 ||
+            task.start ||
+            task.startDate ||
+            task.起,
+        );
+        const fmt = (s) => (s ? s.replace(/-/g, "/") : "");
+        return start === end ? fmt(start) : `${fmt(start)} ～ ${fmt(end)}`;
+      }
+
+      function renderTaskIcons(dateStr) {
+        const tasks = getTasksForDate(dateStr);
+        if (!tasks.length) return "";
+        return `<span class="task-icons" aria-label="當日任務與檔期">${tasks
+          .map((task, index) => {
+            const title = task.title || task.name || task.名稱 || "任務提醒";
+            const text =
+              task.text || task.description || task.note || task.說明 || "";
+            const icon = task.icon || task.image || task.圖示 || "";
+            const emoji = task.emoji || "◆";
+            const tooltip = text ? `${title}｜${text}` : title;
+            const img = icon
+              ? `<img src="${escapeHtml(icon)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" /><span class="task-emoji" style="display:none">${escapeHtml(emoji)}</span>`
+              : `<span class="task-emoji">${escapeHtml(emoji)}</span>`;
+            return `<button type="button" class="task-icon" data-task-index="${index}" data-date="${escapeHtml(dateStr)}" data-tooltip="${escapeHtml(tooltip)}" aria-label="${escapeHtml(title)}" onclick="openTaskPopoverByDate('${escapeHtml(dateStr)}', ${index})">${img}</button>`;
+          })
+          .join("")}</span>`;
+      }
+
+      function openTaskPopoverByDate(dateStr, index) {
+        const tasks = getTasksForDate(dateStr);
+        const task = tasks[index];
+        if (!task) return;
+        const title = task.title || task.name || task.名稱 || "任務提醒";
+        const text =
+          task.text ||
+          task.description ||
+          task.note ||
+          task.說明 ||
+          "尚未設定說明。";
+        const icon = task.icon || task.image || task.圖示 || "";
+        document.getElementById("taskPopoverTitle").textContent = title;
+        document.getElementById("taskPopoverPeriod").textContent =
+          formatTaskPeriod(task);
+        document.getElementById("taskPopoverText").textContent = text;
+        const image = document.getElementById("taskPopoverImage");
+        if (icon) {
+          image.src = icon;
+          image.style.display = "block";
+          image.onerror = () => {
+            image.style.display = "none";
+          };
+        } else {
+          image.removeAttribute("src");
+          image.style.display = "none";
+        }
+        document.getElementById("taskPopover").classList.add("show");
+      }
+
+      function closeTaskPopover() {
+        document.getElementById("taskPopover").classList.remove("show");
+      }
+
       function renderCalendar() {
         const year = parseInt(yearSelect.value);
         const month = parseInt(monthSelect.value);
@@ -593,7 +2089,7 @@
 
         calendarGrid.innerHTML = "";
 
-        const firstDay = new Date(year, month, 1).getDay();
+        const firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // 週一=0，週日=6
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         for (let i = 0; i < firstDay; i++) {
@@ -615,22 +2111,28 @@
             month === now.getMonth() &&
             d === now.getDate();
 
-          let shiftsHtml = "<div class='empty-text'>無排班資料</div>";
+          // 未選擇人員時，只顯示純月曆資訊，不顯示班別，也不顯示「休」。
+          // 選擇人員後，才依該人當日資料顯示班別；沒有班別時顯示「休」。
+          let shiftsHtml = "";
 
-          if (selectedStaff && scheduleData[dateStr]) {
-            const dayShifts = scheduleData[dateStr];
+          if (selectedStaff) {
+            shiftsHtml = "<div class='empty-text' aria-label='休假'>休</div>";
 
-            const myShifts = Object.keys(dayShifts).filter((key) => {
-              const staffName = extractStaffName(dayShifts[key]);
-              return staffName === selectedStaff;
-            });
+            if (scheduleData[dateStr]) {
+              const dayShifts = scheduleData[dateStr];
 
-            if (myShifts.length > 0) {
-              shiftsHtml = `
-              <div class="shift-area">
-                ${myShifts.map((shift) => `<div class="shift-tag">${shift}</div>`).join("")}
-              </div>
-            `;
+              const myShifts = Object.keys(dayShifts).filter((key) => {
+                const staffName = extractStaffName(dayShifts[key]);
+                return staffName === selectedStaff;
+              });
+
+              if (myShifts.length > 0) {
+                shiftsHtml = `
+                <div class="shift-area">
+                  ${myShifts.map(renderShiftTag).join("")}
+                </div>
+              `;
+              }
             }
           }
 
@@ -638,8 +2140,18 @@
           <div class="day-card ${isHoliday ? "holiday" : ""} ${isToday ? "today" : ""}">
 
             <div class="date-row">
-              <div class="date-number">${d}</div>
-              ${holidayName ? `<div class="holiday-tag">${holidayName}</div>` : ""}
+              <div class="date-main">
+                <div class="date-number">${d}</div>
+                <span class="day-info-line">
+                  <span class="responsive-weekday ${weekDay === 0 || weekDay === 6 ? "weekend" : ""}">${["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][weekDay]}</span>
+                  ${renderTaskIcons(dateStr)}
+                </span>
+              </div>
+              <div class="date-meta">
+                <span class="lunar-date">${escapeHtml(getLunarDate(dateObj))}</span>
+                ${getSolarTerm(year, month, d) ? `<span class="solar-term">${escapeHtml(getSolarTerm(year, month, d))}</span>` : ""}
+                ${holidayName ? `<div class="holiday-tag">${escapeHtml(holidayName)}</div>` : ""}
+              </div>
             </div>
 
             ${shiftsHtml}
@@ -668,9 +2180,25 @@
         }, 1000);
       }
 
+      document.getElementById("fortuneModal").addEventListener("click", (e) => {
+        if (e.target.id === "fortuneModal") closeFortune();
+      });
+
+      document.getElementById("taskPopover").addEventListener("click", (e) => {
+        if (e.target.id === "taskPopover") closeTaskPopover();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeFortune();
+          closeTaskPopover();
+        }
+      });
+
       document.addEventListener("contextmenu", (e) => e.preventDefault());
 
       init();
     </script>
   </body>
 </html>
+99
