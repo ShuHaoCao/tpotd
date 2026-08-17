@@ -17,16 +17,6 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap"
       rel="stylesheet"
     />
-    <script
-      type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=2O9hnCcxUxbgKqcXKyCNWQO8IS5WAiELWyf1kQuXwq6zcBn-_UMQNQNLs6SkcOPL7Vxg6gnY2VQDuK_-AfQ6vY5t0gy410RhqGXUkeTBO-EQz2mLVZdyfC2vEQpLwfvwwj8L0ukc1U-cO87qOg4PUGnHARabAiIYztk_bnA992OOod83bvGDvfhHk8pi6LrNPJsLhOKbmHy3EMCafbUjd36vDkJUCa31iE0GmTEpC9UlIecJRe0ekn9_IrtShBGL8Mgy0KXztIFFqGcKHviGpAFCE9t7VMt-TsCVyaeXrIk4I2Q_nP0m5XuA3F1bztSHO48kpEkZQAhBZnS0cqJ4HQ"
-      charset="UTF-8"
-    ></script>
-    <link
-      rel="stylesheet"
-      crossorigin="anonymous"
-      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDU5MTQ4MjA5ODJkMjk2MzI0ZTg5N2YyZSZmbj1jYWxlbmRhcl9maXhlZF9ub19kYXRhX2NhcmQuaHRtbCZjZD1hdHRhY2htZW50JnRzPTQ5NjM4OCZwPWZzJmNpZD0xJnNpZz1mN2Y0NmU4ZTU0ZmQ4MTlmODQ5MzIzYzM0OWViM2Q2Y2U1MGI1MGJjNjExNmY0OWZiMjFlYTFlOGIwN2JmNTkwJnY9MA"
-    />
     <style>
       :root {
         --bg: #09111f;
@@ -1290,7 +1280,27 @@
         }
       }
 
-      /* ===== 任務 / 檔期圖示列 ===== */
+      /* ===== 任務提示層級修正：避免 tooltip 被日期卡裁切 / 鄰格遮住 ===== */
+      .calendar-grid {
+        isolation: isolate;
+      }
+
+      .day-card {
+        overflow: visible;
+        z-index: 1;
+      }
+
+      .day-card:hover,
+      .day-card:focus-within {
+        z-index: 60;
+      }
+
+      /* 保留卡片原本圓角視覺，但不再裁切浮出的任務提示 */
+      .day-card::before {
+        border-radius: inherit;
+      }
+
+      /* ===== 任務 / 檔期文字膠囊列 ===== */
       .date-main {
         flex: 1 1 auto;
         min-width: 0;
@@ -1301,90 +1311,103 @@
         align-items: center;
         gap: 6px;
         min-width: 0;
+        flex: 1 1 auto;
       }
 
-      .task-icons {
+      .task-labels {
         display: inline-flex;
         align-items: center;
-        gap: clamp(2px, 0.28vw, 5px);
+        gap: clamp(3px, 0.35vw, 6px);
         min-width: 0;
-        max-width: min(104px, 42%);
-        flex: 0 1 auto;
+        max-width: 100%;
+        flex: 1 1 auto;
         overflow: visible;
+        position: relative;
+        z-index: 8;
       }
 
-      .task-icon {
+      .task-label {
+        --task-hue: 192;
         position: relative;
-        width: clamp(15px, 1.45vw, 22px);
-        height: clamp(15px, 1.45vw, 22px);
-        min-width: 14px;
-        flex: 0 1 clamp(15px, 1.45vw, 22px);
-        padding: 2px;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 7px;
-        background: linear-gradient(
-          145deg,
-          rgba(255, 255, 255, 0.12),
-          rgba(255, 255, 255, 0.045)
-        );
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 0;
+        max-width: 138px;
+        height: clamp(21px, 1.8vw, 27px);
+        padding: 2px clamp(8px, 0.75vw, 12px);
+        border-radius: 999px;
+        border: 1px solid hsla(var(--task-hue), 84%, 72%, 0.48);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.15),
+            rgba(255, 255, 255, 0.035)
+          ),
+          hsla(var(--task-hue), 70%, 48%, 0.16);
+        color: hsl(var(--task-hue), 92%, 84%);
         box-shadow:
           inset 0 1px 0 rgba(255, 255, 255, 0.16),
-          0 3px 9px rgba(0, 0, 0, 0.18);
-        display: inline-grid;
-        place-items: center;
+          0 3px 10px hsla(var(--task-hue), 70%, 35%, 0.12);
+        font-family: "Noto Sans TC", sans-serif;
+        font-size: clamp(0.62rem, 0.66vw, 0.74rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        white-space: nowrap;
         cursor: pointer;
+        overflow: visible;
         transition:
           transform 0.18s ease,
           border-color 0.18s ease,
-          box-shadow 0.18s ease;
-        z-index: 3;
+          box-shadow 0.18s ease,
+          filter 0.18s ease;
+        z-index: 8;
       }
 
-      .task-icon:hover,
-      .task-icon:focus-visible {
-        transform: translateY(-2px) scale(1.08);
-        border-color: rgba(125, 211, 252, 0.58);
+      .task-label-text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      .task-label:hover,
+      .task-label:focus-visible {
+        transform: translateY(-2px);
+        filter: brightness(1.1) saturate(1.08);
+        border-color: hsla(var(--task-hue), 95%, 82%, 0.82);
         box-shadow:
-          inset 0 1px 0 rgba(255, 255, 255, 0.22),
-          0 6px 16px rgba(14, 165, 233, 0.18);
+          inset 0 1px 0 rgba(255, 255, 255, 0.24),
+          0 6px 18px hsla(var(--task-hue), 75%, 40%, 0.22),
+          0 0 16px hsla(var(--task-hue), 75%, 56%, 0.13);
         outline: none;
         z-index: 20;
       }
 
-      .task-icon img {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: contain;
-        border-radius: 4px;
-        pointer-events: none;
-      }
-
-      .task-icon .task-emoji {
-        font-size: clamp(10px, 1vw, 15px);
-        line-height: 1;
-        pointer-events: none;
-      }
-
-      .task-icon::after {
+      .task-label::after {
         content: attr(data-tooltip);
         position: absolute;
         left: 50%;
         bottom: calc(100% + 9px);
         transform: translate(-50%, 5px);
-        width: max-content;
-        max-width: 250px;
-        padding: 7px 9px;
-        border-radius: 9px;
+        width: min(190px, calc(100vw - 28px));
+        max-width: min(190px, calc(100vw - 28px));
+        padding: 8px 10px;
+        border-radius: 10px;
         color: #eef8ff;
         background: rgba(6, 13, 27, 0.96);
-        border: 1px solid rgba(125, 211, 252, 0.24);
+        border: 1px solid hsla(var(--task-hue), 84%, 72%, 0.28);
         box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
         font-size: 0.7rem;
         font-weight: 700;
-        line-height: 1.45;
+        line-height: 1.55;
         letter-spacing: 0.02em;
         white-space: normal;
+        text-align: left;
+        overflow-wrap: anywhere;
+        word-break: break-word;
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
@@ -1392,16 +1415,17 @@
           opacity 0.15s ease,
           transform 0.15s ease,
           visibility 0.15s ease;
+        z-index: 999;
       }
 
-      .task-icon:hover::after,
-      .task-icon:focus-visible::after {
+      .task-label:hover::after,
+      .task-label:focus-visible::after {
         opacity: 1;
         visibility: visible;
         transform: translate(-50%, 0);
       }
 
-      /* 日期右側農曆 / 節氣保留自己的空間，任務圖示只在左側自動縮放 */
+      /* 日期右側農曆 / 節氣保留自己的空間，任務文字只在左側自動縮放 */
       .date-row {
         overflow: visible;
       }
@@ -1424,7 +1448,7 @@
         display: flex;
       }
       .task-popover-card {
-        width: min(440px, 100%);
+        width: min(360px, calc(100vw - 28px));
         position: relative;
         padding: 18px 18px 20px;
         border-radius: 22px;
@@ -1437,6 +1461,7 @@
         box-shadow:
           0 24px 70px rgba(0, 0, 0, 0.48),
           inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        text-align: left;
       }
       .task-popover-head {
         display: flex;
@@ -1445,25 +1470,21 @@
         padding-right: 42px;
       }
       .task-popover-image {
-        width: 42px;
-        height: 42px;
-        flex: 0 0 42px;
-        object-fit: contain;
-        padding: 5px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: none !important;
       }
       .task-popover-title {
         font-size: 1.06rem;
         font-weight: 900;
         color: #f8fbff;
+        text-align: left;
+        overflow-wrap: anywhere;
       }
       .task-popover-period {
         margin-top: 3px;
         color: #7dd3fc;
         font-size: 0.75rem;
         font-weight: 700;
+        text-align: left;
       }
       .task-popover-text {
         margin-top: 14px;
@@ -1471,6 +1492,9 @@
         font-size: 0.9rem;
         line-height: 1.75;
         white-space: pre-line;
+        text-align: left;
+        overflow-wrap: anywhere;
+        word-break: break-word;
       }
       .task-popover-close {
         position: absolute;
@@ -1488,48 +1512,168 @@
         box-shadow: none;
       }
 
-      @media (max-width: 1199px) {
-        .task-icons {
-          max-width: 92px;
-          gap: 3px;
+      @media (min-width: 1200px) {
+        .date-main {
+          flex: 1 1 0;
+          min-width: 0;
         }
-        .task-icon {
-          width: 19px;
-          height: 19px;
-          flex-basis: 19px;
-          border-radius: 6px;
+        .day-info-line {
+          flex: 1 1 0;
+          min-width: 0;
+          overflow: visible;
+        }
+        .task-labels {
+          max-width: 100%;
+        }
+        .task-label {
+          max-width: min(150px, 100%);
+        }
+        .date-meta {
+          position: relative;
+          z-index: 2;
+          padding-left: 4px;
+        }
+      }
+
+      @media (max-width: 1199px) {
+        .task-labels {
+          max-width: min(300px, 64%);
+          gap: 4px;
+        }
+        .task-label {
+          max-width: 116px;
+          height: 23px;
+          padding-inline: 9px;
+          font-size: 0.66rem;
         }
       }
 
       @media (max-width: 768px) {
         .day-info-line {
+          gap: 5px;
+        }
+        .task-labels {
+          max-width: min(62vw, 330px);
           gap: 4px;
+          flex-wrap: wrap;
         }
-        .task-icons {
-          max-width: 82px;
-          gap: 2px;
+        .task-label {
+          max-width: 128px;
+          height: 22px;
+          padding-inline: 9px;
+          font-size: 0.64rem;
         }
-        .task-icon {
-          width: 17px;
-          height: 17px;
-          flex-basis: 17px;
-          padding: 1px;
-          border-radius: 5px;
-        }
-        /* 手機改用點擊資訊卡，不顯示 hover tooltip */
-        .task-icon::after {
+        .task-label::after {
           display: none;
+        }
+        .task-popover {
+          padding: 12px;
+        }
+        .task-popover-card {
+          width: min(330px, calc(100vw - 24px));
+          padding: 16px 16px 18px;
+          border-radius: 18px;
+        }
+        .task-popover-title {
+          font-size: 1rem;
+          line-height: 1.45;
+        }
+        .task-popover-period {
+          font-size: 0.72rem;
+          line-height: 1.5;
+        }
+        .task-popover-text {
+          font-size: 0.86rem;
+          line-height: 1.7;
         }
       }
 
       @media (max-width: 430px) {
-        .task-icons {
-          max-width: 72px;
+        .task-labels {
+          max-width: 58vw;
         }
-        .task-icon {
-          width: 15px;
-          height: 15px;
-          flex-basis: 15px;
+        .task-label {
+          max-width: 105px;
+          height: 21px;
+          padding-inline: 8px;
+          font-size: 0.61rem;
+        }
+      }
+
+      /* ===== 農曆日期移至國曆日期下方，釋放右側空間 ===== */
+      .date-number-stack {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex: 0 0 auto;
+        min-width: 0;
+        gap: 2px;
+        line-height: 1;
+      }
+
+      .lunar-under-date {
+        display: block;
+        margin-top: 1px;
+        padding-left: 1px;
+        color: rgba(203, 213, 225, 0.72);
+        font-size: clamp(0.6rem, 0.66vw, 0.72rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: 0.01em;
+        white-space: nowrap;
+      }
+
+      .date-main {
+        align-items: flex-start;
+      }
+
+      .day-info-line {
+        align-self: flex-start;
+        padding-top: 3px;
+      }
+
+      .date-meta {
+        align-self: flex-start;
+      }
+
+      @media (min-width: 769px) and (max-width: 1199px) {
+        .lunar-under-date {
+          font-size: 0.64rem;
+        }
+        .day-info-line {
+          padding-top: 2px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .date-main {
+          align-items: flex-start;
+          gap: 7px;
+        }
+        .date-number-stack {
+          min-width: 38px;
+        }
+        .lunar-under-date {
+          margin-top: 2px;
+          font-size: 0.61rem;
+          line-height: 1.1;
+        }
+        .day-info-line {
+          align-self: flex-start;
+          padding-top: 1px;
+        }
+        .date-meta {
+          padding-top: 1px;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .date-number-stack {
+          min-width: 36px;
+        }
+        .lunar-under-date {
+          font-size: 0.58rem;
         }
       }
     </style>
@@ -1753,16 +1897,51 @@
         return terms.join("・");
       }
 
+      function lunarNumberToChinese(num) {
+        const n = Number(num);
+        const digits = [
+          "零",
+          "一",
+          "二",
+          "三",
+          "四",
+          "五",
+          "六",
+          "七",
+          "八",
+          "九",
+        ];
+        if (!Number.isFinite(n) || n < 0) return String(num);
+        if (n < 10) return digits[n];
+        if (n === 10) return "十";
+        if (n < 20) return "十" + digits[n - 10];
+        if (n < 30) return "二十" + (n === 20 ? "" : digits[n - 20]);
+        if (n < 40) return "三十" + (n === 30 ? "" : digits[n - 30]);
+        return String(num);
+      }
+
       function getLunarDate(dateObj) {
         try {
           const formatter = new Intl.DateTimeFormat("zh-TW-u-ca-chinese", {
             month: "long",
             day: "numeric",
           });
-          let lunar = formatter
-            .format(dateObj)
-            .replace(/\s+/g, "")
-            .replace(/月(\d+)日?/, "月$1");
+          let lunar = formatter.format(dateObj).replace(/\s+/g, "");
+
+          // 將農曆日期中的阿拉伯數字全部轉成中文數字，例如：八月1 → 八月一日。
+          lunar = lunar.replace(
+            /(\d+)月(\d+)日?/,
+            (_, month, day) =>
+              `${lunarNumberToChinese(month)}月${lunarNumberToChinese(day)}日`,
+          );
+
+          // 部分瀏覽器月份已是中文，只會輸出日期數字，例如：八月1。
+          lunar = lunar.replace(
+            /月(\d+)日?/,
+            (_, day) => `月${lunarNumberToChinese(day)}日`,
+          );
+
+          if (!lunar.endsWith("日")) lunar += "日";
           return lunar;
         } catch (err) {
           return "";
@@ -2134,21 +2313,30 @@
         return start === end ? fmt(start) : `${fmt(start)} ～ ${fmt(end)}`;
       }
 
-      function renderTaskIcons(dateStr) {
+      function taskHue(task, index) {
+        if (task.colorHue != null && Number.isFinite(Number(task.colorHue))) {
+          return Math.max(0, Math.min(360, Number(task.colorHue)));
+        }
+        const title = String(
+          task.title || task.name || task.名稱 || "任務提醒",
+        );
+        let hash = 0;
+        for (const ch of title) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+        const palette = [192, 265, 330, 38, 152, 215, 18];
+        return palette[(hash + index) % palette.length];
+      }
+
+      function renderTaskLabels(dateStr) {
         const tasks = getTasksForDate(dateStr);
         if (!tasks.length) return "";
-        return `<span class="task-icons" aria-label="當日任務與檔期">${tasks
+        return `<span class="task-labels" aria-label="當日任務與檔期">${tasks
           .map((task, index) => {
             const title = task.title || task.name || task.名稱 || "任務提醒";
             const text =
               task.text || task.description || task.note || task.說明 || "";
-            const icon = task.icon || task.image || task.圖示 || "";
-            const emoji = task.emoji || "◆";
             const tooltip = text ? `${title}｜${text}` : title;
-            const img = icon
-              ? `<img src="${escapeHtml(icon)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'" /><span class="task-emoji" style="display:none">${escapeHtml(emoji)}</span>`
-              : `<span class="task-emoji">${escapeHtml(emoji)}</span>`;
-            return `<button type="button" class="task-icon" data-task-index="${index}" data-date="${escapeHtml(dateStr)}" data-tooltip="${escapeHtml(tooltip)}" aria-label="${escapeHtml(title)}" onclick="openTaskPopoverByDate('${escapeHtml(dateStr)}', ${index})">${img}</button>`;
+            const hue = taskHue(task, index);
+            return `<button type="button" class="task-label" style="--task-hue:${hue}" data-task-index="${index}" data-date="${escapeHtml(dateStr)}" data-tooltip="${escapeHtml(tooltip)}" aria-label="${escapeHtml(title)}" onclick="openTaskPopoverByDate('${escapeHtml(dateStr)}', ${index})"><span class="task-label-text">${escapeHtml(title)}</span></button>`;
           })
           .join("")}</span>`;
       }
@@ -2164,22 +2352,13 @@
           task.note ||
           task.說明 ||
           "尚未設定說明。";
-        const icon = task.icon || task.image || task.圖示 || "";
         document.getElementById("taskPopoverTitle").textContent = title;
         document.getElementById("taskPopoverPeriod").textContent =
           formatTaskPeriod(task);
         document.getElementById("taskPopoverText").textContent = text;
         const image = document.getElementById("taskPopoverImage");
-        if (icon) {
-          image.src = icon;
-          image.style.display = "block";
-          image.onerror = () => {
-            image.style.display = "none";
-          };
-        } else {
-          image.removeAttribute("src");
-          image.style.display = "none";
-        }
+        image.removeAttribute("src");
+        image.style.display = "none";
         document.getElementById("taskPopover").classList.add("show");
       }
 
@@ -2267,14 +2446,16 @@
 
             <div class="date-row">
               <div class="date-main">
-                <div class="date-number">${d}</div>
+                <div class="date-number-stack">
+                  <div class="date-number">${d}</div>
+                  <span class="lunar-date lunar-under-date">${escapeHtml(getLunarDate(dateObj))}</span>
+                </div>
                 <span class="day-info-line">
                   <span class="responsive-weekday ${weekDay === 0 || weekDay === 6 ? "weekend" : ""}">${["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][weekDay]}</span>
-                  ${renderTaskIcons(dateStr)}
+                  ${renderTaskLabels(dateStr)}
                 </span>
               </div>
               <div class="date-meta">
-                <span class="lunar-date">${escapeHtml(getLunarDate(dateObj))}</span>
                 ${getSolarTerm(year, month, d) ? `<span class="solar-term">${escapeHtml(getSolarTerm(year, month, d))}</span>` : ""}
                 ${holidayName ? `<div class="holiday-tag">${escapeHtml(holidayName)}</div>` : ""}
               </div>
