@@ -2201,6 +2201,36 @@
         );
       }
 
+      // ============================================================
+      // 下拉清單排除名單
+      // 將「不希望出現在人員搜尋下拉清單」的人員姓名填入此陣列即可。
+      // 注意：只會從下拉清單隱藏，不會修改原始 schedule_data.json 班表資料。
+      // 範例：const STAFF_DROPDOWN_EXCLUDE = ["王小明", "陳大華"];
+      // ============================================================
+      const STAFF_DROPDOWN_EXCLUDE = [
+        "林凱勳",
+        "柯國超",
+        "林養俊",
+        "邱嶸祜",
+        "張正德",
+        "張永儀",
+        "張健儀",
+        "許智勇",
+        "陳新安",
+        "黃仁政",
+        "黃憲章",
+        "賴世豪",
+        "蔡綜哲",
+      ];
+
+      function isStaffExcludedFromDropdown(name) {
+        const target = normalizeStaffName(name);
+        if (!target) return false;
+        return STAFF_DROPDOWN_EXCLUDE.some(
+          (excludedName) => normalizeStaffName(excludedName) === target,
+        );
+      }
+
       function populateStaff(data) {
         // 用正規化姓名當 key，避免全形/半形、隱藏字元或意外空白造成
         // 下拉選單看得到人，但查班時比對不到。
@@ -2214,6 +2244,7 @@
           Object.values(shifts).forEach((shiftValue) => {
             extractStaffNames(shiftValue).forEach((name) => {
               if (!isValidStaffName(name)) return;
+              if (isStaffExcludedFromDropdown(name)) return;
               const key = normalizeStaffName(name);
               if (!names.has(key)) names.set(key, String(name).trim());
             });
