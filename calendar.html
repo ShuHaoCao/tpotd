@@ -17,6 +17,16 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap"
       rel="stylesheet"
     />
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=2O9hnCcxUxbgKqcXKyCNWQO8IS5WAiELWyf1kQuXwq6zcBn-_UMQNQNLs6SkcOPL7Vxg6gnY2VQDuK_-AfQ6vY5t0gy410RhqGXUkeTBO-EQz2mLVZdyfC2vEQpLwfvwwj8L0ukc1U-cO87qOg4PUGnHARabAiIYztk_bnA992OOod83bvGDvfhHk8pi6LrNPJsLhOKbmHy3EMCafbUjd36vDkJUCa31iE0GmTEpC9UlIecJRe0ekn9_IrtShBGL8Mgy0KXztIFFqGcKHviGpAFCE9t7VMt-TsCVyaeXrIk4I2Q_nP0m5XuA3F1bztSHO48kpEkZQAhBZnS0cqJ4HQ"
+      charset="UTF-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin="anonymous"
+      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDU5MTQ4MjA5ODJkMjk2MzI0ZTg5N2YyZSZmbj1jYWxlbmRhcl9maXhlZF9ub19kYXRhX2NhcmQuaHRtbCZjZD1hdHRhY2htZW50JnRzPTQ5NjM4OCZwPWZzJmNpZD0xJnNpZz1mN2Y0NmU4ZTU0ZmQ4MTlmODQ5MzIzYzM0OWViM2Q2Y2U1MGI1MGJjNjExNmY0OWZiMjFlYTFlOGIwN2JmNTkwJnY9MA"
+    />
     <style>
       :root {
         --bg: #09111f;
@@ -774,6 +784,64 @@
         user-select: none;
       }
 
+      /* ===== 尚未排班：維持日期卡尺寸，不讓內容把方框撐高 ===== */
+      .not-scheduled-state {
+        margin-top: auto;
+        flex: 1 1 0;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 2px 4px 8px;
+        overflow: hidden;
+        text-align: center;
+        user-select: none;
+      }
+
+      .not-scheduled-icon {
+        width: clamp(36px, 3.2vw, 48px);
+        height: clamp(36px, 3.2vw, 48px);
+        flex: 0 0 auto;
+        filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.2));
+      }
+
+      .not-scheduled-icon svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+
+      .not-scheduled-title {
+        font-family: "Noto Serif TC", "Noto Sans TC", serif;
+        font-size: clamp(1rem, 1.25vw, 1.35rem);
+        font-weight: 900;
+        line-height: 1.12;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+        background: linear-gradient(
+          90deg,
+          #c084fc 0%,
+          #a78bfa 38%,
+          #67e8f9 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 18px rgba(103, 232, 249, 0.08);
+      }
+
+      .not-scheduled-subtitle {
+        color: rgba(203, 213, 225, 0.72);
+        font-size: clamp(0.62rem, 0.72vw, 0.76rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+      }
+
       .footer-note {
         margin-top: 18px;
         text-align: center;
@@ -1154,6 +1222,24 @@
           justify-content: center;
           text-align: center;
           font-size: clamp(3rem, 10vw, 4.6rem);
+        }
+
+        .not-scheduled-state {
+          gap: 4px;
+          padding: 2px 2px 6px;
+        }
+
+        .not-scheduled-icon {
+          width: 34px;
+          height: 34px;
+        }
+
+        .not-scheduled-title {
+          font-size: 0.94rem;
+        }
+
+        .not-scheduled-subtitle {
+          font-size: 0.58rem;
         }
 
         .fortune-modal {
@@ -1543,9 +1629,7 @@
             尚未設定今日資料。
           </div>
           <div class="fortune-note">
-            內容由
-            <strong>fortune_data.json</strong>
-            載入。你可以日後自行依日期填入文字；若當日沒有資料，系統會顯示預設備註。
+            內容由取自<strong>365祈願魔法書</strong>。
           </div>
         </div>
       </div>
@@ -1793,17 +1877,21 @@
         startClock();
       }
 
-      function extractStaffName(value) {
-        if (value == null) return "";
+      function normalizeStaffName(value) {
+        return String(value ?? "")
+          .normalize("NFKC")
+          .replace(/[\u200B-\u200D\uFEFF]/g, "")
+          .replace(/\s+/g, "")
+          .trim();
+      }
 
+      function extractStaffNames(value) {
+        if (value == null) return [];
+
+        let raw = "";
         if (typeof value === "string" || typeof value === "number") {
-          return String(value).trim();
-        }
-
-        // 新版 schedule_data.json 的班別資料可能長這樣：
-        // { name: "王昭文", status: { 台中: "", 嘉義: "", 高雄: "" } }
-        // 這裡只取真正的人名，不把整個物件轉成 [object Object]。
-        if (typeof value === "object" && !Array.isArray(value)) {
+          raw = String(value);
+        } else if (typeof value === "object" && !Array.isArray(value)) {
           const possibleNameKeys = [
             "name",
             "姓名",
@@ -1813,38 +1901,49 @@
             "人員",
             "value",
           ];
-
           for (const key of possibleNameKeys) {
             if (
               typeof value[key] === "string" ||
               typeof value[key] === "number"
             ) {
-              return String(value[key]).trim();
+              raw = String(value[key]);
+              break;
             }
           }
+        } else if (Array.isArray(value)) {
+          return value.flatMap(extractStaffNames);
         }
 
-        return "";
+        // 相容單一姓名，也容許同一欄位出現「、，,/／；;、換行」等多人格式。
+        return raw
+          .split(/[、,，/／;；\n\r]+/)
+          .map((name) => String(name).trim())
+          .filter(Boolean);
+      }
+
+      function extractStaffName(value) {
+        return extractStaffNames(value)[0] || "";
       }
 
       function isValidStaffName(name) {
-        const cleanName = String(name || "").trim();
-
+        const cleanName = normalizeStaffName(name);
         return (
           cleanName &&
           cleanName !== "-" &&
           cleanName !== "#SPILL!" &&
           cleanName !== "#溢出!" &&
-          cleanName !== "null" &&
-          cleanName !== "undefined" &&
-          cleanName !== "[object Object]" &&
+          cleanName.toLowerCase() !== "null" &&
+          cleanName.toLowerCase() !== "undefined" &&
+          cleanName !== "[objectObject]" &&
           !/^\d+$/.test(cleanName) &&
           !/^[：:]+$/.test(cleanName)
         );
       }
 
       function populateStaff(data) {
-        const names = new Set();
+        // 用正規化姓名當 key，避免全形/半形、隱藏字元或意外空白造成
+        // 下拉選單看得到人，但查班時比對不到。
+        const names = new Map();
 
         Object.entries(data).forEach(([date, shifts]) => {
           if (date === "lastUpdated") return;
@@ -1852,20 +1951,26 @@
             return;
 
           Object.values(shifts).forEach((shiftValue) => {
-            const cleanName = extractStaffName(shiftValue);
-            if (isValidStaffName(cleanName)) {
-              names.add(cleanName);
-            }
+            extractStaffNames(shiftValue).forEach((name) => {
+              if (!isValidStaffName(name)) return;
+              const key = normalizeStaffName(name);
+              if (!names.has(key)) names.set(key, String(name).trim());
+            });
           });
         });
 
         staffSelect.innerHTML = '<option value="">-- 請選擇人員 --</option>';
-
-        [...names]
+        [...names.values()]
           .sort((a, b) => a.localeCompare(b, "zh-Hant"))
-          .forEach((name) => {
-            staffSelect.options.add(new Option(name, name));
-          });
+          .forEach((name) => staffSelect.options.add(new Option(name, name)));
+      }
+
+      function shiftContainsStaff(shiftValue, selectedStaff) {
+        const target = normalizeStaffName(selectedStaff);
+        if (!target) return false;
+        return extractStaffNames(shiftValue).some(
+          (name) => normalizeStaffName(name) === target,
+        );
       }
 
       function renderToday() {
@@ -2111,20 +2216,38 @@
             month === now.getMonth() &&
             d === now.getDate();
 
-          // 未選擇人員時，只顯示純月曆資訊，不顯示班別，也不顯示「休」。
-          // 選擇人員後，才依該人當日資料顯示班別；沒有班別時顯示「休」。
+          // 未選擇人員時，只顯示純月曆資訊。
+          // 選擇人員後：整個日期沒有任何班表資料時顯示「尚未排班」；
+          // 日期已有班表資料，但該人當日沒有班別時，才顯示「休」。
           let shiftsHtml = "";
 
           if (selectedStaff) {
-            shiftsHtml = "<div class='empty-text' aria-label='休假'>休</div>";
-
-            if (scheduleData[dateStr]) {
+            if (!scheduleData[dateStr]) {
+              shiftsHtml = `
+                <div class="not-scheduled-state" aria-label="尚未排班，請稍後查看">
+                  <div class="not-scheduled-icon" aria-hidden="true">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="calendarGradient-${year}-${month}-${d}" x1="10" y1="8" x2="55" y2="56" gradientUnits="userSpaceOnUse">
+                          <stop stop-color="#C084FC"/>
+                          <stop offset="0.48" stop-color="#A78BFA"/>
+                          <stop offset="1" stop-color="#67E8F9"/>
+                        </linearGradient>
+                      </defs>
+                      <rect x="10" y="14" width="44" height="39" rx="6" stroke="url(#calendarGradient-${year}-${month}-${d})" stroke-width="4"/>
+                      <path d="M10 25H54" stroke="url(#calendarGradient-${year}-${month}-${d})" stroke-width="4" stroke-linecap="round"/>
+                      <path d="M21 9V19M43 9V19" stroke="url(#calendarGradient-${year}-${month}-${d})" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div class="not-scheduled-title">尚未排班</div>
+                  <div class="not-scheduled-subtitle">• 請稍後查看 •</div>
+                </div>
+              `;
+            } else {
               const dayShifts = scheduleData[dateStr];
-
-              const myShifts = Object.keys(dayShifts).filter((key) => {
-                const staffName = extractStaffName(dayShifts[key]);
-                return staffName === selectedStaff;
-              });
+              const myShifts = Object.keys(dayShifts).filter((key) =>
+                shiftContainsStaff(dayShifts[key], selectedStaff),
+              );
 
               if (myShifts.length > 0) {
                 shiftsHtml = `
@@ -2132,6 +2255,9 @@
                   ${myShifts.map(renderShiftTag).join("")}
                 </div>
               `;
+              } else {
+                shiftsHtml =
+                  "<div class='empty-text' aria-label='休假'>休</div>";
               }
             }
           }
