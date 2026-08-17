@@ -1676,6 +1676,88 @@
           font-size: 0.58rem;
         }
       }
+
+      /* ===== 任務獨立列：置於日期下方，避免與節氣/假日擠壓 ===== */
+      .task-row {
+        width: 100%;
+        min-height: 0;
+        margin: -3px 0 9px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        position: relative;
+        z-index: 8;
+      }
+      .task-row:empty {
+        display: none;
+      }
+      .task-row .task-labels {
+        width: auto;
+        max-width: 100%;
+        display: inline-flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 5px;
+      }
+      .task-row .task-label {
+        flex: 0 0 auto;
+        width: fit-content;
+        max-width: 100%;
+        height: auto;
+        min-height: clamp(21px, 1.8vw, 27px);
+        padding-inline: clamp(9px, 0.75vw, 13px);
+      }
+      .task-row .task-label-text {
+        width: auto;
+        max-width: 100%;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        line-height: 1.25;
+        text-align: left;
+      }
+      @media (max-width: 1199px) {
+        .task-row .task-labels {
+          width: auto;
+          max-width: 100%;
+        }
+        .task-row .task-label {
+          width: fit-content;
+          max-width: 100%;
+        }
+      }
+      @media (max-width: 768px) {
+        .task-row {
+          margin: -1px 0 8px;
+        }
+        .task-row .task-labels {
+          width: auto;
+          max-width: 100%;
+          gap: 4px;
+        }
+        .task-row .task-label {
+          width: fit-content;
+          max-width: 100%;
+          min-height: 22px;
+          padding-inline: 9px;
+        }
+      }
+      @media (max-width: 430px) {
+        .task-row .task-labels {
+          width: auto;
+          max-width: 100%;
+        }
+        .task-row .task-label {
+          width: fit-content;
+          max-width: 100%;
+          min-height: 21px;
+          padding-inline: 8px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2452,7 +2534,6 @@
                 </div>
                 <span class="day-info-line">
                   <span class="responsive-weekday ${weekDay === 0 || weekDay === 6 ? "weekend" : ""}">${["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][weekDay]}</span>
-                  ${renderTaskLabels(dateStr)}
                 </span>
               </div>
               <div class="date-meta">
@@ -2460,6 +2541,8 @@
                 ${holidayName ? `<div class="holiday-tag">${escapeHtml(holidayName)}</div>` : ""}
               </div>
             </div>
+
+            <div class="task-row">${renderTaskLabels(dateStr)}</div>
 
             ${shiftsHtml}
 
@@ -2508,4 +2591,3 @@
     </script>
   </body>
 </html>
-99
