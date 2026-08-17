@@ -656,6 +656,45 @@
         color: var(--ink);
         color-scheme: dark;
       }
+
+      /* ===== 全站下拉選單相容性修正 =====
+         Windows / Chrome 對原生 <select> 的深色模式支援不一致，
+         可能造成「展開後白底白字／淡字」；因此統一所有下拉選單的
+         收合狀態與展開選項配色，不只星期條件。 */
+      select {
+        background-color: rgba(7, 21, 38, 0.96) !important;
+        color: #eaf6ff !important;
+        -webkit-text-fill-color: #eaf6ff;
+      }
+
+      @media screen {
+        select {
+          color-scheme: light !important;
+        }
+
+        select option,
+        select optgroup {
+          background-color: #ffffff !important;
+          color: #102a43 !important;
+          -webkit-text-fill-color: #102a43 !important;
+        }
+
+        select option:checked {
+          background: #8fc2f5 linear-gradient(0deg, #8fc2f5 0%, #8fc2f5 100%) !important;
+          color: #071b2f !important;
+          -webkit-text-fill-color: #071b2f !important;
+        }
+
+        select option:disabled {
+          background-color: #f1f5f9 !important;
+          color: #64748b !important;
+          -webkit-text-fill-color: #64748b !important;
+        }
+      }
+      .field select:disabled {
+        color: #7f96ad;
+        opacity: 0.8;
+      }
       .card {
         position: relative;
         overflow: hidden;
@@ -1053,7 +1092,7 @@
     <div class="app">
       <section class="hero">
         <div>
-          <h1>車次預測輔助系統</h1>
+          <h1>車次需求預測輔助系統 v1.01</h1>
           <p>
             依歷史三階段車次資料，動態推估下一階段需求。資料愈多，模型自行重新計算，不固定日期、樣本數、車次範圍或機率。
           </p>
@@ -1063,7 +1102,7 @@
 
       <div class="toolbar">
         <button class="btn primary" id="autoLoadBtn">重新讀取資料檔</button>
-        <button class="btn secondary" id="chooseBtn">手動選擇 JSON</button>
+        <button class="btn secondary" id="chooseBtn">手動選擇</button>
         <input
           id="fileInput"
           type="file"
@@ -1073,7 +1112,9 @@
         <button class="btn ghost" onclick="window.print()">
           列印 / 另存 PDF
         </button>
-        <span class="file-name" id="fileName">預設檔名:momo_dispatch_data</span>
+        <span class="file-name" id="fileName"
+          >預設檔名：momo_dispatch_data.json</span
+        >
       </div>
 
       <section class="filters">
