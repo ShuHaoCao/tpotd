@@ -1,7 +1,97 @@
 {
   "tasks": [
     {
-      "id": "NewEmployee-2026",
+      "id": "Transfer_001",
+      "title": "人員異動",
+      "start": "20250203",
+      "end": "20250203",
+      "text": "曹書豪-自臺南郵局行銷科升任本股專員",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Transfer_002",
+      "title": "人員異動",
+      "start": "20250324",
+      "end": "20250324",
+      "text": "許瑞廷-自臺南郵局快捷股調任至本股",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Transfer_003",
+      "title": "人員異動",
+      "start": "20250708",
+      "end": "20250708",
+      "text": "吳政謙-自臺南成功路郵局營收股調任至本股",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Transfer_004",
+      "title": "人員異動",
+      "start": "20250716",
+      "end": "20250716",
+      "text": "邱學士-自永康郵局調任至本股；張健儀、陳新安、楊嶸祜-退休",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Transfer_005",
+      "title": "人員異動",
+      "start": "20250801",
+      "end": "20250801",
+      "text": "翁志峰-自臺南郵局快捷股調任至本股",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Transfer_006",
+      "title": "人員異動",
+      "start": "20250919",
+      "end": "20250919",
+      "text": "林凱勳-對外甄試考上後，調任至高雄郵局",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Transfer_007",
+      "title": "人員異動",
+      "start": "20260116",
+      "end": "20260116",
+      "text": "林養俊-退休",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "NewEmployee_001",
+      "title": "新人報到",
+      "start": "20250826",
+      "end": "20250826",
+      "text": "新人報到:連志維、許智勇",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "NewEmployee_002",
+      "title": "新人報到",
+      "start": "20251014",
+      "end": "20251014",
+      "text": "新人報到:莊世民、金哲駿",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Secondment_001",
+      "title": "借調",
+      "start": "20251215",
+      "end": "20251215",
+      "text": "自12月15日起，許智勇借調至快捷股，黃憲章借調至本股",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "NewEmployee_003",
       "title": "新人報到",
       "start": "20260116",
       "end": "20260116",
@@ -10,7 +100,7 @@
       "enabled": true
     },
     {
-      "id": "NewEmployee-2026",
+      "id": "NewEmployee_004",
       "title": "新人報到",
       "start": "20260302",
       "end": "20260302",
