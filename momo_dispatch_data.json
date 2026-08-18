@@ -9613,28 +9613,28 @@
     "weekday": "週二",
     "summary": {
       "total_duration": "7小時36分鐘",
-      "total_trips": 8,
-      "total_carts": 130,
-      "grand_total_trips": 10,
-      "grand_total_carts": 146,
+      "total_trips": 9,
+      "total_carts": 144,
+      "grand_total_trips": 11,
+      "grand_total_carts": 160,
       "total_mails": 4634,
-      "mail_per_cart": 35.6461538461538,
-      "mail_per_trip": 579.25,
+      "mail_per_cart": 32.1805555555556,
+      "mail_per_trip": 514.888888888889,
       "contribution": {
-        "trip_outsource": "0%",
-        "trip_post": "100%",
-        "cart_outsource": "0%",
-        "cart_post": "100%"
+        "trip_outsource": "11%",
+        "trip_post": "89%",
+        "cart_outsource": "10%",
+        "cart_post": "90%"
       }
     },
     "warehouse_summary": {
       "yk_warehouse": { "trips": 2, "carts": 16 },
-      "xs_warehouse": { "trips": 8, "carts": 130 },
+      "xs_warehouse": { "trips": 9, "carts": 144 },
       "outsource": {
-        "total": { "trips": 0, "carts": 0 },
+        "total": { "trips": 1, "carts": 14 },
         "stage1": { "trips": 0, "carts": 0 },
         "stage2": { "trips": 0, "carts": 0 },
-        "stage3": { "trips": 0, "carts": 0 }
+        "stage3": { "trips": 1, "carts": 14 }
       },
       "post": {
         "total": { "trips": 8, "carts": 130 },
@@ -10211,6 +10211,23 @@
             "interval_mins": 51
           }
         ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第7車",
+            "call_time": "02:49",
+            "driver": "黃憲章(快)",
+            "return_time": "03:29",
+            "arrival_time": "04:10",
+            "transit_duration_mins": 41,
+            "loaded_carts": 13,
+            "trip_no": "快捷第3車",
+            "interval_mins": null
+          }
+        ]
       }
     ]
   },
@@ -10623,6 +10640,156 @@
             "loaded_carts": 6,
             "trip_no": "運輸第5車",
             "interval_mins": 28
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "seq": "069",
+    "date": "2026-08-18",
+    "weekday": "週二",
+    "summary": {
+      "total_duration": "7小時24分鐘",
+      "total_trips": 8,
+      "total_carts": 124,
+      "grand_total_trips": 10,
+      "grand_total_carts": 144,
+      "total_mails": 5426,
+      "mail_per_cart": 43.758064516129,
+      "mail_per_trip": 678.25,
+      "contribution": {
+        "trip_outsource": "13%",
+        "trip_post": "88%",
+        "cart_outsource": "8%",
+        "cart_post": "92%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 20 },
+      "xs_warehouse": { "trips": 8, "carts": 124 },
+      "outsource": {
+        "total": { "trips": 1, "carts": 10 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 1, "carts": 10 }
+      },
+      "post": {
+        "total": { "trips": 7, "carts": 114 },
+        "stage1": { "trips": 4, "carts": 69 },
+        "stage2": { "trips": 2, "carts": 27 },
+        "stage3": { "trips": 1, "carts": 18 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:16",
+            "driver": "黃憲章(快)",
+            "return_time": "22:02",
+            "arrival_time": "22:54",
+            "transit_duration_mins": 52.0000000000001,
+            "loaded_carts": 18,
+            "trip_no": "快捷第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:01",
+            "driver": "陳柏林(128)",
+            "return_time": "22:50",
+            "arrival_time": "23:35",
+            "transit_duration_mins": 45,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": 45
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "22:31",
+            "driver": "莊世民(夜1)",
+            "return_time": "23:06",
+            "arrival_time": "23:53",
+            "transit_duration_mins": 47,
+            "loaded_carts": 18,
+            "trip_no": "運輸第2車",
+            "interval_mins": 30
+          },
+          {
+            "car_name": "第1階段第4車",
+            "display_name": "總車次第4車",
+            "call_time": "23:03",
+            "driver": "黃憲章(快)",
+            "return_time": "23:57",
+            "arrival_time": "00:45",
+            "transit_duration_mins": 48,
+            "loaded_carts": 15,
+            "trip_no": "快捷第2車",
+            "interval_mins": 32
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第5車",
+            "call_time": "00:45",
+            "driver": "黃憲章(快)",
+            "return_time": "01:39",
+            "arrival_time": "02:40",
+            "transit_duration_mins": 61,
+            "loaded_carts": 9,
+            "trip_no": "快捷第3車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第2階段第2車",
+            "display_name": "總車次第6車",
+            "call_time": "01:35",
+            "driver": "金哲駿(夜3)",
+            "return_time": "02:15",
+            "arrival_time": "03:05",
+            "transit_duration_mins": 50,
+            "loaded_carts": 18,
+            "trip_no": "運輸第3車",
+            "interval_mins": 50
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第7車",
+            "call_time": "02:20",
+            "driver": "陳國乾(立勤)",
+            "return_time": "03:00",
+            "arrival_time": "03:40",
+            "transit_duration_mins": 40,
+            "loaded_carts": 10,
+            "trip_no": "外包第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第8車",
+            "call_time": "02:53",
+            "driver": "黃憲章(快)",
+            "return_time": "03:58",
+            "arrival_time": "04:40",
+            "transit_duration_mins": 42,
+            "loaded_carts": 18,
+            "trip_no": "快捷第4車",
+            "interval_mins": 33
           }
         ]
       }
