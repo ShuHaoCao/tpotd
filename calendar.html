@@ -1758,6 +1758,159 @@
           padding-inline: 8px;
         }
       }
+
+      /* ===== 休字獨立浮動定位：完全脫離任務標籤排版 ===== */
+      .empty-text {
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 20px;
+        margin: 0;
+        min-height: 0;
+        height: auto;
+        display: block;
+        padding: 0;
+        font-size: clamp(2.75rem, 3.7vw, 4.35rem);
+        line-height: 1;
+        text-align: center;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* 平板仍固定在每張日期卡相同的底部基準線 */
+      @media (max-width: 1199px) {
+        .empty-text {
+          left: 14px;
+          right: 14px;
+          bottom: 18px;
+          font-size: clamp(2.6rem, 5.4vw, 3.9rem);
+        }
+      }
+
+      /* 手機卡片原本高度會依內容縮放，因此休假日另外保留固定高度 */
+      @media (max-width: 768px) {
+        .day-card:has(.empty-text) {
+          min-height: 122px;
+        }
+
+        .empty-text {
+          left: 12px;
+          right: 12px;
+          bottom: 12px;
+          font-size: clamp(2.35rem, 8vw, 3.25rem);
+        }
+      }
+
+      /* ===== 版面修正：節氣置於左側農曆下方；任務固定右上垂直排列 ===== */
+      .solar-under-lunar {
+        margin-top: 3px;
+        align-self: flex-start;
+      }
+      .day-card {
+        padding-top: 14px;
+      }
+      .task-row {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: auto;
+        max-width: 58%;
+        margin: 0;
+        z-index: 18;
+        justify-content: flex-end;
+      }
+      .task-row .task-labels {
+        align-items: flex-end;
+        gap: 5px;
+      }
+      .task-row .task-label {
+        max-width: 100%;
+      }
+      .date-meta {
+        margin-left: auto;
+        padding-right: 0;
+        max-width: 42%;
+      }
+      @media (max-width: 768px) {
+        .task-row {
+          top: 10px;
+          right: 10px;
+          max-width: 55%;
+        }
+        .task-row .task-labels {
+          align-items: flex-end;
+        }
+        .solar-under-lunar {
+          margin-top: 2px;
+        }
+      }
+      @media (max-width: 430px) {
+        .task-row {
+          max-width: 52%;
+        }
+      }
+
+      /* ===== 本次修正：農曆日期縮小 + 任務標籤依序配色 ===== */
+      .lunar-under-date {
+        font-size: clamp(0.46rem, 0.5vw, 0.54rem) !important;
+        font-weight: 700;
+        letter-spacing: -0.055em;
+        line-height: 1.08;
+        white-space: nowrap;
+        transform: scaleX(0.9);
+        transform-origin: left top;
+      }
+
+      @media (min-width: 769px) and (max-width: 1199px) {
+        .lunar-under-date {
+          font-size: 0.49rem !important;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .lunar-under-date {
+          font-size: 0.47rem !important;
+          letter-spacing: -0.065em;
+          transform: scaleX(0.88);
+        }
+      }
+
+      /* 同一天中的任務依出現順序循環：綠、藍、紅、黃、白 */
+      .task-row .task-label:nth-child(5n + 1) {
+        --task-hue: 142;
+      }
+      .task-row .task-label:nth-child(5n + 2) {
+        --task-hue: 205;
+      }
+      .task-row .task-label:nth-child(5n + 3) {
+        --task-hue: 354;
+      }
+      .task-row .task-label:nth-child(5n + 4) {
+        --task-hue: 48;
+      }
+      .task-row .task-label:nth-child(5n + 5) {
+        --task-hue: 210;
+        color: #f8fafc;
+        border-color: rgba(248, 250, 252, 0.66);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.2),
+            rgba(255, 255, 255, 0.055)
+          ),
+          rgba(226, 232, 240, 0.13);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.28),
+          0 3px 10px rgba(226, 232, 240, 0.1);
+      }
+      .task-row .task-label:nth-child(5n + 5):hover,
+      .task-row .task-label:nth-child(5n + 5):focus-visible {
+        border-color: rgba(255, 255, 255, 0.92);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.36),
+          0 6px 18px rgba(226, 232, 240, 0.17),
+          0 0 16px rgba(255, 255, 255, 0.1);
+      }
     </style>
   </head>
   <body>
@@ -2562,13 +2715,13 @@
                 <div class="date-number-stack">
                   <div class="date-number">${d}</div>
                   <span class="lunar-date lunar-under-date">${escapeHtml(getLunarDate(dateObj))}</span>
+                  ${getSolarTerm(year, month, d) ? `<span class="solar-term solar-under-lunar">${escapeHtml(getSolarTerm(year, month, d))}</span>` : ""}
                 </div>
                 <span class="day-info-line">
                   <span class="responsive-weekday ${weekDay === 0 || weekDay === 6 ? "weekend" : ""}">${["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][weekDay]}</span>
                 </span>
               </div>
               <div class="date-meta">
-                ${getSolarTerm(year, month, d) ? `<span class="solar-term">${escapeHtml(getSolarTerm(year, month, d))}</span>` : ""}
                 ${holidayName ? `<div class="holiday-tag">${escapeHtml(holidayName)}</div>` : ""}
               </div>
             </div>
