@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-08-19T22:41:21.174Z",
+  "updatedAt": "2026-08-19T22:49:02.870Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -2959,7 +2959,7 @@
       "weekday": "週三",
       "unit": "臺南郵局運輸股",
       "title": "MOMO進出口統計表",
-      "generatedAt": "2026-08-19T22:41:21.174Z",
+      "generatedAt": "2026-08-19T22:49:02.870Z",
       "inbound": {
         "stages": [
           {
@@ -3161,9 +3161,9 @@
         "totalCarts": 181,
         "momoTotal": 141,
         "packageTotal": 40,
-        "mailCount": null,
-        "averagePerCart": 0,
-        "averagePerTrip": 0,
+        "mailCount": 4826,
+        "averagePerCart": 26.662983425414364,
+        "averagePerTrip": 402.1666666666667,
         "outboundInboundRatio": 1.2836879432624113,
         "note": ""
       },
