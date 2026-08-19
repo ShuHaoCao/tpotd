@@ -1411,6 +1411,260 @@
         }
       }
     </style>
+
+    <style>
+      /* === 車次歷史時間分佈分析｜依 momo_dispatch_data 結構重設 === */
+      .dist-modal-card {
+        max-width: 1380px !important;
+      }
+      .dist-filter-bar {
+        display: grid;
+        grid-template-columns:
+          minmax(220px, 1.3fr) minmax(170px, 0.8fr) minmax(340px, 1.7fr)
+          minmax(145px, 0.65fr);
+        gap: 12px;
+        padding: 16px;
+      }
+      .dist-control {
+        min-width: 0;
+      }
+      .dist-label {
+        display: block;
+        margin-bottom: 6px;
+        color: #7dd3fc;
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 0.05em;
+      }
+      .dist-input,
+      .dist-select {
+        width: 100%;
+        min-height: 42px;
+        padding: 9px 12px;
+        border-radius: 10px;
+        color: #f8fafc !important;
+        background: rgba(15, 23, 42, 0.78) !important;
+        border: 1px solid rgba(56, 189, 248, 0.35) !important;
+        outline: none;
+        font-weight: 800;
+      }
+      .dist-input:focus,
+      .dist-select:focus {
+        border-color: rgba(94, 234, 212, 0.85) !important;
+        box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.11);
+      }
+      .dist-stage-switch {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .dist-stage-btn {
+        flex: 1 1 auto;
+        min-height: 42px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        background: rgba(15, 23, 42, 0.6);
+        color: #cbd5e1;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+      .dist-stage-btn.active {
+        color: #00111a !important;
+        background: linear-gradient(135deg, #22d3ee, #34d399) !important;
+        box-shadow: 0 0 16px rgba(34, 211, 238, 0.22);
+      }
+      .dist-data-strip {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 0 16px 12px;
+      }
+      .dist-data-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        color: #cbd5e1;
+        background: rgba(15, 23, 42, 0.66);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        font-size: 10px;
+        font-weight: 900;
+      }
+      .dist-data-chip b {
+        color: #5eead4;
+      }
+      .dist-data-chip.warn {
+        border-color: rgba(251, 191, 36, 0.35);
+        color: #fde68a;
+        background: rgba(120, 53, 15, 0.16);
+      }
+      .dist-kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        padding: 0 16px 16px;
+      }
+      .dist-kpi {
+        position: relative;
+        overflow: hidden;
+        padding: 12px 13px;
+        min-height: 86px;
+        border-radius: 12px;
+        background: linear-gradient(
+          145deg,
+          rgba(15, 23, 42, 0.76),
+          rgba(8, 47, 73, 0.38)
+        );
+        border: 1px solid rgba(56, 189, 248, 0.22);
+      }
+      .dist-kpi::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 3px;
+        background: linear-gradient(#22d3ee, #34d399);
+        opacity: 0.85;
+      }
+      .dist-kpi .k {
+        color: #94a3b8;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+      .dist-kpi .v {
+        margin-top: 5px;
+        color: #f8fafc;
+        font-size: 16px;
+        font-weight: 950;
+        font-variant-numeric: tabular-nums;
+      }
+      .dist-kpi .s {
+        margin-top: 4px;
+        color: #94a3b8;
+        font-size: 10px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .dist-chart-title {
+        padding: 2px 18px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .dist-chart-wrap {
+        height: 410px;
+        padding: 8px 18px 20px;
+      }
+      .dist-legend-note {
+        color: #94a3b8;
+        font-size: 10px;
+        line-height: 1.5;
+      }
+      .dist-drill {
+        margin: 0 16px 18px;
+        border: 1px solid rgba(56, 189, 248, 0.24);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .dist-drill-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 12px 14px;
+        background: rgba(8, 47, 73, 0.58);
+        color: #e0f2fe;
+        font-size: 12px;
+        font-weight: 900;
+      }
+      .dist-drill-empty {
+        padding: 22px;
+        color: #94a3b8;
+        text-align: center;
+        font-size: 12px;
+      }
+      .dist-table-wrap {
+        max-height: 310px;
+        overflow: auto;
+      }
+      .dist-table {
+        width: 100%;
+        min-width: 930px;
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        font-size: 11px;
+      }
+      .dist-table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        padding: 9px 8px;
+        color: #bae6fd !important;
+        background: #082f49 !important;
+        border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+        white-space: nowrap;
+      }
+      .dist-table td {
+        padding: 9px 8px;
+        background: rgba(3, 18, 32, 0.72) !important;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+        white-space: nowrap;
+      }
+      .dist-table td.left {
+        text-align: left;
+      }
+      .dist-status {
+        display: inline-flex;
+        width: max-content;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: rgba(52, 211, 153, 0.14);
+        color: #6ee7b7;
+        border: 1px solid rgba(52, 211, 153, 0.28);
+        font-size: 10px;
+        font-weight: 900;
+      }
+      .dist-status.warn {
+        background: rgba(251, 191, 36, 0.12);
+        color: #fde68a;
+        border-color: rgba(251, 191, 36, 0.3);
+      }
+      @media (max-width: 1080px) {
+        .dist-filter-bar {
+          grid-template-columns: 1fr 1fr;
+        }
+        .dist-kpis {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 700px) {
+        .dist-filter-bar {
+          grid-template-columns: 1fr;
+        }
+        .dist-kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .dist-chart-wrap {
+          height: 330px;
+          padding-left: 7px;
+          padding-right: 7px;
+        }
+        .dist-chart-title {
+          align-items: flex-start;
+        }
+      }
+      @media (max-width: 460px) {
+        .dist-kpis {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
   </head>
   <body
     class="bg-slate-100 text-slate-800 font-sans antialiased selection:bg-emerald-500 selection:text-white"
@@ -1645,40 +1899,41 @@
         <div
           class="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-slate-200/80 flex items-center justify-between"
         >
-          <div>
+          <div class="min-w-0">
             <p
               class="text-xs font-semibold text-slate-400 uppercase tracking-wider"
             >
-              貢獻度
+              車次時間分佈
             </p>
             <div
               class="text-xs font-bold text-slate-700 mt-1.5 flex items-center gap-1"
             >
               <span
-                class="inline-block w-2 h-2 rounded-full bg-purple-500"
+                class="inline-block w-2 h-2 rounded-full bg-cyan-400"
               ></span>
-              車次：外包 {{ currentData.summary.contribution.trip_outsource }} /
-              郵局 {{ currentData.summary.contribution.trip_post }}
+              歷史 {{ historyOverview.days }} 天・{{ historyOverview.records }}
+              趟
             </div>
             <div
               class="text-xs font-bold text-slate-600 mt-1 flex items-center gap-1"
             >
               <span
-                class="inline-block w-2 h-2 rounded-full bg-blue-500"
+                class="inline-block w-2 h-2 rounded-full bg-emerald-400"
               ></span>
-              籃車：外包 {{ currentData.summary.contribution.cart_outsource }} /
-              郵局 {{ currentData.summary.contribution.cart_post }}
+              {{ historyOverview.tripTypes }} 種車次可比較
             </div>
           </div>
           <div class="flex flex-col items-end gap-2">
             <div class="p-3 bg-purple-50 text-purple-600 rounded-xl">
-              <span class="material-icons text-xl sm:text-2xl">pie_chart</span>
+              <span class="material-icons text-xl sm:text-2xl"
+                >query_stats</span
+              >
             </div>
             <button
-              @click="openTrendModal('contribution')"
+              @click="openDistributionModal"
               class="text-[11px] text-purple-700 hover:text-purple-900 font-bold flex items-center gap-0.5 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100 transition-all"
             >
-              <span class="material-icons text-xs">trending_up</span>趨勢
+              <span class="material-icons text-xs">bar_chart</span>歷史分析
             </button>
           </div>
         </div>
@@ -2214,6 +2469,232 @@
       </div>
 
       <div
+        v-if="distributionModal.show"
+        class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 animate-fade-in"
+        @click.self="closeDistributionModal"
+      >
+        <div
+          class="dist-modal-card bg-white rounded-2xl shadow-2xl border border-slate-200 w-full overflow-hidden flex flex-col max-h-[95vh]"
+        >
+          <div
+            class="bg-slate-900 text-white p-4 flex justify-between items-center gap-3"
+          >
+            <div>
+              <div
+                class="font-black flex items-center gap-2 text-sm sm:text-base"
+              >
+                <span class="material-icons text-cyan-300">query_stats</span
+                >車次歷史時間分佈分析
+              </div>
+              <div class="text-[11px] text-slate-400 mt-1">
+                依資料檔案分析；跨午夜依大夜班作業日連續排序
+              </div>
+            </div>
+            <button
+              @click="closeDistributionModal"
+              class="text-slate-400 hover:text-white"
+            >
+              <span class="material-icons">close</span>
+            </button>
+          </div>
+
+          <div class="overflow-y-auto">
+            <div class="dist-filter-bar">
+              <div class="dist-control">
+                <label class="dist-label">車次（trip_no）</label>
+                <input
+                  class="dist-input"
+                  list="distributionTripOptions"
+                  v-model="distributionTrip"
+                  @change="refreshDistribution"
+                  placeholder="例如：郵局第1車、明嘉第3車"
+                />
+                <datalist id="distributionTripOptions">
+                  <option
+                    v-for="opt in distributionTripOptions"
+                    :key="opt.value"
+                    :value="opt.value"
+                  >
+                    {{ opt.label }}
+                  </option>
+                </datalist>
+              </div>
+              <div class="dist-control">
+                <label class="dist-label">作業階段（stage_name）</label>
+                <select
+                  class="dist-select"
+                  v-model="distributionOperationStage"
+                  @change="refreshDistribution"
+                >
+                  <option value="all">全部階段</option>
+                  <option value="第1階段">第1階段</option>
+                  <option value="第2階段">第2階段</option>
+                  <option value="第3階段">第3階段</option>
+                </select>
+              </div>
+              <div class="dist-control">
+                <label class="dist-label">時間事件</label>
+                <div class="dist-stage-switch">
+                  <button
+                    v-for="item in distributionStageOptions"
+                    :key="item.value"
+                    type="button"
+                    :class="['dist-stage-btn',{active:distributionStage===item.value}]"
+                    @click="setDistributionStage(item.value)"
+                  >
+                    {{ item.label }}
+                  </button>
+                </div>
+              </div>
+              <div class="dist-control">
+                <label class="dist-label">時間粒度</label>
+                <select
+                  class="dist-select"
+                  v-model.number="distributionBucket"
+                  @change="refreshDistribution"
+                >
+                  <option :value="15">15 分鐘</option>
+                  <option :value="30">30 分鐘</option>
+                  <option :value="60">1 小時</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="dist-data-strip">
+              <span class="dist-data-chip"
+                >資料期間 <b>{{ distributionSummary.dateRange }}</b></span
+              >
+              <span class="dist-data-chip"
+                >有效樣本 <b>{{ distributionSummary.trips }}</b> 趟</span
+              >
+              <span class="dist-data-chip"
+                >平均裝載 <b>{{ distributionSummary.avgCarts }}</b> 台</span
+              >
+              <span class="dist-data-chip"
+                >平均回程行車 <b>{{ distributionSummary.avgTransit }}</b></span
+              >
+              <span
+                v-if="distributionSummary.missingDriver"
+                class="dist-data-chip warn"
+                >司機缺值 {{ distributionSummary.missingDriver }} 筆</span
+              >
+              <span
+                v-if="distributionSummary.missingTime"
+                class="dist-data-chip warn"
+                >時間缺值 {{ distributionSummary.missingTime }} 筆</span
+              >
+            </div>
+
+            <div class="dist-kpis">
+              <div class="dist-kpi">
+                <div class="k">常態發車區間</div>
+                <div class="v">{{ distributionSummary.normalDepart }}</div>
+                <div class="s">
+                  該區間占發車樣本 {{ distributionSummary.normalDepartPct }}
+                </div>
+              </div>
+              <div class="dist-kpi">
+                <div class="k">平均發車</div>
+                <div class="v">{{ distributionSummary.avgDepart }}</div>
+                <div class="s">call_time</div>
+              </div>
+              <div class="dist-kpi">
+                <div class="k">平均倉儲駛離</div>
+                <div class="v">{{ distributionSummary.avgWarehouse }}</div>
+                <div class="s">return_time</div>
+              </div>
+              <div class="dist-kpi">
+                <div class="k">平均返港／返局</div>
+                <div class="v">{{ distributionSummary.avgReturn }}</div>
+                <div class="s">arrival_time</div>
+              </div>
+            </div>
+
+            <div class="dist-chart-title">
+              <div class="font-black text-sm flex items-center gap-2">
+                <span class="material-icons text-blue-400">bar_chart</span
+                >累積次數分佈長條圖
+              </div>
+              <div class="dist-legend-note">
+                藍＝發車｜橙＝倉儲駛離／回程發車｜綠＝返港／返局。
+              </div>
+            </div>
+            <div class="dist-chart-wrap">
+              <canvas id="distributionChart"></canvas>
+            </div>
+
+            <div class="dist-drill">
+              <div class="dist-drill-head">
+                <span>區間明細下鑽</span
+                ><span v-if="distributionDrill.label"
+                  >{{ distributionDrill.stageLabel }}｜{{
+                  distributionDrill.label }}｜共 {{
+                  distributionDrill.rows.length }} 筆</span
+                >
+              </div>
+              <div
+                v-if="!distributionDrill.rows.length"
+                class="dist-drill-empty"
+              >
+                點擊上方柱狀圖，可追查該區間的日期、作業階段、司機、三個時間點、回程行車時間與裝載籃車數。
+              </div>
+              <div v-else class="dist-table-wrap">
+                <table class="dist-table">
+                  <thead>
+                    <tr>
+                      <th>日期</th>
+                      <th>星期</th>
+                      <th>作業階段</th>
+                      <th>車次</th>
+                      <th>司機</th>
+                      <th>發車</th>
+                      <th>倉儲駛離</th>
+                      <th>返港</th>
+                      <th>回程行車</th>
+                      <th>籃車</th>
+                      <th>狀態</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(row,idx) in distributionDrill.rows"
+                      :key="row.date+'-'+row.trip_no+'-'+idx"
+                    >
+                      <td class="font-mono font-bold">{{ row.date }}</td>
+                      <td>{{ row.weekday || '—' }}</td>
+                      <td>{{ row.stage_name }}</td>
+                      <td class="left font-bold">{{ row.trip_no }}</td>
+                      <td class="left">{{ row.driver || '未填' }}</td>
+                      <td class="font-mono text-blue-300">
+                        {{ row.call_time || '—' }}
+                      </td>
+                      <td class="font-mono text-orange-300">
+                        {{ row.return_time || '—' }}
+                      </td>
+                      <td class="font-mono text-emerald-300">
+                        {{ row.arrival_time || '—' }}
+                      </td>
+                      <td>
+                        {{ row.transit_duration_mins === null ? '—' :
+                        Math.round(row.transit_duration_mins) + ' 分' }}
+                      </td>
+                      <td>{{ row.loaded_carts ?? '—' }}</td>
+                      <td>
+                        <span
+                          :class="['dist-status',{warn:row.status!=='正常'}]"
+                          >{{ row.status }}</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
         v-if="trendModal.show"
         class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-6 transition-all animate-fade-in"
         @click.self="closeTrendModal"
@@ -2490,6 +2971,370 @@
             specialDateColors: {},
           });
 
+          const distributionModal = ref({ show: false });
+          const distributionTrip = ref("");
+          const distributionOperationStage = ref("all");
+          const distributionStage = ref("all");
+          const distributionBucket = ref(30);
+          const distributionDrill = ref({
+            label: "",
+            stageLabel: "",
+            rows: [],
+          });
+          let distributionChartInstance = null;
+
+          const distributionStageOptions = [
+            { value: "all", label: "全部（對比）" },
+            { value: "depart", label: "發車" },
+            { value: "warehouse", label: "倉儲駛離" },
+            { value: "return", label: "返港／返局" },
+          ];
+
+          const flattenHistoryCars = () => {
+            const rows = [];
+            (mockData.value || []).forEach((day) => {
+              (day.stages || []).forEach((stage) => {
+                (stage.cars || []).forEach((car) =>
+                  rows.push({
+                    ...car,
+                    date: day.date,
+                    weekday: day.weekday || "",
+                    stage_name: stage.stage_name || "",
+                    tripKey: String(car.trip_no || "").trim(),
+                  }),
+                );
+              });
+            });
+            return rows;
+          };
+
+          const historyOverview = computed(() => {
+            const rows = flattenHistoryCars();
+            const tripTypes = new Set(
+              rows.map((r) => r.tripKey).filter(Boolean),
+            ).size;
+            return {
+              days: mockData.value.length,
+              records: rows.length,
+              tripTypes,
+            };
+          });
+
+          const distributionTripOptions = computed(() => {
+            const counts = new Map();
+            flattenHistoryCars().forEach((car) => {
+              if (!car.tripKey) return;
+              counts.set(car.tripKey, (counts.get(car.tripKey) || 0) + 1);
+            });
+            return [...counts.entries()]
+              .map(([value, count]) => ({
+                value,
+                count,
+                label: `${value}｜${count} 趟`,
+              }))
+              .sort(
+                (a, b) =>
+                  b.count - a.count ||
+                  a.value.localeCompare(b.value, "zh-Hant", { numeric: true }),
+              );
+          });
+
+          const selectedDistributionRows = computed(() =>
+            flattenHistoryCars().filter((car) => {
+              if (car.tripKey !== distributionTrip.value) return false;
+              if (
+                distributionOperationStage.value !== "all" &&
+                car.stage_name !== distributionOperationStage.value
+              )
+                return false;
+              return true;
+            }),
+          );
+
+          const clockToMinutes = (value) => {
+            const m = String(value || "").match(/^(\d{1,2}):(\d{2})$/);
+            if (!m) return null;
+            const hh = Number(m[1]),
+              mm = Number(m[2]);
+            if (hh > 23 || mm > 59) return null;
+            return hh * 60 + mm;
+          };
+          const minutesToClock = (mins) => {
+            if (!Number.isFinite(mins)) return "—";
+            const n = ((Math.round(mins) % 1440) + 1440) % 1440;
+            return `${String(Math.floor(n / 60)).padStart(2, "0")}:${String(n % 60).padStart(2, "0")}`;
+          };
+          // 大夜班作業日：中午以前視為前一晚的延續，確保 23:30 → 00:30 不會被圖表拆開。
+          const toNightAxisMinute = (minute) =>
+            minute === null ? null : minute < 12 * 60 ? minute + 1440 : minute;
+          const distributionFieldMap = {
+            depart: "call_time",
+            warehouse: "return_time",
+            return: "arrival_time",
+          };
+          const distributionStageLabelMap = {
+            depart: "發車",
+            warehouse: "倉儲駛離",
+            return: "返港／返局",
+          };
+
+          const getDistributionAxisData = () => {
+            const stages = {};
+            Object.entries(distributionFieldMap).forEach(([key, field]) => {
+              stages[key] = selectedDistributionRows.value
+                .map((r) => {
+                  const raw = clockToMinutes(r[field]);
+                  return raw === null
+                    ? null
+                    : { row: r, raw, axis: toNightAxisMinute(raw) };
+                })
+                .filter(Boolean);
+            });
+            return stages;
+          };
+
+          const getBucketMeta = () => {
+            const stages = getDistributionAxisData();
+            const vals = Object.values(stages)
+              .flat()
+              .map((x) => x.axis);
+            const size = Number(distributionBucket.value) || 30;
+            if (!vals.length) return { starts: [], labels: [], size };
+            // 以實際資料帶為主，但左右各保留一個 bucket，圖形較易讀。
+            let min = Math.floor(Math.min(...vals) / size) * size - size;
+            let max = Math.floor(Math.max(...vals) / size) * size + size;
+            min = Math.max(12 * 60, min);
+            max = Math.min(36 * 60, max);
+            const starts = [];
+            for (let x = min; x <= max; x += size) starts.push(x);
+            return {
+              starts,
+              labels: starts.map(
+                (x) => `${minutesToClock(x)}–${minutesToClock(x + size)}`,
+              ),
+              size,
+            };
+          };
+
+          const averageStageTime = (stageKey) => {
+            const arr = getDistributionAxisData()[stageKey] || [];
+            if (!arr.length) return "—";
+            return minutesToClock(
+              arr.reduce((sum, x) => sum + x.axis, 0) / arr.length,
+            );
+          };
+          const avgNumber = (rows, getter) => {
+            const vals = rows.map(getter).filter((v) => Number.isFinite(v));
+            return vals.length
+              ? vals.reduce((a, b) => a + b, 0) / vals.length
+              : null;
+          };
+
+          const distributionSummary = computed(() => {
+            const rows = selectedDistributionRows.value;
+            const meta = getBucketMeta();
+            const dep = getDistributionAxisData().depart || [];
+            let normalDepart = "—",
+              normalDepartPct = "0%";
+            if (dep.length && meta.starts.length) {
+              const counts = meta.starts.map(
+                (st) =>
+                  dep.filter((x) => x.axis >= st && x.axis < st + meta.size)
+                    .length,
+              );
+              const maxCount = Math.max(...counts);
+              const idx = counts.indexOf(maxCount);
+              normalDepart = meta.labels[idx] || "—";
+              normalDepartPct = `${((maxCount / dep.length) * 100).toFixed(1)}%`;
+            }
+            const dates = rows
+              .map((r) => r.date)
+              .filter(Boolean)
+              .sort();
+            const transit = avgNumber(rows, (r) =>
+              Number.isFinite(Number(r.transit_duration_mins))
+                ? Number(r.transit_duration_mins)
+                : NaN,
+            );
+            const carts = avgNumber(rows, (r) =>
+              Number.isFinite(Number(r.loaded_carts))
+                ? Number(r.loaded_carts)
+                : NaN,
+            );
+            const missingDriver = rows.filter(
+              (r) => !String(r.driver || "").trim(),
+            ).length;
+            const missingTime = rows.filter(
+              (r) => !r.call_time || !r.return_time || !r.arrival_time,
+            ).length;
+            return {
+              trips: rows.length,
+              dateRange: dates.length
+                ? `${dates[0]} ～ ${dates[dates.length - 1]}`
+                : "—",
+              normalDepart,
+              normalDepartPct,
+              avgDepart: averageStageTime("depart"),
+              avgWarehouse: averageStageTime("warehouse"),
+              avgReturn: averageStageTime("return"),
+              avgTransit: transit === null ? "—" : `${Math.round(transit)} 分`,
+              avgCarts: carts === null ? "—" : carts.toFixed(1),
+              missingDriver,
+              missingTime,
+            };
+          });
+
+          const renderDistributionChart = () => {
+            const canvas = document.getElementById("distributionChart");
+            if (!canvas || typeof Chart === "undefined") return;
+            if (distributionChartInstance) distributionChartInstance.destroy();
+            const meta = getBucketMeta();
+            const stages = getDistributionAxisData();
+            const colors = {
+              depart: ["rgba(59,130,246,.78)", "rgb(96,165,250)"],
+              warehouse: ["rgba(249,115,22,.78)", "rgb(251,146,60)"],
+              return: ["rgba(34,197,94,.78)", "rgb(74,222,128)"],
+            };
+            const keys =
+              distributionStage.value === "all"
+                ? ["depart", "warehouse", "return"]
+                : [distributionStage.value];
+            const datasets = keys.map((key) => ({
+              label: distributionStageLabelMap[key],
+              stageKey: key,
+              data: meta.starts.map(
+                (st) =>
+                  (stages[key] || []).filter(
+                    (x) => x.axis >= st && x.axis < st + meta.size,
+                  ).length,
+              ),
+              backgroundColor: colors[key][0],
+              borderColor: colors[key][1],
+              borderWidth: 1,
+              borderRadius: 6,
+              maxBarThickness: 32,
+            }));
+            distributionChartInstance = new Chart(canvas.getContext("2d"), {
+              type: "bar",
+              data: { labels: meta.labels, datasets },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: "nearest", intersect: true },
+                onClick: (event, elements) => {
+                  if (!elements.length) return;
+                  const el = elements[0],
+                    ds =
+                      distributionChartInstance.data.datasets[el.datasetIndex],
+                    start = meta.starts[el.index],
+                    key = ds.stageKey;
+                  const detail = (stages[key] || [])
+                    .filter(
+                      (x) => x.axis >= start && x.axis < start + meta.size,
+                    )
+                    .map((x) => ({
+                      date: x.row.date,
+                      weekday: x.row.weekday,
+                      stage_name: x.row.stage_name,
+                      trip_no: x.row.trip_no,
+                      driver: x.row.driver || "",
+                      call_time: x.row.call_time || "",
+                      return_time: x.row.return_time || "",
+                      arrival_time: x.row.arrival_time || "",
+                      transit_duration_mins: Number.isFinite(
+                        Number(x.row.transit_duration_mins),
+                      )
+                        ? Number(x.row.transit_duration_mins)
+                        : null,
+                      loaded_carts: x.row.loaded_carts,
+                      status:
+                        !x.row.driver ||
+                        !x.row.call_time ||
+                        !x.row.return_time ||
+                        !x.row.arrival_time
+                          ? "資料缺值"
+                          : "正常",
+                    }))
+                    .sort((a, b) => a.date.localeCompare(b.date));
+                  distributionDrill.value = {
+                    label: meta.labels[el.index] || "",
+                    stageLabel: distributionStageLabelMap[key],
+                    rows: detail,
+                  };
+                },
+                plugins: {
+                  legend: {
+                    labels: { color: "#e2e8f0", font: { weight: "bold" } },
+                  },
+                  tooltip: {
+                    callbacks: {
+                      label: (ctx) => {
+                        const key = ctx.dataset.stageKey;
+                        const total = (stages[key] || []).length;
+                        const pct = total
+                          ? ((ctx.raw / total) * 100).toFixed(1)
+                          : "0.0";
+                        return `${ctx.dataset.label}：${ctx.raw} 次（${pct}%）`;
+                      },
+                    },
+                  },
+                },
+                scales: {
+                  x: {
+                    stacked: false,
+                    ticks: {
+                      color: "#cbd5e1",
+                      maxRotation: 0,
+                      autoSkip: true,
+                      maxTicksLimit: 18,
+                      font: { size: 10, weight: "bold" },
+                    },
+                    grid: { display: false },
+                  },
+                  y: {
+                    beginAtZero: true,
+                    ticks: { color: "#cbd5e1", precision: 0, stepSize: 1 },
+                    title: {
+                      display: true,
+                      text: "歷史累積次數",
+                      color: "#cbd5e1",
+                    },
+                    grid: { color: "rgba(148,163,184,.16)" },
+                  },
+                },
+              },
+            });
+          };
+          const refreshDistribution = () => {
+            distributionDrill.value = { label: "", stageLabel: "", rows: [] };
+            nextTick(renderDistributionChart);
+          };
+          const setDistributionStage = (stage) => {
+            distributionStage.value = stage;
+            refreshDistribution();
+          };
+          const openDistributionModal = () => {
+            const opts = distributionTripOptions.value;
+            if (
+              !distributionTrip.value ||
+              !opts.some((o) => o.value === distributionTrip.value)
+            )
+              distributionTrip.value = opts[0]?.value || "";
+            distributionModal.value.show = true;
+            distributionOperationStage.value = "all";
+            distributionStage.value = "all";
+            distributionBucket.value = 30;
+            distributionDrill.value = { label: "", stageLabel: "", rows: [] };
+            nextTick(renderDistributionChart);
+          };
+          const closeDistributionModal = () => {
+            if (distributionChartInstance) {
+              distributionChartInstance.destroy();
+              distributionChartInstance = null;
+            }
+            distributionModal.value.show = false;
+          };
+
           let chartInstance = null;
           let trendScrollerCleanup = null;
 
@@ -2574,22 +3419,41 @@
 
           const ganttHours = [20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-          // 讀取本地 JSON
-          fetch("momo_dispatch_data.json")
-            .then((response) => response.json())
-            .then((data) => {
-              mockData.value = Array.isArray(data)
-                ? [...data].sort((a, b) =>
-                    String(a.date).localeCompare(String(b.date)),
-                  )
-                : [];
-              currentIndex.value = Math.max(mockData.value.length - 1, 0);
-              syncPickerToCurrentDate();
-              nextTick(() => renderBucketCharts());
-            })
-            .catch((err) => {
-              console.error("加載真實 JSON 失敗，請確認檔案位置", err);
-            });
+          // 讀取本地 JSON：正式部署仍優先 momo_dispatch_data.json；亦支援本次提供的檔名。
+          const loadDispatchJson = async () => {
+            const candidates = [
+              "momo_dispatch_data.json",
+              "momo_dispatch_data(5).json",
+            ];
+            let lastError = null;
+            for (const file of candidates) {
+              try {
+                const response = await fetch(file, { cache: "no-store" });
+                if (!response.ok)
+                  throw new Error(`${file}: HTTP ${response.status}`);
+                const data = await response.json();
+                if (!Array.isArray(data))
+                  throw new Error(`${file}: JSON 根節點不是陣列`);
+                mockData.value = [...data].sort((a, b) =>
+                  String(a.date).localeCompare(String(b.date)),
+                );
+                currentIndex.value = Math.max(mockData.value.length - 1, 0);
+                syncPickerToCurrentDate();
+                nextTick(() => {
+                  renderBucketCharts();
+                  if (distributionModal.value.show) renderDistributionChart();
+                });
+                return;
+              } catch (err) {
+                lastError = err;
+              }
+            }
+            console.error(
+              "加載派車 JSON 失敗，請確認 momo_dispatch_data.json 與 HTML 位於同一資料夾",
+              lastError,
+            );
+          };
+          loadDispatchJson();
 
           const currentData = computed(() => {
             return (
@@ -3344,7 +4208,6 @@
               trips: "每日車次與籃車數",
               duration: "每日運載作業時間",
               mails: "每日郵件量與車輛／籃車裝載量",
-              contribution: "每日外包車與郵車運載貢獻比",
             };
             trendModal.value.title = titles[type] || "歷史趨勢分析";
             trendModal.value.type = type;
@@ -3750,41 +4613,6 @@
                   },
                 },
               };
-            } else if (type === "contribution") {
-              chartConfig = {
-                type: "bar",
-                data: {
-                  labels: labels,
-                  datasets: [
-                    {
-                      label: "郵局車次比例 (%)",
-                      data: raw.map((d) =>
-                        parseFloat(d.summary.contribution.trip_post),
-                      ),
-                      backgroundColor: "rgba(59, 130, 246, 0.85)",
-                    },
-                    {
-                      label: "外包車次比例 (%)",
-                      data: raw.map((d) =>
-                        parseFloat(d.summary.contribution.trip_outsource),
-                      ),
-                      backgroundColor: "rgba(168, 85, 247, 0.85)",
-                    },
-                  ],
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  scales: {
-                    x: { ...xAxisConfig, stacked: true },
-                    y: {
-                      stacked: true,
-                      max: 100,
-                      title: { display: true, text: "佔比 (%)" },
-                    },
-                  },
-                },
-              };
             }
 
             chartInstance = new Chart(ctx, chartConfig);
@@ -3979,6 +4807,20 @@
             ganttHours,
             trendModal,
             trendStatistics,
+            distributionModal,
+            distributionTrip,
+            distributionTripOptions,
+            distributionOperationStage,
+            distributionStage,
+            distributionStageOptions,
+            distributionBucket,
+            distributionSummary,
+            distributionDrill,
+            historyOverview,
+            openDistributionModal,
+            closeDistributionModal,
+            refreshDistribution,
+            setDistributionStage,
             openTrendModal,
             closeTrendModal,
             changeTimeScale,
