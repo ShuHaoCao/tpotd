@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0c2340" />
+    <title>值班次數查詢</title>
+    <style>
+      :root {
+        --navy: #0c2340;
+        --navy2: #17365f;
+        --blue: #1769d2;
+        --cyan: #4c9be8;
+        --green: #16866f;
+        --bg: #f3f6fa;
+        --surface: #ffffff;
+        --surface2: #f8fafc;
+        --text: #172133;
+        --muted: #6d788b;
+        --line: #e3e8ef;
+        --line2: #edf1f5;
+        --danger: #cf3e3e;
+        --warning: #9b6a10;
+        --shadow: 0 14px 34px rgba(25, 45, 77, 0.08);
+        --shadow-sm: 0 5px 16px rgba(25, 45, 77, 0.06);
+        --radius: 18px;
+        --radius-sm: 12px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        background: var(--bg);
+      }
+      body {
+        margin: 0;
+        color: var(--text);
+        background: var(--bg);
+        font-family:
+          "Noto Sans TC",
+          "Microsoft JhengHei",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      button,
+      select,
+      input {
+        font: inherit;
+      }
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+      .app-shell {
+        min-height: 100vh;
+        background: linear-gradient(
+          180deg,
+          #eef3f9 0,
+          #f7f9fc 260px,
+          #f3f6fa 100%
+        );
+      }
+      .topbar {
+        background: linear-gradient(
+          135deg,
+          var(--navy) 0%,
+          var(--navy2) 72%,
+          #1e4776 100%
+        );
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+      }
+      .topbar:after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        top: -190px;
+        width: 420px;
+        height: 420px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 60px rgba(255, 255, 255, 0.035),
+          0 0 0 120px rgba(255, 255, 255, 0.02);
+      }
+      .topbar-inner {
+        max-width: 1280px;
+        margin: auto;
+        padding: 26px 28px 30px;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: space-between;
+        gap: 24px;
+        align-items: flex-end;
+      }
+      .brand-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        color: #b9d0ea;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .brand-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #70b5ff;
+        box-shadow: 0 0 0 5px rgba(112, 181, 255, 0.13);
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 3.3vw, 42px);
+        line-height: 1.18;
+        letter-spacing: 0.02em;
+        font-weight: 900;
+      }
+      .hero-sub {
+        margin-top: 9px;
+        color: #c9d8ea;
+        font-size: 14px;
+        line-height: 1.8;
+        max-width: 720px;
+      }
+      .data-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 13px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.09);
+        border-radius: 999px;
+        backdrop-filter: blur(8px);
+        white-space: nowrap;
+        font-size: 12px;
+        color: #e6eef7;
+      }
+      .data-pill i {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #73d2b7;
+        box-shadow: 0 0 0 4px rgba(115, 210, 183, 0.12);
+      }
+      .page {
+        max-width: 1280px;
+        margin: auto;
+        padding: 22px 28px 48px;
+      }
+      .panel {
+        background: var(--surface);
+        border: 1px solid rgba(221, 228, 237, 0.96);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+      .search-panel {
+        overflow: hidden;
+      }
+      .panel-titlebar {
+        padding: 17px 20px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-bottom: 1px solid var(--line2);
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 15px;
+        font-weight: 900;
+        color: #22314a;
+      }
+      .section-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: #eaf2fd;
+        color: var(--blue);
+        display: grid;
+        place-items: center;
+        font-size: 15px;
+        font-weight: 900;
+      }
+      .section-note {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .controls {
+        padding: 18px 20px 20px;
+        display: grid;
+        grid-template-columns: 260px minmax(280px, 1.35fr) 160px 160px 126px;
+        gap: 12px;
+        align-items: end;
+      }
+      .field label {
+        display: block;
+        margin: 0 0 7px 2px;
+        font-size: 12px;
+        color: #627087;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+      }
+      select,
+      input[type="date"] {
+        width: 100%;
+        height: 46px;
+        border-radius: 11px;
+        border: 1px solid #d8e0ea;
+        background: #fff;
+        color: var(--text);
+        outline: none;
+        padding: 0 12px;
+        transition: 0.18s;
+      }
+      select:hover,
+      input[type="date"]:hover {
+        border-color: #b9c8da;
+      }
+
+      .mode-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        padding: 5px;
+        min-height: 46px;
+        border: 1px solid #d8e0ea;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #f7f9fc, #f1f5f9);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.9),
+          0 2px 7px rgba(38, 61, 91, 0.04);
+      }
+
+      .mode-btn {
+        border: 1px solid transparent;
+        border-radius: 9px;
+        background: transparent;
+        color: #65748a;
+        font-size: 13px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: 0.18s ease;
+        padding: 0 16px;
+        white-space: nowrap;
+        min-width: 0;
+      }
+
+      .mode-btn:hover {
+        color: #1d5f9f;
+        background: rgba(255, 255, 255, 0.75);
+      }
+
+      .mode-btn.active {
+        color: #fff;
+        border-color: rgba(23, 105, 210, 0.58);
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.18),
+            rgba(255, 255, 255, 0) 46%
+          ),
+          linear-gradient(135deg, #1971dd, #1258b5);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.28),
+          0 5px 12px rgba(23, 105, 210, 0.2);
+      }
+
+      #mode {
+        display: none !important;
+      }
+
+      .person-list-field {
+        display: none;
+        grid-column: 1/-1;
+      }
+      .person-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+        gap: 8px;
+        padding: 12px;
+        border: 1px solid #dfe6ef;
+        border-radius: 13px;
+        background: #f8fafc;
+      }
+      .person-btn {
+        min-height: 40px;
+        border: 1px solid #dce5ef;
+        background: #fff;
+        color: #33445d;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.16s;
+        box-shadow: 0 1px 3px rgba(30, 50, 80, 0.03);
+      }
+      .person-btn:hover {
+        border-color: #9dbce1;
+        background: #f3f8fe;
+        color: #185a9d;
+        transform: translateY(-1px);
+      }
+      .person-btn.active {
+        border-color: #1769d2;
+        background: linear-gradient(135deg, #1769d2, #1355ad);
+        color: #fff;
+        box-shadow: 0 5px 12px rgba(23, 105, 210, 0.18);
+      }
+      .person-list-note {
+        grid-column: 1/-1;
+        font-size: 11px;
+        color: #7b8798;
+        margin: 0 2px 2px;
+      }
+      select:focus,
+      input[type="date"]:focus {
+        border-color: #5e96d8;
+        box-shadow: 0 0 0 4px rgba(23, 105, 210, 0.09);
+      }
+      .primary-btn {
+        width: 100%;
+        height: 46px;
+        border: 0;
+        border-radius: 11px;
+        background: linear-gradient(135deg, #1769d2, #1355ad);
+        color: #fff;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 8px 16px rgba(23, 105, 210, 0.18);
+        transition: 0.18s;
+      }
+      .primary-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(23, 105, 210, 0.23);
+      }
+      .primary-btn:active {
+        transform: translateY(0);
+      }
+      .date-pair {
+        display: contents;
+      }
+      .filebar {
+        padding: 12px 20px;
+        border-top: 1px solid var(--line2);
+        background: #fbfcfe;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        color: #737f91;
+        font-size: 12px;
+      }
+      .filebar .file-help {
+        line-height: 1.6;
+        flex: 1;
+        min-width: 250px;
+      }
+      .file-picker {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .file-picker input[type="file"] {
+        max-width: 270px;
+        font-size: 11px;
+        color: #607086;
+      }
+      .load-status {
+        margin-left: auto;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .ok {
+        color: var(--green);
+      }
+      .bad {
+        color: var(--danger);
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: 1.25fr 1fr 1fr 1fr;
+        gap: 14px;
+        margin: 16px 0;
+      }
+      .kpi {
+        position: relative;
+        padding: 18px 18px 17px;
+        overflow: hidden;
+        min-height: 116px;
+        background: linear-gradient(180deg, #fff, #fcfdff);
+      }
+      .kpi:after {
+        content: "";
+        position: absolute;
+        right: -22px;
+        bottom: -32px;
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: rgba(23, 105, 210, 0.035);
+      }
+      .kpi-label {
+        font-size: 12px;
+        color: #738096;
+        font-weight: 800;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .kpi-label:before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #78a9e7;
+      }
+      .kpi strong {
+        display: block;
+        font-size: clamp(23px, 2.3vw, 31px);
+        line-height: 1.1;
+        color: #172844;
+        font-weight: 900;
+        word-break: break-word;
+      }
+      .kpi-sub {
+        margin-top: 9px;
+        color: #8993a3;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+      .result-panel {
+        overflow: hidden;
+      }
+      .result-head {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line2);
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: center;
+      }
+      .result-title {
+        font-size: 18px;
+        font-weight: 900;
+        color: #1c2d48;
+      }
+      .result-note {
+        font-size: 12px;
+        color: #7b8799;
+        margin-top: 4px;
+      }
+      .desktop-hint {
+        font-size: 11px;
+        color: #8a96a6;
+        padding: 7px 10px;
+        border: 1px solid #e1e7ef;
+        border-radius: 999px;
+        background: #fafbfd;
+        white-space: nowrap;
+      }
+      .table-wrap {
+        overflow: visible;
+        max-height: none;
+        background: #fff;
+      }
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 680px;
+      }
+      th,
+      td {
+        padding: 15px 19px;
+        border-bottom: 1px solid var(--line2);
+        text-align: left;
+        vertical-align: middle;
+      }
+      th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: #f7f9fc;
+        color: #5e6a7f;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.025em;
+        cursor: pointer;
+        user-select: none;
+      }
+      th:hover {
+        background: #f0f5fb;
+        color: #275d9e;
+      }
+      th:nth-child(2),
+      td:nth-child(2) {
+        text-align: right;
+        width: 150px;
+      }
+      th:nth-child(3),
+      td:nth-child(3) {
+        text-align: right;
+        width: 230px;
+      }
+      tbody tr {
+        transition: 0.14s;
+      }
+      tbody tr:hover {
+        background: #fafcff;
+      }
+      .person-cell {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        font-weight: 900;
+        gap: 10px;
+      }
+
+      .name-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+
+      .name-text {
+        font-weight: 950;
+        font-size: 16px;
+        letter-spacing: 0.01em;
+        color: #132a46;
+      }
+
+      .count-chip {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 950;
+        color: #154f8e;
+        border: 1px solid rgba(108, 168, 231, 0.45);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.94),
+          rgba(220, 238, 255, 0.86)
+        );
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.95),
+          0 4px 10px rgba(47, 95, 150, 0.1);
+        backdrop-filter: blur(10px);
+      }
+      .rank {
+        flex: 0 0 auto;
+        display: inline-grid;
+        place-items: center;
+        width: 29px;
+        height: 29px;
+        border-radius: 9px;
+        margin-right: 11px;
+        background: #edf3fb;
+        color: #35679e;
+        font-size: 11px;
+        font-weight: 900;
+      }
+      .rank.top {
+        background: linear-gradient(145deg, #e3efff, #d8eaff);
+        color: #15579c;
+      }
+      .count-value {
+        font-size: 15px;
+        color: #1d2f4a;
+      }
+      .pct-row {
+        display: grid;
+        grid-template-columns: 78px minmax(220px, 1fr);
+        justify-content: stretch;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+      }
+      .pct-value {
+        font-weight: 950;
+        min-width: 0;
+        font-size: 16px;
+        color: #12365d;
+        text-align: right;
+      }
+      .bar {
+        height: 14px;
+        width: 100%;
+        min-width: 220px;
+        background: linear-gradient(
+          180deg,
+          rgba(230, 238, 247, 0.98),
+          rgba(244, 248, 252, 0.98)
+        );
+        border-radius: 999px;
+        overflow: hidden;
+        border: 1px solid rgba(151, 180, 214, 0.34);
+        box-shadow:
+          inset 0 2px 5px rgba(68, 103, 144, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.95),
+          0 3px 10px rgba(52, 96, 146, 0.06);
+        position: relative;
+      }
+      .fill {
+        height: 100%;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0) 48%
+          ),
+          linear-gradient(90deg, #1769d2 0%, #48a0f0 55%, #84c5ff 100%);
+        border-radius: 999px;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.78),
+          inset 0 -1px 0 rgba(12, 76, 145, 0.22),
+          0 0 14px rgba(55, 146, 232, 0.22);
+        position: relative;
+      }
+
+      .fill:after {
+        content: "";
+        position: absolute;
+        inset: 1px 8px auto 8px;
+        height: 35%;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.38);
+        filter: blur(0.2px);
+      }
+
+      tbody tr:nth-child(1) .count-chip,
+      tbody tr:nth-child(2) .count-chip,
+      tbody tr:nth-child(3) .count-chip {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(209, 233, 255, 0.92)
+        );
+        border-color: rgba(91, 157, 226, 0.55);
+      }
+      .empty {
+        padding: 64px 20px;
+        text-align: center;
+        color: #7e8999;
+        font-size: 14px;
+      }
+      .footer {
+        padding: 16px 6px 0;
+        text-align: center;
+        color: #8d97a6;
+        font-size: 11px;
+        line-height: 1.8;
+      }
+      .mobile-cards {
+        display: none;
+      }
+
+      @media (min-width: 1025px) {
+        .controls > .field:first-child {
+          min-width: 260px;
+        }
+
+        #querySelectField {
+          min-width: 280px;
+        }
+
+        .mode-switch {
+          width: 100%;
+        }
+      }
+
+      /* Desktop dual-percentage analysis */
+      @media (min-width: 1025px) {
+        table {
+          min-width: 980px;
+          table-layout: fixed;
+        }
+
+        th:first-child,
+        td:first-child {
+          width: 36%;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2),
+        th:nth-child(3),
+        td:nth-child(3) {
+          width: 32%;
+          text-align: left;
+        }
+
+        th:nth-child(2),
+        th:nth-child(3) {
+          white-space: nowrap;
+        }
+
+        .pct-row {
+          grid-template-columns: 82px minmax(150px, 1fr);
+          gap: 12px;
+        }
+
+        .bar {
+          min-width: 0;
+        }
+
+        .pct-value {
+          font-size: 16px;
+          font-weight: 950;
+        }
+      }
+
+      .pct-caption {
+        display: block;
+        margin-top: 3px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #8a96a8;
+        letter-spacing: 0;
+      }
+
+      .fill.total-fill {
+        background:
+          linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0) 48%
+          ),
+          linear-gradient(90deg, #16866f 0%, #2eb59a 55%, #76d8c4 100%);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.78),
+          inset 0 -1px 0 rgba(14, 101, 84, 0.22),
+          0 0 14px rgba(46, 181, 154, 0.2);
+      }
+
+      /* Tablet */
+      @media (min-width: 641px) and (max-width: 1024px) {
+        .topbar-inner {
+          padding: 24px 22px 27px;
+          align-items: flex-start;
+        }
+        .page {
+          padding: 18px 20px 38px;
+        }
+        .controls {
+          grid-template-columns: 1fr 1.5fr;
+          gap: 12px;
+        }
+        .field.date-field {
+          grid-column: auto;
+        }
+        .search-btn-wrap {
+          grid-column: 1/-1;
+        }
+        .primary-btn {
+          max-width: 220px;
+          margin-left: auto;
+          display: block;
+        }
+        .filebar {
+          align-items: flex-start;
+          flex-wrap: wrap;
+        }
+        .load-status {
+          margin-left: 0;
+          width: 100%;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .kpi {
+          min-height: 108px;
+        }
+        .result-head {
+          align-items: flex-start;
+        }
+        .table-wrap {
+          max-height: none;
+          overflow: visible;
+        }
+        .person-list {
+          grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 640px) {
+        .topbar-inner {
+          padding: 21px 16px 24px;
+          display: block;
+        }
+        .brand-eyebrow {
+          font-size: 10px;
+          margin-bottom: 7px;
+        }
+        h1 {
+          font-size: 27px;
+        }
+        .hero-sub {
+          font-size: 12px;
+          line-height: 1.7;
+          margin-top: 8px;
+        }
+        .data-pill {
+          display: inline-flex;
+          margin-top: 16px;
+          padding: 8px 10px;
+          max-width: 100%;
+          white-space: normal;
+          line-height: 1.4;
+        }
+        .page {
+          padding: 12px 11px 30px;
+        }
+        .panel {
+          border-radius: 15px;
+          box-shadow: var(--shadow-sm);
+        }
+        .panel-titlebar {
+          padding: 14px 14px 11px;
+        }
+        .section-icon {
+          width: 29px;
+          height: 29px;
+          border-radius: 9px;
+        }
+        .section-title {
+          font-size: 14px;
+        }
+        .section-note {
+          display: none;
+        }
+        .controls {
+          padding: 13px 14px 15px;
+          grid-template-columns: 1fr;
+          gap: 11px;
+        }
+
+        .mode-switch {
+          min-height: 45px;
+        }
+
+        .mode-btn {
+          font-size: 12px;
+          padding: 0 8px;
+        }
+
+        .field label {
+          font-size: 11px;
+          margin-bottom: 5px;
+        }
+        select,
+        input[type="date"],
+        .primary-btn {
+          height: 45px;
+        }
+        .person-list {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 7px;
+          padding: 9px;
+        }
+        .person-btn {
+          min-height: 39px;
+          padding: 7px 5px;
+          font-size: 12px;
+        }
+        .date-pair {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr;
+          gap: 9px;
+        }
+        .date-pair .field {
+          min-width: 0;
+        }
+        .filebar {
+          padding: 10px 14px;
+          display: block;
+        }
+        .filebar .file-help {
+          font-size: 11px;
+          min-width: 0;
+        }
+        .file-picker {
+          margin-top: 8px;
+        }
+        .file-picker input[type="file"] {
+          max-width: 100%;
+          width: 100%;
+        }
+        .load-status {
+          display: block;
+          margin: 8px 0 0;
+          font-size: 11px;
+          white-space: normal;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+          gap: 9px;
+          margin: 10px 0;
+        }
+        .kpi {
+          padding: 14px 13px;
+          min-height: 98px;
+          border-radius: 14px;
+        }
+        .kpi strong {
+          font-size: 21px;
+        }
+        .kpi-sub {
+          font-size: 10px;
+          margin-top: 7px;
+        }
+        .kpi-label {
+          font-size: 10px;
+          margin-bottom: 7px;
+        }
+        .result-head {
+          padding: 14px;
+          align-items: flex-start;
+        }
+        .result-title {
+          font-size: 16px;
+        }
+        .result-note {
+          font-size: 11px;
+        }
+        .desktop-hint {
+          display: none;
+        }
+        .table-wrap {
+          display: none;
+        }
+        .mobile-cards {
+          display: block;
+          padding: 9px;
+          background: #f7f9fc;
+          max-height: none;
+        }
+        .m-card {
+          background: #fff;
+          border: 1px solid #e4eaf1;
+          border-radius: 13px;
+          padding: 13px;
+          margin-bottom: 8px;
+          box-shadow: 0 2px 8px rgba(33, 51, 78, 0.035);
+        }
+        .m-card:last-child {
+          margin-bottom: 0;
+        }
+        .m-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+        }
+        .m-name {
+          display: flex;
+          align-items: center;
+          min-width: 0;
+          font-size: 14px;
+          font-weight: 900;
+          color: #21324e;
+        }
+        .m-name span:last-child {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .m-count {
+          flex: 0 0 auto;
+          font-size: 12px;
+          color: #154f8e;
+          font-weight: 950;
+          padding: 5px 9px;
+          border-radius: 999px;
+          border: 1px solid rgba(108, 168, 231, 0.42);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.96),
+            rgba(220, 238, 255, 0.86)
+          );
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.95),
+            0 3px 9px rgba(47, 95, 150, 0.09);
+        }
+        .m-count b {
+          font-size: 18px;
+          color: #183b66;
+          margin-right: 2px;
+        }
+        .m-bottom {
+          margin-top: 11px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .m-pct {
+          width: 62px;
+          font-weight: 900;
+          font-size: 13px;
+          color: #24598f;
+        }
+        .m-bar {
+          height: 12px;
+          flex: 1;
+          background: linear-gradient(180deg, #e7eef6, #f6f9fc);
+          border-radius: 99px;
+          overflow: hidden;
+          border: 1px solid rgba(151, 180, 214, 0.3);
+          box-shadow:
+            inset 0 2px 4px rgba(68, 103, 144, 0.09),
+            inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .m-fill {
+          height: 100%;
+          background:
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.45),
+              rgba(255, 255, 255, 0) 48%
+            ),
+            linear-gradient(90deg, #1769d2, #62a6eb, #8acaff);
+          border-radius: 99px;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.72),
+            0 0 12px rgba(55, 146, 232, 0.18);
+        }
+        .empty {
+          padding: 45px 15px;
+          font-size: 13px;
+        }
+        .footer {
+          text-align: left;
+          padding: 13px 4px 0;
+          font-size: 10px;
+        }
+      }
+
+      @media (max-width: 390px) {
+        .kpis {
+          grid-template-columns: 1fr;
+        }
+        .kpi {
+          min-height: auto;
+        }
+        .date-pair {
+          grid-template-columns: 1fr;
+        }
+        .person-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          scroll-behavior: auto !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <div>
+            <div class="brand-eyebrow">
+              <span class="brand-dot"></span>Duty Analytics
+            </div>
+            <h1>值班次數查詢</h1>
+            <div class="hero-sub">快速掌握班別分布、個人輪值與區間統計。</div>
+          </div>
+          <div class="data-pill">
+            <i></i><span id="dateBadge">資料尚未載入</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="page">
+        <section class="panel search-panel">
+          <div class="panel-titlebar">
+            <div class="section-title">
+              <span class="section-icon">⌕</span><span>查詢條件</span>
+            </div>
+            <div class="section-note">
+              選擇查詢方式與日期區間後，即時更新統計結果
+            </div>
+          </div>
+          <div class="controls">
+            <div class="field">
+              <label>查詢方式</label>
+              <div class="mode-switch" id="modeSwitch">
+                <button type="button" class="mode-btn active" data-mode="shift">
+                  依班別查詢
+                </button>
+                <button type="button" class="mode-btn" data-mode="person">
+                  依人員查詢
+                </button>
+              </div>
+              <select id="mode" aria-hidden="true" tabindex="-1">
+                <option value="shift">依班別查詢</option>
+                <option value="person">依人員查詢</option>
+              </select>
+            </div>
+            <div class="field" id="querySelectField">
+              <label id="queryLabel">班別名稱</label
+              ><select id="query"></select>
+            </div>
+            <div class="date-pair">
+              <div class="field date-field">
+                <label>起始日期</label><input id="startDate" type="date" />
+              </div>
+              <div class="field date-field">
+                <label>結束日期</label><input id="endDate" type="date" />
+              </div>
+            </div>
+            <div class="search-btn-wrap">
+              <button class="primary-btn" id="searchBtn">查詢統計</button>
+            </div>
+          </div>
+          <div class="filebar">
+            <div class="file-help">改由手動選檔。</div>
+            <div class="file-picker">
+              <input
+                id="fileInput"
+                type="file"
+                accept=".json,application/json"
+              />
+            </div>
+            <span class="load-status" id="loadStatus">載入中…</span>
+          </div>
+        </section>
+
+        <section class="kpis">
+          <div class="panel kpi">
+            <div class="kpi-label" id="s1Label">查詢項目</div>
+            <strong id="s1">—</strong>
+            <div class="kpi-sub" id="s1sub">—</div>
+          </div>
+          <div class="panel kpi">
+            <div class="kpi-label" id="s2Label">總值班次數</div>
+            <strong id="s2">—</strong>
+            <div class="kpi-sub">僅計入具有效姓名的排班紀錄</div>
+          </div>
+          <div class="panel kpi">
+            <div class="kpi-label" id="s3Label">涵蓋人數</div>
+            <strong id="s3">—</strong>
+            <div class="kpi-sub" id="s3sub">—</div>
+          </div>
+          <div class="panel kpi">
+            <div class="kpi-label">資料日期</div>
+            <strong id="s4">—</strong>
+            <div class="kpi-sub" id="s4sub">依目前篩選區間</div>
+          </div>
+        </section>
+
+        <section class="panel result-panel">
+          <div class="result-head">
+            <div>
+              <div class="result-title" id="resultTitle">統計結果</div>
+              <div class="result-note" id="resultNote">
+                依目前條件彙整；電腦版提供班別占比與個人總班別占比，可點欄位標題排序
+              </div>
+            </div>
+            <div class="desktop-hint">點擊表頭可排序 ↑↓</div>
+          </div>
+          <div class="table-wrap" id="tableWrap">
+            <div class="empty">載入資料後即可查詢。</div>
+          </div>
+          <div class="mobile-cards" id="mobileCards">
+            <div class="empty">載入資料後即可查詢。</div>
+          </div>
+        </section>
+
+        <div class="footer">
+          百分比計算：班別次數百分比＝該人員該班別值班次數 ÷
+          該班別全部值班次數；總班別百分比＝該人員該班別值班次數 ÷
+          該人員全部值班次數。空白、破折號等未排班值不列入統計；班別名稱會自動去除多餘空白以整合改版前後資料。
+        </div>
+      </main>
+    </div>
+    <script>
+      let rawData = {},
+        records = [],
+        currentRows = [],
+        sortState = { key: "count", dir: "desc" };
+      const $ = (id) => document.getElementById(id);
+      const INVALID_NAMES = new Set([
+        "",
+        "-",
+        "－",
+        "—",
+        "–",
+        "null",
+        "undefined",
+        "#溢出!",
+        "#spill!",
+        "#n/a",
+        "#value!",
+        "#ref!",
+        "#div/0!",
+        "#name?",
+        "#num!",
+        "#null!",
+        "#calc!",
+      ]);
+      function normalizeShift(s) {
+        return String(s ?? "")
+          .trim()
+          .replace(/\s+/g, "");
+      }
+      function normalizeName(v) {
+        if (v && typeof v === "object" && !Array.isArray(v)) v = v.name ?? "";
+        const s = String(v ?? "").trim();
+        const lower = s.toLowerCase();
+        if (INVALID_NAMES.has(lower)) return "";
+        // 防止 Excel / 試算表錯誤值被誤認為人名
+        if (
+          /^#(?:spill|n\/a|value|ref|div\/0|name\?|num|null|calc)!?$/i.test(s)
+        )
+          return "";
+        if (/^#溢出!?$/i.test(s)) return "";
+        return s;
+      }
+      function parseData(data) {
+        const out = [];
+        for (const [date, day] of Object.entries(data || {})) {
+          if (!day || typeof day !== "object" || Array.isArray(day)) continue;
+          for (const [shift, value] of Object.entries(day)) {
+            const name = normalizeName(value),
+              sh = normalizeShift(shift);
+            if (name && sh) out.push({ date, shift: sh, name });
+          }
+        }
+        return out;
+      }
+      function validDates() {
+        return Object.keys(rawData)
+          .filter((x) => /^\d{4}-\d{2}-\d{2}$/.test(x))
+          .sort();
+      }
+      function setupData(data, source = "schedule_data.json") {
+        if (!data || typeof data !== "object" || Array.isArray(data))
+          throw new Error("JSON 頂層必須是日期物件");
+        rawData = data;
+        records = parseData(data);
+        const dates = validDates();
+        if (dates.length) {
+          $("startDate").value = dates[0];
+          $("endDate").value = dates.at(-1);
+          $("startDate").min = dates[0];
+          $("startDate").max = dates.at(-1);
+          $("endDate").min = dates[0];
+          $("endDate").max = dates.at(-1);
+          $("dateBadge").textContent = `${dates[0]} ～ ${dates.at(-1)}`;
+        }
+        $("loadStatus").textContent =
+          `✓ 已載入 ${records.length.toLocaleString()} 筆有效紀錄`;
+        $("loadStatus").className = "load-status ok";
+        populateQuery();
+        render();
+      }
+      async function autoLoad() {
+        try {
+          const r = await fetch("schedule_data.json?ts=" + Date.now(), {
+            cache: "no-store",
+          });
+          if (!r.ok) throw new Error();
+          setupData(await r.json());
+        } catch (e) {
+          $("loadStatus").textContent = "請手動選擇 schedule_data.json";
+          $("loadStatus").className = "load-status bad";
+        }
+      }
+      function getFiltered() {
+        const a = $("startDate").value || "0000-00-00",
+          b = $("endDate").value || "9999-99-99";
+        return records.filter((r) => r.date >= a && r.date <= b);
+      }
+      function populateQuery() {
+        const mode = $("mode").value,
+          old = $("query").value;
+
+        const vals = [
+          ...new Set(records.map((r) => (mode === "shift" ? r.shift : r.name))),
+        ]
+          .filter(Boolean)
+          .sort((a, b) => a.localeCompare(b, "zh-Hant-TW", { numeric: true }));
+
+        $("query").innerHTML = vals
+          .map(
+            (v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`,
+          )
+          .join("");
+
+        if (vals.includes(old)) $("query").value = old;
+
+        $("queryLabel").textContent =
+          mode === "shift" ? "班別名稱" : "人員姓名";
+        $("querySelectField").style.display = "block";
+
+        const current = $("query").value;
+        if (!current && vals.length) $("query").value = vals[0];
+
+        document.querySelectorAll(".mode-btn").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.mode === mode);
+          btn.setAttribute(
+            "aria-pressed",
+            btn.dataset.mode === mode ? "true" : "false",
+          );
+        });
+      }
+      function calc() {
+        const data = getFiltered(),
+          mode = $("mode").value,
+          q = $("query").value;
+        const counts = new Map();
+
+        if (mode === "shift") {
+          const matched = data.filter((r) => r.shift === q);
+          matched.forEach((r) =>
+            counts.set(r.name, (counts.get(r.name) || 0) + 1),
+          );
+
+          const queriedShiftTotal = matched.length;
+
+          return [...counts.entries()].map(([person, count]) => {
+            const personAllTotal = data.filter((r) => r.name === person).length;
+            return {
+              label: person,
+              count,
+              shiftPct: queriedShiftTotal
+                ? (count / queriedShiftTotal) * 100
+                : 0,
+              totalPct: personAllTotal ? (count / personAllTotal) * 100 : 0,
+            };
+          });
+        }
+
+        const matched = data.filter((r) => r.name === q);
+        matched.forEach((r) =>
+          counts.set(r.shift, (counts.get(r.shift) || 0) + 1),
+        );
+
+        const personAllTotal = matched.length;
+
+        return [...counts.entries()].map(([shift, count]) => {
+          const shiftAllTotal = data.filter((r) => r.shift === shift).length;
+          return {
+            label: shift,
+            count,
+            shiftPct: shiftAllTotal ? (count / shiftAllTotal) * 100 : 0,
+            totalPct: personAllTotal ? (count / personAllTotal) * 100 : 0,
+          };
+        });
+      }
+      function sortRows() {
+        currentRows.sort((a, b) => {
+          let x = a[sortState.key],
+            y = b[sortState.key],
+            c = 0;
+          if (typeof x === "string")
+            c = x.localeCompare(y, "zh-Hant-TW", { numeric: true });
+          else c = x - y;
+          return sortState.dir === "asc" ? c : -c;
+        });
+      }
+      function render() {
+        if (!records.length) return;
+        currentRows = calc();
+        sortRows();
+        const mode = $("mode").value,
+          q = $("query").value,
+          data = getFiltered();
+        const total = currentRows.reduce((s, r) => s + r.count, 0);
+        const dates = [...new Set(data.map((r) => r.date))].sort();
+        $("s1Label").textContent = mode === "shift" ? "查詢班別" : "查詢人員";
+        $("s1").textContent = q || "—";
+        $("s1sub").textContent =
+          mode === "shift" ? "班別值班分布" : "個人班別分布";
+        $("s2Label").textContent = "總值班次數";
+        $("s2").textContent = total.toLocaleString();
+        $("s3Label").textContent = mode === "shift" ? "值班人數" : "值過班別";
+        $("s3").textContent = currentRows.length.toLocaleString();
+        $("s3sub").textContent = mode === "shift" ? "不同人員數" : "不同班別數";
+        $("s4").textContent = dates.length
+          ? dates.length.toLocaleString()
+          : "0";
+        $("s4sub").textContent = dates.length
+          ? `${dates[0]} ～ ${dates.at(-1)}`
+          : "目前區間無資料";
+        $("resultTitle").textContent =
+          mode === "shift" ? `「${q}」值班人員統計` : `「${q}」值班班別統計`;
+        const firstHead = mode === "shift" ? "人員姓名" : "班別名稱";
+        if (!currentRows.length) {
+          $("tableWrap").innerHTML =
+            '<div class="empty">這個日期區間沒有符合的值班紀錄。</div>';
+          $("mobileCards").innerHTML =
+            '<div class="empty">這個日期區間沒有符合的值班紀錄。</div>';
+          return;
+        }
+        const arrow = (k) =>
+          sortState.key === k ? (sortState.dir === "asc" ? " ▲" : " ▼") : "";
+        $("tableWrap").innerHTML =
+          `<table><thead><tr>` +
+          `<th data-key="count">${firstHead}／次數${arrow("count")}</th>` +
+          `<th data-key="shiftPct">班別次數百分比${arrow("shiftPct")}<span class="pct-caption">該人員此班次數 ÷ 此班全部值班次數</span></th>` +
+          `<th data-key="totalPct">總班別百分比${arrow("totalPct")}<span class="pct-caption">該人員此班次數 ÷ 該人員全部值班次數</span></th>` +
+          `</tr></thead><tbody>` +
+          currentRows
+            .map(
+              (r, i) =>
+                `<tr>` +
+                `<td><div class="person-cell"><span class="rank ${i < 3 ? "top" : ""}">${i + 1}</span><div class="name-wrap"><span class="name-text">${escapeHtml(r.label)}</span><span class="count-chip">${r.count.toLocaleString()} 次</span></div></div></td>` +
+                `<td><div class="pct-row"><span class="pct-value">${r.shiftPct.toFixed(2)}%</span><div class="bar"><div class="fill" style="width:${Math.min(100, r.shiftPct)}%"></div></div></div></td>` +
+                `<td><div class="pct-row"><span class="pct-value">${r.totalPct.toFixed(2)}%</span><div class="bar"><div class="fill total-fill" style="width:${Math.min(100, r.totalPct)}%"></div></div></div></td>` +
+                `</tr>`,
+            )
+            .join("") +
+          `</tbody></table>`;
+
+        $("mobileCards").innerHTML = currentRows
+          .map(
+            (r, i) =>
+              `<div class="m-card"><div class="m-top"><div class="m-name"><span class="rank ${i < 3 ? "top" : ""}">${i + 1}</span><span>${escapeHtml(r.label)}</span></div><div class="m-count"><b>${r.count.toLocaleString()}</b>次</div></div><div class="m-bottom"><div class="m-pct">${r.totalPct.toFixed(2)}%</div><div class="m-bar"><div class="m-fill" style="width:${Math.min(100, r.totalPct)}%"></div></div></div></div>`,
+          )
+          .join("");
+        document.querySelectorAll("th[data-key]").forEach(
+          (th) =>
+            (th.onclick = () => {
+              const k = th.dataset.key;
+              if (sortState.key === k)
+                sortState.dir = sortState.dir === "asc" ? "desc" : "asc";
+              else {
+                sortState.key = k;
+                sortState.dir = k === "label" ? "asc" : "desc";
+              }
+              render();
+            }),
+        );
+      }
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[m],
+        );
+      }
+      document.querySelectorAll(".mode-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const nextMode = btn.dataset.mode;
+          if ($("mode").value === nextMode) return;
+          $("mode").value = nextMode;
+          populateQuery();
+          sortState = { key: "count", dir: "desc" };
+          render();
+        });
+      });
+      $("query").addEventListener("change", render);
+      $("startDate").addEventListener("change", render);
+      $("endDate").addEventListener("change", render);
+      $("searchBtn").addEventListener("click", render);
+      $("fileInput").addEventListener("change", async (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          setupData(JSON.parse(await f.text()), f.name);
+        } catch (err) {
+          $("loadStatus").textContent = "讀取失敗：" + err.message;
+          $("loadStatus").className = "load-status bad";
+        }
+      });
+      autoLoad();
+    </script>
+  </body>
+</html>
