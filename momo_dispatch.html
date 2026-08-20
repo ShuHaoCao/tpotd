@@ -7,6 +7,16 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>MOMO新市倉大夜班派車看板 v3.0</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Z3OW_2Ubhsqp2UUPrKv1cfO51LmHfhEC3jERVNACEnhTTByfE5FsQDdNiwb_sF2UNnkXkk9mClLfFy0AF1SejXHwTxlhrSX-E_84rGP2zQ_cn-xHfKb4UgFlv0VJ1rpUiCGz1snKyP0YyhmyMzOZEScMfAnK53x19DwjCvXqXqOK75_oh2AuEk1s11dsAGQ1aXayWwBJ4p75_VurAqdPLPXelpMhDrc9NBZ1MTOPvZLyl80cz9JKxyA4QTC2UXckLcwi-kMBQtOPgdOQIQHm3eRgYuvHHjI-lSx51zZxU3n4hftjVmUfLPfk45QBuZyd7yJZwsafHT5zpbtrObWwxj2UHlNlLqUq124F_ldbmkA"
+      charset="UTF-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin="anonymous"
+      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMGFiZjA4MjA2YWM0YzQ4ZTRiMDExMjA4ZCZmbj1tb21vX2Rpc3BhdGNoX3N0YWdlX3RyaXBfbnVtYmVyX3BjdC5odG1sJmNkPWF0dGFjaG1lbnQmdHM9NDk2NDU5JnA9ZnMmY2lkPTEmc2lnPThlYzc3OTBmOTE4ZmFlYWEyZGNmYmFlNTQxZmYxZTA5OTA0MjIwMTZhYjg0YTk2MWZkODliMDQ1MTY1ZTA5ODEmdj0w"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -2501,15 +2511,24 @@
           <div class="overflow-y-auto">
             <div class="dist-filter-bar">
               <div class="dist-control">
-                <label class="dist-label">車次（trip_no）</label>
-                <input
-                  class="dist-input"
-                  list="distributionTripOptions"
+                <label class="dist-label">作業階段（stage_name）</label>
+                <select
+                  class="dist-select"
+                  v-model="distributionOperationStage"
+                  @change="onDistributionOperationStageChange"
+                >
+                  <option value="第1階段">第1階段</option>
+                  <option value="第2階段">第2階段</option>
+                  <option value="第3階段">第3階段</option>
+                </select>
+              </div>
+              <div class="dist-control">
+                <label class="dist-label">該階段車次（第幾車）</label>
+                <select
+                  class="dist-select"
                   v-model="distributionTrip"
                   @change="refreshDistribution"
-                  placeholder="例如：郵局第1車、明嘉第3車"
-                />
-                <datalist id="distributionTripOptions">
+                >
                   <option
                     v-for="opt in distributionTripOptions"
                     :key="opt.value"
@@ -2517,19 +2536,6 @@
                   >
                     {{ opt.label }}
                   </option>
-                </datalist>
-              </div>
-              <div class="dist-control">
-                <label class="dist-label">作業階段（stage_name）</label>
-                <select
-                  class="dist-select"
-                  v-model="distributionOperationStage"
-                  @change="refreshDistribution"
-                >
-                  <option value="all">全部階段</option>
-                  <option value="第1階段">第1階段</option>
-                  <option value="第2階段">第2階段</option>
-                  <option value="第3階段">第3階段</option>
                 </select>
               </div>
               <div class="dist-control">
@@ -3020,34 +3026,75 @@
             };
           });
 
+          // 車次歷史分析的「車次」只看同一作業階段中的第幾車。
+          // 例如：郵局第2車、明嘉第2車、運輸第2車 → 都歸為「第2車」；
+          // 作業階段已在前一個欄位先分流，因此這裡不再依單位名稱拆成一長串。
+          const normalizeDistributionTripNo = (tripNo) => {
+            const raw = String(tripNo || "").trim();
+            if (!raw) return "";
+
+            // 優先擷取「第 N 車」。
+            let m = raw.match(/第\s*(\d+)\s*車/);
+            if (m) return `第${Number(m[1])}車`;
+
+            // 相容「2車」、「02車」等格式。
+            m = raw.match(/(?:^|[^\d])(\d+)\s*車(?:次)?(?:$|[^\d])/);
+            if (m) return `第${Number(m[1])}車`;
+
+            // 若資料格式特殊，保留原值，避免資料被遺漏。
+            return raw;
+          };
+
           const distributionTripOptions = computed(() => {
             const counts = new Map();
+
             flattenHistoryCars().forEach((car) => {
-              if (!car.tripKey) return;
-              counts.set(car.tripKey, (counts.get(car.tripKey) || 0) + 1);
+              if (car.stage_name !== distributionOperationStage.value) return;
+
+              const normalizedTrip = normalizeDistributionTripNo(car.tripKey);
+              if (!normalizedTrip) return;
+
+              counts.set(normalizedTrip, (counts.get(normalizedTrip) || 0) + 1);
             });
+
+            const totalCount = [...counts.values()].reduce(
+              (sum, count) => sum + count,
+              0,
+            );
+
             return [...counts.entries()]
               .map(([value, count]) => ({
                 value,
                 count,
-                label: `${value}｜${count} 趟`,
+                percentage: totalCount
+                  ? ((count / totalCount) * 100).toFixed(2)
+                  : "0.00",
+                label: `${value}｜${count} 趟｜${
+                  totalCount ? ((count / totalCount) * 100).toFixed(2) : "0.00"
+                }%`,
+                order:
+                  Number(String(value).match(/第(\d+)車/)?.[1]) ||
+                  Number.MAX_SAFE_INTEGER,
               }))
               .sort(
                 (a, b) =>
-                  b.count - a.count ||
+                  a.order - b.order ||
                   a.value.localeCompare(b.value, "zh-Hant", { numeric: true }),
               );
           });
 
           const selectedDistributionRows = computed(() =>
             flattenHistoryCars().filter((car) => {
-              if (car.tripKey !== distributionTrip.value) return false;
               if (
                 distributionOperationStage.value !== "all" &&
                 car.stage_name !== distributionOperationStage.value
               )
                 return false;
-              return true;
+
+              return (
+                normalizeDistributionTripNo(car.tripKey) ===
+                distributionTrip.value
+              );
             }),
           );
 
@@ -3309,6 +3356,14 @@
             distributionDrill.value = { label: "", stageLabel: "", rows: [] };
             nextTick(renderDistributionChart);
           };
+          const onDistributionOperationStageChange = () => {
+            // 階段變更後，只保留該階段存在的車次；若原車次不存在，自動選取樣本最多的第一個車次。
+            const opts = distributionTripOptions.value;
+            if (!opts.some((o) => o.value === distributionTrip.value)) {
+              distributionTrip.value = opts[0]?.value || "";
+            }
+            refreshDistribution();
+          };
           const setDistributionStage = (stage) => {
             distributionStage.value = stage;
             refreshDistribution();
@@ -3321,7 +3376,11 @@
             )
               distributionTrip.value = opts[0]?.value || "";
             distributionModal.value.show = true;
-            distributionOperationStage.value = "all";
+            // 分析流程改為：先選作業階段 → 再選該階段車次 → 分析時間分佈。
+            distributionOperationStage.value = "第1階段";
+            const stageOpts = distributionTripOptions.value;
+            if (!stageOpts.some((o) => o.value === distributionTrip.value))
+              distributionTrip.value = stageOpts[0]?.value || "";
             distributionStage.value = "all";
             distributionBucket.value = 30;
             distributionDrill.value = { label: "", stageLabel: "", rows: [] };
@@ -4820,6 +4879,7 @@
             openDistributionModal,
             closeDistributionModal,
             refreshDistribution,
+            onDistributionOperationStageChange,
             setDistributionStage,
             openTrendModal,
             closeTrendModal,
