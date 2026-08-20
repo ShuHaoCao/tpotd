@@ -7,16 +7,6 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <title>MOMO新市倉大夜班派車看板 v3.0</title>
-    <script
-      type="text/javascript"
-      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Z3OW_2Ubhsqp2UUPrKv1cfO51LmHfhEC3jERVNACEnhTTByfE5FsQDdNiwb_sF2UNnkXkk9mClLfFy0AF1SejXHwTxlhrSX-E_84rGP2zQ_cn-xHfKb4UgFlv0VJ1rpUiCGz1snKyP0YyhmyMzOZEScMfAnK53x19DwjCvXqXqOK75_oh2AuEk1s11dsAGQ1aXayWwBJ4p75_VurAqdPLPXelpMhDrc9NBZ1MTOPvZLyl80cz9JKxyA4QTC2UXckLcwi-kMBQtOPgdOQIQHm3eRgYuvHHjI-lSx51zZxU3n4hftjVmUfLPfk45QBuZyd7yJZwsafHT5zpbtrObWwxj2UHlNlLqUq124F_ldbmkA"
-      charset="UTF-8"
-    ></script>
-    <link
-      rel="stylesheet"
-      crossorigin="anonymous"
-      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMGFiZjA4MjA2YWM0YzQ4ZTRiMDExMjA4ZCZmbj1tb21vX2Rpc3BhdGNoX3N0YWdlX3RyaXBfbnVtYmVyX3BjdC5odG1sJmNkPWF0dGFjaG1lbnQmdHM9NDk2NDU5JnA9ZnMmY2lkPTEmc2lnPThlYzc3OTBmOTE4ZmFlYWEyZGNmYmFlNTQxZmYxZTA5OTA0MjIwMTZhYjg0YTk2MWZkODliMDQ1MTY1ZTA5ODEmdj0w"
-    />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1319,6 +1309,52 @@
         }
         .trend-weekday-card {
           flex: 0 0 112px;
+        }
+      }
+
+      /* === 趨勢視窗：桌機依資料量適度放大；手機維持精簡 === */
+      .trend-modal-panel {
+        max-height: 94vh;
+        transition:
+          width 0.2s ease,
+          max-width 0.2s ease;
+      }
+
+      @media (max-width: 768px) {
+        .trend-modal-panel {
+          width: 100% !important;
+          max-width: 100% !important;
+          max-height: 96vh !important;
+          border-radius: 12px !important;
+        }
+        .trend-overall-stats,
+        .trend-weekday-panel {
+          display: none !important;
+        }
+        .trend-modal-controls {
+          padding: 7px 8px !important;
+          gap: 6px !important;
+        }
+        .trend-modal-controls > div:not(:first-child) {
+          display: none !important;
+        }
+        .trend-modal-controls > div:first-child {
+          width: 100%;
+          display: grid !important;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 3px !important;
+          padding: 3px !important;
+        }
+        .trend-modal-controls > div:first-child button {
+          padding: 6px 3px !important;
+          font-size: 10px !important;
+        }
+        .trend-chart-shell {
+          height: 300px !important;
+        }
+        .trend-scroll-hint {
+          padding: 3px 6px 0 !important;
+          font-size: 9px !important;
         }
       }
 
@@ -2706,7 +2742,8 @@
         @click.self="closeTrendModal"
       >
         <div
-          class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]"
+          class="trend-modal-panel bg-white rounded-2xl shadow-2xl border border-slate-200 w-full overflow-hidden flex flex-col"
+          :style="trendModalPanelStyle()"
         >
           <div
             class="bg-slate-900 text-white p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
@@ -2742,7 +2779,7 @@
           </div>
 
           <div
-            class="bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2"
+            class="trend-modal-controls bg-slate-100 px-4 py-2.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2"
           >
             <div
               class="flex items-center gap-1 bg-white p-1 rounded-lg border shadow-sm"
@@ -2886,13 +2923,23 @@
             class="p-3 sm:p-6 overflow-y-auto flex-1 bg-slate-50 min-h-[320px] sm:min-h-[420px]"
           >
             <div
-              v-if="['mails', 'duration', 'trips'].includes(trendModal.type) && trendModal.scale === 'daily'"
+              v-if="['mails', 'duration', 'trips'].includes(trendModal.type) && trendModal.scale === 'daily' && !trendModal.showAll"
               class="trend-scroll-hint"
             >
               <span class="material-icons text-sm">swipe</span>
               左右滑動查看較早或較新的完整資料
             </div>
-            <div class="w-full relative" style="height: 380px">
+            <div
+              v-if="['mails', 'duration', 'trips'].includes(trendModal.type) && trendModal.showAll"
+              class="trend-scroll-hint"
+            >
+              <span class="material-icons text-sm">insights</span>
+              全部總覽：完整時間範圍自動壓縮顯示，並加入自適應趨勢線
+            </div>
+            <div
+              class="trend-chart-shell w-full relative"
+              :style="trendChartShellStyle()"
+            >
               <div
                 id="trendChartScrollViewport"
                 class="trend-chart-scroll-viewport"
@@ -2908,8 +2955,20 @@
           </div>
 
           <div
-            class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex justify-end"
+            class="bg-slate-100 px-6 py-3 border-t border-slate-200 flex items-center justify-end gap-2"
           >
+            <button
+              v-if="['trips', 'duration', 'mails'].includes(trendModal.type)"
+              @click="toggleTrendShowAll"
+              type="button"
+              :class="['px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all inline-flex items-center gap-1.5', trendModal.showAll ? 'bg-emerald-600 text-white hover:bg-emerald-500' : 'bg-cyan-700 text-white hover:bg-cyan-600']"
+              :title="trendModal.showAll ? '切回原本可左右滑動的細部模式' : '將全部資料壓縮至同一畫面，快速掌握長期趨勢'"
+            >
+              <span class="material-icons text-sm"
+                >{{ trendModal.showAll ? 'zoom_in' : 'fit_screen' }}</span
+              >
+              {{ trendModal.showAll ? '顯示細部' : '顯示全部' }}
+            </button>
             <button
               @click="closeTrendModal"
               class="px-4 py-2 bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-lg hover:bg-slate-700 transition-all"
@@ -2968,6 +3027,8 @@
             title: "",
             type: "",
             scale: "daily",
+            // 趨勢圖顯示模式：false=原本細部滑動；true=全部資料壓縮總覽 + 自動趨勢線
+            showAll: false,
             // 營運總耗時圖表 Y 軸上下限，可直接在趨勢視窗中調整
             durationAxisMin: 240,
             durationAxisMax: 720,
@@ -4145,6 +4206,38 @@
             };
           };
 
+          // 趨勢視窗尺寸：桌機資料越多，視窗與圖表適度增大；手機固定精簡。
+          const trendModalPanelStyle = () => {
+            if (window.innerWidth <= 768) {
+              return { width: "100%", maxWidth: "100%", maxHeight: "96vh" };
+            }
+            const count = getAggregatedData(trendModal.value.scale).labels
+              .length;
+            const width =
+              count <= 14
+                ? 900
+                : count <= 45
+                  ? 1080
+                  : count <= 100
+                    ? 1240
+                    : count <= 220
+                      ? 1380
+                      : 1500;
+            return {
+              width: `min(${width}px, 96vw)`,
+              maxWidth: "96vw",
+              maxHeight: "94vh",
+            };
+          };
+
+          const trendChartShellStyle = () => {
+            if (window.innerWidth <= 768) return { height: "300px" };
+            const count = getAggregatedData(trendModal.value.scale).labels
+              .length;
+            const height = count <= 45 ? 400 : count <= 150 ? 450 : 500;
+            return { height: `${height}px` };
+          };
+
           const valCheck = (val) => {
             let n = parseFloat(val);
             return isNaN(n) ? 0 : n;
@@ -4271,6 +4364,7 @@
             trendModal.value.title = titles[type] || "歷史趨勢分析";
             trendModal.value.type = type;
             trendModal.value.scale = "daily";
+            trendModal.value.showAll = false;
             trendModal.value.show = true;
             nextTick(() => {
               renderChart();
@@ -4279,6 +4373,13 @@
 
           const changeTimeScale = (newScale) => {
             trendModal.value.scale = newScale;
+            nextTick(() => {
+              renderChart();
+            });
+          };
+
+          const toggleTrendShowAll = () => {
+            trendModal.value.showAll = !trendModal.value.showAll;
             nextTick(() => {
               renderChart();
             });
@@ -4347,8 +4448,11 @@
             );
             const content = document.getElementById("trendChartScrollContent");
             const scrollableDailyTypes = ["mails", "duration", "trips"];
+            const showAll = Boolean(trendModal.value.showAll);
             const isScrollableDailyChart =
-              scale === "daily" && scrollableDailyTypes.includes(type);
+              scale === "daily" &&
+              scrollableDailyTypes.includes(type) &&
+              !showAll;
 
             if (viewport && content) {
               const isMobile = window.innerWidth <= 768;
@@ -4365,19 +4469,26 @@
 
               content.style.width = `${desiredWidth}px`;
               content.style.minWidth = `${desiredWidth}px`;
+              viewport.style.overflowX = showAll ? "hidden" : "auto";
               viewport.scrollLeft = 0;
             }
 
             let chartConfig = {};
 
             // X 軸核心防錯設定：限制最大顯示刻度為 12 個，其餘點自動 skip，絕不發生文字重疊
+            const overviewTickLimit = (() => {
+              if (!showAll) return 12;
+              const width = viewport?.clientWidth || window.innerWidth || 900;
+              return Math.max(5, Math.min(12, Math.floor(width / 105)));
+            })();
+
             const xAxisConfig = {
               grid: { display: false },
               ticks: {
                 autoSkip: true,
-                maxTicksLimit: 12,
+                maxTicksLimit: overviewTickLimit,
                 maxRotation: 0,
-                font: { size: 11, weight: "bold" },
+                font: { size: showAll ? 10 : 11, weight: "bold" },
               },
             };
 
@@ -4412,7 +4523,7 @@
               return `rgba(${r}, ${g}, ${b}, ${alpha})`;
             };
 
-            const movingAverage = (values, windowSize = 5) =>
+            const movingAverage = (values, windowSize = 5, decimals = 0) =>
               values.map((_, index, arr) => {
                 const start = Math.max(0, index - windowSize + 1);
                 const slice = arr
@@ -4420,10 +4531,25 @@
                   .map(Number)
                   .filter(Number.isFinite);
                 if (!slice.length) return null;
-                return Math.round(
-                  slice.reduce((sum, n) => sum + n, 0) / slice.length,
-                );
+                const avg = slice.reduce((sum, n) => sum + n, 0) / slice.length;
+                const factor = 10 ** decimals;
+                return Math.round(avg * factor) / factor;
               });
+
+            // 總覽模式依資料量自動拉長平滑視窗：資料越多，越著重長期脈絡。
+            const adaptiveTrendWindow = (count) => {
+              if (count <= 14) return 3;
+              if (count <= 45) return 5;
+              if (count <= 100) return 7;
+              if (count <= 220) return 14;
+              if (count <= 500) return 30;
+              return Math.max(30, Math.round(count / 18));
+            };
+            const trendWindow = showAll
+              ? adaptiveTrendWindow(labels.length)
+              : scale === "daily"
+                ? 5
+                : 3;
 
             if (type === "trips") {
               chartConfig = {
@@ -4434,21 +4560,64 @@
                     {
                       label: "籃車數 (台)",
                       data: raw.map((d) => d.summary.total_carts),
-                      backgroundColor: "rgba(59, 130, 246, 0.6)",
+                      backgroundColor: showAll
+                        ? "rgba(59, 130, 246, 0.42)"
+                        : "rgba(59, 130, 246, 0.6)",
                       borderColor: "rgb(59, 130, 246)",
-                      borderWidth: 1,
+                      borderWidth: showAll ? 0 : 1,
+                      maxBarThickness: showAll ? 16 : 34,
                       yAxisID: "yCarts",
                     },
+                    ...(showAll
+                      ? [
+                          {
+                            label: `籃車趨勢 (${trendWindow}期均線)`,
+                            data: movingAverage(
+                              raw.map((d) => d.summary.total_carts),
+                              trendWindow,
+                              1,
+                            ),
+                            type: "line",
+                            borderColor: "rgb(96, 165, 250)",
+                            backgroundColor: "rgba(96, 165, 250, 0.08)",
+                            borderWidth: 2.5,
+                            borderDash: [7, 4],
+                            tension: 0.3,
+                            pointRadius: 0,
+                            yAxisID: "yCarts",
+                          },
+                        ]
+                      : []),
                     {
                       label: "車次 (次)",
                       data: raw.map((d) => d.summary.total_trips),
                       type: "line",
                       borderColor: "rgb(234, 179, 8)",
                       backgroundColor: "rgb(234, 179, 8)",
-                      borderWidth: 3,
-                      tension: 0.15,
+                      borderWidth: showAll ? 1.8 : 3,
+                      tension: showAll ? 0.08 : 0.15,
+                      pointRadius: showAll ? 0 : 3,
                       yAxisID: "yTrips",
                     },
+                    ...(showAll
+                      ? [
+                          {
+                            label: `車次趨勢 (${trendWindow}期均線)`,
+                            data: movingAverage(
+                              raw.map((d) => d.summary.total_trips),
+                              trendWindow,
+                              1,
+                            ),
+                            type: "line",
+                            borderColor: "rgb(250, 204, 21)",
+                            backgroundColor: "rgba(250, 204, 21, 0.08)",
+                            borderWidth: 3,
+                            tension: 0.34,
+                            pointRadius: 0,
+                            yAxisID: "yTrips",
+                          },
+                        ]
+                      : []),
                   ],
                 },
                 options: {
@@ -4486,10 +4655,32 @@
                       borderColor: "rgb(245, 158, 11)",
                       backgroundColor: "rgba(245, 158, 11, 0.1)",
                       fill: true,
-                      borderWidth: 3,
-                      tension: 0.15,
-                      pointRadius: 4,
+                      borderWidth: showAll ? 1.8 : 3,
+                      tension: showAll ? 0.08 : 0.15,
+                      pointRadius: showAll ? 0 : 4,
                     },
+                    ...(showAll
+                      ? [
+                          {
+                            label: `作業時間趨勢 (${trendWindow}期均線)`,
+                            data: movingAverage(
+                              raw.map((d) =>
+                                scale === "daily"
+                                  ? parseMinsOnly(d.summary.total_duration)
+                                  : d.summary.total_duration_mins,
+                              ),
+                              trendWindow,
+                              1,
+                            ),
+                            borderColor: "rgb(251, 191, 36)",
+                            backgroundColor: "rgba(251, 191, 36, 0.08)",
+                            borderWidth: 3,
+                            tension: 0.34,
+                            pointRadius: 0,
+                            fill: false,
+                          },
+                        ]
+                      : []),
                   ],
                 },
                 options: {
@@ -4528,10 +4719,7 @@
               const mailValues = raw.map((d) => d.summary.total_mails || 0);
               const tripMailValues = raw.map((d) => d.summary.mail_per_trip);
               const cartMailValues = raw.map((d) => d.summary.mail_per_cart);
-              const mailTrendValues = movingAverage(
-                mailValues,
-                scale === "daily" ? 5 : 3,
-              );
+              const mailTrendValues = movingAverage(mailValues, trendWindow);
               const specialDateColors =
                 trendModal.value.specialDateColors || {};
               const mailBarColors = raw.map((d) => {
@@ -4572,13 +4760,16 @@
                       borderColor: mailBarBorderColors,
                       borderWidth: 1,
                       borderRadius: 8,
-                      maxBarThickness: 34,
+                      maxBarThickness: showAll ? 14 : 34,
                       order: 4,
                       yAxisID: "yMailCount",
                     },
                     {
-                      label:
-                        scale === "daily" ? "郵件量5日均線" : "郵件量趨勢線",
+                      label: showAll
+                        ? `郵件量趨勢 (${trendWindow}期均線)`
+                        : scale === "daily"
+                          ? "郵件量5日均線"
+                          : "郵件量趨勢線",
                       data: mailTrendValues,
                       type: "line",
                       borderColor: "rgb(244, 114, 182)",
@@ -4599,7 +4790,7 @@
                       backgroundColor: "rgb(16, 185, 129)",
                       borderWidth: 2.5,
                       tension: 0.15,
-                      pointRadius: 4,
+                      pointRadius: showAll ? 0 : 4,
                       order: 1,
                       yAxisID: "yTripMail",
                     },
@@ -4612,7 +4803,7 @@
                       borderWidth: 2.5,
                       borderDash: [4, 4],
                       tension: 0.15,
-                      pointRadius: 4,
+                      pointRadius: showAll ? 0 : 4,
                       order: 2,
                       yAxisID: "yCartMail",
                     },
@@ -4673,6 +4864,18 @@
                 },
               };
             }
+
+            // 所有「趨勢線／均線」統一使用虛線，避免不同圖表視覺語意不一致。
+            (chartConfig.data?.datasets || []).forEach((dataset) => {
+              const label = String(dataset.label || "");
+              if (
+                dataset.type === "line" &&
+                (label.includes("趨勢") || label.includes("均線"))
+              ) {
+                dataset.borderDash = [8, 5];
+                dataset.borderCapStyle = "round";
+              }
+            });
 
             chartInstance = new Chart(ctx, chartConfig);
             setupTrendChartScroller(isScrollableDailyChart);
@@ -4866,6 +5069,8 @@
             ganttHours,
             trendModal,
             trendStatistics,
+            trendModalPanelStyle,
+            trendChartShellStyle,
             distributionModal,
             distributionTrip,
             distributionTripOptions,
@@ -4884,6 +5089,7 @@
             openTrendModal,
             closeTrendModal,
             changeTimeScale,
+            toggleTrendShowAll,
             renderChart,
             addMailSpecialDateColor,
             removeMailSpecialDateColor,
