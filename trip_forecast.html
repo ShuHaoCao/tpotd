@@ -1106,7 +1106,7 @@
     <div class="app">
       <section class="hero">
         <div>
-          <h1>車次需求預測輔助系統 v1.01</h1>
+          <h1>車次需求預測</h1>
           <p>
             依歷史三階段車次資料，動態推估下一階段需求。資料愈多，模型自行重新計算，不固定日期、樣本數、車次範圍或機率。
           </p>
@@ -1126,9 +1126,6 @@
         <button class="btn ghost" onclick="window.print()">
           列印 / 另存 PDF
         </button>
-        <span class="file-name" id="fileName"
-          >預設檔名：momo_dispatch_data.json</span
-        >
       </div>
 
       <section class="filters">
@@ -1734,7 +1731,6 @@
           els.endDate.min = dates[0];
           els.endDate.max = dates.at(-1);
           els.loadStatus.textContent = `已載入 ${rows.length} 日｜${fmtDate(dates[0])}～${fmtDate(dates.at(-1))}`;
-          els.fileName.textContent = `資料來源：${name}`;
           populateControls();
           renderAll();
         }
