@@ -163,6 +163,33 @@
       "enabled": true
     },
     {
+      "id": "AGV-OatDrink-2026",
+      "title": "愛滋味",
+      "start": "20260813",
+      "end": "20260813",
+      "text": "早班支援運載任務，至愛滋味廠區運載純農燕麥(籃車)",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "Get-together-2026",
+      "title": "聚餐",
+      "start": "20260816",
+      "end": "20260816",
+      "text": "運輸股同仁聚餐，地點:饗麻饗辣中華店，時間:11:30-13:30",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "suitcase-2026",
+      "title": "萬國行李箱",
+      "start": "20260821",
+      "end": "20260821",
+      "text": "今天開始運載作業",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
       "id": "shift-Notes",
       "title": "值班說明",
       "start": "20260822",
@@ -204,24 +231,6 @@
       "start": "20260907",
       "end": "20260921",
       "text": "文旦收寄期間，自9月7日(一)起至9月21(一)日止",
-      "colorHue": 152,
-      "enabled": true
-    },
-    {
-      "id": "AGV-OatDrink-2026",
-      "title": "愛滋味",
-      "start": "20260813",
-      "end": "20260813",
-      "text": "早班支援運載任務，至愛滋味廠區運載純農燕麥(籃車)",
-      "colorHue": 152,
-      "enabled": true
-    },
-    {
-      "id": "Get-together-2026",
-      "title": "聚餐",
-      "start": "20260816",
-      "end": "20260816",
-      "text": "運輸股同仁聚餐，地點:饗麻饗辣中華店，時間:11:30-13:30",
       "colorHue": 152,
       "enabled": true
     }
