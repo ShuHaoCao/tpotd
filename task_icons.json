@@ -173,7 +173,7 @@
     },
     {
       "id": "typhoon-day-off",
-      "title": "颱風假",
+      "title": "防災假",
       "start": "20260823",
       "end": "20260823",
       "text": "台南市政府於8月22日(六)晚上8點宣布8月23日(日)停止上班上課",
@@ -223,6 +223,28 @@
       "end": "20260816",
       "text": "運輸股同仁聚餐，地點:饗麻饗辣中華店，時間:11:30-13:30",
       "colorHue": 152,
+      "enabled": true
+    }
+  ],
+  "_dateBackgroundHelp": {
+    "description": "指定日期背景圖。未設定時不顯示。圖片會自動依日期卡尺寸等比例縮放並鋪滿（cover），不需自行調整圖片大小；比例不同時僅裁切邊緣，不會拉伸變形。opacity 建議 0.10～0.22。",
+    "fields": {
+      "date": "單日，格式 YYYYMMDD；若使用 start/end 則可設定日期區間",
+      "start": "起日 YYYYMMDD（可選）",
+      "end": "迄日 YYYYMMDD（可選）",
+      "image": "圖片路徑或網址",
+      "opacity": "透明度，建議 0.10～0.22，程式安全範圍 0.04～0.42",
+      "position": "圖片裁切焦點，例如 center、center top、50% 35%；圖片尺寸會由程式自動貼合日期卡。",
+      "enabled": "false 可暫停顯示"
+    },
+    "taskAlternative": "也可直接在既有 task 物件加入 backgroundImage、backgroundOpacity（背景透明度請仍優先使用 dateBackgrounds 的 opacity）。"
+  },
+  "dateBackgrounds": [
+    {
+      "date": "20260823",
+      "image": "heavy_rain.png",
+      "opacity": 0.42,
+      "position": "center",
       "enabled": true
     }
   ]

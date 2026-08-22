@@ -1911,6 +1911,233 @@
           0 6px 18px rgba(226, 232, 240, 0.17),
           0 0 16px rgba(255, 255, 255, 0.1);
       }
+
+      /* =========================================================
+         指定日期背景圖｜由 task_icons.json > dateBackgrounds 控制
+         ========================================================= */
+      .day-card.has-date-background {
+        isolation: isolate;
+        background-color: rgba(10, 18, 32, 0.94);
+      }
+
+      .day-card.has-date-background::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        border-radius: inherit;
+        background-image: var(--date-bg-image);
+        /* 背景圖永遠依日期卡尺寸等比例縮放並鋪滿；比例不同時只裁切邊緣，不拉伸變形 */
+        background-position: var(--date-bg-position, center);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-origin: border-box;
+        background-clip: border-box;
+        opacity: var(--date-bg-opacity, 0.16);
+        filter: saturate(0.72) contrast(0.92) brightness(0.86);
+        pointer-events: none;
+      }
+
+      .day-card.has-date-background::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: linear-gradient(
+          180deg,
+          rgba(5, 12, 24, 0.18) 0%,
+          rgba(5, 12, 24, 0.36) 54%,
+          rgba(5, 12, 24, 0.58) 100%
+        );
+        pointer-events: none;
+      }
+
+      .day-card.has-date-background .date-number,
+      .day-card.has-date-background .lunar-date,
+      .day-card.has-date-background .responsive-weekday,
+      .day-card.has-date-background .not-scheduled-title,
+      .day-card.has-date-background .not-scheduled-subtitle {
+        text-shadow: 0 2px 9px rgba(0, 0, 0, 0.78);
+      }
+
+      /* =========================================================
+         手機體驗最終整併層｜覆蓋前段舊版 media query，避免規則互撞
+         ========================================================= */
+      @media (max-width: 768px) {
+        html {
+          -webkit-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+        }
+
+        body {
+          padding: 7px;
+          overscroll-behavior-x: none;
+        }
+
+        .hero {
+          padding: 14px;
+          border-radius: 18px;
+        }
+
+        .title-area h1 {
+          font-size: clamp(1.65rem, 8vw, 2.1rem);
+          line-height: 1.15;
+        }
+
+        .title-area p {
+          font-size: 0.82rem;
+          line-height: 1.55;
+        }
+
+        .controls {
+          gap: 8px;
+        }
+
+        .control-card {
+          min-width: 0;
+          padding: 9px;
+        }
+
+        select,
+        button {
+          min-height: 44px;
+          touch-action: manipulation;
+        }
+
+        .calendar-shell {
+          padding: 7px;
+          border-radius: 18px;
+        }
+
+        .calendar-grid {
+          gap: 7px;
+        }
+
+        .day-card,
+        .day-card:hover {
+          width: 100%;
+          padding: 11px;
+          border-radius: 16px;
+          transform: none;
+        }
+
+        .date-row {
+          min-height: 38px;
+          margin-bottom: 7px;
+          padding-right: 0;
+          align-items: flex-start;
+        }
+
+        .date-number {
+          font-size: 1.5rem;
+        }
+
+        .responsive-weekday {
+          padding-top: 2px;
+          font-size: 0.73rem;
+        }
+
+        .holiday-tag {
+          max-width: 40vw;
+          white-space: normal;
+          line-height: 1.25;
+          text-align: center;
+        }
+
+        .task-row {
+          position: relative;
+          top: auto;
+          right: auto;
+          width: 100%;
+          max-width: 100%;
+          margin: 1px 0 8px;
+          justify-content: flex-start;
+        }
+
+        .task-row .task-labels {
+          width: 100%;
+          max-width: 100%;
+          align-items: flex-start;
+          gap: 4px;
+        }
+
+        .task-row .task-label {
+          min-height: 30px;
+          padding: 5px 9px;
+          border-radius: 11px;
+          font-size: 0.67rem;
+          line-height: 1.25;
+        }
+
+        .shift-area {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 6px;
+        }
+
+        .shift-tag {
+          min-height: 44px;
+          padding: 8px;
+          line-height: 1.3;
+        }
+
+        .shift-name {
+          overflow-wrap: anywhere;
+        }
+
+        .task-popover {
+          padding: 8px;
+        }
+
+        .task-popover-card {
+          width: 100%;
+          max-height: min(78dvh, 620px);
+          overflow-y: auto;
+          overscroll-behavior: contain;
+          border-radius: 20px 20px 14px 14px;
+          padding-bottom: max(18px, env(safe-area-inset-bottom));
+        }
+
+        .fortune-dialog {
+          max-height: min(82dvh, 680px);
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .day-card.has-date-background::before {
+          opacity: min(var(--date-bg-opacity, 0.16), 0.2);
+          filter: saturate(0.62) contrast(0.9) brightness(0.78);
+        }
+      }
+
+      @media (max-width: 640px) {
+        .controls {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .clock-box {
+          padding: 12px;
+        }
+
+        .date-row {
+          padding-right: 0;
+        }
+
+        .task-row {
+          max-width: 100%;
+        }
+
+        .task-row .task-label {
+          min-height: 30px;
+          max-width: 100%;
+          font-size: 0.65rem;
+        }
+
+        .shift-area {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2045,6 +2272,7 @@
       let scheduleData = {};
       let fortuneData = {};
       let taskData = [];
+      let dateBackgroundData = [];
       // ============================================================
       // 國定假日設定區｜每年只要在這裡直接增修即可
       // 格式："YYYY-MM-DD": "假日名稱",
@@ -2278,9 +2506,13 @@
           taskData = Array.isArray(rawTaskData)
             ? rawTaskData
             : rawTaskData.tasks || [];
+          dateBackgroundData = Array.isArray(rawTaskData)
+            ? []
+            : rawTaskData.dateBackgrounds || rawTaskData.backgrounds || [];
         } catch (err) {
           console.warn("task_icons.json 讀取失敗", err);
           taskData = [];
+          dateBackgroundData = [];
         }
 
         [yearSelect, monthSelect, staffSelect].forEach((el) => {
@@ -2563,6 +2795,99 @@
           .slice(0, 5);
       }
 
+      function normalizeOpacity(value, fallback = 0.16) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) return fallback;
+        return Math.max(0.04, Math.min(0.42, num));
+      }
+
+      function getDateBackground(dateStr) {
+        // 第一順位：dateBackgrounds 專用設定；後寫的規則可覆蓋前面的規則。
+        const dedicated = dateBackgroundData
+          .filter((item) => {
+            if (!item || item.enabled === false) return false;
+            const start = normalizeTaskDate(
+              item.date || item.start || item.startDate,
+            );
+            const end = normalizeTaskDate(
+              item.end ||
+                item.endDate ||
+                item.date ||
+                item.start ||
+                item.startDate,
+            );
+            const image =
+              item.image || item.backgroundImage || item.background || item.src;
+            return Boolean(
+              start && end && image && dateStr >= start && dateStr <= end,
+            );
+          })
+          .at(-1);
+
+        if (dedicated) return dedicated;
+
+        // 第二順位：也允許直接在 task 物件中加入 backgroundImage。
+        return (
+          taskData
+            .filter((task) => {
+              if (!task || task.enabled === false) return false;
+              const image =
+                task.backgroundImage || task.background || task.bgImage;
+              if (!image) return false;
+              const start = normalizeTaskDate(
+                task.start || task.startDate || task.起,
+              );
+              const end = normalizeTaskDate(
+                task.end ||
+                  task.endDate ||
+                  task.訖 ||
+                  task.start ||
+                  task.startDate ||
+                  task.起,
+              );
+              return start && end && dateStr >= start && dateStr <= end;
+            })
+            .at(-1) || null
+        );
+      }
+
+      function escapeCssUrl(value) {
+        return String(value ?? "")
+          .trim()
+          .replace(/\\/g, "\\\\")
+          .replace(/"/g, '\\"')
+          .replace(/'/g, "\\'")
+          .replace(/[\r\n\f]/g, "");
+      }
+
+      function getDateBackgroundStyle(dateStr) {
+        const item = getDateBackground(dateStr);
+        if (!item) return { className: "", style: "" };
+
+        const image =
+          item.image ||
+          item.backgroundImage ||
+          item.background ||
+          item.bgImage ||
+          item.src;
+        if (!image) return { className: "", style: "" };
+
+        const opacity = normalizeOpacity(
+          item.opacity ?? item.backgroundOpacity,
+          0.16,
+        );
+        const position = String(item.position || "center").replace(
+          /[;{}]/g,
+          "",
+        );
+        const escapedImage = escapeCssUrl(image);
+
+        return {
+          className: "has-date-background",
+          style: `--date-bg-image:url('${escapedImage}'); --date-bg-opacity:${opacity}; --date-bg-position:${position};`,
+        };
+      }
+
       function formatTaskPeriod(task) {
         const start = normalizeTaskDate(
           task.start || task.startDate || task.起,
@@ -2661,6 +2986,8 @@
             month === now.getMonth() &&
             d === now.getDate();
 
+          const dateBackground = getDateBackgroundStyle(dateStr);
+
           // 未選擇人員時，只顯示純月曆資訊。
           // 選擇人員後：整個日期沒有任何班表資料時顯示「尚未排班」；
           // 日期已有班表資料，但該人當日沒有班別時，才顯示「休」。
@@ -2708,7 +3035,7 @@
           }
 
           calendarGrid.innerHTML += `
-          <div class="day-card ${isHoliday ? "holiday" : ""} ${isToday ? "today" : ""}">
+          <div class="day-card ${isHoliday ? "holiday" : ""} ${isToday ? "today" : ""} ${dateBackground.className}" ${dateBackground.style ? `style="${dateBackground.style}"` : ""}>
 
             <div class="date-row">
               <div class="date-main">
