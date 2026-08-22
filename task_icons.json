@@ -163,6 +163,33 @@
       "enabled": true
     },
     {
+      "id": "shift-Notes",
+      "title": "值班說明",
+      "start": "20260822",
+      "end": "20260822",
+      "text": "出口→政謙，夜1→世民(支援MOMO)，夜2→以平(MOMO跑1趟，00:00下班)，128車次→哲駿(休假)",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "typhoon-day-off",
+      "title": "颱風假",
+      "start": "20260823",
+      "end": "20260823",
+      "text": "台南市政府於8月22日(六)晚上8點宣布8月23日(日)停止上班上課",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "shift-Notes",
+      "title": "值班說明",
+      "start": "20260823",
+      "end": "20260823",
+      "text": "早1→翊宏，772→俊融，出口→政謙，夜1→哲駿，128→柏林(00:00上班)，夜2→恆毅(00:00上班)",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
       "id": "Examination-2026",
       "title": "職階升等考試",
       "start": "20260830",
