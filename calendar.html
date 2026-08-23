@@ -2138,6 +2138,42 @@
           grid-template-columns: 1fr;
         }
       }
+
+      /* ===== 標籤說明 Tooltip 視窗邊界修正 =====
+         依標籤所在位置自動改為靠左 / 靠右 / 向下展開，
+         避免說明框超出瀏覽器可視範圍。 */
+      .task-label.tooltip-left::after {
+        left: 0;
+        right: auto;
+        transform: translate(0, 5px);
+      }
+
+      .task-label.tooltip-right::after {
+        left: auto;
+        right: 0;
+        transform: translate(0, 5px);
+      }
+
+      .task-label.tooltip-below::after {
+        top: calc(100% + 9px);
+        bottom: auto;
+      }
+
+      .task-label.tooltip-left:hover::after,
+      .task-label.tooltip-left:focus-visible::after,
+      .task-label.tooltip-right:hover::after,
+      .task-label.tooltip-right:focus-visible::after {
+        transform: translate(0, 0);
+      }
+
+      /* 極窄畫面仍以既有點擊式 popover 為主 */
+      @media (max-width: 768px) {
+        .task-label.tooltip-left::after,
+        .task-label.tooltip-right::after,
+        .task-label.tooltip-below::after {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -3061,6 +3097,52 @@
         `;
         }
       }
+
+      /* ===== Tooltip 自動避開視窗邊界 ===== */
+      function updateTaskTooltipPosition(label) {
+        if (!label || window.innerWidth <= 768) return;
+
+        label.classList.remove(
+          "tooltip-left",
+          "tooltip-right",
+          "tooltip-below",
+        );
+
+        const rect = label.getBoundingClientRect();
+        const viewportPadding = 14;
+        const tooltipWidth = Math.min(
+          190,
+          Math.max(0, window.innerWidth - viewportPadding * 2),
+        );
+        const centerX = rect.left + rect.width / 2;
+
+        if (centerX + tooltipWidth / 2 > window.innerWidth - viewportPadding) {
+          label.classList.add("tooltip-right");
+        } else if (centerX - tooltipWidth / 2 < viewportPadding) {
+          label.classList.add("tooltip-left");
+        }
+
+        // 上方空間不足時改向下展開，避免 tooltip 被視窗頂端裁切。
+        if (rect.top < 105) {
+          label.classList.add("tooltip-below");
+        }
+      }
+
+      document.addEventListener("pointerover", (e) => {
+        const label = e.target.closest?.(".task-label");
+        if (label) updateTaskTooltipPosition(label);
+      });
+
+      document.addEventListener("focusin", (e) => {
+        const label = e.target.closest?.(".task-label");
+        if (label) updateTaskTooltipPosition(label);
+      });
+
+      window.addEventListener("resize", () => {
+        document
+          .querySelectorAll(".task-label:hover, .task-label:focus-visible")
+          .forEach(updateTaskTooltipPosition);
+      });
 
       function startClock() {
         const liveClock = document.getElementById("liveClock");
