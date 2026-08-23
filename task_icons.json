@@ -268,7 +268,8 @@
   },
   "dateBackgrounds": [
     {
-      "date": "20260823",
+      "start": "20260823",
+      "end": "20260824",
       "image": "heavy_rain.png",
       "opacity": 0.42,
       "position": "center",
