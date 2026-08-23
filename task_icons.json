@@ -217,6 +217,24 @@
       "enabled": true
     },
     {
+      "id": "typhoon-day-off",
+      "title": "防災假",
+      "start": "20260824",
+      "end": "20260824",
+      "text": "台南市政府於8月23日(日)晚上6點宣布8月24日(一)停止上班上課",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
+      "id": "shift-Notes",
+      "title": "值班說明",
+      "start": "20260824",
+      "end": "20260824",
+      "text": "早1→耀宗，772→育宏，出口→政謙，夜1→柏林，128→世民(00:00上班)",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
       "id": "Examination-2026",
       "title": "職階升等考試",
       "start": "20260830",
