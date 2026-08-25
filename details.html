@@ -4,6 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MOMO進出口統計詳情表 v1.1</title>
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=UIdCiU86ZGhj_gZi2yhJstLFILvXUFdN7qsV28XHb4X9fEK2ibZRV2T_15TIQQmHWAerFdIGZg_1Q-d1hHeL0xbXAaoypyPCIdy2cNZKNi56aYqQCd1lv3ZUQp2phiyJC1XdWkIw_sOLo4ZkXsYbYW2JWk9TxhIXFNPaMlXhMDJCek0j4bNNOssmAUq5gMDmY03VzFJqKPG_jL4u9t27ZN5n7cQffJ4ZgafEkxMVoIkJjBme1nrdAFQWtZwbnZozyB0UeZE7BNGBUNZ_9902CKCtzGLntiWCTIsnA4Gu3jBgZlINNYwmKyaDQcForSFeQgOcvXig8K70mBcDfSAn0A"
+      charset="UTF-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin="anonymous"
+      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMGYwMTA4MWY1YTZhNzU0NGQzMjJjYmIxOCZmbj1kZXRhaWxzX2NhbGVuZGFyX2Rpc2FibGVkLmh0bWwmY2Q9YXR0YWNobWVudCZ0cz00OTY1NzUmcD1mcyZjaWQ9MSZzaWc9NWVlN2MyNTc2YmRkNzIwYmMxNTUyZTM2NWE1NTgzN2I5NzIyNjQ5ZDg2MjliZTliZTMzMzY0N2U4YjhiZTA1ZiZ2PTA"
+    />
     <style>
       :root {
         --ink: #172033;
@@ -55,6 +65,132 @@
         color: #fff;
         background: #475467;
         cursor: pointer;
+      }
+
+      /* 自訂日期月曆：只允許點選 details.json 中實際存在的日期 */
+      .date-picker-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .date-picker-wrap #dateSelect {
+        width: 154px;
+        padding-right: 42px;
+        cursor: pointer;
+        background: #fff;
+      }
+
+      .date-picker-trigger {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 34px;
+        min-height: 34px !important;
+        padding: 0 !important;
+        border: 0 !important;
+        border-radius: 8px !important;
+        background: transparent !important;
+        color: #475467 !important;
+        font-size: 18px !important;
+        line-height: 1;
+      }
+
+      .date-picker-popup {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        z-index: 1000;
+        width: 310px;
+        padding: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 18px 45px rgb(15 23 42 / 20%);
+      }
+
+      .date-picker-popup[hidden] {
+        display: none !important;
+      }
+
+      .calendar-head {
+        display: grid;
+        grid-template-columns: 38px 1fr 38px;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+
+      .calendar-head button {
+        min-height: 36px !important;
+        padding: 0 !important;
+        border: 1px solid #d6deea !important;
+        border-radius: 9px !important;
+        background: #f8fafc !important;
+        color: #344054 !important;
+        font-size: 18px !important;
+      }
+
+      .calendar-head button:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      .calendar-month-label {
+        text-align: center;
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .calendar-weekdays,
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+      }
+
+      .calendar-weekdays {
+        margin-bottom: 4px;
+      }
+
+      .calendar-weekdays span {
+        padding: 4px 0;
+        color: #667085;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .calendar-day {
+        min-height: 36px !important;
+        padding: 0 !important;
+        border: 1px solid transparent !important;
+        border-radius: 9px !important;
+        background: #f8fafc !important;
+        color: #172033 !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+      }
+
+      .calendar-day.has-data:hover {
+        border-color: #245e9f !important;
+        background: #eef5ff !important;
+      }
+
+      .calendar-day.selected {
+        border-color: #245e9f !important;
+        background: #245e9f !important;
+        color: #fff !important;
+      }
+
+      .calendar-day.no-data,
+      .calendar-day.other-month {
+        background: #fff !important;
+        color: #c2c8d0 !important;
+        cursor: not-allowed;
+        text-decoration: line-through;
+        opacity: 0.65;
       }
       .status {
         font-size: 13px;
@@ -480,7 +616,45 @@
   <body>
     <div class="topbar">
       <strong>詳情表日期</strong>
-      <input id="dateSelect" type="date" aria-label="選擇報表日期" />
+      <div class="date-picker-wrap">
+        <input
+          id="dateSelect"
+          type="text"
+          readonly
+          aria-label="選擇報表日期"
+          aria-haspopup="dialog"
+        />
+        <button
+          id="datePickerTrigger"
+          class="date-picker-trigger"
+          type="button"
+          aria-label="開啟日期月曆"
+        >
+          📅
+        </button>
+        <div
+          id="datePickerPopup"
+          class="date-picker-popup"
+          role="dialog"
+          aria-label="選擇報表日期"
+          hidden
+        >
+          <div class="calendar-head">
+            <button id="calendarPrev" type="button" aria-label="上一個月">
+              ‹
+            </button>
+            <div id="calendarMonthLabel" class="calendar-month-label"></div>
+            <button id="calendarNext" type="button" aria-label="下一個月">
+              ›
+            </button>
+          </div>
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>日</span><span>一</span><span>二</span><span>三</span
+            ><span>四</span><span>五</span><span>六</span>
+          </div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </div>
+      </div>
       <button type="button" onclick="window.print()">列印 A4</button>
       <span id="status" class="status">讀取 details.json 中…</span>
     </div>
@@ -628,6 +802,19 @@
         document.title = `${key} MOMO進出口統計詳情表`;
         history.replaceState(null, "", `?date=${encodeURIComponent(key)}`);
       }
+      function parseDateKey(key) {
+        const [y, m, d] = String(key).split("-").map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      function monthKey(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+      }
+
+      function formatDateKey(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      }
+
       async function init() {
         try {
           const res = await fetch(`details.json?ts=${Date.now()}`, {
@@ -635,37 +822,152 @@
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           database = await res.json();
+
           const dates = Object.keys(database.reports || {})
             .sort()
             .reverse();
           if (!dates.length) throw new Error("沒有報表資料");
+
+          const dateSet = new Set(dates);
           const dateInput = document.getElementById("dateSelect");
+          const trigger = document.getElementById("datePickerTrigger");
+          const popup = document.getElementById("datePickerPopup");
+          const prevBtn = document.getElementById("calendarPrev");
+          const nextBtn = document.getElementById("calendarNext");
+          const monthLabel = document.getElementById("calendarMonthLabel");
+          const grid = document.getElementById("calendarGrid");
+          const status = document.getElementById("status");
+
           const requested = new URLSearchParams(location.search).get("date");
-          const target = dates.includes(requested) ? requested : dates[0];
-
-          dateInput.min = dates[dates.length - 1];
-          dateInput.max = dates[0];
-          dateInput.value = target;
+          const target = dateSet.has(requested) ? requested : dates[0];
           let currentDate = target;
+          let viewDate = new Date(
+            parseDateKey(target).getFullYear(),
+            parseDateKey(target).getMonth(),
+            1,
+          );
 
-          dateInput.addEventListener("change", (e) => {
-            const selectedDate = e.target.value;
-            if (dates.includes(selectedDate)) {
-              currentDate = selectedDate;
-              showReport(selectedDate);
-              document.getElementById("status").textContent =
-                `共 ${dates.length} 日資料`;
-              return;
+          const minDate = parseDateKey(dates[dates.length - 1]);
+          const maxDate = parseDateKey(dates[0]);
+          const minMonth = new Date(
+            minDate.getFullYear(),
+            minDate.getMonth(),
+            1,
+          );
+          const maxMonth = new Date(
+            maxDate.getFullYear(),
+            maxDate.getMonth(),
+            1,
+          );
+
+          function renderCalendar() {
+            const y = viewDate.getFullYear();
+            const m = viewDate.getMonth();
+            monthLabel.textContent = `${y} 年 ${m + 1} 月`;
+            grid.innerHTML = "";
+
+            const firstWeekday = new Date(y, m, 1).getDay();
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const prevMonthDays = new Date(y, m, 0).getDate();
+
+            for (let cell = 0; cell < 42; cell++) {
+              let cellDate;
+              let inCurrentMonth = true;
+
+              if (cell < firstWeekday) {
+                cellDate = new Date(
+                  y,
+                  m - 1,
+                  prevMonthDays - firstWeekday + cell + 1,
+                );
+                inCurrentMonth = false;
+              } else if (cell >= firstWeekday + daysInMonth) {
+                cellDate = new Date(
+                  y,
+                  m + 1,
+                  cell - firstWeekday - daysInMonth + 1,
+                );
+                inCurrentMonth = false;
+              } else {
+                cellDate = new Date(y, m, cell - firstWeekday + 1);
+              }
+
+              const key = formatDateKey(cellDate);
+              const hasData = inCurrentMonth && dateSet.has(key);
+              const btn = document.createElement("button");
+              btn.type = "button";
+              btn.className = "calendar-day";
+              btn.textContent = cellDate.getDate();
+              btn.setAttribute("aria-label", key);
+
+              if (!inCurrentMonth) {
+                btn.classList.add("other-month");
+                btn.disabled = true;
+              } else if (!hasData) {
+                btn.classList.add("no-data");
+                btn.disabled = true;
+                btn.title = "此日期沒有資料";
+              } else {
+                btn.classList.add("has-data");
+                if (key === currentDate) btn.classList.add("selected");
+                btn.addEventListener("click", () => {
+                  currentDate = key;
+                  dateInput.value = key;
+                  showReport(key);
+                  status.textContent = `共 ${dates.length} 日資料`;
+                  popup.hidden = true;
+                });
+              }
+
+              grid.appendChild(btn);
             }
 
-            e.target.value = currentDate;
-            document.getElementById("status").textContent =
-              "此日期沒有資料，請選擇其他日期";
+            prevBtn.disabled = monthKey(viewDate) <= monthKey(minMonth);
+            nextBtn.disabled = monthKey(viewDate) >= monthKey(maxMonth);
+          }
+
+          function openCalendar() {
+            const selected = parseDateKey(currentDate);
+            viewDate = new Date(selected.getFullYear(), selected.getMonth(), 1);
+            renderCalendar();
+            popup.hidden = false;
+          }
+
+          dateInput.value = target;
+          dateInput.addEventListener("click", openCalendar);
+          trigger.addEventListener("click", () => {
+            if (popup.hidden) openCalendar();
+            else popup.hidden = true;
+          });
+
+          prevBtn.addEventListener("click", () => {
+            viewDate = new Date(
+              viewDate.getFullYear(),
+              viewDate.getMonth() - 1,
+              1,
+            );
+            renderCalendar();
+          });
+
+          nextBtn.addEventListener("click", () => {
+            viewDate = new Date(
+              viewDate.getFullYear(),
+              viewDate.getMonth() + 1,
+              1,
+            );
+            renderCalendar();
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!e.target.closest(".date-picker-wrap")) popup.hidden = true;
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") popup.hidden = true;
           });
 
           showReport(target);
-          document.getElementById("status").textContent =
-            `共 ${dates.length} 日資料`;
+          status.textContent = `共 ${dates.length} 日資料`;
         } catch (err) {
           console.error(err);
           document.getElementById("status").textContent = "讀取失敗";
