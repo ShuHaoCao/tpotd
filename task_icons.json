@@ -244,6 +244,15 @@
       "enabled": true
     },
     {
+      "id": "suitcase-2026",
+      "title": "萬國行李箱",
+      "start": "20260827",
+      "end": "20260827",
+      "text": "志維→新市，慶富→永康",
+      "colorHue": 152,
+      "enabled": true
+    },
+    {
       "id": "Examination-2026",
       "title": "職階升等考試",
       "start": "20260830",
