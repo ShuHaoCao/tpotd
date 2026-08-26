@@ -11535,5 +11535,143 @@
         ]
       }
     ]
+  },
+  {
+    "seq": "076",
+    "date": "2026-08-26",
+    "weekday": "週三",
+    "summary": {
+      "total_duration": "6小時20分鐘",
+      "total_trips": 7,
+      "total_carts": 94,
+      "grand_total_trips": 9,
+      "grand_total_carts": 109,
+      "total_mails": 3930,
+      "mail_per_cart": 41.8085106382979,
+      "mail_per_trip": 561.428571428571,
+      "contribution": {
+        "trip_outsource": "14%",
+        "trip_post": "86%",
+        "cart_outsource": "7%",
+        "cart_post": "93%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 15 },
+      "xs_warehouse": { "trips": 7, "carts": 94 },
+      "outsource": {
+        "total": { "trips": 1, "carts": 7 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 1, "carts": 7 }
+      },
+      "post": {
+        "total": { "trips": 6, "carts": 87 },
+        "stage1": { "trips": 3, "carts": 44 },
+        "stage2": { "trips": 1, "carts": 18 },
+        "stage3": { "trips": 2, "carts": 25 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "22:10",
+            "driver": "黃憲章(快)",
+            "return_time": "22:20",
+            "arrival_time": "23:00",
+            "transit_duration_mins": 40,
+            "loaded_carts": 18,
+            "trip_no": "快捷第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:18",
+            "driver": "陳柏林(128)",
+            "return_time": "22:52",
+            "arrival_time": "23:35",
+            "transit_duration_mins": 43,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": 8
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "23:36",
+            "driver": "張正德(快)",
+            "return_time": "23:56",
+            "arrival_time": "00:40",
+            "transit_duration_mins": 43.9999999999998,
+            "loaded_carts": 8,
+            "trip_no": "快捷第2車",
+            "interval_mins": 78
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第4車",
+            "call_time": "01:21",
+            "driver": "黃憲章(快)",
+            "return_time": "02:11",
+            "arrival_time": "02:50",
+            "transit_duration_mins": 39,
+            "loaded_carts": 18,
+            "trip_no": "快捷第3車",
+            "interval_mins": null
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第5車",
+            "call_time": "03:04",
+            "driver": "張正德(快)",
+            "return_time": "03:18",
+            "arrival_time": "03:55",
+            "transit_duration_mins": 37,
+            "loaded_carts": 13,
+            "trip_no": "快捷第3車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第6車",
+            "call_time": "03:05",
+            "driver": "陳國乾(立勤)",
+            "return_time": "03:45",
+            "arrival_time": "03:45",
+            "transit_duration_mins": 0,
+            "loaded_carts": 7,
+            "trip_no": "外包第1車",
+            "interval_mins": 1
+          },
+          {
+            "car_name": "第3階段第3車",
+            "display_name": "總車次第7車",
+            "call_time": "03:04",
+            "driver": "黃憲章(快)",
+            "return_time": "03:48",
+            "arrival_time": "04:30",
+            "transit_duration_mins": 42,
+            "loaded_carts": 12,
+            "trip_no": "快捷第4車",
+            "interval_mins": 1439
+          }
+        ]
+      }
+    ]
   }
 ]
