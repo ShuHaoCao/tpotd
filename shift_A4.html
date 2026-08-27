@@ -1,0 +1,1857 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>班表表格線上版</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        overflow: hidden;
+      }
+      body {
+        font-family: "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+      }
+      #viewport {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: 62px;
+        bottom: 14px;
+        overflow: hidden;
+        background: #fff;
+      }
+      #sheet {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 1137px;
+        height: 685px;
+        transform-origin: center center;
+      }
+      #canvas {
+        position: relative;
+        width: 1137px;
+        height: 685px;
+        background: #fff;
+      }
+      .cell {
+        position: absolute;
+        margin: 0;
+        padding: 4px;
+        border: 1px solid #000;
+        background: #fff;
+        color: #000;
+        overflow: hidden;
+        outline: 0;
+        font-size: 14px;
+        line-height: 1.2;
+      }
+      .cell:focus {
+        box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.18);
+      }
+      @media print {
+        @page {
+          size: landscape;
+          margin: 8mm;
+        }
+        html,
+        body,
+        #viewport,
+        #canvas,
+        .cell {
+          background: #fff !important;
+        }
+        html,
+        body {
+          overflow: visible;
+        }
+        #viewport {
+          inset: 0;
+        }
+      }
+
+      /* ===== 固定標題排版 ===== */
+      .cell {
+        padding: 0;
+      }
+
+      .fixed-label {
+        width: 100%;
+        height: 100%;
+        font-weight: 700;
+        color: #000;
+        user-select: none;
+        box-sizing: border-box;
+      }
+
+      /* 橫向文字：第一字與最後一字固定在左右端，其他字平均分散 */
+      .horizontal {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        white-space: nowrap;
+        padding: 0 10px;
+      }
+
+      /* 直向文字：
+         所有同列標題使用相同的上下內距，
+         第一個字上緣切齊、最後一個字下緣切齊，
+         中間字平均分散。 */
+      .vertical {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+      }
+
+      .horizontal span,
+      .vertical span,
+      .vertical-col span {
+        display: block;
+        flex: 0 0 auto;
+        line-height: 1;
+      }
+
+      /* 「陪產照顧」：兩欄並排，但兩欄的文字高度與上下基準完全一致 */
+      .vertical-pair {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        gap: 5px;
+        padding: 10px 5px;
+      }
+
+      .vertical-col {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      /* ===== 排班資料控制列（不影響表格幾何） ===== */
+      #scheduleControls {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 6px 12px;
+        background: #fff;
+        border: 1px solid #bbb;
+        border-radius: 6px;
+        font-size: 14px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        white-space: nowrap;
+      }
+
+      #scheduleControls .info-item {
+        color: #333;
+      }
+
+      #scheduleControls .info-item + .info-item {
+        padding-left: 10px;
+        border-left: 1px solid #d2d2d2;
+      }
+
+      #weekdayDisplay {
+        min-width: 48px;
+        font-weight: 700;
+      }
+
+      #scheduleControls input[type="date"] {
+        font: inherit;
+        padding: 3px 6px;
+      }
+
+      #scheduleControls button {
+        font: inherit;
+        padding: 3px 8px;
+        cursor: pointer;
+      }
+
+      #weekdayDisplay,
+      #scheduledCount,
+      #offdayCount,
+      #totalCount {
+        color: #333;
+      }
+
+      /* JSON 動態寫入的姓名：
+         左右置中、垂直靠下、底部保留少量空白，
+         字體盡量放大並使用藍紫色。 */
+      .schedule-name {
+        position: absolute;
+        left: 0;
+        bottom: 5px;
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding: 0 2px;
+        box-sizing: border-box;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 1.02;
+        color: #3657c8;
+        text-align: center;
+        pointer-events: none;
+        user-select: none;
+        z-index: 2;
+      }
+
+      .schedule-name span {
+        display: block;
+        line-height: 1.02;
+      }
+
+      @media print {
+        #scheduleControls {
+          display: none !important;
+        }
+      }
+
+      /* ===== offday.json 動態寫入的假別姓名 ===== */
+      .offday-name {
+        position: absolute;
+        left: 0;
+        bottom: 5px;
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding: 0 2px;
+        box-sizing: border-box;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 1.02;
+        color: #3657c8;
+        text-align: center;
+        pointer-events: none;
+        user-select: none;
+        z-index: 2;
+      }
+
+      .offday-name span {
+        display: block;
+        line-height: 1.02;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="scheduleControls">
+      <label for="scheduleDate">日期：</label>
+      <input id="scheduleDate" type="date" />
+      <span id="weekdayDisplay" class="info-item">星期－</span>
+      <span id="scheduledCount" class="info-item">排班人員 0 人</span>
+      <span id="offdayCount" class="info-item">休假人員 0 人</span>
+      <span id="totalCount" class="info-item">總人數 0 人</span>
+    </div>
+
+    <div id="viewport">
+      <div id="sheet">
+        <div id="canvas">
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="1"
+            style="left: 0px; top: 0px; width: 252px; height: 34px"
+          >
+            <div class="fixed-label horizontal">
+              <span>輪</span><span>休</span><span>假</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="2"
+            style="left: 252px; top: 0px; width: 85px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>特</span><span>休</span><span>假</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="4"
+            style="left: 379px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>婚</span><span>喪</span><span>假</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="5"
+            style="left: 421px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical-pair">
+              <div class="vertical-col"><span>陪</span><span>產</span></div>
+              <div class="vertical-col"><span>照</span><span>顧</span></div>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="6"
+            style="left: 463px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>病</span><span>事</span><span>假</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="7"
+            style="left: 505px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>公</span><span>假</span><span>見</span><span>習</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="8"
+            style="left: 547px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>支</span><span>援</span><span>借</span><span>調</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="9"
+            style="left: 589px; top: 0px; width: 43px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>泰</span><span>順</span><span>委</span><span>外</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="10"
+            style="left: 632px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>明</span><span>嘉</span><span>加</span><span>派</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="11"
+            style="left: 674px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>大</span><span>夜</span><span>班</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="12"
+            style="left: 716px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>幹</span><span>線</span><span>運</span><span>輸</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="13"
+            style="left: 758px; top: 0px; width: 84px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>自</span><span>運</span><span>業</span><span>務</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="14"
+            style="left: 842px; top: 0px; width: 169px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>接</span><span>送</span><span>業</span><span>務</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="15"
+            style="left: 1011px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>空</span><span>袋</span><span>檯</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="16"
+            style="left: 1053px; top: 0px; width: 42px; height: 293px"
+          >
+            <div class="fixed-label vertical">
+              <span>接</span><span>送</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="17"
+            style="left: 1095px; top: 0px; width: 42px; height: 293px"
+          >
+            <div class="fixed-label vertical" style="height: 95px">
+              <span>股</span><span>長</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="18"
+            style="left: 0px; top: 34px; width: 168px; height: 63px"
+          >
+            <div class="fixed-label horizontal">
+              <span>休</span><span>息</span><span>日</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="19"
+            style="left: 168px; top: 34px; width: 84px; height: 63px"
+          >
+            <div class="fixed-label horizontal">
+              <span>例</span><span>假</span><span>日</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="20"
+            style="left: 0px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="21"
+            style="left: 42px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="22"
+            style="left: 84px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="23"
+            style="left: 126px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="24"
+            style="left: 168px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="25"
+            style="left: 210px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="26"
+            style="left: 252px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="27"
+            style="left: 294px; top: 97px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="29"
+            style="left: 379px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="30"
+            style="left: 421px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="31"
+            style="left: 463px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="32"
+            style="left: 505px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="33"
+            style="left: 547px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="34"
+            style="left: 589px; top: 97px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="35"
+            style="left: 632px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="36"
+            style="left: 674px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="37"
+            style="left: 716px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="38"
+            style="left: 758px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="39"
+            style="left: 800px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="40"
+            style="left: 842px; top: 97px; width: 85px; height: 98px"
+          >
+            <div class="fixed-label vertical">
+              <span>中</span><span>班</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="41"
+            style="left: 927px; top: 97px; width: 84px; height: 98px"
+          >
+            <div class="fixed-label vertical">
+              <span>早</span><span>班</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="42"
+            style="left: 1011px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="43"
+            style="left: 0px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="44"
+            style="left: 42px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="45"
+            style="left: 84px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="46"
+            style="left: 126px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="47"
+            style="left: 168px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="48"
+            style="left: 210px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="49"
+            style="left: 252px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="50"
+            style="left: 294px; top: 195px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="52"
+            style="left: 379px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="53"
+            style="left: 421px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="54"
+            style="left: 463px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="55"
+            style="left: 505px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="56"
+            style="left: 547px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="57"
+            style="left: 589px; top: 195px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="58"
+            style="left: 632px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="59"
+            style="left: 674px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="60"
+            style="left: 716px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="61"
+            style="left: 758px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="62"
+            style="left: 800px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="63"
+            style="left: 842px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="64"
+            style="left: 884px; top: 195px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="65"
+            style="left: 927px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="66"
+            style="left: 969px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="67"
+            style="left: 1011px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="68"
+            style="left: 0px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="69"
+            style="left: 42px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="70"
+            style="left: 84px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="71"
+            style="left: 126px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="72"
+            style="left: 168px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="73"
+            style="left: 210px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="74"
+            style="left: 252px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="75"
+            style="left: 294px; top: 293px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="77"
+            style="left: 379px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="78"
+            style="left: 421px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="79"
+            style="left: 463px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="80"
+            style="left: 505px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="81"
+            style="left: 547px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="82"
+            style="left: 589px; top: 293px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="83"
+            style="left: 632px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="84"
+            style="left: 674px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="85"
+            style="left: 716px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="86"
+            style="left: 758px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="87"
+            style="left: 800px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="88"
+            style="left: 842px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="89"
+            style="left: 884px; top: 293px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="90"
+            style="left: 927px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="91"
+            style="left: 969px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="95"
+            style="left: 0px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="96"
+            style="left: 42px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="97"
+            style="left: 84px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="98"
+            style="left: 126px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="99"
+            style="left: 168px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="100"
+            style="left: 210px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="101"
+            style="left: 252px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="102"
+            style="left: 294px; top: 391px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="104"
+            style="left: 379px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="105"
+            style="left: 421px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="106"
+            style="left: 463px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="107"
+            style="left: 505px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="108"
+            style="left: 547px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="109"
+            style="left: 589px; top: 391px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="110"
+            style="left: 632px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="111"
+            style="left: 674px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="112"
+            style="left: 716px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="113"
+            style="left: 758px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="114"
+            style="left: 800px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="115"
+            style="left: 842px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="116"
+            style="left: 884px; top: 391px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="117"
+            style="left: 927px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="118"
+            style="left: 969px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="119"
+            style="left: 0px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="120"
+            style="left: 42px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="121"
+            style="left: 84px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="122"
+            style="left: 126px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="123"
+            style="left: 168px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="124"
+            style="left: 210px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="125"
+            style="left: 252px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="126"
+            style="left: 294px; top: 489px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="128"
+            style="left: 379px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="129"
+            style="left: 421px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="130"
+            style="left: 463px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="131"
+            style="left: 505px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="132"
+            style="left: 547px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="133"
+            style="left: 589px; top: 489px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="134"
+            style="left: 632px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="135"
+            style="left: 674px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="136"
+            style="left: 716px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="137"
+            style="left: 758px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="138"
+            style="left: 800px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="139"
+            style="left: 842px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="140"
+            style="left: 884px; top: 489px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="141"
+            style="left: 927px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="142"
+            style="left: 969px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="146"
+            style="left: 0px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="147"
+            style="left: 42px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="148"
+            style="left: 84px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="149"
+            style="left: 126px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="150"
+            style="left: 168px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="151"
+            style="left: 210px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="152"
+            style="left: 252px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="153"
+            style="left: 294px; top: 587px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="155"
+            style="left: 379px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="156"
+            style="left: 421px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="157"
+            style="left: 463px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="158"
+            style="left: 505px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="159"
+            style="left: 547px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="160"
+            style="left: 589px; top: 587px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="161"
+            style="left: 632px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="162"
+            style="left: 674px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="163"
+            style="left: 716px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="164"
+            style="left: 758px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="165"
+            style="left: 800px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="166"
+            style="left: 842px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="167"
+            style="left: 884px; top: 587px; width: 43px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="168"
+            style="left: 927px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="169"
+            style="left: 969px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="92"
+            style="left: 1011px; top: 293px; width: 42px; height: 196px"
+          >
+            <div class="fixed-label vertical" style="height: 97px">
+              <span>內</span><span>檯</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="93"
+            style="left: 1053px; top: 293px; width: 42px; height: 196px"
+          >
+            <div class="fixed-label vertical" style="height: 97px">
+              <span>進</span><span>口</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="94"
+            style="left: 1095px; top: 293px; width: 42px; height: 196px"
+          >
+            <div class="fixed-label vertical" style="height: 97px">
+              <span>專</span><span>員</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="143"
+            style="left: 1011px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="170"
+            style="left: 1011px; top: 587px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="144"
+            style="left: 1053px; top: 489px; width: 42px; height: 196px"
+          >
+            <div class="fixed-label vertical" style="height: 97px">
+              <span>出</span><span>口</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="145"
+            style="left: 1095px; top: 489px; width: 42px; height: 196px"
+          >
+            <div class="fixed-label vertical" style="height: 97px">
+              <span>專</span><span>員</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="3"
+            style="left: 337px; top: 0px; width: 42px; height: 97px"
+          >
+            <div class="fixed-label vertical">
+              <span>身</span><span>心</span><span>假</span>
+            </div>
+          </div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="28"
+            style="left: 337px; top: 97px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="51"
+            style="left: 337px; top: 195px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="76"
+            style="left: 337px; top: 293px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="103"
+            style="left: 337px; top: 391px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="127"
+            style="left: 337px; top: 489px; width: 42px; height: 98px"
+          ></div>
+          <div
+            class="cell"
+            contenteditable="false"
+            data-cell="154"
+            style="left: 337px; top: 587px; width: 42px; height: 98px"
+          ></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // ============================================================
+      // 排班資料 → Cell 對應表
+      //
+      // 目前先放入「從現有固定標題可以明確判斷」的對應。
+      // 其餘班別（早班1、中班1、大夜班1...）只要後續補進此表即可。
+      // ============================================================
+      const SHIFT_CELL_MAP = {
+        股長: { cell: 17, zone: "full" },
+        中班專員: { cell: 94, zone: "full" },
+        夜班專員: { cell: 145, zone: "full" },
+        內檯經辦: { cell: 92, zone: "full" },
+        空袋檯: { cell: 42, zone: "full" },
+        早班1: { cell: 66, zone: "full" },
+        早班2: { cell: 91, zone: "full" },
+        早班3: { cell: 118, zone: "full" },
+        早班4: { cell: 142, zone: "full" },
+        早班5: { cell: 169, zone: "full" },
+        新營1: { cell: 65, zone: "full" },
+        新營2: { cell: 90, zone: "full" },
+        自運甲線: { cell: 39, zone: "full" },
+        自運乙線: { cell: 62, zone: "full" },
+        "早1(六日)": { cell: 66, zone: "full" },
+        "早3(六)": { cell: 118, zone: "full" },
+        "早3(日)": { cell: 118, zone: "full" },
+        中班1: { cell: 64, zone: "full" },
+        "771/772車次": { cell: 60, zone: "full" },
+        "771/772車次(六日)": { cell: 60, zone: "full" },
+        中班2: { cell: 89, zone: "full" },
+        中班3: { cell: 116, zone: "full" },
+        "中3(六)": { cell: 116, zone: "full" },
+        中班4: { cell: 140, zone: "full" },
+        中班5: { cell: 167, zone: "full" },
+        中班6: { cell: 63, zone: "full" },
+        中班7: { cell: 88, zone: "full" },
+        中班8: { cell: 115, zone: "full" },
+        中班9: { cell: 139, zone: "full" },
+        中班10: { cell: 166, zone: "full" },
+        中班11: { cell: 165, zone: "full" },
+        中班12: { cell: 164, zone: "full" },
+        中班13: { cell: 163, zone: "full" },
+        中班14: { cell: 162, zone: "full" },
+        中班15: { cell: 161, zone: "full" },
+        嘉義B: { cell: 61, zone: "full" },
+        嘉義2: { cell: 61, zone: "full" },
+        嘉義4: { cell: 113, zone: "full" },
+        大夜班1: { cell: 36, zone: "full" },
+        大夜班2: { cell: 59, zone: "full" },
+        大夜班3: { cell: 84, zone: "full" },
+        大夜班4: { cell: 111, zone: "full" },
+        大夜班5: { cell: 135, zone: "full" },
+        "127/128車次": { cell: 37, zone: "full" },
+        "夜1(六日)": { cell: 36, zone: "full" },
+        "夜3(六日)": { cell: 84, zone: "full" },
+        進口接送: { cell: 93, zone: "full" },
+        出口接送: { cell: 144, zone: "full" },
+        "中1(六)": { cell: 64, zone: "full" },
+      };
+      const SUPPORT_SLOTS = [33, 56, 81, 132, 159, 108];
+      const TRAINING_SLOTS = [33, 56, 81, 132, 159, 108];
+
+      // ============================================================
+      // offday.json → 假別 Cell 對照
+      // 有幾個人，就依清單順序依序填入。
+      // ============================================================
+      const OFFDAY_CELL_MAP = {
+        公假見習: [32, 55, 80, 107, 131, 158],
+        病事假: [31, 54, 79, 106, 130, 157],
+        陪產照顧: [30, 53, 78, 105, 129, 156],
+        婚喪假: [29, 52, 77, 104, 128, 155],
+        身心假: [28, 51, 76, 103, 127, 154],
+        特休假: [27, 50, 75, 102, 126, 153, 26, 49, 74, 101, 125, 152],
+        例假日: [25, 48, 73, 100, 124, 151, 24, 47, 72, 99, 123, 150],
+        休息日: [
+          23, 46, 71, 98, 122, 149, 22, 45, 70, 97, 121, 148, 21, 44, 69, 96,
+          120, 147, 20, 43, 68, 95, 119, 146,
+        ],
+      };
+
+      // 星期六：
+      // 原「例假日」區一併改列「休息日」，因此休息日可使用全部 36 格。
+      // 星期日：
+      // 原「休息日」區一併改列「例假日」，因此例假日可使用全部 36 格。
+      const WEEKEND_ROTATION_SLOTS = [
+        25, 48, 73, 100, 124, 151, 24, 47, 72, 99, 123, 150, 23, 46, 71, 98,
+        122, 149, 22, 45, 70, 97, 121, 148, 21, 44, 69, 96, 120, 147, 20, 43,
+        68, 95, 119, 146,
+      ];
+
+      let offdayData = {};
+
+      let scheduleData = {};
+
+      const dateInput = document.getElementById("scheduleDate");
+      const weekdayEl = document.getElementById("weekdayDisplay");
+      const scheduledCountEl = document.getElementById("scheduledCount");
+      const offdayCountEl = document.getElementById("offdayCount");
+      const totalCountEl = document.getElementById("totalCount");
+
+      function normalizeName(value) {
+        if (value == null) return "";
+        if (typeof value === "string") {
+          const s = value.trim();
+          return s === "-" ? "" : s;
+        }
+        if (typeof value === "object") {
+          const s = value.name == null ? "" : String(value.name).trim();
+          return s === "-" ? "" : s;
+        }
+        return String(value).trim();
+      }
+
+      function getCell(cellNo) {
+        return document.querySelector('.cell[data-cell="' + cellNo + '"]');
+      }
+
+      function clearScheduleNames() {
+        document
+          .querySelectorAll(".schedule-name")
+          .forEach((el) => el.remove());
+      }
+
+      function addNameToCell(cellNo, name) {
+        const cell = getCell(cellNo);
+        if (!cell || !name) return;
+
+        const box = document.createElement("div");
+        box.className = "schedule-name";
+
+        Array.from(name).forEach((ch) => {
+          const span = document.createElement("span");
+          span.textContent = ch;
+          box.appendChild(span);
+        });
+
+        cell.appendChild(box);
+      }
+
+      function normalizeOffdayNames(value) {
+        if (value == null) return [];
+
+        if (Array.isArray(value)) {
+          return value
+            .map((v) => {
+              if (typeof v === "string") return v.trim();
+              if (v && typeof v === "object" && v.name != null) {
+                return String(v.name).trim();
+              }
+              return "";
+            })
+            .filter((v) => v && v !== "-");
+        }
+
+        if (typeof value === "string") {
+          const s = value.trim();
+          return s && s !== "-" ? [s] : [];
+        }
+
+        return [];
+      }
+
+      function clearOffdayNames() {
+        document.querySelectorAll(".offday-name").forEach((el) => el.remove());
+      }
+
+      function addOffdayNameToCell(cellNo, name) {
+        const cell = getCell(cellNo);
+        if (!cell || !name) return;
+
+        const box = document.createElement("div");
+        box.className = "offday-name";
+
+        Array.from(name).forEach((ch) => {
+          const span = document.createElement("span");
+          span.textContent = ch;
+          box.appendChild(span);
+        });
+
+        cell.appendChild(box);
+      }
+
+      function getDateWeekday(dateText) {
+        // 用本地時間中午解析，避免 YYYY-MM-DD 被 UTC 時區換日。
+        const [y, m, d] = dateText.split("-").map(Number);
+        return new Date(y, m - 1, d, 12, 0, 0).getDay();
+      }
+
+      function updateSummary(date, scheduled, offday) {
+        const weekdayNames = [
+          "星期日",
+          "星期一",
+          "星期二",
+          "星期三",
+          "星期四",
+          "星期五",
+          "星期六",
+        ];
+        if (weekdayEl) {
+          weekdayEl.textContent = date
+            ? weekdayNames[getDateWeekday(date)]
+            : "星期－";
+        }
+        if (scheduledCountEl)
+          scheduledCountEl.textContent = "排班人員 " + scheduled + " 人";
+        if (offdayCountEl)
+          offdayCountEl.textContent = "休假人員 " + offday + " 人";
+        if (totalCountEl)
+          totalCountEl.textContent = "總人數 " + (scheduled + offday) + " 人";
+      }
+
+      function setHorizontalHeader(cellNo, text) {
+        const cell = getCell(cellNo);
+        if (!cell) return;
+
+        const label = cell.querySelector(".fixed-label.horizontal");
+        if (!label) return;
+
+        label.replaceChildren();
+        Array.from(text).forEach((ch) => {
+          const span = document.createElement("span");
+          span.textContent = ch;
+          label.appendChild(span);
+        });
+      }
+
+      function updateRotationHeaders(date) {
+        const weekday = getDateWeekday(date);
+
+        if (weekday === 6) {
+          // 星期六：輪休假項下「例假日」改成「休息日」
+          setHorizontalHeader(18, "休息日");
+          setHorizontalHeader(19, "休息日");
+        } else if (weekday === 0) {
+          // 星期日：輪休假項下「休息日」改成「例假日」
+          setHorizontalHeader(18, "例假日");
+          setHorizontalHeader(19, "例假日");
+        } else {
+          // 平日恢復原本標題
+          setHorizontalHeader(18, "休息日");
+          setHorizontalHeader(19, "例假日");
+        }
+      }
+
+      function getOffdayCellMapForDate(date) {
+        const weekday = getDateWeekday(date);
+
+        if (weekday === 6) {
+          return {
+            ...OFFDAY_CELL_MAP,
+            例假日: [],
+            休息日: WEEKEND_ROTATION_SLOTS,
+          };
+        }
+
+        if (weekday === 0) {
+          return {
+            ...OFFDAY_CELL_MAP,
+            例假日: WEEKEND_ROTATION_SLOTS,
+            休息日: [],
+          };
+        }
+
+        return OFFDAY_CELL_MAP;
+      }
+
+      function getOffdayNamesForType(day, leaveType, date) {
+        const weekday = getDateWeekday(date);
+
+        // 為避免 offday.json 仍以原假別欄位保存而漏人：
+        // 星期六把「例假日 + 休息日」全部視為休息日；
+        // 星期日把「例假日 + 休息日」全部視為例假日。
+        if (weekday === 6 && leaveType === "休息日") {
+          return [
+            ...normalizeOffdayNames(day["休息日"]),
+            ...normalizeOffdayNames(day["例假日"]),
+          ];
+        }
+
+        if (weekday === 0 && leaveType === "例假日") {
+          return [
+            ...normalizeOffdayNames(day["例假日"]),
+            ...normalizeOffdayNames(day["休息日"]),
+          ];
+        }
+
+        return normalizeOffdayNames(day[leaveType]);
+      }
+
+      function renderOffdayForDate(date) {
+        clearOffdayNames();
+        updateRotationHeaders(date);
+
+        const day = offdayData[date];
+        if (!day) return 0;
+
+        let rendered = 0;
+        const effectiveMap = getOffdayCellMapForDate(date);
+
+        for (const [leaveType, slots] of Object.entries(effectiveMap)) {
+          if (!slots.length) continue;
+
+          const names = getOffdayNamesForType(day, leaveType, date);
+
+          names.slice(0, slots.length).forEach((name, index) => {
+            addOffdayNameToCell(slots[index], name);
+            rendered++;
+          });
+        }
+
+        return rendered;
+      }
+
+      async function loadOffdayData() {
+        try {
+          const response = await fetch("./offday.json", { cache: "no-store" });
+
+          if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+          }
+
+          const data = await response.json();
+
+          if (!data || typeof data !== "object" || Array.isArray(data)) {
+            throw new Error("offday.json 格式不正確");
+          }
+
+          offdayData = data;
+
+          if (dateInput && dateInput.value) {
+            renderSelectedDate();
+          }
+        } catch (err) {
+          console.error("休假資料載入失敗：", err);
+          if (dateInput && dateInput.value) renderSelectedDate();
+        }
+      }
+
+      function renderSelectedDate() {
+        clearScheduleNames();
+
+        const date = dateInput.value;
+        if (!date) {
+          updateSummary("", 0, 0);
+          return;
+        }
+
+        const day = scheduleData[date];
+
+        if (!day) {
+          const offdayRendered = renderOffdayForDate(date);
+          updateSummary(date, 0, offdayRendered);
+          return;
+        }
+
+        let rendered = 0;
+
+        // 一般班別
+        for (const [shift, target] of Object.entries(SHIFT_CELL_MAP)) {
+          const name = normalizeName(day[shift]);
+          if (name) {
+            addNameToCell(target.cell, name);
+            rendered++;
+          }
+        }
+
+        // 支援：支援1~3有排人，就依順序塞進候選格。
+        const supportNames = ["支援1", "支援2", "支援3"]
+          .map((k) => normalizeName(day[k]))
+          .filter(Boolean);
+
+        // 見習：見習1~3同樣依順序塞進同一組候選格。
+        const trainingNames = ["見習1", "見習2", "見習3"]
+          .map((k) => normalizeName(day[k]))
+          .filter(Boolean);
+
+        const occupied = new Set();
+
+        function fillSequential(names, slots) {
+          for (const name of names) {
+            const next = slots.find((cellNo) => !occupied.has(cellNo));
+            if (!next) break;
+            addNameToCell(next, name);
+            occupied.add(next);
+            rendered++;
+          }
+        }
+
+        fillSequential(supportNames, SUPPORT_SLOTS);
+        fillSequential(trainingNames, TRAINING_SLOTS);
+        const offdayRendered = renderOffdayForDate(date);
+        updateSummary(date, rendered, offdayRendered);
+      }
+
+      function configureDateRange() {
+        const dates = Object.keys(scheduleData).sort();
+        if (!dates.length) {
+          updateSummary("", 0, 0);
+          return;
+        }
+
+        dateInput.min = dates[0];
+        dateInput.max = dates[dates.length - 1];
+
+        const now = new Date();
+        const today =
+          now.getFullYear() +
+          "-" +
+          String(now.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(now.getDate()).padStart(2, "0");
+
+        dateInput.value = scheduleData[today] ? today : dates[dates.length - 1];
+        renderSelectedDate();
+      }
+
+      async function loadScheduleData() {
+        try {
+          const response = await fetch("./schedule_data.json", {
+            cache: "no-store",
+          });
+          if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+          }
+          const data = await response.json();
+          if (!data || typeof data !== "object" || Array.isArray(data)) {
+            throw new Error("JSON 格式不正確");
+          }
+          scheduleData = data;
+          configureDateRange();
+        } catch (err) {
+          console.error("排班資料載入失敗：", err);
+          updateSummary(dateInput ? dateInput.value : "", 0, 0);
+        }
+      }
+
+      dateInput.addEventListener("change", renderSelectedDate);
+      window.addEventListener("DOMContentLoaded", () => {
+        loadScheduleData();
+        loadOffdayData();
+      });
+    </script>
+
+    <script>
+      const viewport = document.getElementById("viewport");
+      const sheet = document.getElementById("sheet");
+      const BW = 1137,
+        BH = 685;
+
+      function fit() {
+        const s =
+          Math.min(viewport.clientWidth / BW, viewport.clientHeight / BH) * 0.9;
+        sheet.style.transform = `translate(-50%,-50%) scale(${s})`;
+      }
+      new ResizeObserver(fit).observe(viewport);
+      window.addEventListener("resize", fit);
+      fit();
+    </script>
+  </body>
+</html>

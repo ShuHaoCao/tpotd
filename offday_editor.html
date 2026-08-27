@@ -1,0 +1,772 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>offday.json 資料編輯器</title>
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --panel: #fff;
+        --line: #d9dee8;
+        --text: #172033;
+        --muted: #6b7280;
+        --primary: #1267d6;
+        --primary2: #0b57b8;
+        --danger: #c93434;
+        --ok: #18794e;
+        --warn: #a15c00;
+        --rest: #edf6ff;
+        --weekly: #eefbf4;
+        --other: #fffaf0;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+      }
+      .app {
+        max-width: 1500px;
+        margin: auto;
+        padding: 18px;
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(245, 247, 251, 0.96);
+        backdrop-filter: blur(8px);
+        padding: 10px 0 14px;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 12px;
+      }
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: 0 2px 10px rgba(20, 32, 51, 0.04);
+      }
+      button,
+      .file-label,
+      input[type="date"],
+      select,
+      input[type="text"] {
+        font: inherit;
+      }
+      button,
+      .file-label {
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 8px;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      button:hover,
+      .file-label:hover {
+        border-color: #9eb9de;
+        background: #f8fbff;
+      }
+      .primary {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+      .primary:hover {
+        background: var(--primary2);
+      }
+      .danger {
+        color: var(--danger);
+      }
+      #fileInput {
+        display: none;
+      }
+      .status {
+        margin-left: auto;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .status.dirty {
+        color: var(--warn);
+        font-weight: 700;
+      }
+      .status.saved {
+        color: var(--ok);
+        font-weight: 700;
+      }
+      .date-panel {
+        display: grid;
+        grid-template-columns: minmax(180px, 240px) 1fr auto;
+        gap: 10px;
+        align-items: center;
+        margin: 12px 0;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+      }
+      input[type="date"] {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+        background: #fff;
+      }
+      .date-info {
+        font-weight: 700;
+      }
+      .summary {
+        font-size: 13px;
+        color: var(--muted);
+        text-align: right;
+      }
+      .notice {
+        display: none;
+        margin: 10px 0;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: #fff3cd;
+        color: #765600;
+        border: 1px solid #f3d78a;
+      }
+      .categories {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(20, 32, 51, 0.035);
+      }
+      .card.rest .card-head {
+        background: var(--rest);
+      }
+      .card.weekly .card-head {
+        background: var(--weekly);
+      }
+      .card.other .card-head {
+        background: var(--other);
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      .card-title {
+        font-weight: 800;
+        font-size: 17px;
+      }
+      .badge {
+        font-size: 12px;
+        padding: 2px 7px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid var(--line);
+        color: var(--muted);
+      }
+      .count {
+        margin-left: auto;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+        padding: 10px;
+      }
+      .slot {
+        display: grid;
+        grid-template-columns: 28px minmax(0, 1fr) 28px;
+        gap: 5px;
+        align-items: center;
+      }
+      .slot-num {
+        text-align: right;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .slot select {
+        width: 100%;
+        min-width: 0;
+        border: 1px solid var(--line);
+        border-radius: 7px;
+        padding: 6px;
+        background: #fff;
+      }
+      .clear-slot {
+        padding: 5px 0;
+        border-radius: 6px;
+        color: #8a93a3;
+      }
+      .card-foot {
+        display: flex;
+        gap: 8px;
+        padding: 0 10px 10px;
+      }
+      .card-foot button {
+        padding: 6px 9px;
+        font-size: 13px;
+      }
+      .person-panel {
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+      }
+      .person-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .person-row input {
+        flex: 1;
+        min-width: 220px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 10px;
+      }
+      .person-list {
+        margin-top: 9px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+      .dup {
+        outline: 2px solid #e26b6b !important;
+        background: #fff4f4 !important;
+      }
+      @media (max-width: 1000px) {
+        .categories {
+          grid-template-columns: 1fr;
+        }
+        .slot-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 620px) {
+        .app {
+          padding: 10px;
+        }
+        .date-panel {
+          grid-template-columns: 1fr;
+        }
+        .summary {
+          text-align: left;
+        }
+        .status {
+          width: 100%;
+          margin: 3px 0 0;
+        }
+        .slot-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media print {
+        .topbar,
+        .person-panel,
+        .card-foot,
+        .clear-slot {
+          display: none !important;
+        }
+        .app {
+          max-width: none;
+          padding: 0;
+        }
+        .categories {
+          gap: 7px;
+        }
+        .card {
+          break-inside: avoid;
+        }
+        .slot-grid {
+          grid-template-columns: repeat(4, 1fr);
+          padding: 6px;
+        }
+        .slot {
+          grid-template-columns: 22px 1fr;
+        }
+        .slot select {
+          appearance: none;
+          border: 0;
+          padding: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div class="topbar">
+        <h1>休假資料編輯器</h1>
+        <div class="toolbar">
+          <label class="file-label" for="fileInput">選擇 offday.json</label>
+          <input id="fileInput" type="file" accept="application/json,.json" />
+          <button id="newDateBtn">新增日期</button>
+          <button id="saveBtn" class="primary">儲存目前日期</button>
+          <button id="exportBtn">匯出 offday.json</button>
+          <button id="deleteDateBtn" class="danger">刪除目前日期</button>
+          <span id="status" class="status">尚未載入檔案</span>
+        </div>
+      </div>
+
+      <div id="notice" class="notice"></div>
+
+      <div class="date-panel">
+        <input id="datePicker" type="date" />
+        <div id="dateInfo" class="date-info">請先選擇或載入資料</div>
+        <div id="summary" class="summary">已填 0 人</div>
+      </div>
+
+      <div id="categories" class="categories"></div>
+
+      <div class="person-panel">
+        <strong>人員名單</strong>
+        <div class="person-row" style="margin-top: 8px">
+          <input
+            id="newPerson"
+            type="text"
+            placeholder="輸入新姓名，例如：新進同仁"
+          />
+          <button id="addPersonBtn">新增至下拉名單</button>
+        </div>
+        <div class="person-list" id="personList"></div>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const CATEGORIES = [
+          "公假見習",
+          "病事假",
+          "陪產照顧",
+          "婚喪假",
+          "身心假",
+          "特休假",
+          "例假日",
+          "休息日",
+        ];
+        const DEFAULT_SLOTS = {
+          例假日: 36,
+          休息日: 36,
+          公假見習: 6,
+          病事假: 6,
+          陪產照顧: 6,
+          婚喪假: 6,
+          身心假: 6,
+          特休假: 6,
+        };
+        const BASE_PEOPLE = [
+          "王昭文",
+          "謝勝勳",
+          "曹書豪",
+          "吳家偉",
+          "邱學士",
+          "周耀宗",
+          "李翊宏",
+          "簡慶富",
+          "陳俊瑋",
+          "連志維",
+          "張智雄",
+          "吳秉修",
+          "邱俊融",
+          "程世桓",
+          "吳佳錚",
+          "沈銘展",
+          "許瑞廷",
+          "鄭憲鴻",
+          "陳柏宇",
+          "王寶生",
+          "陳緯謙",
+          "翁志峰",
+          "葉育宏",
+          "莊景宇",
+          "葉吉順",
+          "周恆毅",
+          "陳柏林",
+          "黃憲章",
+          "金哲駿",
+          "莊世明",
+          "張正德",
+          "施以平",
+          "蔡綜哲",
+          "吳政謙",
+        ];
+
+        let memory = {};
+        let people = [...BASE_PEOPLE];
+        let slotCounts = { ...DEFAULT_SLOTS };
+        let dirty = false;
+        let loadedFilename = "offday.json";
+
+        const $ = (s) => document.querySelector(s);
+        const categoriesEl = $("#categories"),
+          datePicker = $("#datePicker"),
+          statusEl = $("#status"),
+          noticeEl = $("#notice");
+
+        function setStatus(text, type = "") {
+          statusEl.textContent = text;
+          statusEl.className = "status" + (type ? " " + type : "");
+        }
+        function setDirty(v = true) {
+          dirty = v;
+          setStatus(
+            v ? "目前日期有尚未儲存的修改" : "資料已同步至記憶體",
+            v ? "dirty" : "saved",
+          );
+        }
+        function showNotice(text = "") {
+          noticeEl.textContent = text;
+          noticeEl.style.display = text ? "block" : "none";
+        }
+        function weekday(dateStr) {
+          if (!dateStr) return "";
+          const d = new Date(dateStr + "T00:00:00");
+          return [
+            "星期日",
+            "星期一",
+            "星期二",
+            "星期三",
+            "星期四",
+            "星期五",
+            "星期六",
+          ][d.getDay()];
+        }
+        function emptyDay() {
+          return Object.fromEntries(CATEGORIES.map((c) => [c, []]));
+        }
+        function normalizeDay(day) {
+          const out = emptyDay();
+          CATEGORIES.forEach((c) => {
+            out[c] = Array.isArray(day?.[c])
+              ? day[c]
+                  .filter((v) => typeof v === "string" && v.trim() !== "")
+                  .map((v) => v.trim())
+              : [];
+          });
+          return out;
+        }
+
+        function absorbUnknownPeople() {
+          const known = new Set(people);
+          Object.values(memory).forEach((day) =>
+            CATEGORIES.forEach((c) =>
+              (day[c] || []).forEach((name) => {
+                if (name && !known.has(name)) {
+                  people.push(name);
+                  known.add(name);
+                }
+              }),
+            ),
+          );
+        }
+
+        function updatePersonList() {
+          $("#personList").textContent =
+            `目前共 ${people.length} 人：` + people.join("、");
+        }
+        function personOptions(selected = "") {
+          const values =
+            selected && !people.includes(selected)
+              ? [selected, ...people]
+              : people;
+          return (
+            '<option value="">— 無資料 —</option>' +
+            values
+              .map(
+                (p) =>
+                  `<option value="${esc(p)}"${p === selected ? " selected" : ""}>${esc(p)}</option>`,
+              )
+              .join("") +
+            '<option value="__CUSTOM__">＋ 自行新增人員…</option>'
+          );
+        }
+        function esc(s) {
+          return String(s).replace(
+            /[&<>"']/g,
+            (m) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[m],
+          );
+        }
+
+        function render() {
+          const date = datePicker.value;
+          const day = normalizeDay(memory[date] || emptyDay());
+          CATEGORIES.forEach((c) => {
+            slotCounts[c] = Math.max(
+              DEFAULT_SLOTS[c],
+              slotCounts[c] || 0,
+              day[c].length,
+            );
+          });
+          categoriesEl.innerHTML = "";
+          CATEGORIES.forEach((c) => {
+            const card = document.createElement("section");
+            const cls =
+              c === "休息日" ? "rest" : c === "例假日" ? "weekly" : "other";
+            card.className = `card ${cls}`;
+            card.dataset.category = c;
+            const filled = day[c].length;
+            card.innerHTML = `<div class="card-head"><div class="card-title">${c}</div><span class="badge">預設 ${DEFAULT_SLOTS[c]} 格</span><div class="count">已填 ${filled} 人</div></div><div class="slot-grid"></div><div class="card-foot"><button class="add-slot">＋新增名額</button><button class="trim-slot">－移除最後空白名額</button></div>`;
+            const grid = card.querySelector(".slot-grid");
+            for (let i = 0; i < slotCounts[c]; i++) {
+              const selected = day[c][i] || "";
+              const row = document.createElement("div");
+              row.className = "slot";
+              row.innerHTML = `<span class="slot-num">${i + 1}</span><select data-category="${c}" data-index="${i}">${personOptions(selected)}</select><button class="clear-slot" title="清除此格">×</button>`;
+              grid.appendChild(row);
+            }
+            categoriesEl.appendChild(card);
+          });
+          bindGridEvents();
+          updateHeader();
+          validateDuplicates();
+        }
+
+        function bindGridEvents() {
+          categoriesEl.querySelectorAll("select").forEach((sel) =>
+            sel.addEventListener("change", () => {
+              if (sel.value === "__CUSTOM__") {
+                const name = prompt("輸入要新增的人員姓名：", "");
+                if (name && name.trim()) {
+                  addPerson(name.trim());
+                  refreshAllSelects(name, sel);
+                } else sel.value = "";
+              }
+              setDirty(true);
+              updateHeader();
+              validateDuplicates();
+            }),
+          );
+          categoriesEl.querySelectorAll(".clear-slot").forEach((btn) =>
+            btn.addEventListener("click", () => {
+              const sel = btn.previousElementSibling;
+              sel.value = "";
+              sel.dispatchEvent(new Event("change"));
+            }),
+          );
+          categoriesEl.querySelectorAll(".add-slot").forEach((btn) =>
+            btn.addEventListener("click", () => {
+              const c = btn.closest(".card").dataset.category;
+              collectCurrentIntoTemp();
+              slotCounts[c]++;
+              render();
+              setDirty(true);
+            }),
+          );
+          categoriesEl.querySelectorAll(".trim-slot").forEach((btn) =>
+            btn.addEventListener("click", () => {
+              const c = btn.closest(".card").dataset.category;
+              const sels = [...btn.closest(".card").querySelectorAll("select")];
+              if (slotCounts[c] <= DEFAULT_SLOTS[c])
+                return alert(`至少保留預設 ${DEFAULT_SLOTS[c]} 個可編輯欄位。`);
+              if (sels.at(-1)?.value)
+                return alert("最後一格已有資料，請先清除後再移除。");
+              collectCurrentIntoTemp();
+              slotCounts[c]--;
+              render();
+              setDirty(true);
+            }),
+          );
+        }
+
+        function refreshAllSelects(newName = "", target = null) {
+          categoriesEl.querySelectorAll("select").forEach((sel) => {
+            const old = sel === target ? newName : sel.value;
+            sel.innerHTML = personOptions(old);
+            sel.value = old;
+          });
+          updatePersonList();
+        }
+        function addPerson(name) {
+          if (!name) return;
+          if (!people.includes(name)) people.push(name);
+          updatePersonList();
+        }
+
+        function collectEditor() {
+          const day = emptyDay();
+          CATEGORIES.forEach((c) => {
+            day[c] = [
+              ...categoriesEl.querySelectorAll(`select[data-category="${c}"]`),
+            ]
+              .map((s) => s.value)
+              .filter((v) => v && v !== "__CUSTOM__");
+          });
+          return day;
+        }
+        function collectCurrentIntoTemp() {
+          if (datePicker.value) memory[datePicker.value] = collectEditor();
+        }
+        function updateHeader() {
+          const d = datePicker.value;
+          $("#dateInfo").textContent = d
+            ? `${d}　${weekday(d)}`
+            : "尚未選擇日期";
+          const day = collectEditor();
+          const total = CATEGORIES.reduce((n, c) => n + day[c].length, 0);
+          $("#summary").textContent =
+            `已填 ${total} 人｜例假 ${day["例假日"].length}｜休息 ${day["休息日"].length}｜其他假別 ${total - day["例假日"].length - day["休息日"].length}`;
+        }
+        function validateDuplicates() {
+          const map = new Map();
+          categoriesEl.querySelectorAll("select").forEach((sel) => {
+            sel.classList.remove("dup");
+            if (!sel.value || sel.value === "__CUSTOM__") return;
+            if (!map.has(sel.value)) map.set(sel.value, []);
+            map.get(sel.value).push(sel);
+          });
+          const dups = [...map.entries()].filter(([, arr]) => arr.length > 1);
+          dups.forEach(([, arr]) => arr.forEach((s) => s.classList.add("dup")));
+          showNotice(
+            dups.length
+              ? `提醒：${dups.map(([n]) => n).join("、")} 在同一天被填入多個假別／名額。系統不阻擋儲存，但請確認是否正確。`
+              : "",
+          );
+        }
+
+        function saveCurrent() {
+          const d = datePicker.value;
+          if (!d) return alert("請先選擇日期。");
+          memory[d] = collectEditor();
+          setDirty(false);
+          render();
+        }
+
+        function switchDate(newDate) {
+          if (dirty) {
+            memory[datePicker.dataset.current || newDate] = collectEditor();
+            dirty = false;
+          }
+          datePicker.dataset.current = newDate;
+          slotCounts = { ...DEFAULT_SLOTS };
+          render();
+          setStatus(
+            memory[newDate]
+              ? "已載入該日期資料"
+              : "此日期目前無資料，可直接新增編輯",
+          );
+        }
+
+        $("#fileInput").addEventListener("change", async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          try {
+            const parsed = JSON.parse(await file.text());
+            if (!parsed || Array.isArray(parsed) || typeof parsed !== "object")
+              throw new Error("JSON 最外層必須是日期物件");
+            memory = {};
+            Object.entries(parsed).forEach(
+              ([d, day]) => (memory[d] = normalizeDay(day)),
+            );
+            loadedFilename = file.name || "offday.json";
+            people = [...BASE_PEOPLE];
+            absorbUnknownPeople();
+            updatePersonList();
+            const dates = Object.keys(memory).sort();
+            const first = dates[0] || new Date().toISOString().slice(0, 10);
+            datePicker.value = first;
+            datePicker.dataset.current = first;
+            slotCounts = { ...DEFAULT_SLOTS };
+            render();
+            setStatus(
+              `已載入 ${dates.length} 個日期：${loadedFilename}`,
+              "saved",
+            );
+          } catch (err) {
+            alert("讀取失敗：" + err.message);
+          }
+        });
+
+        datePicker.addEventListener("change", (e) =>
+          switchDate(e.target.value),
+        );
+        $("#saveBtn").addEventListener("click", saveCurrent);
+        $("#newDateBtn").addEventListener("click", () => {
+          const d = datePicker.value || new Date().toISOString().slice(0, 10);
+          if (!datePicker.value) datePicker.value = d;
+          if (!memory[d]) memory[d] = emptyDay();
+          datePicker.dataset.current = d;
+          slotCounts = { ...DEFAULT_SLOTS };
+          render();
+          setDirty(true);
+        });
+        $("#deleteDateBtn").addEventListener("click", () => {
+          const d = datePicker.value;
+          if (!d || !memory[d])
+            return alert("目前日期沒有可刪除的記憶體資料。");
+          if (confirm(`確定刪除 ${d} 的全部休假資料嗎？`)) {
+            delete memory[d];
+            render();
+            setDirty(false);
+          }
+        });
+        $("#exportBtn").addEventListener("click", () => {
+          if (datePicker.value) memory[datePicker.value] = collectEditor();
+          const sorted = Object.fromEntries(
+            Object.keys(memory)
+              .sort()
+              .map((d) => [d, normalizeDay(memory[d])]),
+          );
+          const blob = new Blob([JSON.stringify(sorted, null, 2)], {
+            type: "application/json;charset=utf-8",
+          });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "offday.json";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(a.href);
+          setDirty(false);
+          setStatus("已匯出新的 offday.json", "saved");
+        });
+        $("#addPersonBtn").addEventListener("click", () => {
+          const input = $("#newPerson");
+          const name = input.value.trim();
+          if (!name) return;
+          addPerson(name);
+          refreshAllSelects();
+          input.value = "";
+          setStatus(`已將「${name}」加入本次編輯的人員下拉名單`);
+        });
+        $("#newPerson").addEventListener("keydown", (e) => {
+          if (e.key === "Enter") $("#addPersonBtn").click();
+        });
+        window.addEventListener("beforeunload", (e) => {
+          if (dirty) {
+            e.preventDefault();
+            e.returnValue = "";
+          }
+        });
+
+        updatePersonList();
+        render();
+        setStatus("尚未載入檔案；也可以直接選日期建立新資料");
+      })();
+    </script>
+  </body>
+</html>
