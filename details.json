@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-08-29T22:08:23.356Z",
+  "updatedAt": "2026-08-29T22:11:39.895Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -4719,7 +4719,7 @@
       "weekday": "週六",
       "unit": "臺南郵局運輸股",
       "title": "MOMO進出口統計表",
-      "generatedAt": "2026-08-29T22:08:23.356Z",
+      "generatedAt": "2026-08-29T22:11:39.895Z",
       "inbound": {
         "stages": [
           {
@@ -4729,14 +4729,14 @@
                 "time": "23:10",
                 "carNo": "第1車",
                 "driver": "莊世民(夜2)",
-                "workItem": "快捷第1車",
+                "workItem": "運輸第1車",
                 "carts": 18
               },
               {
                 "time": "00:25",
                 "carNo": "第2車",
                 "driver": "周恆毅(128)",
-                "workItem": "運輸第1車",
+                "workItem": "運輸第2車",
                 "carts": 18
               }
             ],
@@ -4750,14 +4750,14 @@
                 "time": "02:00",
                 "carNo": "第1車",
                 "driver": "莊世民(夜2)",
-                "workItem": "快捷第2車",
+                "workItem": "運輸第3車",
                 "carts": 18
               },
               {
                 "time": "02:40",
                 "carNo": "第2車",
                 "driver": "金哲駿(夜1)",
-                "workItem": "快捷第3車",
+                "workItem": "運輸第4車",
                 "carts": 9
               }
             ],
@@ -4771,7 +4771,7 @@
                 "time": "04:20",
                 "carNo": "第1車",
                 "driver": "莊世民(夜2)",
-                "workItem": "快捷第4車",
+                "workItem": "運輸第5車",
                 "carts": 14
               }
             ],
