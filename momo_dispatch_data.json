@@ -72,7 +72,7 @@
             "arrival_time": "00:05",
             "transit_duration_mins": 48.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "快捷第1車",
+            "trip_no": "運輸第2車",
             "interval_mins": 15
           },
           {
@@ -96,7 +96,7 @@
             "arrival_time": "00:25",
             "transit_duration_mins": 44,
             "loaded_carts": 18,
-            "trip_no": "運輸第2車",
+            "trip_no": "運輸第3車",
             "interval_mins": 5
           },
           {
@@ -108,7 +108,7 @@
             "arrival_time": "00:45",
             "transit_duration_mins": 48,
             "loaded_carts": 18,
-            "trip_no": "運輸第3車",
+            "trip_no": "運輸第4車",
             "interval_mins": 40
           },
           {
@@ -120,7 +120,7 @@
             "arrival_time": "00:50",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "運輸第4車",
+            "trip_no": "運輸第5車",
             "interval_mins": 36
           },
           {
@@ -132,7 +132,7 @@
             "arrival_time": "00:50",
             "transit_duration_mins": 40,
             "loaded_carts": 3,
-            "trip_no": "運輸第5車",
+            "trip_no": "運輸第6車",
             "interval_mins": 1
           }
         ]
@@ -161,7 +161,7 @@
             "arrival_time": "02:25",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "運輸第6車",
+            "trip_no": "運輸第7車",
             "interval_mins": 51
           },
           {
@@ -173,7 +173,7 @@
             "arrival_time": "03:05",
             "transit_duration_mins": 37,
             "loaded_carts": 9,
-            "trip_no": "運輸第7車",
+            "trip_no": "運輸第8車",
             "interval_mins": 13
           }
         ]
@@ -202,7 +202,7 @@
             "arrival_time": "04:15",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "運輸第8車",
+            "trip_no": "運輸第9車",
             "interval_mins": 34
           },
           {
@@ -214,7 +214,7 @@
             "arrival_time": "04:40",
             "transit_duration_mins": 33,
             "loaded_carts": 18,
-            "trip_no": "運輸第9車",
+            "trip_no": "運輸第10車",
             "interval_mins": 10
           },
           {
@@ -226,7 +226,7 @@
             "arrival_time": "05:00",
             "transit_duration_mins": 41,
             "loaded_carts": 5,
-            "trip_no": "運輸第10車",
+            "trip_no": "運輸第11車",
             "interval_mins": 9
           }
         ]
@@ -318,7 +318,7 @@
             "arrival_time": "00:05",
             "transit_duration_mins": 41.0000000000002,
             "loaded_carts": 18,
-            "trip_no": "快捷第1車",
+            "trip_no": "運輸第2車",
             "interval_mins": 5
           },
           {
@@ -330,7 +330,7 @@
             "arrival_time": "00:30",
             "transit_duration_mins": 36.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "運輸第2車",
+            "trip_no": "運輸第3車",
             "interval_mins": 25
           },
           {
@@ -342,7 +342,7 @@
             "arrival_time": "00:35",
             "transit_duration_mins": 35,
             "loaded_carts": 18,
-            "trip_no": "運輸第3車",
+            "trip_no": "運輸第4車",
             "interval_mins": 26
           },
           {
@@ -354,7 +354,7 @@
             "arrival_time": "01:10",
             "transit_duration_mins": 42,
             "loaded_carts": 8,
-            "trip_no": "運輸第4車",
+            "trip_no": "運輸第5車",
             "interval_mins": 1
           }
         ]
@@ -383,7 +383,7 @@
             "arrival_time": "03:20",
             "transit_duration_mins": 47,
             "loaded_carts": 13,
-            "trip_no": "運輸第5車",
+            "trip_no": "運輸第6車",
             "interval_mins": 43
           }
         ]
@@ -412,7 +412,7 @@
             "arrival_time": "04:00",
             "transit_duration_mins": 34,
             "loaded_carts": 18,
-            "trip_no": "運輸第6車",
+            "trip_no": "運輸第7車",
             "interval_mins": 26
           },
           {
@@ -424,7 +424,7 @@
             "arrival_time": "04:10",
             "transit_duration_mins": 37,
             "loaded_carts": 7,
-            "trip_no": "運輸第7車",
+            "trip_no": "運輸第8車",
             "interval_mins": 23
           }
         ]
@@ -859,12 +859,12 @@
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:19",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:11",
             "arrival_time": "23:50",
             "transit_duration_mins": 39,
             "loaded_carts": 18,
-            "trip_no": "快捷第1車",
+            "trip_no": "運輸第2車",
             "interval_mins": 13
           },
           {
@@ -888,7 +888,7 @@
             "arrival_time": "00:28",
             "transit_duration_mins": 38.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "運輸第2車",
+            "trip_no": "運輸第3車",
             "interval_mins": 5
           },
           {
@@ -900,7 +900,7 @@
             "arrival_time": "00:34",
             "transit_duration_mins": 42.9999999999998,
             "loaded_carts": 18,
-            "trip_no": "運輸第3車",
+            "trip_no": "運輸第4車",
             "interval_mins": 10
           },
           {
@@ -912,19 +912,19 @@
             "arrival_time": "01:10",
             "transit_duration_mins": 38,
             "loaded_carts": 18,
-            "trip_no": "運輸第4車",
+            "trip_no": "運輸第5車",
             "interval_mins": 8
           },
           {
             "car_name": "第1階段第8車",
             "display_name": "總車次第8車",
             "call_time": "23:38",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "00:32",
             "arrival_time": "01:30",
             "transit_duration_mins": 58,
             "loaded_carts": 18,
-            "trip_no": "快捷第2車",
+            "trip_no": "運輸第6車",
             "interval_mins": 18
           }
         ]
@@ -953,7 +953,7 @@
             "arrival_time": "02:45",
             "transit_duration_mins": 51,
             "loaded_carts": 6,
-            "trip_no": "運輸第5車",
+            "trip_no": "運輸第7車",
             "interval_mins": 23
           }
         ]
@@ -970,7 +970,7 @@
             "arrival_time": "03:30",
             "transit_duration_mins": 35,
             "loaded_carts": 18,
-            "trip_no": "運輸第6車",
+            "trip_no": "運輸第8車",
             "interval_mins": null
           },
           {
@@ -994,7 +994,7 @@
             "arrival_time": "04:10",
             "transit_duration_mins": 33,
             "loaded_carts": 18,
-            "trip_no": "運輸第7車",
+            "trip_no": "運輸第9車",
             "interval_mins": 5
           },
           {
@@ -1006,7 +1006,7 @@
             "arrival_time": "04:30",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "運輸第8車",
+            "trip_no": "運輸第10車",
             "interval_mins": 3
           },
           {
@@ -1018,7 +1018,7 @@
             "arrival_time": "05:20",
             "transit_duration_mins": 33,
             "loaded_carts": 18,
-            "trip_no": "運輸第9車",
+            "trip_no": "運輸第11車",
             "interval_mins": 65
           },
           {
@@ -1030,7 +1030,7 @@
             "arrival_time": "05:30",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "運輸第10車",
+            "trip_no": "運輸第12車",
             "interval_mins": 2
           },
           {
@@ -1042,7 +1042,7 @@
             "arrival_time": "05:50",
             "transit_duration_mins": 41,
             "loaded_carts": 14,
-            "trip_no": "運輸第11車",
+            "trip_no": "運輸第13車",
             "interval_mins": 22
           }
         ]
@@ -1117,12 +1117,12 @@
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:32",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:12",
             "arrival_time": "23:55",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "快捷第1車",
+            "trip_no": "運輸第2車",
             "interval_mins": 11
           },
           {
@@ -1146,7 +1146,7 @@
             "arrival_time": "00:35",
             "transit_duration_mins": 45,
             "loaded_carts": 18,
-            "trip_no": "運輸第2車",
+            "trip_no": "運輸第3車",
             "interval_mins": 4
           },
           {
@@ -1158,7 +1158,7 @@
             "arrival_time": "00:50",
             "transit_duration_mins": 45,
             "loaded_carts": 18,
-            "trip_no": "運輸第3車",
+            "trip_no": "運輸第4車",
             "interval_mins": 2
           },
           {
@@ -1170,7 +1170,7 @@
             "arrival_time": "00:55",
             "transit_duration_mins": 50,
             "loaded_carts": 4,
-            "trip_no": "運輸第4車",
+            "trip_no": "運輸第5車",
             "interval_mins": 43
           }
         ]
@@ -1199,7 +1199,7 @@
             "arrival_time": "02:55",
             "transit_duration_mins": 61,
             "loaded_carts": 12,
-            "trip_no": "運輸第5車",
+            "trip_no": "運輸第6車",
             "interval_mins": 21
           }
         ]
@@ -1216,7 +1216,7 @@
             "arrival_time": "03:45",
             "transit_duration_mins": 35,
             "loaded_carts": 18,
-            "trip_no": "運輸第6車",
+            "trip_no": "運輸第7車",
             "interval_mins": null
           },
           {
@@ -1240,7 +1240,7 @@
             "arrival_time": "04:20",
             "transit_duration_mins": 45,
             "loaded_carts": 18,
-            "trip_no": "運輸第7車",
+            "trip_no": "運輸第8車",
             "interval_mins": 5
           },
           {
@@ -1252,7 +1252,7 @@
             "arrival_time": "04:35",
             "transit_duration_mins": 32,
             "loaded_carts": 13,
-            "trip_no": "運輸第8車",
+            "trip_no": "運輸第9車",
             "interval_mins": 5
           }
         ]
@@ -1315,12 +1315,12 @@
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "21:47",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:13",
             "arrival_time": "23:52",
             "transit_duration_mins": 39,
             "loaded_carts": 18,
-            "trip_no": "快捷第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 47
           },
           {
@@ -1332,7 +1332,7 @@
             "arrival_time": "00:03",
             "transit_duration_mins": 45.0000000000002,
             "loaded_carts": 18,
-            "trip_no": "運輸第1車",
+            "trip_no": "運輸第2車",
             "interval_mins": 42
           },
           {
@@ -1356,7 +1356,7 @@
             "arrival_time": "00:30",
             "transit_duration_mins": 36.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "運輸第2車",
+            "trip_no": "運輸第3車",
             "interval_mins": 32
           },
           {
@@ -1368,7 +1368,7 @@
             "arrival_time": "00:45",
             "transit_duration_mins": 49,
             "loaded_carts": 18,
-            "trip_no": "運輸第3車",
+            "trip_no": "運輸第4車",
             "interval_mins": 3
           }
         ]
@@ -1397,7 +1397,7 @@
             "arrival_time": "02:40",
             "transit_duration_mins": 52,
             "loaded_carts": 9,
-            "trip_no": "運輸第4車",
+            "trip_no": "運輸第5車",
             "interval_mins": 53
           },
           {
@@ -1409,7 +1409,7 @@
             "arrival_time": "03:03",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "運輸第5車",
+            "trip_no": "運輸第6車",
             "interval_mins": 0
           }
         ]
@@ -1438,7 +1438,7 @@
             "arrival_time": "04:00",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "運輸第6車",
+            "trip_no": "運輸第7車",
             "interval_mins": 3
           },
           {
@@ -1450,7 +1450,7 @@
             "arrival_time": "04:15",
             "transit_duration_mins": 35,
             "loaded_carts": 18,
-            "trip_no": "運輸第7車",
+            "trip_no": "運輸第8車",
             "interval_mins": 20
           },
           {
@@ -1462,7 +1462,7 @@
             "arrival_time": "04:30",
             "transit_duration_mins": 44,
             "loaded_carts": 18,
-            "trip_no": "運輸第8車",
+            "trip_no": "運輸第9車",
             "interval_mins": 0
           },
           {
@@ -1474,7 +1474,7 @@
             "arrival_time": "04:40",
             "transit_duration_mins": 53,
             "loaded_carts": 18,
-            "trip_no": "運輸第9車",
+            "trip_no": "運輸第10車",
             "interval_mins": 7
           },
           {
@@ -1486,7 +1486,7 @@
             "arrival_time": "05:30",
             "transit_duration_mins": 38,
             "loaded_carts": 18,
-            "trip_no": "運輸第10車",
+            "trip_no": "運輸第11車",
             "interval_mins": 65
           }
         ]
@@ -1780,7 +1780,7 @@
             "arrival_time": "04:30",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "運輸第15車",
+            "trip_no": "運輸第16車",
             "interval_mins": 10
           },
           {
@@ -1804,7 +1804,7 @@
             "arrival_time": "06:13",
             "transit_duration_mins": 45,
             "loaded_carts": 18,
-            "trip_no": "運輸第16車",
+            "trip_no": "運輸第17車",
             "interval_mins": 9
           },
           {
@@ -1816,7 +1816,7 @@
             "arrival_time": "06:35",
             "transit_duration_mins": 46,
             "loaded_carts": 18,
-            "trip_no": "運輸第17車",
+            "trip_no": "運輸第18車",
             "interval_mins": 21
           },
           {
@@ -1828,7 +1828,7 @@
             "arrival_time": "06:45",
             "transit_duration_mins": 47,
             "loaded_carts": 18,
-            "trip_no": "運輸第18車",
+            "trip_no": "運輸第19車",
             "interval_mins": 9
           },
           {
@@ -2263,12 +2263,12 @@
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "23:58",
-            "driver": "周恆毅",
+            "driver": "周恆毅(128)",
             "return_time": "00:31",
             "arrival_time": "01:12",
             "transit_duration_mins": 41,
             "loaded_carts": 10,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 52
           }
         ]
@@ -2314,7 +2314,7 @@
             "arrival_time": "04:43",
             "transit_duration_mins": 43,
             "loaded_carts": 15,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第2車",
             "interval_mins": 21
           }
         ]
@@ -2370,19 +2370,19 @@
             "arrival_time": "23:42",
             "transit_duration_mins": 48,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:52",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:32",
             "arrival_time": "00:23",
             "transit_duration_mins": 51.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 38
           },
           {
@@ -2401,12 +2401,12 @@
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "23:25",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "00:05",
             "arrival_time": "00:55",
             "transit_duration_mins": 50,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 20
           }
         ]
@@ -2430,12 +2430,12 @@
             "car_name": "第2階段第2車",
             "display_name": "總車次第7車",
             "call_time": "01:29",
-            "driver": "徐鈺沛(明嘉)",
+            "driver": "張正德(夜1)",
             "return_time": "02:09",
             "arrival_time": "03:30",
             "transit_duration_mins": 81,
             "loaded_carts": 11,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 33
           }
         ]
@@ -2459,12 +2459,12 @@
             "car_name": "第3階段第2車",
             "display_name": "總車次第9車",
             "call_time": "03:00",
-            "driver": "周耀宗",
+            "driver": "周耀宗(早5)",
             "return_time": "03:54",
             "arrival_time": "04:40",
             "transit_duration_mins": 46,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第5車",
             "interval_mins": 6
           }
         ]
@@ -2532,19 +2532,19 @@
             "arrival_time": "23:25",
             "transit_duration_mins": 39,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 62
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:47",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:21",
             "arrival_time": "00:15",
             "transit_duration_mins": 54.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 45
           },
           {
@@ -2563,12 +2563,12 @@
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "23:29",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "00:29",
             "arrival_time": "01:25",
             "transit_duration_mins": 56,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 1
           },
           {
@@ -2580,7 +2580,7 @@
             "arrival_time": "01:29",
             "transit_duration_mins": 59,
             "loaded_carts": 7,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 16
           }
         ]
@@ -2592,12 +2592,12 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第7車",
             "call_time": "01:19",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "01:59",
             "arrival_time": "02:40",
             "transit_duration_mins": 41,
             "loaded_carts": 13,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           },
           {
@@ -2621,12 +2621,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第9車",
             "call_time": "03:00",
-            "driver": "周耀宗",
+            "driver": "周耀宗(早5)",
             "return_time": "03:55",
             "arrival_time": "04:30",
             "transit_duration_mins": 35,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第6車",
             "interval_mins": null
           },
           {
@@ -2706,43 +2706,55 @@
             "arrival_time": "23:30",
             "transit_duration_mins": 39,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 39
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "21:59",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:04",
             "arrival_time": "23:45",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 20
+          },
+          {
+            "car_name": "第1階段第4車",
+            "display_name": "總車次第4車",
+            "call_time": "22:36",
+            "driver": "徐鈺沛(明嘉)",
+            "return_time": "23:16",
+            "arrival_time": "23:55",
+            "transit_duration_mins": 39,
+            "loaded_carts": 18,
+            "trip_no": "外包第2車",
+            "interval_mins": 37
           },
           {
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "22:32",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "23:32",
             "arrival_time": "00:15",
             "transit_duration_mins": 43.0000000000002,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
-            "interval_mins": 33
+            "trip_no": "運輸第3車",
+            "interval_mins": 1436
           },
           {
             "car_name": "第1階段第6車",
             "display_name": "總車次第6車",
             "call_time": "23:08",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "00:33",
             "arrival_time": "00:50",
             "transit_duration_mins": 17,
             "loaded_carts": 13,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 36
           }
         ]
@@ -2766,12 +2778,12 @@
             "car_name": "第2階段第2車",
             "display_name": "總車次第8車",
             "call_time": "01:07",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "01:39",
             "arrival_time": "02:35",
             "transit_duration_mins": 56,
             "loaded_carts": 13,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": 32
           }
         ]
@@ -2795,36 +2807,36 @@
             "car_name": "第3階段第2車",
             "display_name": "總車次第10車",
             "call_time": "02:48",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "03:46",
             "arrival_time": "04:20",
             "transit_duration_mins": 34,
             "loaded_carts": 18,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": 34
           },
           {
             "car_name": "第3階段第3車",
             "display_name": "總車次第11車",
             "call_time": "03:00",
-            "driver": "周耀宗",
+            "driver": "周耀宗(早5)",
             "return_time": "03:59",
             "arrival_time": "04:50",
             "transit_duration_mins": 51,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第7車",
             "interval_mins": 12
           },
           {
             "car_name": "第3階段第4車",
             "display_name": "總車次第12車",
             "call_time": "03:15",
-            "driver": "張正德",
+            "driver": "張正德(中10)",
             "return_time": "04:03",
             "arrival_time": "04:55",
             "transit_duration_mins": 52,
             "loaded_carts": 10,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第8車",
             "interval_mins": 15
           }
         ]
@@ -2892,7 +2904,7 @@
             "arrival_time": "23:50",
             "transit_duration_mins": 32,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 100
           },
           {
@@ -2911,12 +2923,12 @@
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:11",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:57",
             "arrival_time": "00:40",
             "transit_duration_mins": 42.9999999999998,
             "loaded_carts": 8,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 10
           }
         ]
@@ -2945,12 +2957,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第6車",
             "call_time": "02:30",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "03:27",
             "arrival_time": "04:10",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": null
           },
           {
@@ -3013,7 +3025,7 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "00:59",
-            "driver": "",
+            "driver": "徐鈺沛(明嘉)",
             "return_time": "01:39",
             "arrival_time": "02:20",
             "transit_duration_mins": 41,
@@ -3030,7 +3042,7 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第2車",
             "call_time": "02:30",
-            "driver": "",
+            "driver": "徐鈺沛(明嘉)",
             "return_time": "03:10",
             "arrival_time": "03:50",
             "transit_duration_mins": 40,
@@ -3047,12 +3059,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第3車",
             "call_time": "03:00",
-            "driver": "葉吉順",
+            "driver": "葉吉順(早5)",
             "return_time": "03:32",
             "arrival_time": "04:15",
             "transit_duration_mins": 43,
             "loaded_carts": 4,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           }
         ]
@@ -3115,12 +3127,12 @@
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "23:15",
-            "driver": "金哲駿",
+            "driver": "金哲駿(128)",
             "return_time": "23:49",
             "arrival_time": "00:25",
             "transit_duration_mins": 36,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 135
           },
           {
@@ -3161,12 +3173,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第5車",
             "call_time": "03:00",
-            "driver": "葉吉順",
+            "driver": "葉吉順(早5)",
             "return_time": "03:33",
             "arrival_time": "04:10",
             "transit_duration_mins": 37,
             "loaded_carts": 13,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第2車",
             "interval_mins": null
           }
         ]
@@ -3229,12 +3241,12 @@
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "22:45",
-            "driver": "金哲駿",
+            "driver": "金哲駿(128)",
             "return_time": "23:27",
             "arrival_time": "00:12",
             "transit_duration_mins": 45,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 105
           },
           {
@@ -3253,12 +3265,12 @@
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:06",
-            "driver": "施以平",
+            "driver": "施以平(夜2)",
             "return_time": "23:53",
             "arrival_time": "00:30",
             "transit_duration_mins": 36.9999999999999,
             "loaded_carts": 16,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 10
           }
         ]
@@ -3287,12 +3299,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第6車",
             "call_time": "03:00",
-            "driver": "葉吉順",
+            "driver": "葉吉順(早5)",
             "return_time": "03:29",
             "arrival_time": "04:10",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第3車",
             "interval_mins": null
           },
           {
@@ -3360,43 +3372,43 @@
             "arrival_time": "23:45",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "22:21",
-            "driver": "金哲駿",
+            "driver": "金哲駿(夜2)",
             "return_time": "23:27",
             "arrival_time": "00:10",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 19
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:46",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "00:00",
             "arrival_time": "00:55",
             "transit_duration_mins": 55,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 25
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:29",
-            "driver": "莊世民",
+            "driver": "莊世民(夜3)",
             "return_time": "00:37",
             "arrival_time": "01:15",
             "transit_duration_mins": 38,
             "loaded_carts": 17,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 43
           }
         ]
@@ -3408,12 +3420,12 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第5車",
             "call_time": "01:29",
-            "driver": "莊世民",
+            "driver": "莊世民(夜3)",
             "return_time": "02:34",
             "arrival_time": "03:15",
             "transit_duration_mins": 41,
             "loaded_carts": 14,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           }
         ]
@@ -3425,12 +3437,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第6車",
             "call_time": "03:00",
-            "driver": "葉吉順",
+            "driver": "葉吉順(早5)",
             "return_time": "03:44",
             "arrival_time": "04:20",
             "transit_duration_mins": 36,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第6車",
             "interval_mins": null
           },
           {
@@ -3510,7 +3522,7 @@
             "arrival_time": "00:10",
             "transit_duration_mins": 51,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": 115
           },
           {
@@ -3529,12 +3541,12 @@
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:31",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜2)",
             "return_time": "00:20",
             "arrival_time": "01:05",
             "transit_duration_mins": 45,
             "loaded_carts": 9,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 9
           }
         ]
@@ -3558,12 +3570,12 @@
             "car_name": "第2階段第2車",
             "display_name": "總車次第6車",
             "call_time": "01:40",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "02:07",
             "arrival_time": "03:00",
             "transit_duration_mins": 53,
             "loaded_carts": 10,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 42
           }
         ]
@@ -3575,12 +3587,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第7車",
             "call_time": "03:00",
-            "driver": "連志維",
+            "driver": "連志維(早5)",
             "return_time": "03:46",
             "arrival_time": "04:27",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第4車",
             "interval_mins": null
           }
         ]
@@ -3631,12 +3643,12 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "21:22",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "21:58",
             "arrival_time": "22:40",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
@@ -3648,43 +3660,43 @@
             "arrival_time": "23:15",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 8
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:28",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:43",
             "arrival_time": "00:20",
             "transit_duration_mins": 36.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 58
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:11",
-            "driver": "金哲駿",
+            "driver": "金哲駿(夜3)",
             "return_time": "23:43",
             "arrival_time": "00:20",
             "transit_duration_mins": 36.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 43
           },
           {
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "23:37",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜3)",
             "return_time": "00:47",
             "arrival_time": "02:30",
             "transit_duration_mins": 103,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": 26
           }
         ]
@@ -3696,12 +3708,12 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第6車",
             "call_time": "01:02",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "01:28",
             "arrival_time": "02:10",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": null
           }
         ]
@@ -3713,36 +3725,36 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第7車",
             "call_time": "02:05",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "03:03",
             "arrival_time": "03:45",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第7車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第8車",
             "call_time": "03:00",
-            "driver": "葉吉順",
+            "driver": "葉吉順(早5)",
             "return_time": "03:31",
             "arrival_time": "04:10",
             "transit_duration_mins": 39,
             "loaded_carts": 18,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第8車",
             "interval_mins": 55
           },
           {
             "car_name": "第3階段第3車",
             "display_name": "總車次第9車",
             "call_time": "03:23",
-            "driver": "金哲駿",
+            "driver": "金哲駿(夜1)",
             "return_time": "04:34",
             "arrival_time": "05:10",
             "transit_duration_mins": 36,
             "loaded_carts": 9,
-            "trip_no": "郵局第8車",
+            "trip_no": "運輸第9車",
             "interval_mins": 23
           }
         ]
@@ -3793,12 +3805,12 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "21:16",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "22:00",
             "arrival_time": "22:30",
             "transit_duration_mins": 30.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
@@ -3810,31 +3822,31 @@
             "arrival_time": "23:20",
             "transit_duration_mins": 36,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 43
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:39",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:44",
             "arrival_time": "00:25",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 40
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:34",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "00:41",
             "arrival_time": "01:30",
             "transit_duration_mins": 49,
             "loaded_carts": 15,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 55
           }
         ]
@@ -3846,24 +3858,24 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第5車",
             "call_time": "01:05",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "01:24",
             "arrival_time": "02:05",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第6車",
             "call_time": "01:37",
-            "driver": "張正德",
+            "driver": "張正德(夜3)",
             "return_time": "02:07",
             "arrival_time": "02:55",
             "transit_duration_mins": 48,
             "loaded_carts": 13,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": 32
           }
         ]
@@ -3875,24 +3887,24 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第7車",
             "call_time": "02:48",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "03:19",
             "arrival_time": "04:00",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第7車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第8車",
             "call_time": "03:00",
-            "driver": "葉吉順",
+            "driver": "葉吉順(早5)",
             "return_time": "03:34",
             "arrival_time": "04:20",
             "transit_duration_mins": 46,
             "loaded_carts": 14,
-            "trip_no": "幹線車早5",
+            "trip_no": "運輸第8車",
             "interval_mins": 12
           }
         ]
@@ -3943,12 +3955,12 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "21:19",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "22:02",
             "arrival_time": "22:50",
             "transit_duration_mins": 48,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
@@ -3960,31 +3972,31 @@
             "arrival_time": "23:50",
             "transit_duration_mins": 47,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 60
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:44",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:38",
             "arrival_time": "00:20",
             "transit_duration_mins": 41.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 25
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:32",
-            "driver": "莊世民",
+            "driver": "莊世民(夜1)",
             "return_time": "00:21",
             "arrival_time": "01:01",
             "transit_duration_mins": 40,
             "loaded_carts": 8,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 48
           }
         ]
@@ -3996,24 +4008,24 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第5車",
             "call_time": "00:47",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "01:14",
             "arrival_time": "01:57",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第6車",
             "call_time": "01:31",
-            "driver": "張正德",
+            "driver": "張正德(夜3)",
             "return_time": "02:04",
             "arrival_time": "02:58",
             "transit_duration_mins": 54,
             "loaded_carts": 14,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": 44
           }
         ]
@@ -4025,24 +4037,24 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第7車",
             "call_time": "02:54",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "03:01",
             "arrival_time": "03:48",
             "transit_duration_mins": 47,
             "loaded_carts": 18,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第7車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第8車",
             "call_time": "22:12",
-            "driver": "莊世民",
+            "driver": "莊世民(夜1)",
             "return_time": "03:30",
             "arrival_time": "04:15",
             "transit_duration_mins": 45,
             "loaded_carts": 13,
-            "trip_no": "郵局第8車",
+            "trip_no": "運輸第8車",
             "interval_mins": 1158
           }
         ]
@@ -4093,48 +4105,48 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "21:24",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "22:06",
             "arrival_time": "23:00",
             "transit_duration_mins": 54.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "22:12",
-            "driver": "周恆毅",
+            "driver": "周恆毅(128)",
             "return_time": "23:24",
             "arrival_time": "00:11",
             "transit_duration_mins": 47.0000000000002,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 48
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:58",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "23:47",
             "arrival_time": "00:27",
             "transit_duration_mins": 40,
             "loaded_carts": 16,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 46
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:35",
-            "driver": "莊世民",
+            "driver": "莊世民(夜1)",
             "return_time": "23:52",
             "arrival_time": "00:35",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 37
           }
         ]
@@ -4146,24 +4158,24 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第5車",
             "call_time": "01:07",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "01:35",
             "arrival_time": "02:24",
             "transit_duration_mins": 49,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第6車",
             "call_time": "01:35",
-            "driver": "莊世民",
+            "driver": "莊世民(夜1)",
             "return_time": "02:36",
             "arrival_time": "03:18",
             "transit_duration_mins": 42,
             "loaded_carts": 15,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": 28
           }
         ]
@@ -4175,12 +4187,12 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第7車",
             "call_time": "03:17",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "03:30",
             "arrival_time": "04:10",
             "transit_duration_mins": 40,
             "loaded_carts": 15,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第7車",
             "interval_mins": null
           }
         ]
@@ -4231,48 +4243,48 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "21:44",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "22:19",
             "arrival_time": "23:05",
             "transit_duration_mins": 46,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "22:14",
-            "driver": "金哲駿",
+            "driver": "金哲駿(128)",
             "return_time": "23:00",
             "arrival_time": "23:52",
             "transit_duration_mins": 52,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 30
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "23:00",
-            "driver": "莊世民",
+            "driver": "莊世民(夜2)",
             "return_time": "23:52",
             "arrival_time": "00:30",
             "transit_duration_mins": 37.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": 46
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:41",
-            "driver": "金哲駿",
+            "driver": "金哲駿(128)",
             "return_time": "00:32",
             "arrival_time": "01:05",
             "transit_duration_mins": 33,
             "loaded_carts": 9,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 41
           }
         ]
@@ -4284,24 +4296,24 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第5車",
             "call_time": "01:27",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "01:43",
             "arrival_time": "02:26",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第6車",
             "call_time": "01:46",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "02:06",
             "arrival_time": "02:55",
             "transit_duration_mins": 49,
             "loaded_carts": 9,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": 19
           }
         ]
@@ -4313,24 +4325,24 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第7車",
             "call_time": "02:34",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "03:20",
             "arrival_time": "04:00",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第7車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第8車",
             "call_time": "03:02",
-            "driver": "黃憲章(快捷)",
+            "driver": "黃憲章(夜2)",
             "return_time": "04:48",
             "arrival_time": "05:30",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第8車",
+            "trip_no": "運輸第8車",
             "interval_mins": 28
           }
         ]
@@ -4386,7 +4398,7 @@
             "arrival_time": "23:00",
             "transit_duration_mins": 63.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "快捷第1車",
             "interval_mins": null
           },
           {
@@ -4398,7 +4410,7 @@
             "arrival_time": "23:44",
             "transit_duration_mins": 51,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第1車",
             "interval_mins": 72
           },
           {
@@ -4410,31 +4422,31 @@
             "arrival_time": "00:38",
             "transit_duration_mins": 53.9999999999998,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "快捷第2車",
             "interval_mins": 0
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:19",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "00:26",
             "arrival_time": "01:05",
             "transit_duration_mins": 39,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第2車",
             "interval_mins": 40
           },
           {
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "23:39",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "00:34",
             "arrival_time": "01:22",
             "transit_duration_mins": 48,
             "loaded_carts": 9,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第3車",
             "interval_mins": 20
           }
         ]
@@ -4451,19 +4463,19 @@
             "arrival_time": "02:22",
             "transit_duration_mins": 53,
             "loaded_carts": 18,
-            "trip_no": "郵局第6車",
+            "trip_no": "快捷第3車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第7車",
             "call_time": "01:45",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "01:54",
             "arrival_time": "02:40",
             "transit_duration_mins": 46,
             "loaded_carts": 13,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第4車",
             "interval_mins": 33
           }
         ]
@@ -4480,19 +4492,19 @@
             "arrival_time": "03:53",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第8車",
+            "trip_no": "快捷第4車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第9車",
             "call_time": "03:03",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "04:21",
             "arrival_time": "05:08",
             "transit_duration_mins": 47,
             "loaded_carts": 16,
-            "trip_no": "郵局第9車",
+            "trip_no": "運輸第5車",
             "interval_mins": 12
           }
         ]
@@ -4548,7 +4560,7 @@
             "arrival_time": "23:00",
             "transit_duration_mins": 55.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "快捷第1車",
             "interval_mins": null
           },
           {
@@ -4560,7 +4572,7 @@
             "arrival_time": "23:46",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第1車",
             "interval_mins": 73
           },
           {
@@ -4572,7 +4584,7 @@
             "arrival_time": "00:43",
             "transit_duration_mins": 57,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "快捷第2車",
             "interval_mins": 2
           },
           {
@@ -4584,7 +4596,7 @@
             "arrival_time": "01:12",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第2車",
             "interval_mins": 34
           },
           {
@@ -4596,7 +4608,7 @@
             "arrival_time": "01:17",
             "transit_duration_mins": 48,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第3車",
             "interval_mins": 23
           }
         ]
@@ -4613,19 +4625,19 @@
             "arrival_time": "02:18",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第6車",
+            "trip_no": "快捷第3車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第7車",
             "call_time": "01:48",
-            "driver": "張正德",
+            "driver": "張正德(夜3)",
             "return_time": "01:58",
             "arrival_time": "02:55",
             "transit_duration_mins": 57,
             "loaded_carts": 9,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第4車",
             "interval_mins": 34
           }
         ]
@@ -4642,19 +4654,19 @@
             "arrival_time": "03:52",
             "transit_duration_mins": 42,
             "loaded_carts": 18,
-            "trip_no": "郵局第8車",
+            "trip_no": "快捷第4車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第9車",
             "call_time": "02:38",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜1)",
             "return_time": "03:52",
             "arrival_time": "04:32",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第9車",
+            "trip_no": "運輸第5車",
             "interval_mins": 29
           },
           {
@@ -4666,7 +4678,7 @@
             "arrival_time": "05:20",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第10車",
+            "trip_no": "快捷第5車",
             "interval_mins": 20
           },
           {
@@ -4678,7 +4690,7 @@
             "arrival_time": "05:30",
             "transit_duration_mins": 31,
             "loaded_carts": 9,
-            "trip_no": "郵局第11車",
+            "trip_no": "運輸第6車",
             "interval_mins": 40
           }
         ]
@@ -4734,7 +4746,7 @@
             "arrival_time": "22:45",
             "transit_duration_mins": 41,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "快捷第1車",
             "interval_mins": null
           },
           {
@@ -4746,7 +4758,7 @@
             "arrival_time": "00:45",
             "transit_duration_mins": 69.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第1車",
             "interval_mins": 69
           },
           {
@@ -4758,19 +4770,19 @@
             "arrival_time": "00:55",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "快捷第2車",
             "interval_mins": 16
           },
           {
             "car_name": "第1階段第4車",
             "display_name": "總車次第4車",
             "call_time": "23:19",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "00:15",
             "arrival_time": "00:55",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第2車",
             "interval_mins": 1
           }
         ]
@@ -4787,31 +4799,31 @@
             "arrival_time": "02:25",
             "transit_duration_mins": 40,
             "loaded_carts": 14,
-            "trip_no": "郵局第5車",
+            "trip_no": "快捷第3車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第6車",
             "call_time": "01:26",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "01:55",
             "arrival_time": "02:30",
             "transit_duration_mins": 35,
             "loaded_carts": 18,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第3車",
             "interval_mins": 27
           },
           {
             "car_name": "第2階段第3車",
             "display_name": "總車次第7車",
             "call_time": "01:38",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "02:33",
             "arrival_time": "03:05",
             "transit_duration_mins": 32,
             "loaded_carts": 18,
-            "trip_no": "郵局第7車",
+            "trip_no": "運輸第4車",
             "interval_mins": 12
           }
         ]
@@ -4828,19 +4840,19 @@
             "arrival_time": "04:40",
             "transit_duration_mins": 68,
             "loaded_carts": 18,
-            "trip_no": "郵局第8車",
+            "trip_no": "快捷第4車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第9車",
             "call_time": "02:58",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "04:02",
             "arrival_time": "05:00",
             "transit_duration_mins": 58,
             "loaded_carts": 11,
-            "trip_no": "郵局第9車",
+            "trip_no": "運輸第5車",
             "interval_mins": 9
           }
         ]
@@ -4896,7 +4908,7 @@
             "arrival_time": "22:55",
             "transit_duration_mins": 48.0000000000001,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "快捷第1車",
             "interval_mins": null
           },
           {
@@ -4908,19 +4920,19 @@
             "arrival_time": "23:30",
             "transit_duration_mins": 35.9999999999999,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第1車",
             "interval_mins": 64
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "22:48",
-            "driver": "金哲駿",
+            "driver": "金哲駿(夜1)",
             "return_time": "00:00",
             "arrival_time": "00:40",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第2車",
             "interval_mins": 21
           },
           {
@@ -4932,19 +4944,19 @@
             "arrival_time": "00:40",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "快捷第2車",
             "interval_mins": 24
           },
           {
             "car_name": "第1階段第5車",
             "display_name": "總車次第5車",
             "call_time": "23:59",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "00:00",
             "arrival_time": "00:45",
             "transit_duration_mins": 45,
             "loaded_carts": 5,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第3車",
             "interval_mins": 47
           }
         ]
@@ -4956,12 +4968,12 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第6車",
             "call_time": "01:37",
-            "driver": "葉吉順",
+            "driver": "葉吉順(夜3)",
             "return_time": "01:52",
             "arrival_time": "02:35",
             "transit_duration_mins": 43,
             "loaded_carts": 14,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第4車",
             "interval_mins": null
           }
         ]
@@ -4978,19 +4990,19 @@
             "arrival_time": "03:30",
             "transit_duration_mins": 38,
             "loaded_carts": 18,
-            "trip_no": "郵局第7車",
+            "trip_no": "快捷第3車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第8車",
             "call_time": "02:47",
-            "driver": "金哲駿",
+            "driver": "金哲駿(夜1)",
             "return_time": "03:38",
             "arrival_time": "04:10",
             "transit_duration_mins": 32,
             "loaded_carts": 9,
-            "trip_no": "郵局第8車",
+            "trip_no": "運輸第5車",
             "interval_mins": 3
           }
         ]
@@ -5046,31 +5058,31 @@
             "arrival_time": "22:45",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "快捷第1車",
             "interval_mins": null
           },
           {
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "23:50",
-            "driver": "周恆毅",
+            "driver": "周恆毅(夜3)",
             "return_time": "00:30",
             "arrival_time": "01:10",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第1車",
             "interval_mins": 145
           },
           {
             "car_name": "第1階段第3車",
             "display_name": "總車次第3車",
             "call_time": "23:50",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "00:30",
             "arrival_time": "01:10",
             "transit_duration_mins": 40,
             "loaded_carts": 7,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第2車",
             "interval_mins": 0
           }
         ]
@@ -5121,24 +5133,24 @@
             "car_name": "第1階段第1車",
             "display_name": "總車次第1車",
             "call_time": "22:05",
-            "driver": "莊世民",
+            "driver": "莊世民(128)",
             "return_time": "22:45",
             "arrival_time": "23:25",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "運輸第1車",
             "interval_mins": null
           },
           {
             "car_name": "第1階段第2車",
             "display_name": "總車次第2車",
             "call_time": "23:00",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "23:40",
             "arrival_time": "00:20",
             "transit_duration_mins": 39.9999999999999,
             "loaded_carts": 15,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第2車",
             "interval_mins": 55
           }
         ]
@@ -5150,24 +5162,24 @@
             "car_name": "第2階段第1車",
             "display_name": "總車次第3車",
             "call_time": "01:15",
-            "driver": "莊世民",
+            "driver": "莊世民(128)",
             "return_time": "01:50",
             "arrival_time": "02:30",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第3車",
+            "trip_no": "運輸第3車",
             "interval_mins": null
           },
           {
             "car_name": "第2階段第2車",
             "display_name": "總車次第4車",
             "call_time": "01:20",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "02:01",
             "arrival_time": "02:41",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "運輸第4車",
             "interval_mins": 5
           }
         ]
@@ -5179,24 +5191,24 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第5車",
             "call_time": "02:41",
-            "driver": "莊世民",
+            "driver": "莊世民(128)",
             "return_time": "03:21",
             "arrival_time": "04:01",
             "transit_duration_mins": 40,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "運輸第5車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第2車",
             "display_name": "總車次第6車",
             "call_time": "03:20",
-            "driver": "張正德",
+            "driver": "張正德(夜1)",
             "return_time": "04:00",
             "arrival_time": "04:40",
             "transit_duration_mins": 40,
             "loaded_carts": 10,
-            "trip_no": "郵局第6車",
+            "trip_no": "運輸第6車",
             "interval_mins": 39
           }
         ]
@@ -5252,7 +5264,7 @@
             "arrival_time": "23:25",
             "transit_duration_mins": 43,
             "loaded_carts": 18,
-            "trip_no": "郵局第1車",
+            "trip_no": "快捷第1車",
             "interval_mins": null
           },
           {
@@ -5264,7 +5276,7 @@
             "arrival_time": "00:30",
             "transit_duration_mins": 34.9999999999999,
             "loaded_carts": 15,
-            "trip_no": "郵局第2車",
+            "trip_no": "運輸第1車",
             "interval_mins": 54
           }
         ]
@@ -5281,7 +5293,7 @@
             "arrival_time": "02:40",
             "transit_duration_mins": 39,
             "loaded_carts": 14,
-            "trip_no": "郵局第3車",
+            "trip_no": "快捷第2車",
             "interval_mins": null
           }
         ]
@@ -5293,24 +5305,24 @@
             "car_name": "第3階段第1車",
             "display_name": "總車次第4車",
             "call_time": "02:24",
-            "driver": "",
+            "driver": "黃憲章(快捷)",
             "return_time": "03:04",
             "arrival_time": "03:35",
             "transit_duration_mins": 31,
             "loaded_carts": 18,
-            "trip_no": "郵局第4車",
+            "trip_no": "快捷第3車",
             "interval_mins": null
           },
           {
             "car_name": "第3階段第1車",
             "display_name": "總車次第5車",
             "call_time": "03:46",
-            "driver": "",
+            "driver": "黃憲章(快捷)",
             "return_time": "04:26",
             "arrival_time": "05:10",
             "transit_duration_mins": 44,
             "loaded_carts": 18,
-            "trip_no": "郵局第5車",
+            "trip_no": "快捷第4車",
             "interval_mins": 82
           }
         ]
@@ -12023,6 +12035,144 @@
             "loaded_carts": 14,
             "trip_no": "運輸第5車",
             "interval_mins": null
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "seq": "080",
+    "date": "2026-08-30",
+    "weekday": "週日",
+    "summary": {
+      "total_duration": "6小時40分鐘",
+      "total_trips": 7,
+      "total_carts": 99,
+      "grand_total_trips": 9,
+      "grand_total_carts": 117,
+      "total_mails": 4136,
+      "mail_per_cart": 41.7777777777778,
+      "mail_per_trip": 590.857142857143,
+      "contribution": {
+        "trip_outsource": "14%",
+        "trip_post": "86%",
+        "cart_outsource": "8%",
+        "cart_post": "92%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 18 },
+      "xs_warehouse": { "trips": 7, "carts": 99 },
+      "outsource": {
+        "total": { "trips": 1, "carts": 8 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 1, "carts": 8 }
+      },
+      "post": {
+        "total": { "trips": 6, "carts": 91 },
+        "stage1": { "trips": 3, "carts": 48 },
+        "stage2": { "trips": 1, "carts": 18 },
+        "stage3": { "trips": 2, "carts": 25 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:55",
+            "driver": "張正德(快捷)",
+            "return_time": "22:24",
+            "arrival_time": "23:10",
+            "transit_duration_mins": 46,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:28",
+            "driver": "莊世民(128)",
+            "return_time": "23:09",
+            "arrival_time": "23:50",
+            "transit_duration_mins": 41,
+            "loaded_carts": 18,
+            "trip_no": "運輸第2車",
+            "interval_mins": 33
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "23:10",
+            "driver": "黃憲章(快捷)",
+            "return_time": "23:54",
+            "arrival_time": "00:30",
+            "transit_duration_mins": 35.9999999999999,
+            "loaded_carts": 12,
+            "trip_no": "運輸第3車",
+            "interval_mins": 42
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第4車",
+            "call_time": "01:45",
+            "driver": "張正德(快捷)",
+            "return_time": "02:20",
+            "arrival_time": "03:15",
+            "transit_duration_mins": 55,
+            "loaded_carts": 18,
+            "trip_no": "運輸第4車",
+            "interval_mins": null
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第5車",
+            "call_time": "02:07",
+            "driver": "黃憲章(快捷)",
+            "return_time": "03:34",
+            "arrival_time": "04:10",
+            "transit_duration_mins": 36,
+            "loaded_carts": 18,
+            "trip_no": "快捷第4車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第6車",
+            "call_time": "03:00",
+            "driver": "陳國乾(立勤)",
+            "return_time": "03:40",
+            "arrival_time": "03:40",
+            "transit_duration_mins": 0,
+            "loaded_carts": 8,
+            "trip_no": "外包第1車",
+            "interval_mins": 53
+          },
+          {
+            "car_name": "第3階段第3車",
+            "display_name": "總車次第7車",
+            "call_time": "03:06",
+            "driver": "張正德(快捷)",
+            "return_time": "04:07",
+            "arrival_time": "04:35",
+            "transit_duration_mins": 28,
+            "loaded_carts": 7,
+            "trip_no": "快捷第5車",
+            "interval_mins": 6
           }
         ]
       }
