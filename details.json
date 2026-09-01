@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-09-01T21:55:39.328Z",
+  "updatedAt": "2026-09-01T22:04:12.795Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -5304,7 +5304,7 @@
       "weekday": "週二",
       "unit": "臺南郵局運輸股",
       "title": "MOMO進出口統計表",
-      "generatedAt": "2026-09-01T21:55:39.328Z",
+      "generatedAt": "2026-09-01T22:04:12.795Z",
       "inbound": {
         "stages": [
           {
