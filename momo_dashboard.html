@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>MOMO 運務車次分析</title>
+
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ArJskjir4Nj5br6olzGY7NrFKjeT0iU4Og0xNcRmZny0GlKMAUsbOWW-OR_IHCUUdHB_-DdpFt8zChx2eykLEomxA_G0rgCCOEc_Dqyf-51ZXLzjPb3uw5P0oiwTx0JXfwNCn5sxSKxarUhqkbcHU02OjeDEvAAjZ-TmdNVnXbvCpNR9sz0Hj8qIC5o0P3E7KrUiIAaTCNZ570TjdRTGvIjQz7280bdKZEkkQsNVseq5UHt-PZo6J7g_fCh1ffeC5xFHa7ijS7t5Zld2v0a56rBCv_IMbTYCaLbUxwXnFVGGZLEgPuBYVUSLoIWou2M-AhjkFL87Dr92vmDwz6NbmQ"
+      charset="UTF-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin="anonymous"
+      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDcxZGM4MjBiODNjYzkxZTYyMzhiZDQ2NiZmbj1tb21vX2Rhc2hib2FyZF9kdXR5X2F2ZXJhZ2VfZml4ZWQuaHRtbCZjZD1hdHRhY2htZW50JnRzPTQ5Njc0NiZwPWZzJmNpZD0xJnNpZz04YjY5YTU5NWY4YmMxNjk2OTI2ZTcyMzI4YzUxNmNkODU1MDcwMWZmZjhiZTMwYTJmZTc5ZjdmZmE5MjEzODg1JnY9MA"
+    />
+    <script
+      type="text/javascript"
+      src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Q8rBSD3TjS8B-dWw_u5nr3jgndUKiILQfiYEPOPW1CYUItzbsqCuWl8arNcufU4msPTo2NTaff8NN195IeUEETlV3I6s9FPKCnEeFphRmQUtTxf_4vyc_YCgy6in60EHA6XWM_OVumMYy3iVq8xG0eBhNdV0Gw33-0hjS2mIkidneVTEwrfrCjhcBxFyX4VNqBV6ELPO8Aiskana7UEE_FUG-6OVVUjACyG6nEpj8bTTTEX-IqTtUvtDsBQsVK5oxAsTT5t4tc70YqWPSX1hp_D1a5rPLP08hqrhDv7wdijVPPaJ0SUuItQhSgvRSah03iEooiKrwNSxB-pWrhBIzA"
+      charset="UTF-8"
+    ></script>
+    <link
+      rel="stylesheet"
+      crossorigin="anonymous"
+      href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jaGF0Z3B0LmNvbS9iYWNrZW5kLWFwaS9lc3R1YXJ5L2NvbnRlbnQ_aWQ9ZmlsZV8wMDAwMDAwMDlmZWM4MjBiYWY2MzBkZThlZjk5NDY5NSZmbj1tb21vX2Rhc2hib2FyZF9ncm91cGVkX3N0YWdlLmh0bWwmY2Q9YXR0YWNobWVudCZ0cz00OTY3NDYmcD1mcyZjaWQ9MSZzaWc9NjdjMGViYzQwMmI0NjUzY2JlODI5NGUxOWNmYmExNmJlYzkzODViNDBiOGI4MWFiNmExOWY4NDUwZDNmMDFlMyZ2PTA"
+    />
+    <style>
+      :root {
+        --bg: #f4f7f6;
+        --card: #fff;
+        --ink: #17211d;
+        --muted: #6b7771;
+        --line: #dfe7e3;
+        --brand: #087a52;
+        --brand2: #0fa66d;
+        --soft: #e9f6f0;
+        --warn: #b86f08;
+        --shadow: 0 12px 32px rgba(26, 63, 47, 0.08);
+        --r: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: linear-gradient(180deg, #eef6f2 0, #f7f8f7 260px);
+        font-family:
+          "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+        color: var(--ink);
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 260px 1fr;
+      }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        padding: 24px 18px;
+        background: #10251d;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .logo {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #1ec985, #0a8c5d);
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        box-shadow: inset 0 0 0 1px #ffffff22;
+      }
+      .brand h1 {
+        font-size: 16px;
+        margin: 0;
+      }
+      .brand p {
+        font-size: 12px;
+        color: #a9c3b7;
+        margin: 4px 0 0;
+      }
+      .nav {
+        display: grid;
+        gap: 7px;
+      }
+      .nav button {
+        border: 0;
+        background: transparent;
+        color: #bed0c7;
+        padding: 12px 13px;
+        border-radius: 12px;
+        text-align: left;
+        cursor: pointer;
+      }
+      .nav button.active,
+      .nav button:hover {
+        background: #ffffff12;
+        color: #fff;
+      }
+      .nav .n {
+        display: inline-grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        background: #ffffff10;
+        margin-right: 8px;
+        font-size: 12px;
+      }
+      .side-note {
+        margin-top: auto;
+        font-size: 12px;
+        color: #92aa9f;
+        line-height: 1.7;
+      }
+      .main {
+        min-width: 0;
+        padding: 28px 34px 48px;
+      }
+      .topbar {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .topbar h2 {
+        font-size: 28px;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .topbar p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .status {
+        background: #fff;
+        border: 1px solid var(--line);
+        padding: 9px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--brand2);
+        display: inline-block;
+        margin-right: 7px;
+      }
+      .filters,
+      .card {
+        background: var(--card);
+        border: 1px solid #e5ece8;
+        border-radius: var(--r);
+        box-shadow: var(--shadow);
+      }
+      .filters {
+        padding: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .field label {
+        display: block;
+        font-size: 11px;
+        font-weight: 800;
+        color: var(--muted);
+        margin: 0 0 6px 2px;
+      }
+      .field input,
+      .field select {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #fbfcfb;
+        border-radius: 11px;
+        padding: 10px 11px;
+        outline: none;
+      }
+      .field input:focus,
+      .field select:focus {
+        border-color: #73bd9d;
+        box-shadow: 0 0 0 3px #0fa66d14;
+      }
+      .reset {
+        align-self: end;
+        border: 0;
+        background: var(--soft);
+        color: var(--brand);
+        font-weight: 800;
+        border-radius: 11px;
+        padding: 11px 15px;
+        cursor: pointer;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .kpi {
+        padding: 15px 16px;
+        background: linear-gradient(180deg, #fff, #fbfdfc);
+        border: 1px solid var(--line);
+        border-radius: 15px;
+      }
+      .kpi .label {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .kpi strong {
+        font-size: 23px;
+        display: block;
+        margin-top: 4px;
+      }
+      .kpi small {
+        color: var(--muted);
+      }
+      .panel {
+        display: none;
+      }
+      .panel.active {
+        display: block;
+      }
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        align-items: flex-end;
+        margin: 0 0 13px;
+      }
+      .panel-head h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+      .panel-head p {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .controls .field {
+        min-width: 180px;
+      }
+      .card {
+        padding: 18px;
+      }
+      .stage-groups {
+        display: grid;
+        gap: 16px;
+      }
+      .stage-group {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .stage-group-title {
+        padding: 13px 16px;
+        background: linear-gradient(90deg, #0d5c45, #087a52);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+      }
+      .stage-group .table-wrap {
+        border: 0;
+        border-radius: 0;
+      }
+      .stage-group .data-table {
+        min-width: 620px;
+      }
+      .stage-group .data-table th {
+        top: auto;
+      }
+
+      .table-wrap {
+        overflow: auto;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 720px;
+      }
+      .data-table th {
+        position: sticky;
+        top: 0;
+        background: #f7faf8;
+        color: #52625b;
+        font-size: 12px;
+        text-align: left;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .data-table td {
+        padding: 12px;
+        border-bottom: 1px solid #edf1ef;
+        font-size: 14px;
+        vertical-align: middle;
+      }
+      .data-table tr:last-child td {
+        border-bottom: 0;
+      }
+      .rank {
+        width: 28px;
+        height: 28px;
+        border-radius: 9px;
+        background: #eef3f0;
+        display: grid;
+        place-items: center;
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: 800;
+        background: var(--soft);
+        color: var(--brand);
+        white-space: nowrap;
+      }
+      .pct {
+        min-width: 130px;
+      }
+      .bar {
+        height: 7px;
+        background: #edf1ef;
+        border-radius: 99px;
+        overflow: hidden;
+        margin-top: 5px;
+      }
+      .bar > i {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, var(--brand), var(--brand2));
+        border-radius: inherit;
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .empty {
+        padding: 42px;
+        text-align: center;
+        color: var(--muted);
+      }
+      .sequence {
+        font-weight: 800;
+        letter-spacing: 0.01em;
+      }
+      .arrow {
+        color: #8ba097;
+        margin: 0 5px;
+      }
+      .chart-summary {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .chart-stat {
+        background: #f7faf8;
+        border: 1px solid var(--line);
+        padding: 12px;
+        border-radius: 12px;
+      }
+      .chart-stat span {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .chart-stat strong {
+        display: block;
+        font-size: 21px;
+        margin-top: 3px;
+      }
+      .chart-wrap {
+        height: 390px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        padding: 12px;
+        background: linear-gradient(180deg, #fff, #fbfcfb);
+      }
+      canvas {
+        height: 100%;
+        display: block;
+      }
+      .legend-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 10px;
+        line-height: 1.6;
+      }
+      .mobile-tabs {
+        display: none;
+      }
+      @media (max-width: 1100px) {
+        .app {
+          display: block;
+        }
+        .sidebar {
+          height: auto;
+          position: sticky;
+          z-index: 20;
+          padding: 12px 20px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        }
+        .sidebar .brand p,
+        .side-note {
+          display: none;
+        }
+        .sidebar .nav {
+          margin-left: auto;
+          display: flex;
+          overflow: auto;
+        }
+        .nav button {
+          white-space: nowrap;
+        }
+        .nav .n {
+          display: none;
+        }
+        .main {
+          padding: 22px;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .filters {
+          grid-template-columns: 1fr 1fr auto;
+        }
+      }
+      @media (max-width: 700px) {
+        body {
+          background: #f5f7f6;
+        }
+        .sidebar {
+          padding: 10px 14px;
+        }
+        .brand h1 {
+          font-size: 14px;
+        }
+        .logo {
+          width: 36px;
+          height: 36px;
+          border-radius: 11px;
+        }
+        .sidebar .nav {
+          display: none;
+        }
+        .main {
+          padding: 14px 12px 32px;
+        }
+        .topbar {
+          display: block;
+        }
+        .topbar h2 {
+          font-size: 22px;
+        }
+        .status {
+          display: inline-block;
+          margin-top: 10px;
+        }
+        .mobile-tabs {
+          display: flex;
+          gap: 7px;
+          overflow: auto;
+          padding: 2px 0 12px;
+          position: sticky;
+          top: 56px;
+          z-index: 15;
+          background: #f5f7f6;
+        }
+        .mobile-tabs button {
+          border: 1px solid var(--line);
+          background: #fff;
+          border-radius: 999px;
+          padding: 8px 11px;
+          white-space: nowrap;
+          color: var(--muted);
+        }
+        .mobile-tabs button.active {
+          background: #143226;
+          color: #fff;
+          border-color: #143226;
+        }
+        .filters {
+          grid-template-columns: 1fr 1fr;
+          padding: 12px;
+          gap: 9px;
+        }
+        .reset {
+          grid-column: 1/-1;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+        }
+        .kpi {
+          padding: 12px;
+        }
+        .kpi strong {
+          font-size: 19px;
+        }
+        .panel-head {
+          display: block;
+        }
+        .controls {
+          margin-top: 12px;
+        }
+        .controls .field {
+          min-width: 0;
+          flex: 1 1 45%;
+        }
+        .card {
+          padding: 12px;
+          border-radius: 15px;
+        }
+        .data-table {
+          min-width: 650px;
+        }
+        .chart-summary {
+          grid-template-columns: 1fr 1fr;
+        }
+        .chart-stat:last-child {
+          grid-column: 1/-1;
+        }
+        .chart-wrap {
+          height: 330px;
+          padding: 8px;
+        }
+        .sequence {
+          font-size: 13px;
+        }
+      }
+      @media (max-width: 420px) {
+        .filters {
+          grid-template-columns: 1fr;
+        }
+        .reset {
+          grid-column: auto;
+        }
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .controls .field {
+          flex-basis: 100%;
+        }
+        .topbar p {
+          font-size: 13px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo">M</div>
+          <div>
+            <h1>MOMO 運務分析</h1>
+            <p>Dispatch Intelligence Dashboard</p>
+          </div>
+        </div>
+        <nav class="nav" id="nav"></nav>
+        <div class="side-note">
+          自動讀取同資料夾的最新 JSON。<br />統計依日期篩選即時重算。
+        </div>
+      </aside>
+      <main class="main">
+        <div class="topbar">
+          <div>
+            <h2>運務車次分析儀表板</h2>
+            <p>從階段配置、單位車次順序到運務員負荷，一頁看懂值班結構。</p>
+          </div>
+          <div class="status">
+            <span class="dot"></span><span id="statusText"></span>
+          </div>
+        </div>
+        <div class="mobile-tabs" id="mobileTabs"></div>
+        <section class="filters">
+          <div class="field">
+            <label>起始日期</label><input type="date" id="dateFrom" />
+          </div>
+          <div class="field">
+            <label>結束日期</label><input type="date" id="dateTo" />
+          </div>
+          <button class="reset" id="resetDate">重設日期</button>
+          <button class="reset" id="chooseData">選擇資料檔</button>
+          <input
+            type="file"
+            id="dataFile"
+            accept=".json,application/json"
+            hidden
+          />
+        </section>
+        <div class="kpis">
+          <div class="kpi">
+            <span class="label">資料天數</span><strong id="kpiDays">—</strong
+            ><small>日期筆數</small>
+          </div>
+          <div class="kpi">
+            <span class="label">總車次</span><strong id="kpiTrips">—</strong
+            ><small>stages.cars 加總</small>
+          </div>
+          <div class="kpi">
+            <span class="label">運務員</span><strong id="kpiDrivers">—</strong
+            ><small>姓名正規化後</small>
+          </div>
+          <div class="kpi">
+            <span class="label">每日平均車次</span><strong id="kpiAvg">—</strong
+            ><small>目前日期範圍</small>
+          </div>
+        </div>
+        <section class="panel active" id="p1">
+          <div class="panel-head">
+            <div>
+              <h3>① 各階段車次數分布</h3>
+              <p>同一階段每日共有幾車，統計其出現次數與占該階段日期的比例。</p>
+            </div>
+            <div class="controls">
+              <div class="field">
+                <label>排序方式</label>
+                <select id="s1sort">
+                  <option value="cars">按車次順序</option>
+                  <option value="pctDesc">按百分比高至低</option>
+                  <option value="pctAsc">按百分比低至高</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card"><div id="t1"></div></div>
+        </section>
+        <section class="panel" id="p2">
+          <div class="panel-head">
+            <div>
+              <h3>② 各階段單位車次順序</h3>
+              <p>
+                依當日實際出車順序，將「快捷第1車」簡化為「快捷」後形成序列模式。
+              </p>
+            </div>
+            <div class="controls">
+              <div class="field">
+                <label>階段</label
+                ><select id="s2"></select>
+              </div>
+            </div>
+          </div>
+          <div class="card"><div id="t2"></div></div>
+        </section>
+        <section class="panel" id="p3">
+          <div class="panel-head">
+            <div>
+              <h3>③ 單位車次 × 運務員</h3>
+              <p>
+                查看指定階段、指定單位車次由哪些運務員擔任，以及各自占該車次的值班比例。
+              </p>
+            </div>
+            <div class="controls">
+              <div class="field">
+                <label>階段</label
+                ><select id="s3stage"></select>
+              </div>
+              <div class="field">
+                <label>單位車次</label
+                ><select id="s3trip"></select>
+              </div>
+            </div>
+          </div>
+          <div class="card"><div id="t3"></div></div>
+        </section>
+        <section class="panel" id="p4">
+          <div class="panel-head">
+            <div>
+              <h3>④ 運務員車次結構</h3>
+              <p>
+                用姓名反查該運務員曾擔任哪些階段／單位車次，百分比以此人的全部值班車次為分母。
+              </p>
+            </div>
+            <div class="controls">
+              <div class="field">
+                <label>運務員</label
+                ><select id="s4driver"></select>
+              </div>
+            </div>
+          </div>
+          <div class="card"><div id="t4"></div></div>
+        </section>
+        <section class="panel" id="p5">
+          <div class="panel-head">
+            <div>
+              <h3>⑤ 運務員每日車次</h3>
+              <p>
+                直條圖顯示選定運務員每日總車次；圖表仍顯示全部日期（包含未值勤日），值班平均僅計算有值班的日期。
+              </p>
+            </div>
+            <div class="controls">
+              <div class="field">
+                <label>運務員</label
+                ><select id="s5driver"></select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="chart-summary">
+              <div class="chart-stat">
+                <span>期間總車次</span><strong id="cTotal">—</strong>
+              </div>
+              <div class="chart-stat">
+                <span>值班平均</span><strong id="cAvg">—</strong>
+              </div>
+              <div class="chart-stat">
+                <span>單日最高</span><strong id="cMax">—</strong>
+              </div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart"></canvas></div>
+            <div class="legend-note">
+              值班平均＝選定期間內該運務員所有車次 ÷ 實際有值班（當日車次 &gt;
+              0）的天數；0
+              車次日期不納入平均，但仍會完整顯示在圖表中。姓名後方的班別註記（如「(快)」「(128)」）會合併至同一姓名。
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      let RAW = [];
+      const tabs = [
+        ["p1", "階段車次數"],
+        ["p2", "單位順序"],
+        ["p3", "車次運務員"],
+        ["p4", "人員車次"],
+        ["p5", "每日車次圖"],
+      ];
+      const $ = (s) => document.querySelector(s),
+        $$ = (s) => [...document.querySelectorAll(s)];
+      const stageNum = (s) => +(s.match(/\d+/) || [999])[0];
+      const tripNum = (s) => +(s.match(/第(\d+)車/) || [, 999])[1];
+      const normalizeDriver = (s) =>
+        (s || "")
+          .trim()
+          .replace(/[（(][^）)]*[）)]\s*$/, "")
+          .trim() || "未登錄";
+      const unitName = (s) => (s || "未分類").replace(/第\d+車$/, "");
+      const pct = (n, d) => (d ? +((n * 100) / d).toFixed(1) : 0);
+      const fmtPct = (n) =>
+        Number.isInteger(n) ? n.toFixed(0) + "%" : n.toFixed(1) + "%";
+      const escapeHtml = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[m],
+        );
+      function flat(days) {
+        return days.flatMap((day) =>
+          (day.stages || []).flatMap((stage) =>
+            (stage.cars || []).map((car, i) => ({
+              date: day.date,
+              weekday: day.weekday,
+              stage: stage.stage_name,
+              stageOrder: stageNum(stage.stage_name),
+              position: i + 1,
+              trip: car.trip_no || "未分類",
+              unit: unitName(car.trip_no),
+              driver: normalizeDriver(car.driver),
+              rawDriver: car.driver || "",
+              carName: car.car_name || "",
+              displayName: car.display_name || "",
+            })),
+          ),
+        );
+      }
+      let dates = [];
+      function initializeDates() {
+        dates = [...new Set(RAW.map((x) => x.date).filter(Boolean))].sort();
+        $("#dateFrom").value = dates[0] || "";
+        $("#dateTo").value = dates.at(-1) || "";
+        $("#dateFrom").min = $("#dateTo").min = dates[0] || "";
+        $("#dateFrom").max = $("#dateTo").max = dates.at(-1) || "";
+      }
+      function filteredDays() {
+        let a = $("#dateFrom").value,
+          b = $("#dateTo").value;
+        return RAW.filter((x) => (!a || x.date >= a) && (!b || x.date <= b));
+      }
+      function table(headers, rows) {
+        if (!rows.length)
+          return '<div class="empty">目前篩選條件沒有資料</div>';
+        return `<div class="table-wrap"><table class="data-table"><thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
+      }
+      function rankCell(i) {
+        return `<div class="rank">${i + 1}</div>`;
+      }
+      function pctCell(n) {
+        return `<div class="pct"><b>${fmtPct(n)}</b><div class="bar"><i style="width:${Math.min(n, 100)}%"></i></div></div>`;
+      }
+      function buildNav() {
+        let html = tabs
+          .map(
+            (t, i) =>
+              `<button data-tab="${t[0]}" class="${i ? "" : "active"}"><span class="n">${i + 1}</span>${t[1]}</button>`,
+          )
+          .join("");
+        $("#nav").innerHTML = html;
+        $("#mobileTabs").innerHTML = tabs
+          .map(
+            (t, i) =>
+              `<button data-tab="${t[0]}" class="${i ? "" : "active"}">${i + 1}. ${t[1]}</button>`,
+          )
+          .join("");
+        $$("[data-tab]").forEach(
+          (b) => (b.onclick = () => showTab(b.dataset.tab)),
+        );
+      }
+      function showTab(id) {
+        $$(".panel").forEach((x) => x.classList.toggle("active", x.id === id));
+        $$("[data-tab]").forEach((x) =>
+          x.classList.toggle("active", x.dataset.tab === id),
+        );
+        if (id === "p5") setTimeout(renderChart, 20);
+      }
+      function setSelect(sel, items, preferred) {
+        let old = preferred ?? sel.value;
+        sel.innerHTML = items
+          .map(
+            (v) => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`,
+          )
+          .join("");
+        if (items.includes(old)) sel.value = old;
+      }
+      function allStages(days) {
+        return [...new Set(flat(days).map((r) => r.stage))].sort(
+          (a, b) => stageNum(a) - stageNum(b),
+        );
+      }
+      function allDrivers(days) {
+        return [
+          ...new Set(
+            flat(days)
+              .map((r) => r.driver)
+              .filter((x) => x !== "未登錄"),
+          ),
+        ].sort((a, b) => a.localeCompare(b, "zh-Hant"));
+      }
+      function refreshBase() {
+        const days = filteredDays(),
+          rows = flat(days),
+          drivers = new Set(
+            rows.map((x) => x.driver).filter((x) => x !== "未登錄"),
+          );
+        $("#statusText").textContent =
+          `${dates[0]} ～ ${dates.at(-1)} · ${RAW.length} 天原始資料`;
+        $("#kpiDays").textContent = days.length;
+        $("#kpiTrips").textContent = rows.length.toLocaleString();
+        $("#kpiDrivers").textContent = drivers.size;
+        $("#kpiAvg").textContent = days.length
+          ? (rows.length / days.length).toFixed(2)
+          : "0";
+        return { days, rows };
+      }
+      function render1() {
+        const { days } = refreshBase();
+        const sortMode = $("#s1sort")?.value || "cars";
+        const groups = [];
+
+        allStages(days).forEach((stage) => {
+          const cnt = new Map();
+          let denom = 0;
+          days.forEach((d) => {
+            const st = (d.stages || []).find((x) => x.stage_name === stage);
+            if (st) {
+              denom++;
+              const cars = (st.cars || []).length;
+              cnt.set(cars, (cnt.get(cars) || 0) + 1);
+            }
+          });
+
+          let rows = [...cnt].map(([cars, n]) => ({
+            stage,
+            cars,
+            n,
+            p: pct(n, denom),
+            denom,
+          }));
+
+          if (sortMode === "pctDesc") {
+            rows.sort((a, b) => b.p - a.p || a.cars - b.cars);
+          } else if (sortMode === "pctAsc") {
+            rows.sort((a, b) => a.p - b.p || a.cars - b.cars);
+          } else {
+            rows.sort((a, b) => a.cars - b.cars);
+          }
+          groups.push({ stage, rows });
+        });
+
+        if (!groups.length) {
+          $("#t1").innerHTML = '<div class="empty">目前篩選條件沒有資料</div>';
+          return;
+        }
+
+        $("#t1").innerHTML = `<div class="stage-groups">${groups
+          .map(
+            ({ stage, rows }) => `
+              <section class="stage-group">
+                <div class="stage-group-title">◆ ${escapeHtml(stage)}</div>
+                ${table(
+                  ["階段車次", "累計次數", "百分比", "分母"],
+                  rows.map(
+                    (r) =>
+                      `<tr><td><b>${escapeHtml(r.stage)}第${r.cars}車</b><div class="muted">總車次第${r.cars}車</div></td><td>${r.n} 次</td><td>${pctCell(r.p)}</td><td class="muted">${r.denom} 個日期</td></tr>`,
+                  ),
+                )}
+              </section>`,
+          )
+          .join("")}</div>`;
+      }
+
+      function render2() {
+        const { days } = refreshBase(),
+          stages = allStages(days);
+        setSelect($("#s2"), stages, $("#s2").value || stages[0]);
+        const stage = $("#s2").value,
+          cnt = new Map();
+        let denom = 0;
+        days.forEach((d) => {
+          const s = (d.stages || []).find((x) => x.stage_name === stage);
+          if (!s) return;
+          denom++;
+          const seq =
+            (s.cars || []).map((c) => unitName(c.trip_no)).join("→") ||
+            "無車次";
+          cnt.set(seq, (cnt.get(seq) || 0) + 1);
+        });
+        const arr = [...cnt]
+          .map(([seq, n]) => ({ seq, n, p: pct(n, denom) }))
+          .sort((a, b) => b.n - a.n || a.seq.localeCompare(b.seq, "zh-Hant"));
+        $("#t2").innerHTML = table(
+          ["排名", "階段", "單位車次順序", "累計次數", "百分比"],
+          arr.map(
+            (r, i) =>
+              `<tr><td>${rankCell(i)}</td><td><span class="tag">${stage}</span></td><td class="sequence">${escapeHtml(r.seq).replaceAll("→", '<span class="arrow">→</span>')}</td><td>${r.n} 次</td><td>${pctCell(r.p)}</td></tr>`,
+          ),
+        );
+      }
+      function render3(resetTrip = false) {
+        const { days, rows } = refreshBase(),
+          stages = allStages(days);
+        setSelect($("#s3stage"), stages, $("#s3stage").value || stages[0]);
+        const stage = $("#s3stage").value;
+        const trips = [
+          ...new Set(rows.filter((r) => r.stage === stage).map((r) => r.trip)),
+        ].sort((a, b) => {
+          const ua = unitName(a),
+            ub = unitName(b);
+          return ua.localeCompare(ub, "zh-Hant") || tripNum(a) - tripNum(b);
+        });
+        setSelect(
+          $("#s3trip"),
+          trips,
+          resetTrip ? trips[0] : $("#s3trip").value || trips[0],
+        );
+        const trip = $("#s3trip").value,
+          subset = rows.filter((r) => r.stage === stage && r.trip === trip),
+          cnt = new Map();
+        subset.forEach((r) => cnt.set(r.driver, (cnt.get(r.driver) || 0) + 1));
+        const arr = [...cnt]
+          .map(([driver, n]) => ({ driver, n, p: pct(n, subset.length) }))
+          .sort(
+            (a, b) => b.n - a.n || a.driver.localeCompare(b.driver, "zh-Hant"),
+          );
+        $("#t3").innerHTML = table(
+          ["排名", "階段", "單位車次", "運務員", "累計次數", "百分比"],
+          arr.map(
+            (r, i) =>
+              `<tr><td>${rankCell(i)}</td><td><span class="tag">${stage}</span></td><td><b>${escapeHtml(trip)}</b></td><td>${escapeHtml(r.driver)}</td><td>${r.n} 次</td><td>${pctCell(r.p)}</td></tr>`,
+          ),
+        );
+      }
+      function render4() {
+        const { days, rows } = refreshBase(),
+          drivers = allDrivers(days);
+        setSelect($("#s4driver"), drivers, $("#s4driver").value || drivers[0]);
+        const driver = $("#s4driver").value,
+          subset = rows.filter((r) => r.driver === driver),
+          cnt = new Map();
+        subset.forEach((r) => {
+          let k = r.stage + "\u0000" + r.trip;
+          cnt.set(k, (cnt.get(k) || 0) + 1);
+        });
+        const arr = [...cnt]
+          .map(([k, n]) => {
+            let [stage, trip] = k.split("\u0000");
+            return { stage, trip, n, p: pct(n, subset.length) };
+          })
+          .sort(
+            (a, b) =>
+              stageNum(a.stage) - stageNum(b.stage) ||
+              unitName(a.trip).localeCompare(unitName(b.trip), "zh-Hant") ||
+              tripNum(a.trip) - tripNum(b.trip),
+          );
+        $("#t4").innerHTML = table(
+          ["排序", "運務員", "階段", "單位車次", "累計次數", "占本人車次"],
+          arr.map(
+            (r, i) =>
+              `<tr><td>${rankCell(i)}</td><td><b>${escapeHtml(driver)}</b></td><td><span class="tag">${r.stage}</span></td><td>${escapeHtml(r.trip)}</td><td>${r.n} 次</td><td>${pctCell(r.p)}</td></tr>`,
+          ),
+        );
+      }
+      function drawBarChart(canvas, points, avg) {
+        const wrap = canvas.parentElement,
+          dpr = window.devicePixelRatio || 1;
+        const barW = 34,
+          gap = 10,
+          left = 42,
+          right = 18,
+          top = 34,
+          bottom = 55;
+        const cssW = Math.max(
+          wrap.clientWidth - 24,
+          left + right + points.length * (barW + gap),
+        );
+        const cssH = wrap.clientHeight - 24;
+        canvas.style.width = cssW + "px";
+        canvas.style.height = cssH + "px";
+        canvas.width = cssW * dpr;
+        canvas.height = cssH * dpr;
+        const c = canvas.getContext("2d");
+        c.scale(dpr, dpr);
+        c.clearRect(0, 0, cssW, cssH);
+        const plotH = cssH - top - bottom,
+          max = Math.max(1, ...points.map((p) => p.v), Math.ceil(avg));
+        c.font = "11px Microsoft JhengHei";
+        c.textAlign = "right";
+        c.textBaseline = "middle";
+        for (let i = 0; i <= max; i++) {
+          let y = top + plotH - (i / max) * plotH;
+          c.strokeStyle = "#e6ece9";
+          c.lineWidth = 1;
+          c.beginPath();
+          c.moveTo(left, y);
+          c.lineTo(cssW - right, y);
+          c.stroke();
+          c.fillStyle = "#7a8881";
+          c.fillText(i, left - 8, y);
+        }
+        const yavg = top + plotH - (avg / max) * plotH;
+        c.setLineDash([5, 5]);
+        c.strokeStyle = "#b86f08";
+        c.beginPath();
+        c.moveTo(left, yavg);
+        c.lineTo(cssW - right, yavg);
+        c.stroke();
+        c.setLineDash([]);
+        c.fillStyle = "#8a5b15";
+        c.textAlign = "left";
+        c.fillText(
+          "值班平均 " + avg.toFixed(2),
+          left + 4,
+          Math.max(11, yavg - 9),
+        );
+        points.forEach((p, i) => {
+          let x = left + i * (barW + gap) + 6,
+            h = (p.v / max) * plotH,
+            y = top + plotH - h;
+          let grad = c.createLinearGradient(0, y, 0, top + plotH);
+          grad.addColorStop(0, "#087a52");
+          grad.addColorStop(1, "#27bf83");
+          c.fillStyle = grad;
+          c.beginPath();
+          if (c.roundRect) c.roundRect(x, y, barW, h, [6, 6, 2, 2]);
+          else c.rect(x, y, barW, h);
+          c.fill();
+          c.fillStyle = "#1d2a24";
+          c.textAlign = "center";
+          c.font = "bold 11px Microsoft JhengHei";
+          c.fillText(p.v, x + barW / 2, Math.max(12, y - 10));
+          c.save();
+          c.translate(x + barW / 2, cssH - bottom + 12);
+          c.rotate(-Math.PI / 4);
+          c.font = "10px Microsoft JhengHei";
+          c.fillStyle = "#6b7771";
+          c.textAlign = "right";
+          c.fillText(p.d.slice(5).replace("-", "/"), 0, 0);
+          c.restore();
+        });
+      }
+      function renderChart() {
+        const { days, rows } = refreshBase(),
+          drivers = allDrivers(days);
+        setSelect($("#s5driver"), drivers, $("#s5driver").value || drivers[0]);
+        const driver = $("#s5driver").value,
+          map = new Map(days.map((d) => [d.date, 0]));
+        rows
+          .filter((r) => r.driver === driver)
+          .forEach((r) => map.set(r.date, (map.get(r.date) || 0) + 1));
+        const points = [...map].map(([d, v]) => ({ d, v })),
+          total = points.reduce((s, p) => s + p.v, 0),
+          dutyDays = points.filter((p) => p.v > 0).length,
+          avg = dutyDays ? total / dutyDays : 0,
+          max = Math.max(0, ...points.map((p) => p.v));
+        $("#cTotal").textContent = total;
+        $("#cAvg").textContent = avg.toFixed(2) + " 次";
+        $("#cMax").textContent = max + " 次";
+        drawBarChart($("#chart"), points, avg);
+      }
+      function renderAll() {
+        render1();
+        render2();
+        render3();
+        render4();
+        renderChart();
+      }
+      buildNav();
+      $("#s1sort").onchange = render1;
+      $("#s2").onchange = render2;
+      $("#s3stage").onchange = () => render3(true);
+      $("#s3trip").onchange = () => render3();
+      $("#s4driver").onchange = render4;
+      $("#s5driver").onchange = renderChart;
+      [$("#dateFrom"), $("#dateTo")].forEach((x) => (x.onchange = renderAll));
+      $("#resetDate").onclick = () => {
+        $("#dateFrom").value = dates[0];
+        $("#dateTo").value = dates.at(-1);
+        renderAll();
+      };
+      $("#chooseData").onclick = () => $("#dataFile").click();
+      $("#dataFile").onchange = async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        try {
+          const data = JSON.parse((await file.text()).replace(/^\uFEFF/, ""));
+          if (!Array.isArray(data) || !data.length)
+            throw new Error("資料格式不是非空白陣列");
+          RAW = data;
+          initializeDates();
+          renderAll();
+        } catch (error) {
+          $("#statusText").textContent = "資料檔讀取失敗：" + error.message;
+        } finally {
+          event.target.value = "";
+        }
+      };
+      window.addEventListener("resize", () => {
+        if ($("#p5").classList.contains("active")) renderChart();
+      });
+      async function loadLatestData() {
+        const candidates = [
+          "momo_dispatch_data.json",
+          "momo_dispatch_data(8).json",
+        ];
+        let lastError;
+        for (const file of candidates) {
+          try {
+            const response = await fetch(file + "?v=" + Date.now(), {
+              cache: "no-store",
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data) || !data.length)
+              throw new Error("資料格式不是非空白陣列");
+            RAW = data;
+            initializeDates();
+            renderAll();
+            return;
+          } catch (error) {
+            lastError = error;
+          }
+        }
+        $("#statusText").textContent =
+          "尚未載入資料。請按「選擇資料檔」，或將 momo_dispatch_data.json 與本網頁放在同一資料夾。";
+        console.error("MOMO 資料載入失敗", lastError);
+      }
+      loadLatestData();
+    </script>
+  </body>
+</html>
