@@ -134,6 +134,15 @@
         color: var(--muted);
         font-size: 14px;
       }
+      .title-row {
+        display: flex;
+        align-items: baseline;
+        gap: 16px;
+      }
+
+      .title-row p {
+        margin: 0;
+      }
       .status {
         background: #fff;
         border: 1px solid var(--line);
@@ -161,7 +170,7 @@
       .filters {
         padding: 16px;
         display: grid;
-        grid-template-columns: 1fr 1fr auto;
+        grid-template-columns: 1fr 1fr auto auto;
         gap: 12px;
         margin-bottom: 18px;
       }
@@ -408,6 +417,128 @@
       .mobile-tabs {
         display: none;
       }
+
+      .unit-summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .unit-summary .chart-stat {
+        min-height: 78px;
+      }
+      .unit-day-list {
+        display: grid;
+        gap: 16px;
+      }
+      .unit-day {
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+      }
+      .unit-day-title {
+        padding: 12px 15px;
+        background: #f1f7f4;
+        font-weight: 900;
+        color: #23473a;
+        border-bottom: 1px solid var(--line);
+      }
+      .unit-day-total {
+        padding: 12px 15px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #edf1ef;
+      }
+      .unit-chip {
+        display: inline-flex;
+        gap: 5px;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: var(--soft);
+        color: var(--brand);
+        font-size: 13px;
+        font-weight: 800;
+      }
+      .unit-stages {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 14px;
+      }
+      .unit-stage {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 12px;
+        background: #fbfcfb;
+      }
+      .unit-stage h4 {
+        margin: 0 0 9px;
+        font-size: 14px;
+      }
+      .unit-stage-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 5px 0;
+        font-size: 13px;
+        border-bottom: 1px dashed #e6ece9;
+      }
+      .unit-stage-row:last-child {
+        border-bottom: 0;
+      }
+
+      .unit-pager {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+
+      .unit-pager-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .pager-btn {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--ink);
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .pager-btn:hover:not(:disabled) {
+        background: var(--soft);
+        color: var(--brand);
+      }
+
+      .pager-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .pager-info {
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      @media (max-width: 700px) {
+        .unit-summary {
+          grid-template-columns: 1fr 1fr;
+        }
+        .unit-stages {
+          grid-template-columns: 1fr;
+        }
+      }
       @media (max-width: 1100px) {
         .app {
           display: block;
@@ -575,19 +706,17 @@
           <div class="logo">M</div>
           <div>
             <h1>MOMO 運務分析</h1>
-            <p>Dispatch Intelligence Dashboard</p>
+            <p>Dispatch Dashboard</p>
           </div>
         </div>
         <nav class="nav" id="nav"></nav>
-        <div class="side-note">
-          自動讀取同資料夾的最新 JSON。<br />統計依日期篩選即時重算。
-        </div>
+        <div class="side-note">統計依日期篩選即時重算。</div>
       </aside>
       <main class="main">
         <div class="topbar">
-          <div>
-            <h2>運務車次分析儀表板</h2>
-            <p>從階段配置、單位車次順序到運務員負荷，一頁看懂值班結構。</p>
+          <div class="title-row">
+            <h2>各階段車次數統計</h2>
+            <p>顯示各階段所有車次之累積次數</p>
           </div>
           <div class="status">
             <span class="dot"></span><span id="statusText"></span>
@@ -602,7 +731,7 @@
             <label>結束日期</label><input type="date" id="dateTo" />
           </div>
           <button class="reset" id="resetDate">重設日期</button>
-          <button class="reset" id="chooseData">選擇資料檔</button>
+          <button class="reset" id="chooseData">載入資料檔</button>
           <input
             type="file"
             id="dataFile"
@@ -621,7 +750,7 @@
           </div>
           <div class="kpi">
             <span class="label">運務員</span><strong id="kpiDrivers">—</strong
-            ><small>姓名正規化後</small>
+            ><small>姓名正規化</small>
           </div>
           <div class="kpi">
             <span class="label">每日平均車次</span><strong id="kpiAvg">—</strong
@@ -631,8 +760,8 @@
         <section class="panel active" id="p1">
           <div class="panel-head">
             <div>
-              <h3>① 各階段車次數分布</h3>
-              <p>同一階段每日共有幾車，統計其出現次數與占該階段日期的比例。</p>
+              <h3>各階段車次數分布</h3>
+              <p>同一階段每日有幾車次，統計次數與占該階段比例</p>
             </div>
             <div class="controls">
               <div class="field">
@@ -650,7 +779,7 @@
         <section class="panel" id="p2">
           <div class="panel-head">
             <div>
-              <h3>② 各階段單位車次順序</h3>
+              <h3>各階段單位車次順序</h3>
               <p>
                 依當日實際出車順序，將「快捷第1車」簡化為「快捷」後形成序列模式。
               </p>
@@ -737,16 +866,38 @@
             </div>
           </div>
         </section>
+        <section class="panel" id="p6">
+          <div class="panel-head">
+            <div>
+              <h3>⑥ 各單位車次數統計</h3>
+              <p>
+                統計選定期間內快捷、運輸、外包等單位的總車次、占比，並逐日分階段顯示。
+              </p>
+            </div>
+            <div class="controls">
+              <div class="field">
+                <label>每頁顯示</label>
+                <select id="s6pageSize">
+                  <option value="5" selected>每頁 5 筆</option>
+                  <option value="10">每頁 10 筆</option>
+                  <option value="20">每頁 20 筆</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card"><div id="t6"></div></div>
+        </section>
       </main>
     </div>
     <script>
       let RAW = [];
       const tabs = [
-        ["p1", "階段車次數"],
-        ["p2", "單位順序"],
-        ["p3", "車次運務員"],
-        ["p4", "人員車次"],
-        ["p5", "每日車次圖"],
+        ["p1", "各階段車次數統計"],
+        ["p2", "單位車次順序統計"],
+        ["p3", "各車次運務員統計"],
+        ["p4", "運務員車次數統計"],
+        ["p5", "運務員每日車次圖"],
+        ["p6", "各單位車次數統計"],
       ];
       const $ = (s) => document.querySelector(s),
         $$ = (s) => [...document.querySelectorAll(s)];
@@ -1218,12 +1369,119 @@
         animateBarChart($("#chart"), points, avg);
       }
 
+      let p6Page = 1;
+
+      function render6(resetPage = false) {
+        if (resetPage) p6Page = 1;
+        const { days, rows } = refreshBase();
+        const preferredUnits = ["快捷", "運輸", "外包"];
+        const unitOrder = (u) => {
+          const i = preferredUnits.indexOf(u);
+          return i >= 0 ? i : preferredUnits.length;
+        };
+        const sortUnits = (arr) =>
+          arr.sort(
+            (a, b) =>
+              unitOrder(a[0]) - unitOrder(b[0]) ||
+              a[0].localeCompare(b[0], "zh-Hant"),
+          );
+        const countUnits = (list) => {
+          const m = new Map();
+          list.forEach((r) => m.set(r.unit, (m.get(r.unit) || 0) + 1));
+          return sortUnits([...m]);
+        };
+        const summaryCounts = countUnits(rows);
+        const summaryMap = new Map(summaryCounts);
+        const total = rows.length;
+        const summaryUnits = [
+          ...preferredUnits,
+          ...summaryCounts
+            .map((x) => x[0])
+            .filter((u) => !preferredUnits.includes(u)),
+        ];
+        const summaryHtml = `<div class="unit-summary">
+          <div class="chart-stat"><span>總車次</span><strong>${total} 車次</strong></div>
+          ${summaryUnits
+            .map((u) => {
+              const n = summaryMap.get(u) || 0;
+              return `<div class="chart-stat"><span>${escapeHtml(u)}累計車次</span><strong>${n} 車次 (${fmtPct(pct(n, total))})</strong></div>`;
+            })
+            .join("")}
+        </div>`;
+        const pageSize = Number($("#s6pageSize")?.value || 5);
+        const sortedDays = [...days].sort((a, b) =>
+          String(b.date || "").localeCompare(String(a.date || "")),
+        );
+        const totalPages = Math.max(1, Math.ceil(sortedDays.length / pageSize));
+        p6Page = Math.min(Math.max(1, p6Page), totalPages);
+        const startIndex = (p6Page - 1) * pageSize;
+        const pageDays = sortedDays.slice(startIndex, startIndex + pageSize);
+
+        const pagerHtml = sortedDays.length
+          ? `<div class="unit-pager">
+              <div class="pager-info">顯示第 ${startIndex + 1}～${Math.min(startIndex + pageSize, sortedDays.length)} 筆，共 ${sortedDays.length} 筆日期資料｜第 ${p6Page} / ${totalPages} 頁</div>
+              <div class="unit-pager-actions">
+                <button type="button" class="pager-btn" id="p6Prev" ${p6Page <= 1 ? "disabled" : ""}>上一頁</button>
+                <button type="button" class="pager-btn" id="p6Next" ${p6Page >= totalPages ? "disabled" : ""}>下一頁</button>
+              </div>
+            </div>`
+          : "";
+
+        const dayHtml = pageDays
+          .map((day) => {
+            const dayRows = rows.filter((r) => r.date === day.date);
+            const dayTotal = dayRows.length;
+            const dayCounts = countUnits(dayRows);
+            const totalChips =
+              dayCounts
+                .map(
+                  ([u, n]) =>
+                    `<span class="unit-chip">${escapeHtml(u)} ${n}車次 (${fmtPct(pct(n, dayTotal))})</span>`,
+                )
+                .join("") || '<span class="muted">無車次</span>';
+            const stages = [...new Set(dayRows.map((r) => r.stage))].sort(
+              (a, b) => stageNum(a) - stageNum(b),
+            );
+            const stageHtml = stages
+              .map((stage) => {
+                const stageRows = dayRows.filter((r) => r.stage === stage);
+                const stTotal = stageRows.length;
+                const counts = countUnits(stageRows);
+                return `<div class="unit-stage"><h4>${escapeHtml(stage)}</h4>${counts.map(([u, n]) => `<div class="unit-stage-row"><b>${escapeHtml(u)}</b><span>${n}車次 (${fmtPct(pct(n, stTotal))})</span></div>`).join("") || '<div class="muted">無車次</div>'}</div>`;
+              })
+              .join("");
+            return `<section class="unit-day"><div class="unit-day-title">${escapeHtml(day.date)} ${day.weekday ? "· " + escapeHtml(day.weekday) : ""}｜每日總計 ${dayTotal} 車次</div><div class="unit-day-total">${totalChips}</div><div class="unit-stages">${stageHtml}</div></section>`;
+          })
+          .join("");
+        $("#t6").innerHTML = total
+          ? summaryHtml +
+            pagerHtml +
+            `<div class="unit-day-list">${dayHtml}</div>`
+          : '<div class="empty">目前篩選條件沒有資料</div>';
+
+        $("#p6Prev")?.addEventListener("click", () => {
+          if (p6Page > 1) {
+            p6Page--;
+            render6();
+            $("#p6")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+        $("#p6Next")?.addEventListener("click", () => {
+          if (p6Page < totalPages) {
+            p6Page++;
+            render6();
+            $("#p6")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      }
+
       function renderAll() {
         render1();
         render2();
         render3();
         render4();
         renderChart();
+        render6();
       }
       buildNav();
       $("#s1sort").onchange = render1;
@@ -1232,10 +1490,18 @@
       $("#s3trip").onchange = () => render3();
       $("#s4driver").onchange = render4;
       $("#s5driver").onchange = renderChart;
-      [$("#dateFrom"), $("#dateTo")].forEach((x) => (x.onchange = renderAll));
+      $("#s6pageSize").onchange = () => render6(true);
+      [$("#dateFrom"), $("#dateTo")].forEach(
+        (x) =>
+          (x.onchange = () => {
+            p6Page = 1;
+            renderAll();
+          }),
+      );
       $("#resetDate").onclick = () => {
         $("#dateFrom").value = dates[0];
         $("#dateTo").value = dates.at(-1);
+        p6Page = 1;
         renderAll();
       };
       $("#chooseData").onclick = () => $("#dataFile").click();
@@ -1248,6 +1514,7 @@
             throw new Error("資料格式不是非空白陣列");
           RAW = data;
           initializeDates();
+          p6Page = 1;
           renderAll();
         } catch (error) {
           $("#statusText").textContent = "資料檔讀取失敗：" + error.message;
