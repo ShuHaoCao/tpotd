@@ -253,16 +253,593 @@
         display: block;
         line-height: 1.02;
       }
+
+      /* ===== 彩色矩陣卡片式班表：以色域取代傳統黑框 ===== */
+      :root {
+        --ink: #17352e;
+        --muted: #60756e;
+        --emerald: #087a5b;
+        --gold: #d6a63b;
+      }
+
+      html,
+      body {
+        background:
+          radial-gradient(
+            circle at 14% 12%,
+            rgba(29, 183, 135, 0.16),
+            transparent 25%
+          ),
+          radial-gradient(
+            circle at 88% 82%,
+            rgba(40, 122, 211, 0.14),
+            transparent 30%
+          ),
+          linear-gradient(145deg, #f5fbf8 0%, #eef6f5 48%, #f8fbff 100%);
+      }
+
+      #viewport {
+        border: 1px solid rgba(255, 255, 255, 0.88);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.58);
+        box-shadow: 0 22px 60px rgba(26, 72, 62, 0.14);
+        backdrop-filter: blur(10px);
+      }
+
+      #canvas {
+        border-radius: 16px;
+        background: #edf5f2;
+        box-shadow:
+          0 20px 48px rgba(14, 55, 46, 0.22),
+          0 3px 10px rgba(14, 55, 46, 0.12);
+        overflow: hidden;
+      }
+
+      #scheduleControls {
+        top: 9px;
+        gap: 10px;
+        min-height: 48px;
+        padding: 7px 28px;
+        color: #22334a;
+        border: 1px solid rgba(255, 255, 255, 0.96);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.86);
+        box-shadow:
+          0 12px 34px rgba(55, 87, 143, 0.14),
+          inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(18px);
+      }
+
+      #scheduleControls .date-nav {
+        display: grid;
+        place-items: center;
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        color: #607188;
+        border: 1px solid #e0e7f0;
+        border-radius: 50%;
+        background: linear-gradient(180deg, #ffffff, #f7f9fc);
+        box-shadow: 0 3px 8px rgba(42, 64, 96, 0.1);
+        font-size: 18px;
+        line-height: 1;
+        transition: 150ms ease;
+      }
+
+      #scheduleControls .date-nav:hover:not(:disabled) {
+        color: #197f67;
+        border-color: #b9ddd2;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(42, 100, 82, 0.15);
+      }
+
+      #scheduleControls .date-nav:disabled {
+        opacity: 0.38;
+        cursor: not-allowed;
+      }
+
+      #scheduleControls input[type="date"] {
+        height: 36px;
+        padding: 0 12px;
+        color: #1f2f46;
+        border: 1px solid #cdd8ff;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #ffffff, #f8faff);
+        box-shadow: inset 0 1px 2px rgba(46, 67, 104, 0.04);
+        font-weight: 800;
+        letter-spacing: 0.03em;
+        outline: none;
+      }
+
+      #scheduleControls input[type="date"]:focus {
+        border-color: #91abea;
+        box-shadow: 0 0 0 3px rgba(104, 137, 221, 0.13);
+      }
+
+      #scheduleControls .control-separator {
+        width: 1px;
+        height: 24px;
+        margin: 0 7px;
+        background: #dfe5ed;
+      }
+
+      #weekdayDisplay,
+      #scheduledCount,
+      #offdayCount,
+      #totalCount {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 34px;
+        padding: 0 16px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      #scheduleControls .info-item + .info-item {
+        padding-left: 16px;
+        border-left: 0;
+      }
+
+      #weekdayDisplay {
+        min-width: 76px;
+        color: #38475b;
+        border-color: #e1e7ef;
+        background: #f5f7fa;
+        box-shadow: inset 0 1px 2px rgba(43, 60, 84, 0.05);
+      }
+
+      #scheduledCount,
+      #offdayCount,
+      #totalCount {
+        gap: 8px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+      }
+
+      #scheduledCount::before,
+      #offdayCount::before,
+      #totalCount::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        flex: 0 0 8px;
+        border-radius: 50%;
+      }
+
+      #scheduledCount {
+        color: #007caf;
+        border-color: #bce8fa;
+        background: linear-gradient(180deg, #ecfaff, #dff5ff);
+      }
+      #scheduledCount::before {
+        background: #079bd3;
+        box-shadow: 0 0 7px rgba(7, 155, 211, 0.48);
+      }
+
+      #offdayCount {
+        color: #db244a;
+        border-color: #ffc6d0;
+        background: linear-gradient(180deg, #fff2f4, #ffe4e9);
+      }
+      #offdayCount::before {
+        background: #f32857;
+        box-shadow: 0 0 7px rgba(243, 40, 87, 0.42);
+      }
+
+      #totalCount {
+        color: #078b69;
+        border-color: #b9ead9;
+        background: linear-gradient(180deg, #edfff8, #dff9ef);
+      }
+      #totalCount::before {
+        background: #10a77c;
+        box-shadow: 0 0 7px rgba(16, 167, 124, 0.42);
+      }
+
+      .cell {
+        /* 同一欄位內：固定使用低彩度綠色細線。 */
+        border: 0;
+        border-right: 1px solid rgba(50, 139, 83, 0.24);
+        border-bottom: 1px solid rgba(50, 139, 83, 0.24);
+        background: var(--cell-bg, rgba(255, 255, 255, 0.76));
+        color: var(--ink);
+        box-shadow: none;
+        transition:
+          filter 160ms ease,
+          box-shadow 160ms ease,
+          transform 160ms ease;
+      }
+
+      .cell.matrix-title {
+        color: #fff;
+        background: var(--title-bg);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+        box-shadow:
+          inset -1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -1px rgba(0, 0, 0, 0.12),
+          0 5px 14px rgba(18, 64, 53, 0.14);
+        z-index: 3;
+      }
+
+      .cell.matrix-title .fixed-label {
+        color: inherit;
+        letter-spacing: 0.04em;
+      }
+
+      .cell.group-leave {
+        --cell-bg: linear-gradient(180deg, #effbeb, #e5f6df);
+        --title-bg: linear-gradient(145deg, #6ecb57, #289f68);
+      }
+      .cell.group-leave:not(.matrix-title) {
+        border-right-color: rgba(54, 143, 86, 0.28);
+        border-bottom-color: rgba(54, 143, 86, 0.28);
+      }
+      .cell.group-support {
+        --cell-bg: linear-gradient(180deg, #e8faf0, #d8f2e6);
+        --title-bg: linear-gradient(145deg, #26b878, #079a73);
+      }
+      .cell.group-vendor {
+        --cell-bg: linear-gradient(180deg, #e4f8ef, #cfeee4);
+        --title-bg: linear-gradient(145deg, #12ad83, #078b78);
+      }
+      .cell.group-night {
+        --cell-bg: linear-gradient(180deg, #e9efff, #dce5fb);
+        --title-bg: linear-gradient(145deg, #536ed6, #394bad);
+      }
+      .cell.group-trunk {
+        --cell-bg: linear-gradient(180deg, #e6f6fb, #d5edf6);
+        --title-bg: linear-gradient(145deg, #199fc4, #1975aa);
+      }
+      .cell.group-self {
+        --cell-bg: linear-gradient(180deg, #e2f5f5, #cfebec);
+        --title-bg: linear-gradient(145deg, #1aa8a6, #117f91);
+      }
+      .cell.group-shuttle {
+        --cell-bg: linear-gradient(180deg, #e5f2fb, #d2e8f7);
+        --title-bg: linear-gradient(145deg, #2f9fd0, #2674b5);
+      }
+      .cell.group-desk {
+        --cell-bg: linear-gradient(180deg, #eaf6ee, #d8ebdf);
+        --title-bg: linear-gradient(145deg, #65ad83, #378264);
+      }
+      .cell.group-management {
+        --cell-bg: linear-gradient(180deg, #e2f2ea, #cce5d9);
+        --title-bg: linear-gradient(145deg, #4c9c7d, #236b58);
+      }
+
+      .cell.matrix-edge-left {
+        /* 粗線本體改由 ::before 繪製，避免被標題或 Hover 的陰影覆蓋。 */
+        isolation: isolate;
+      }
+
+      .cell.matrix-edge-left::before {
+        content: "";
+        position: absolute;
+        z-index: 8;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        pointer-events: none;
+        background: linear-gradient(
+          90deg,
+          rgba(87, 158, 116, 0.24) 0%,
+          rgba(118, 184, 157, 0.5) 28%,
+          rgba(143, 203, 179, 0.58) 68%,
+          rgba(204, 233, 219, 0.34) 100%
+        );
+        box-shadow:
+          inset 1px 0 rgba(54, 128, 94, 0.14),
+          inset -1px 0 rgba(255, 255, 255, 0.38);
+      }
+
+      .cell:not(.matrix-title):hover {
+        filter: brightness(1.045) saturate(1.06);
+        box-shadow: 0 7px 18px rgba(21, 74, 63, 0.2);
+        transform: translateY(-1px);
+        z-index: 5;
+      }
+
+      .schedule-name,
+      .offday-name {
+        left: 4px;
+        bottom: 5px;
+        width: calc(100% - 8px);
+        padding: 4px 2px 3px;
+        color: #244e90;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.86);
+        border-radius: 8px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.52),
+          rgba(255, 255, 255, 0.25)
+        );
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.58);
+        font-size: 21px;
+      }
+
+      @media print {
+        #canvas {
+          border-radius: 0 !important;
+          box-shadow: none !important;
+          overflow: visible;
+        }
+        .cell {
+          border: 0.6px solid #7c8884 !important;
+          color: #111 !important;
+          background: #fff !important;
+          box-shadow: none !important;
+          transform: none !important;
+          text-shadow: none !important;
+        }
+        .cell.matrix-edge-left::before {
+          display: none !important;
+        }
+        .cell .fixed-label {
+          color: #111 !important;
+        }
+        .schedule-name,
+        .offday-name {
+          color: #244b8d !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          text-shadow: none !important;
+        }
+      }
+
+      /* ===== 平板／手機響應式顯示 ===== */
+      #scheduleControls .zoom-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      #scheduleControls .zoom-btn {
+        display: grid;
+        place-items: center;
+        min-width: 34px;
+        height: 34px;
+        padding: 0 9px;
+        color: #52647a;
+        border: 1px solid #dfe6ef;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #fff, #f5f8fb);
+        box-shadow: 0 2px 6px rgba(42, 64, 96, 0.08);
+        font-weight: 900;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      #scheduleControls .zoom-btn:active {
+        transform: translateY(1px);
+      }
+
+      #zoomReset {
+        min-width: 52px;
+        font-size: 12px;
+      }
+
+      #viewport {
+        touch-action: none;
+        overscroll-behavior: contain;
+      }
+
+      @media (max-width: 900px) {
+        #scheduleControls {
+          left: 10px;
+          right: 10px;
+          top: 8px;
+          width: auto;
+          max-width: none;
+          transform: none;
+          justify-content: flex-start;
+          gap: 7px;
+          padding: 7px 9px;
+          border-radius: 18px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        #scheduleControls::-webkit-scrollbar {
+          display: none;
+        }
+
+        #scheduleControls .date-nav {
+          flex-basis: 34px;
+          width: 34px;
+          height: 34px;
+          font-size: 16px;
+        }
+
+        #scheduleControls input[type="date"] {
+          width: 132px;
+          height: 34px;
+          padding: 0 8px;
+          font-size: 13px;
+          border-radius: 10px;
+        }
+
+        #scheduleControls .control-separator {
+          margin: 0 2px;
+          height: 22px;
+        }
+
+        #weekdayDisplay,
+        #scheduledCount,
+        #offdayCount,
+        #totalCount {
+          flex: 0 0 auto;
+          min-height: 32px;
+          padding: 0 11px;
+          font-size: 13px;
+        }
+
+        #weekdayDisplay {
+          min-width: 66px;
+        }
+
+        #viewport {
+          left: 8px;
+          right: 8px;
+          top: 64px;
+          bottom: 8px;
+          border-radius: 18px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        #scheduleControls {
+          display: grid;
+          grid-template-columns: 34px minmax(118px, 1fr) 34px auto;
+          grid-template-rows: 36px 34px;
+          align-items: center;
+          column-gap: 6px;
+          row-gap: 5px;
+          overflow: visible;
+          padding: 7px 8px;
+          border-radius: 16px;
+        }
+
+        #previousDate {
+          grid-column: 1;
+          grid-row: 1;
+        }
+        #scheduleDate {
+          grid-column: 2;
+          grid-row: 1;
+          width: 100% !important;
+        }
+        #nextDate {
+          grid-column: 3;
+          grid-row: 1;
+        }
+        #scheduleControls > .control-separator {
+          display: none;
+        }
+        #scheduleControls .zoom-group {
+          grid-column: 4;
+          grid-row: 1;
+        }
+
+        #weekdayDisplay {
+          grid-column: 1 / 2;
+          grid-row: 2;
+        }
+        #scheduledCount {
+          grid-column: 2 / 3;
+          grid-row: 2;
+        }
+        #offdayCount {
+          grid-column: 3 / 5;
+          grid-row: 2;
+          justify-self: stretch;
+        }
+        #totalCount {
+          display: none;
+        }
+
+        #weekdayDisplay,
+        #scheduledCount,
+        #offdayCount {
+          min-width: 0;
+          width: 100%;
+          padding: 0 7px;
+          font-size: 12px;
+          white-space: nowrap;
+        }
+
+        #scheduledCount,
+        #offdayCount {
+          gap: 5px;
+        }
+        #scheduledCount::before,
+        #offdayCount::before {
+          width: 7px;
+          height: 7px;
+          flex-basis: 7px;
+        }
+
+        #scheduleControls .zoom-btn {
+          min-width: 30px;
+          width: 30px;
+          height: 30px;
+          padding: 0;
+          border-radius: 9px;
+        }
+        #zoomReset {
+          display: none;
+        }
+
+        #viewport {
+          top: 91px;
+          left: 5px;
+          right: 5px;
+          bottom: 5px;
+          border-radius: 15px;
+        }
+      }
     </style>
   </head>
   <body>
     <div id="scheduleControls">
-      <label for="scheduleDate">日期：</label>
+      <button
+        id="previousDate"
+        class="date-nav"
+        type="button"
+        aria-label="前一天"
+        title="前一天"
+      >
+        ◀
+      </button>
       <input id="scheduleDate" type="date" />
+      <button
+        id="nextDate"
+        class="date-nav"
+        type="button"
+        aria-label="後一天"
+        title="後一天"
+      >
+        ▶
+      </button>
+      <span class="control-separator" aria-hidden="true"></span>
+      <span class="zoom-group" aria-label="表格縮放控制">
+        <button
+          id="zoomOut"
+          class="zoom-btn"
+          type="button"
+          aria-label="縮小"
+          title="縮小"
+        >
+          −
+        </button>
+        <button
+          id="zoomReset"
+          class="zoom-btn"
+          type="button"
+          aria-label="恢復適合畫面"
+          title="恢復適合畫面"
+        >
+          適合
+        </button>
+        <button
+          id="zoomIn"
+          class="zoom-btn"
+          type="button"
+          aria-label="放大"
+          title="放大"
+        >
+          ＋
+        </button>
+      </span>
+      <span class="control-separator" aria-hidden="true"></span>
       <span id="weekdayDisplay" class="info-item">星期－</span>
-      <span id="scheduledCount" class="info-item">排班人員 0 人</span>
-      <span id="offdayCount" class="info-item">休假人員 0 人</span>
-      <span id="totalCount" class="info-item">總人數 0 人</span>
+      <span id="scheduledCount" class="info-item">排班 0 人</span>
+      <span id="offdayCount" class="info-item">休假 0 人</span>
+      <span id="totalCount" class="info-item">共 0 人</span>
     </div>
 
     <div id="viewport">
@@ -1490,6 +2067,8 @@
       let scheduleData = {};
 
       const dateInput = document.getElementById("scheduleDate");
+      const previousDateButton = document.getElementById("previousDate");
+      const nextDateButton = document.getElementById("nextDate");
       const weekdayEl = document.getElementById("weekdayDisplay");
       const scheduledCountEl = document.getElementById("scheduledCount");
       const offdayCountEl = document.getElementById("offdayCount");
@@ -1599,11 +2178,32 @@
             : "星期－";
         }
         if (scheduledCountEl)
-          scheduledCountEl.textContent = "排班人員 " + scheduled + " 人";
-        if (offdayCountEl)
-          offdayCountEl.textContent = "休假人員 " + offday + " 人";
+          scheduledCountEl.textContent = "排班 " + scheduled + " 人";
+        if (offdayCountEl) offdayCountEl.textContent = "休假 " + offday + " 人";
         if (totalCountEl)
-          totalCountEl.textContent = "總人數 " + (scheduled + offday) + " 人";
+          totalCountEl.textContent = "共 " + (scheduled + offday) + " 人";
+        updateDateNavigation();
+      }
+
+      function getAvailableDates() {
+        return Object.keys(scheduleData).sort();
+      }
+
+      function updateDateNavigation() {
+        if (!previousDateButton || !nextDateButton || !dateInput) return;
+        const dates = getAvailableDates();
+        const index = dates.indexOf(dateInput.value);
+        previousDateButton.disabled = index <= 0;
+        nextDateButton.disabled = index < 0 || index >= dates.length - 1;
+      }
+
+      function moveToAvailableDate(direction) {
+        const dates = getAvailableDates();
+        const index = dates.indexOf(dateInput.value);
+        const target = dates[index + direction];
+        if (!target) return;
+        dateInput.value = target;
+        renderSelectedDate();
       }
 
       function setHorizontalHeader(cellNo, text) {
@@ -1832,6 +2432,10 @@
       }
 
       dateInput.addEventListener("change", renderSelectedDate);
+      previousDateButton.addEventListener("click", () =>
+        moveToAvailableDate(-1),
+      );
+      nextDateButton.addEventListener("click", () => moveToAvailableDate(1));
       window.addEventListener("DOMContentLoaded", () => {
         loadScheduleData();
         loadOffdayData();
@@ -1844,14 +2448,175 @@
       const BW = 1137,
         BH = 685;
 
-      function fit() {
-        const s =
-          Math.min(viewport.clientWidth / BW, viewport.clientHeight / BH) * 0.9;
-        sheet.style.transform = `translate(-50%,-50%) scale(${s})`;
+      let baseScale = 1;
+      let currentScale = 1;
+      let panX = 0;
+      let panY = 0;
+      const pointers = new Map();
+      let pinchStartDistance = 0;
+      let pinchStartScale = 1;
+      let lastPointer = null;
+
+      function isCompactLayout() {
+        return window.matchMedia("(max-width: 900px)").matches;
       }
-      new ResizeObserver(fit).observe(viewport);
-      window.addEventListener("resize", fit);
-      fit();
+
+      function applyView() {
+        const compact = isCompactLayout();
+        const scaledHeight = BH * currentScale;
+        sheet.style.left = `calc(50% + ${panX}px)`;
+        sheet.style.top = compact
+          ? `${Math.max(10 + scaledHeight / 2 + panY, scaledHeight / 2)}px`
+          : `calc(50% + ${panY}px)`;
+        sheet.style.transform = `translate(-50%,-50%) scale(${currentScale})`;
+      }
+
+      function fit(resetZoom = true) {
+        const compact = isCompactLayout();
+        const widthScale = (viewport.clientWidth - (compact ? 10 : 28)) / BW;
+        const heightScale = (viewport.clientHeight - 24) / BH;
+        // 手機／平板以「完整寬度」為優先，不再因直向螢幕過高而把表格縮得過小。
+        baseScale = compact ? widthScale : Math.min(widthScale, heightScale);
+        baseScale = Math.max(0.12, baseScale);
+        if (resetZoom) {
+          currentScale = baseScale;
+          panX = 0;
+          panY = 0;
+        } else {
+          currentScale = Math.max(baseScale, currentScale);
+        }
+        applyView();
+      }
+
+      function setZoom(
+        nextScale,
+        anchorX = viewport.clientWidth / 2,
+        anchorY = viewport.clientHeight / 2,
+      ) {
+        const min = baseScale;
+        const max = Math.max(baseScale * 4, 1.6);
+        const clamped = Math.min(max, Math.max(min, nextScale));
+        if (Math.abs(clamped - currentScale) < 0.0001) return;
+        currentScale = clamped;
+        if (currentScale <= baseScale * 1.001) {
+          panX = 0;
+          panY = 0;
+        }
+        applyView();
+      }
+
+      document
+        .getElementById("zoomIn")
+        ?.addEventListener("click", () => setZoom(currentScale * 1.22));
+      document
+        .getElementById("zoomOut")
+        ?.addEventListener("click", () => setZoom(currentScale / 1.22));
+      document
+        .getElementById("zoomReset")
+        ?.addEventListener("click", () => fit(true));
+
+      viewport.addEventListener(
+        "wheel",
+        (event) => {
+          if (!(event.ctrlKey || event.metaKey)) return;
+          event.preventDefault();
+          setZoom(
+            currentScale * (event.deltaY < 0 ? 1.12 : 0.89),
+            event.offsetX,
+            event.offsetY,
+          );
+        },
+        { passive: false },
+      );
+
+      viewport.addEventListener("pointerdown", (event) => {
+        viewport.setPointerCapture?.(event.pointerId);
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+        lastPointer = { x: event.clientX, y: event.clientY };
+        if (pointers.size === 2) {
+          const pts = [...pointers.values()];
+          pinchStartDistance = Math.hypot(
+            pts[0].x - pts[1].x,
+            pts[0].y - pts[1].y,
+          );
+          pinchStartScale = currentScale;
+        }
+      });
+
+      viewport.addEventListener("pointermove", (event) => {
+        if (!pointers.has(event.pointerId)) return;
+        const previous = pointers.get(event.pointerId);
+        pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+        if (pointers.size === 2) {
+          const pts = [...pointers.values()];
+          const distance = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+          if (pinchStartDistance > 0)
+            setZoom((pinchStartScale * distance) / pinchStartDistance);
+          return;
+        }
+
+        if (pointers.size === 1 && currentScale > baseScale * 1.01) {
+          panX += event.clientX - previous.x;
+          panY += event.clientY - previous.y;
+          applyView();
+        }
+      });
+
+      function releasePointer(event) {
+        pointers.delete(event.pointerId);
+        pinchStartDistance = 0;
+        lastPointer = null;
+      }
+      viewport.addEventListener("pointerup", releasePointer);
+      viewport.addEventListener("pointercancel", releasePointer);
+
+      new ResizeObserver(() => fit(true)).observe(viewport);
+      window.addEventListener("resize", () => fit(true));
+      fit(true);
+
+      // 依原始表格座標建立色域，不更動任何 cell 編號、尺寸或資料對應。
+      (function decorateScheduleMatrix() {
+        const groups = [
+          { start: 0, end: 505, name: "leave" },
+          { start: 505, end: 589, name: "support" },
+          { start: 589, end: 674, name: "vendor" },
+          { start: 674, end: 716, name: "night" },
+          { start: 716, end: 758, name: "trunk" },
+          { start: 758, end: 842, name: "self" },
+          { start: 842, end: 1011, name: "shuttle" },
+          { start: 1011, end: 1053, name: "desk" },
+          { start: 1053, end: 1138, name: "management" },
+        ];
+
+        // 八大功能區的分界起點；同一功能區內一律保持 1px 細線。
+        // 0px 是整張表格左緣，不需另外繪製內部分隔帶。
+        const sectionStarts = new Set([
+          252, // 特休假＋身心假
+          379, // 婚喪假＋陪產照顧＋病事假
+          505, // 公假見習＋支援借調
+          589, // 泰順委外＋明嘉加派
+          674, // 大夜班＋幹線運輸＋自運業務
+          842, // 接送業務（中班＋早班）
+          1011, // 空袋檯＋接送／進出口＋股長／專員
+        ]);
+
+        document.querySelectorAll("#canvas > .cell").forEach((cell) => {
+          const left = parseFloat(cell.style.left) || 0;
+          const width = parseFloat(cell.style.width) || 0;
+          const center = left + width / 2;
+          const group = groups.find(
+            (item) => center >= item.start && center < item.end,
+          );
+          if (!group) return;
+
+          cell.classList.add("group-" + group.name);
+          if (cell.querySelector(".fixed-label"))
+            cell.classList.add("matrix-title");
+          if (sectionStarts.has(Math.round(left)))
+            cell.classList.add("matrix-edge-left");
+        });
+      })();
     </script>
   </body>
 </html>
