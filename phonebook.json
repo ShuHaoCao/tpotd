@@ -479,6 +479,15 @@
       "note": "司機(台北加班車次)"
     },
     {
+      "name": "吳昱詰",
+      "unit": "明嘉運輸股份有限公司",
+      "networkPhone": "",
+      "landline": "",
+      "mobile": "0910-820-666",
+      "tags": ["外包"],
+      "note": "司機"
+    },
+    {
       "name": "任大哥",
       "unit": "新化郵局(臺南85支)",
       "networkPhone": "86008531",
@@ -587,12 +596,12 @@
       "note": ""
     },
     {
-      "name": "",
-      "unit": "",
+      "name": "何明義",
+      "unit": "麻豆郵局",
       "networkPhone": "",
       "landline": "06-",
-      "mobile": "09",
-      "note": ""
+      "mobile": "0972-575-758",
+      "note": "郵務稽查"
     },
     {
       "name": "",
