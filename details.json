@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-09-03T21:41:36.800Z",
+  "updatedAt": "2026-09-08T13:15:53.320Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -5970,6 +5970,213 @@
         "averagePerTrip": 335.53846153846155,
         "outboundInboundRatio": 1.5909090909090908,
         "note": "9/4 行李箱(合計12棧板-5=187個)\n 04:30 明嘉外包車\n→4棧板-5=59個(台中港)\n→8棧板=128個(新竹)"
+      },
+      "signatures": {
+        "maker": "曹書豪",
+        "dutyOfficer": "曹書豪",
+        "supervisor": "王昭文"
+      }
+    },
+    "2026-09-04": {
+      "date": "2026-09-04",
+      "rocDate": "115年9月4日星期週五",
+      "weekday": "週五",
+      "unit": "臺南郵局運輸股",
+      "title": "MOMO進出口統計表",
+      "generatedAt": "2026-09-08T13:15:53.320Z",
+      "inbound": {
+        "stages": [
+          {
+            "stageName": "第1階段",
+            "rows": [
+              {
+                "time": "23:10",
+                "carNo": "第1車",
+                "driver": "張正德(快捷)",
+                "workItem": "快捷第1車",
+                "carts": 18
+              },
+              {
+                "time": "00:10",
+                "carNo": "第2車",
+                "driver": "莊世明(128)",
+                "workItem": "運輸第1車",
+                "carts": 18
+              }
+            ],
+            "subtotalTrips": 2,
+            "subtotalCarts": 36
+          },
+          {
+            "stageName": "第2階段",
+            "rows": [
+              {
+                "time": "02:01",
+                "carNo": "第1車",
+                "driver": "張正德(快捷)",
+                "workItem": "快捷第2車",
+                "carts": 18
+              },
+              {
+                "time": "03:02",
+                "carNo": "第2車",
+                "driver": "葉吉順(夜3)",
+                "workItem": "運輸第2車",
+                "carts": 15
+              }
+            ],
+            "subtotalTrips": 2,
+            "subtotalCarts": 33
+          },
+          {
+            "stageName": "第3階段",
+            "rows": [
+              {
+                "time": "04:15",
+                "carNo": "第1車",
+                "driver": "張正德(快捷)",
+                "workItem": "快捷第3車",
+                "carts": 18
+              }
+            ],
+            "subtotalTrips": 1,
+            "subtotalCarts": 18
+          }
+        ],
+        "yongkang": {
+          "trips": 2,
+          "carts": 11
+        },
+        "totalTrips": 7,
+        "totalCarts": 98,
+        "note": ""
+      },
+      "outbound": {
+        "north": {
+          "rows": [
+            {
+              "sequence": 1,
+              "time": "00:30",
+              "carNo": "桃園124車次",
+              "momoCarts": 1,
+              "packageCarts": 15,
+              "totalCarts": 16
+            },
+            {
+              "sequence": 2,
+              "time": "00:38",
+              "carNo": "臺南128車次",
+              "momoCarts": 4,
+              "packageCarts": 0,
+              "totalCarts": 4
+            },
+            {
+              "sequence": 3,
+              "time": "01:40",
+              "carNo": "臺北外包車",
+              "momoCarts": 13,
+              "packageCarts": 0,
+              "totalCarts": 13
+            },
+            {
+              "sequence": 4,
+              "time": "01:45",
+              "carNo": "臺中外包車",
+              "momoCarts": 18,
+              "packageCarts": 0,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 5,
+              "time": "01:50",
+              "carNo": "臺中120車次",
+              "momoCarts": 10,
+              "packageCarts": 0,
+              "totalCarts": 10
+            },
+            {
+              "sequence": 6,
+              "time": "03:47",
+              "carNo": "臺中122車次",
+              "momoCarts": 8,
+              "packageCarts": 0,
+              "totalCarts": 8
+            },
+            {
+              "sequence": 7,
+              "time": "04:00",
+              "carNo": "臺北外包車",
+              "momoCarts": 6,
+              "packageCarts": 0,
+              "totalCarts": 6
+            },
+            {
+              "sequence": 8,
+              "time": "04:10",
+              "carNo": "桃園外包車",
+              "momoCarts": 8,
+              "packageCarts": 0,
+              "totalCarts": 8
+            },
+            {
+              "sequence": 9,
+              "time": "05:17",
+              "carNo": "高雄郵局車",
+              "momoCarts": 13,
+              "packageCarts": 0,
+              "totalCarts": 13
+            }
+          ],
+          "subtotalTrips": 9,
+          "subtotalCarts": 96
+        },
+        "south": {
+          "rows": [
+            {
+              "sequence": 1,
+              "time": "02:43",
+              "carNo": "高雄43車次",
+              "momoCarts": 6,
+              "packageCarts": 11,
+              "totalCarts": 17
+            },
+            {
+              "sequence": 2,
+              "time": "03:00",
+              "carNo": "高雄27車次",
+              "momoCarts": 0,
+              "packageCarts": 18,
+              "totalCarts": 18
+            },
+            {
+              "sequence": 3,
+              "time": "03:25",
+              "carNo": "高雄41車次",
+              "momoCarts": 6,
+              "packageCarts": 3,
+              "totalCarts": 9
+            },
+            {
+              "sequence": 4,
+              "time": "04:09",
+              "carNo": "高雄25車次",
+              "momoCarts": 13,
+              "packageCarts": 0,
+              "totalCarts": 13
+            }
+          ],
+          "subtotalTrips": 4,
+          "subtotalCarts": 57
+        },
+        "totalTrips": 13,
+        "totalCarts": 153,
+        "momoTotal": 106,
+        "packageTotal": 47,
+        "mailCount": 3578,
+        "averagePerCart": 23.38562091503268,
+        "averagePerTrip": 275.2307692307692,
+        "outboundInboundRatio": 1.5612244897959184,
+        "note": ""
       },
       "signatures": {
         "maker": "曹書豪",
