@@ -13689,5 +13689,107 @@
         ]
       }
     ]
+  },
+  {
+    "seq": "093",
+    "date": "2026-09-12",
+    "weekday": "週六",
+    "summary": {
+      "total_duration": "6小時33分鐘",
+      "total_trips": 4,
+      "total_carts": 63,
+      "grand_total_trips": 6,
+      "grand_total_carts": 73,
+      "total_mails": 3130,
+      "mail_per_cart": 49.6825396825397,
+      "mail_per_trip": 782.5,
+      "contribution": {
+        "trip_outsource": "0%",
+        "trip_post": "100%",
+        "cart_outsource": "0%",
+        "cart_post": "100%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 10 },
+      "xs_warehouse": { "trips": 4, "carts": 63 },
+      "outsource": {
+        "total": { "trips": 0, "carts": 0 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 0, "carts": 0 }
+      },
+      "post": {
+        "total": { "trips": 4, "carts": 63 },
+        "stage1": { "trips": 2, "carts": 36 },
+        "stage2": { "trips": 1, "carts": 18 },
+        "stage3": { "trips": 1, "carts": 9 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:52",
+            "driver": "施以平(夜2)",
+            "return_time": "22:34",
+            "arrival_time": "23:20",
+            "transit_duration_mins": 46,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "23:17",
+            "driver": "陳柏林(128)",
+            "return_time": "23:54",
+            "arrival_time": "00:25",
+            "transit_duration_mins": 31,
+            "loaded_carts": 18,
+            "trip_no": "運輸第2車",
+            "interval_mins": 85
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第3車",
+            "call_time": "01:20",
+            "driver": "施以平(夜2)",
+            "return_time": "02:15",
+            "arrival_time": "02:50",
+            "transit_duration_mins": 35,
+            "loaded_carts": 18,
+            "trip_no": "運輸第3車",
+            "interval_mins": null
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第4車",
+            "call_time": "02:55",
+            "driver": "施以平(夜2)",
+            "return_time": "03:45",
+            "arrival_time": "04:25",
+            "transit_duration_mins": 40,
+            "loaded_carts": 9,
+            "trip_no": "運輸第4車",
+            "interval_mins": null
+          }
+        ]
+      }
+    ]
   }
 ]
