@@ -13323,5 +13323,143 @@
         ]
       }
     ]
+  },
+  {
+    "seq": "090",
+    "date": "2026-09-09",
+    "weekday": "週三",
+    "summary": {
+      "total_duration": "6小時21分鐘",
+      "total_trips": 7,
+      "total_carts": 109,
+      "grand_total_trips": 11,
+      "grand_total_carts": 147,
+      "total_mails": 6137,
+      "mail_per_cart": 56.302752293578,
+      "mail_per_trip": 876.714285714286,
+      "contribution": {
+        "trip_outsource": "14%",
+        "trip_post": "86%",
+        "cart_outsource": "9%",
+        "cart_post": "91%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 4, "carts": 38 },
+      "xs_warehouse": { "trips": 7, "carts": 109 },
+      "outsource": {
+        "total": { "trips": 1, "carts": 10 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 1, "carts": 10 }
+      },
+      "post": {
+        "total": { "trips": 6, "carts": 99 },
+        "stage1": { "trips": 3, "carts": 51 },
+        "stage2": { "trips": 2, "carts": 30 },
+        "stage3": { "trips": 1, "carts": 18 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "22:04",
+            "driver": "張正德(快捷)",
+            "return_time": "22:27",
+            "arrival_time": "23:10",
+            "transit_duration_mins": 43,
+            "loaded_carts": 18,
+            "trip_no": "快捷第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:38",
+            "driver": "陳柏林(128)",
+            "return_time": "23:11",
+            "arrival_time": "23:45",
+            "transit_duration_mins": 34,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": 34
+          },
+          {
+            "car_name": "第1階段第3車",
+            "display_name": "總車次第3車",
+            "call_time": "23:03",
+            "driver": "施以平(夜1)",
+            "return_time": "23:53",
+            "arrival_time": "00:30",
+            "transit_duration_mins": 36.9999999999999,
+            "loaded_carts": 15,
+            "trip_no": "運輸第2車",
+            "interval_mins": 25
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第4車",
+            "call_time": "00:56",
+            "driver": "張正德(快捷)",
+            "return_time": "01:31",
+            "arrival_time": "02:20",
+            "transit_duration_mins": 49,
+            "loaded_carts": 18,
+            "trip_no": "快捷第2車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第2階段第2車",
+            "display_name": "總車次第5車",
+            "call_time": "01:26",
+            "driver": "周恆毅(夜3)",
+            "return_time": "02:47",
+            "arrival_time": "03:30",
+            "transit_duration_mins": 43,
+            "loaded_carts": 5,
+            "trip_no": "運輸第3車",
+            "interval_mins": 30
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第6車",
+            "call_time": "02:33",
+            "driver": "張正德(快捷)",
+            "return_time": "03:28",
+            "arrival_time": "04:25",
+            "transit_duration_mins": 57,
+            "loaded_carts": 18,
+            "trip_no": "快捷第3車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第7車",
+            "call_time": "03:00",
+            "driver": "徐鈺沛(明嘉)",
+            "return_time": "03:40",
+            "arrival_time": "04:01",
+            "transit_duration_mins": 21,
+            "loaded_carts": 10,
+            "trip_no": "外包第1車",
+            "interval_mins": 27
+          }
+        ]
+      }
+    ]
   }
 ]
