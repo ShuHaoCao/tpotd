@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>班表資料更新工具</title>
+<style>
+:root{--bg:#07130f;--panel:#0d2119;--panel2:#102a20;--line:#285b45;--text:#eef8f3;--muted:#9fc5b4;--accent:#55d89b;--warn:#ffcc66;--danger:#ff7c7c}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:radial-gradient(circle at 15% 0,#15382a 0,transparent 38%),var(--bg);color:var(--text)}
+.wrap{max-width:1180px;margin:auto;padding:28px 18px 60px}
+.hero{padding:24px 26px;border:1px solid #2e684f;border-radius:22px;background:linear-gradient(135deg,rgba(24,65,49,.92),rgba(8,27,20,.94));box-shadow:0 18px 50px #0007}
+.hero h1{margin:0 0 8px;font-size:clamp(26px,4vw,42px)}.hero p{margin:0;color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.card{background:rgba(13,33,25,.9);border:1px solid var(--line);border-radius:18px;padding:18px}
+.card h2{font-size:18px;margin:0 0 16px;line-height:1.5}.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:150px;border:1.5px dashed #4b9472;border-radius:14px;padding:24px;text-align:center;background:#081a13;cursor:pointer;transition:.2s;overflow:hidden}
+.drop:hover{border-color:var(--accent);transform:translateY(-1px)}
+.drop input{display:none}
+.drop-title{display:block;font-size:18px;font-weight:800;line-height:1.5}
+.filename{display:block;width:100%;margin-top:14px;color:var(--accent);font-weight:700;line-height:1.5;word-break:break-all}
+.meta{display:block;width:100%;font-size:13px;color:var(--muted);margin-top:7px;line-height:1.6}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}.btn{border:0;border-radius:12px;padding:12px 17px;font-weight:800;cursor:pointer;background:#244b3a;color:white}.btn.primary{background:var(--accent);color:#062116}.btn:disabled{opacity:.4;cursor:not-allowed}
+.option{display:flex;align-items:center;gap:8px;color:#cfe7dc;font-size:14px;margin-left:auto}.status{margin-top:16px;padding:13px 15px;border-radius:12px;background:#091b14;border:1px solid #234c3b;color:var(--muted);line-height:1.6}.status.ok{border-color:#3c936b;color:#c8ffe5}.status.err{border-color:#9c4949;color:#ffd1d1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.stat{padding:15px;border-radius:14px;background:#0a1c15;border:1px solid #214936}.stat b{display:block;font-size:24px;color:var(--accent)}.stat span{font-size:12px;color:var(--muted)}
+.tablebox{margin-top:16px;overflow:auto;max-height:430px;border:1px solid var(--line);border-radius:14px}table{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}th,td{padding:10px 12px;border-bottom:1px solid #1d4131;text-align:left}th{position:sticky;top:0;background:#173c2c;color:#dff7eb}tr:hover td{background:#10281f}.tag{padding:3px 8px;border-radius:99px;font-size:11px;font-weight:800}.replace{background:#5d4318;color:#ffe0a0}.add{background:#164d36;color:#a9ffd2}
+.note{margin-top:14px;color:#a9c9ba;font-size:13px;line-height:1.7}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.option{margin-left:0;width:100%}}
+</style>
+</head>
+<body><div class="wrap">
+<section class="hero"><h1>班表資料更新工具</h1><p>把 Excel VBA 新匯出的 JSON，安全地覆蓋到既有歷史資料。瀏覽器本機處理，不上傳資料；先預覽，再輸出更新後的 JSON。</p></section>
+
+<div class="grid">
+ <section class="card"><h2>① 舊資料檔</h2><label class="drop"><span class="drop-title">選擇目前使用中的歷史 JSON</span><input id="oldFile" type="file" accept=".json,application/json"><div id="oldName" class="filename">尚未選擇</div><div id="oldMeta" class="meta"></div></label></section>
+ <section class="card"><h2>② Excel 新匯出檔</h2><label class="drop"><span class="drop-title">選擇 VBA 剛匯出的 JSON</span><input id="newFile" type="file" accept=".json,application/json"><div id="newName" class="filename">尚未選擇</div><div id="newMeta" class="meta"></div></label></section>
+</div>
+
+<section class="card" style="margin-top:16px">
+<h2>③ 合併與覆蓋</h2>
+<div class="controls">
+<button id="mergeBtn" class="btn primary" disabled>執行資料更新</button>
+<button id="downloadBtn" class="btn" disabled>下載更新後 JSON</button>
+<label class="option"><input id="keepStatus" type="checkbox"> 保留新檔 status（輸出為新格式）</label>
+</div>
+<div id="status" class="status">請先選擇「舊資料檔」與「Excel 新匯出檔」。預設會將新檔的 <b>name</b> 轉成舊資料檔相容的「班別 → 姓名」格式。</div>
+<div class="stats">
+ <div class="stat"><b id="sOld">0</b><span>舊資料日期數</span></div>
+ <div class="stat"><b id="sNew">0</b><span>新匯入日期數</span></div>
+ <div class="stat"><b id="sReplace">0</b><span>覆蓋既有日期</span></div>
+ <div class="stat"><b id="sAdd">0</b><span>新增日期</span></div>
+</div>
+<div id="preview" class="tablebox" style="display:none"><table><thead><tr><th>日期</th><th>動作</th><th>新檔班別數</th><th>有排班人數</th></tr></thead><tbody id="tbody"></tbody></table></div>
+<div class="note">安全設計：本工具不會直接修改你電腦上的原始 JSON。更新完成後會產生新的檔案供下載，因此即使操作錯誤，原資料仍在。若使用 Chrome / Edge，也可再擴充成 File System Access API 版本，經你授權後直接覆寫指定資料檔。</div>
+</section>
+</div>
+<script>
+let oldData=null,newData=null,mergedData=null;
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function dateRange(o){let k=Object.keys(o||{}).sort();return k.length?`${k[0]} ～ ${k[k.length-1]}（${k.length} 日）`:'無日期資料'}
+async function loadFile(file,kind){
+ try{
+  const obj=JSON.parse(await file.text());
+  if(!obj || Array.isArray(obj) || typeof obj!=='object') throw new Error('JSON 根層必須是物件');
+  if(kind==='old'){oldData=obj;$('oldName').textContent=file.name;$('oldMeta').textContent=dateRange(obj)}
+  else{newData=obj;$('newName').textContent=file.name;$('newMeta').textContent=dateRange(obj)}
+  $('mergeBtn').disabled=!(oldData&&newData);
+  $('sOld').textContent=oldData?Object.keys(oldData).length:0;$('sNew').textContent=newData?Object.keys(newData).length:0;
+  $('status').className='status';$('status').innerHTML='檔案讀取成功。兩份都選好後，按「執行資料更新」。';
+ }catch(e){$('status').className='status err';$('status').textContent='讀取失敗：'+e.message}
+}
+$('oldFile').addEventListener('change',e=>e.target.files[0]&&loadFile(e.target.files[0],'old'));
+$('newFile').addEventListener('change',e=>e.target.files[0]&&loadFile(e.target.files[0],'new'));
+
+function normalizeDay(day, keepStatus){
+ const out={};
+ for(const [shift,val] of Object.entries(day||{})){
+   if(keepStatus){out[shift]=val}
+   else if(val && typeof val==='object' && !Array.isArray(val)) out[shift]=(val.name ?? '');
+   else out[shift]=val;
+ }
+ return out;
+}
+$('mergeBtn').addEventListener('click',()=>{
+ try{
+  const keep=$('keepStatus').checked;
+  mergedData=JSON.parse(JSON.stringify(oldData));
+  let rep=0,add=0,rows=[];
+  for(const date of Object.keys(newData).sort()){
+    const exists=Object.prototype.hasOwnProperty.call(oldData,date);
+    exists?rep++:add++;
+    const day=normalizeDay(newData[date],keep);
+    mergedData[date]=day; // 日期相同：整日以新資料覆蓋；日期不存在：新增
+    let assigned=0;
+    for(const v of Object.values(day)){
+      const n=(v&&typeof v==='object')?(v.name??''):v;
+      if(n!==''&&n!=='-'&&n!=null) assigned++;
+    }
+    rows.push(`<tr><td>${esc(date)}</td><td><span class="tag ${exists?'replace':'add'}">${exists?'覆蓋':'新增'}</span></td><td>${Object.keys(day).length}</td><td>${assigned}</td></tr>`);
+  }
+  // 日期排序後輸出
+  mergedData=Object.fromEntries(Object.keys(mergedData).sort().map(k=>[k,mergedData[k]]));
+  $('sReplace').textContent=rep;$('sAdd').textContent=add;$('tbody').innerHTML=rows.join('');
+  $('preview').style.display='block';$('downloadBtn').disabled=false;
+  $('status').className='status ok';
+  $('status').innerHTML=`更新完成：新檔共 <b>${Object.keys(newData).length}</b> 日，其中覆蓋 <b>${rep}</b> 日、新增 <b>${add}</b> 日。尚未動到原始檔，請確認預覽後下載。`;
+ }catch(e){$('status').className='status err';$('status').textContent='更新失敗：'+e.message}
+});
+$('downloadBtn').addEventListener('click',()=>{
+ if(!mergedData)return;
+ const blob=new Blob([JSON.stringify(mergedData,null,2)],{type:'application/json;charset=utf-8'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+ a.download='schedule_data_updated.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+</script></body></html>
