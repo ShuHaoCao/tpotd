@@ -1526,13 +1526,10 @@
             activeRank = ref("all"),
             loadError = ref(false),
             expandedGroups = ref({});
-          const rankTabs = [
+          const rankTabs = computed(() => [
             { key: "all", name: "全體" },
-            { key: "morning", name: "早班" },
-            { key: "middle", name: "中班" },
-            { key: "night", name: "大夜班" },
-            { key: "office", name: "內勤" },
-          ];
+            ...groups.value.map((g) => ({ key: g.key, name: g.name })),
+          ]);
           const n = (v) => {
             const x = Number(v);
             return Number.isFinite(x) ? x : 0;
