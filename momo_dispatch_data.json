@@ -14207,6 +14207,108 @@
     ]
   },
   {
+    "seq": "114",
+    "date": "2026-10-03",
+    "weekday": "週六",
+    "summary": {
+      "total_duration": "6小時23分鐘",
+      "total_trips": 4,
+      "total_carts": 39,
+      "grand_total_trips": 6,
+      "grand_total_carts": 50,
+      "total_mails": 2853,
+      "mail_per_cart": 73.1538461538462,
+      "mail_per_trip": 713.25,
+      "contribution": {
+        "trip_outsource": "0%",
+        "trip_post": "100%",
+        "cart_outsource": "0%",
+        "cart_post": "100%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 11 },
+      "xs_warehouse": { "trips": 4, "carts": 39 },
+      "outsource": {
+        "total": { "trips": 0, "carts": 0 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 0, "carts": 0 }
+      },
+      "post": {
+        "total": { "trips": 4, "carts": 39 },
+        "stage1": { "trips": 2, "carts": 16 },
+        "stage2": { "trips": 1, "carts": 15 },
+        "stage3": { "trips": 1, "carts": 8 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "22:13",
+            "driver": "金哲駿(夜2)",
+            "return_time": "22:39",
+            "arrival_time": "23:23",
+            "transit_duration_mins": 44,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "23:03",
+            "driver": "陳柏林(128)",
+            "return_time": "23:54",
+            "arrival_time": "00:36",
+            "transit_duration_mins": 41.9999999999999,
+            "loaded_carts": 18,
+            "trip_no": "運輸第2車",
+            "interval_mins": 50
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第3車",
+            "call_time": "01:22",
+            "driver": "金哲駿(夜2)",
+            "return_time": "02:20",
+            "arrival_time": "03:03",
+            "transit_duration_mins": 43,
+            "loaded_carts": 15,
+            "trip_no": "運輸第3車",
+            "interval_mins": null
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第4車",
+            "call_time": "03:11",
+            "driver": "金哲駿(夜2)",
+            "return_time": "04:04",
+            "arrival_time": "04:36",
+            "transit_duration_mins": 32,
+            "loaded_carts": 8,
+            "trip_no": "運輸第4車",
+            "interval_mins": null
+          }
+        ]
+      }
+    ]
+  },
+  {
     "seq": "115",
     "date": "2026-10-04",
     "weekday": "週日",
