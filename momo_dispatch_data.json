@@ -16659,5 +16659,131 @@
         ]
       }
     ]
+  },
+  {
+    "seq": "118",
+    "date": "2026-10-07",
+    "weekday": "週三",
+    "summary": {
+      "total_duration": "6小時24分鐘",
+      "total_trips": 6,
+      "total_carts": 68,
+      "grand_total_trips": 8,
+      "grand_total_carts": 85,
+      "total_mails": 3571,
+      "mail_per_cart": 52.5147058823529,
+      "mail_per_trip": 595.166666666667,
+      "contribution": {
+        "trip_outsource": "17%",
+        "trip_post": "83%",
+        "cart_outsource": "10%",
+        "cart_post": "90%"
+      }
+    },
+    "warehouse_summary": {
+      "yk_warehouse": { "trips": 2, "carts": 17 },
+      "xs_warehouse": { "trips": 6, "carts": 68 },
+      "outsource": {
+        "total": { "trips": 1, "carts": 7 },
+        "stage1": { "trips": 0, "carts": 0 },
+        "stage2": { "trips": 0, "carts": 0 },
+        "stage3": { "trips": 1, "carts": 7 }
+      },
+      "post": {
+        "total": { "trips": 5, "carts": 61 },
+        "stage1": { "trips": 2, "carts": 36 },
+        "stage2": { "trips": 2, "carts": 17 },
+        "stage3": { "trips": 1, "carts": 8 }
+      }
+    },
+    "stages": [
+      {
+        "stage_name": "第1階段",
+        "cars": [
+          {
+            "car_name": "第1階段第1車",
+            "display_name": "總車次第1車",
+            "call_time": "21:56",
+            "driver": "張正德(快捷)",
+            "return_time": "22:30",
+            "arrival_time": "23:05",
+            "transit_duration_mins": 35,
+            "loaded_carts": 18,
+            "trip_no": "快捷第1車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第1階段第2車",
+            "display_name": "總車次第2車",
+            "call_time": "22:47",
+            "driver": "莊世明(128)",
+            "return_time": "23:55",
+            "arrival_time": "00:30",
+            "transit_duration_mins": 34.9999999999999,
+            "loaded_carts": 18,
+            "trip_no": "運輸第1車",
+            "interval_mins": 51
+          }
+        ]
+      },
+      {
+        "stage_name": "第2階段",
+        "cars": [
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第3車",
+            "call_time": "01:20",
+            "driver": "張正德(快捷)",
+            "return_time": "02:16",
+            "arrival_time": "02:45",
+            "transit_duration_mins": 29,
+            "loaded_carts": 9,
+            "trip_no": "快捷第2車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第2階段第1車",
+            "display_name": "總車次第4車",
+            "call_time": "01:48",
+            "driver": "葉吉順(夜3)",
+            "return_time": "02:17",
+            "arrival_time": "02:55",
+            "transit_duration_mins": 38,
+            "loaded_carts": 8,
+            "trip_no": "運輸第2車",
+            "interval_mins": 28
+          }
+        ]
+      },
+      {
+        "stage_name": "第3階段",
+        "cars": [
+          {
+            "car_name": "第3階段第1車",
+            "display_name": "總車次第5車",
+            "call_time": "02:55",
+            "driver": "張正德(快捷)",
+            "return_time": "03:40",
+            "arrival_time": "04:20",
+            "transit_duration_mins": 40,
+            "loaded_carts": 8,
+            "trip_no": "快捷第3車",
+            "interval_mins": null
+          },
+          {
+            "car_name": "第3階段第2車",
+            "display_name": "總車次第6車",
+            "call_time": "03:20",
+            "driver": "徐鈺沛(明嘉)",
+            "return_time": "04:00",
+            "arrival_time": "04:00",
+            "transit_duration_mins": 0,
+            "loaded_carts": 7,
+            "trip_no": "外包第1車",
+            "interval_mins": 25
+          }
+        ]
+      }
+    ]
   }
 ]
