@@ -1,19 +1,6 @@
 <!doctype html>
 <html lang="zh-Hant">
   <head>
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-0VSMGFF0E6"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-0VSMGFF0E6");
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>查詢全部班表</title>
@@ -244,6 +231,11 @@
         "支　援 4": "08:00 - 17:00",
         "見 習 1": "08:00 - 17:00",
         "見 習 2": "08:00 - 17:00",
+        "見 習 3": "08:00 - 17:00",
+        "見 習 4": "08:00 - 17:00",
+        "見 習 5": "08:00 - 17:00",
+        "見 習 6": "08:00 - 17:00",
+        "見 習 7": "08:00 - 17:00",
       };
 
       const shiftTaskNotes = {
@@ -338,6 +330,11 @@
         "支　援 4": "【支援4】支援其他單位、萬國行李箱載運、主管交辦事項",
         "見 習 1": "【見習1】依排班專員所排班別，進行見習、主管交辦事項。",
         "見 習 2": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
+        "見 習 3": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
+        "見 習 4": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
+        "見 習 5": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
+        "見 習 6": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
+        "見 習 7": "【見習2】依排班專員所排班別，進行見習、主管交辦事項。",
         // 您可以根據需求繼續往下增加其他班別
       };
 
@@ -498,6 +495,11 @@
           "支　援 4",
           "見 習 1",
           "見 習 2",
+          "見 習 3",
+          "見 習 4",
+          "見 習 5",
+          "見 習 6",
+          "見 習 7",
         ],
       };
 
@@ -556,6 +558,11 @@
         { label: "支　援 4", color: "orange" },
         { label: "見 習 1", color: "coffee" },
         { label: "見 習 2", color: "coffee" },
+        { label: "見 習 3", color: "coffee" },
+        { label: "見 習 4", color: "coffee" },
+        { label: "見 習 5", color: "coffee" },
+        { label: "見 習 6", color: "coffee" },
+        { label: "見 習 7", color: "coffee" },
       ];
 
       // 新增：防呆對應函數，將網頁標籤（帶空格）與新舊 JSON 欄位（可能沒空格或為物件）做完美對應
