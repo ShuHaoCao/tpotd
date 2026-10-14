@@ -370,7 +370,12 @@
           margin: 0;
         }
       }
-    </style>
+
+.drag-source{outline:3px solid #0e8c7c!important;outline-offset:-3px;opacity:.65}.drag-target{background:#b8e9dd!important;outline:3px dashed #087c70!important;outline-offset:-4px}.drag-hint{font-size:12px;color:#526979;margin:5px 0 10px}.all-table .cell[draggable="true"],.day[draggable="true"]{cursor:grab}.all-table .cell[draggable="true"]:active,.day[draggable="true"]:active{cursor:grabbing}
+/* 全員排班模式 */
+.modebar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}.modebar button{background:#e9eff3}.modebar button.active{background:#0e8c7c;color:white}.modebar input{border:1px solid #ccd8df;border-radius:7px;padding:8px}.modebar label{font-size:13px;color:#475569}.modebar .note{font-size:12px;color:#a13a28}.all-wrap{overflow:auto;max-height:75vh;border:1px solid #cbd5df;border-radius:8px}.all-table{border-collapse:separate;border-spacing:0;font-family:'Microsoft JhengHei',sans-serif;font-size:14px;table-layout:fixed;width:max-content;min-width:100%}.all-table th,.all-table td{border-right:1px solid #cbd5df;border-bottom:1px solid #cbd5df;min-width:85px;height:48px;text-align:center;padding:4px 6px;background:white}.all-table thead th{position:sticky;top:0;z-index:3;background:#e8f1f5;height:58px}.all-table .person-col{position:sticky;left:0;z-index:2;min-width:142px;max-width:142px;text-align:left;background:#f1f6f8;font-weight:700;cursor:pointer}.all-table thead .person-col{z-index:4}.all-table .weekend-col{background:#fff1d4}.all-table .cell{cursor:pointer;font-weight:650;transition:background .1s}.all-table .cell:hover{background:#d8eee9}.all-table .duplicate{background:#ffe0dc;color:#a51f1f;box-shadow:inset 0 0 0 2px #e66b5b}.all-table .checkin{color:#18804a}.all-table .selected-row .person-col{background:#d6eee9}.all-table .out-period{background:#f1f3f5;color:#9ca3af}.all-table .empty{color:#c2cad0}.all-table .dayhead small{display:block;font-size:11px;font-weight:400;margin-top:4px}.all-summary{font-size:13px;margin:10px 0;color:#4c6171}.all-summary strong{color:#b42318}.all-table td .dup-icon{font-size:11px;display:block}.previewbox.all-mode{min-width:0}.previewbox.all-mode #sheet{display:none}.previewbox:not(.all-mode) #allView{display:none}@media print{.modebar{display:none!important}.previewbox.all-mode #allView{display:block!important}.previewbox.all-mode #sheet{display:none!important}.all-wrap{max-height:none;overflow:visible;border:0}.all-table{font-size:10px;min-width:0}.all-table th,.all-table td{min-width:40px;height:27px;padding:2px}.all-table .person-col{min-width:85px;max-width:85px}.all-table thead th,.all-table .person-col{position:static}.all-summary{font-size:10px}@page{size:A4 landscape;margin:8mm}}
+    .all-table .seven-violation{background:#ffe2ac!important;color:#8a3a00!important;box-shadow:inset 0 0 0 2px #df8b00!important}
+      </style>
   </head>
   <body>
     <header class="top">
@@ -379,6 +384,8 @@
         <small>臺南郵局運輸股 · 即時預覽與成果輸出</small>
       </div>
       <div class="actions">
+        <button id="undoBtn" onclick="undoAction()" title="回復上一個修改（Ctrl+Z）">↶ 復原</button>
+        <button onclick="resetAll()" title="清除目前全部排班資料並重新開始">⟲ 重來</button>
         <button onclick="saveJSON()">匯出 JSON</button
         ><label class="filelabel"
           >匯入 JSON<input
@@ -469,9 +476,10 @@
       <section class="previewbox">
         <div class="previewhead">
           <h2>班表即時預覽</h2>
-          <span>點擊日期格直接編輯 · A4 橫式</span>
+          <span>點擊編輯／拖曳移班／Ctrl 拖曳複製 · A4 橫式</span>
         </div>
-        <div id="sheet" class="sheet"></div>
+        <div class="modebar"><button id="personalBtn" class="active" onclick="setMode('personal')">個人方格月曆</button><button id="allBtn" onclick="setMode('all')">全員每日排班</button><label>起日 <input type="date" id="allStart" onchange="changeAllRange()"></label><label>迄日 <input type="date" id="allEnd" onchange="changeAllRange()"></label><span class="note">紅色格：同日同班別重複</span></div>
+        <div id="sheet" class="sheet"></div><div id="allView"><div class="all-summary" id="allSummary"></div><div class="all-wrap"><table class="all-table" id="allTable"></table></div></div>
       </section>
     </main>
     <div
@@ -633,18 +641,51 @@
           },
         ),
       ];
+      const originalPeople = JSON.parse(JSON.stringify(people));
       try {
         let s = JSON.parse(localStorage.getItem(KEY));
         if (Array.isArray(s) && s.length) people = s;
       } catch (e) {}
       let selected = 0,
-        editing = null;
+        editing = null, editingPerson = null, mode = 'personal';
+      let allStart = '2026-10-12', allEnd = '2026-11-03';
+      const history = [];
+      let lastSnapshot = JSON.stringify(people);
       const active = () => people[selected],
         persist = () => {
-          try {
-            localStorage.setItem(KEY, JSON.stringify(people));
-          } catch (e) {}
+          const current = JSON.stringify(people);
+          if (current !== lastSnapshot) {
+            history.push(lastSnapshot);
+            if (history.length > 100) history.shift();
+            lastSnapshot = current;
+          }
+          const undo = $('undoBtn');
+          if (undo) { undo.disabled = !history.length; undo.title = `復原上一個修改（尚有 ${history.length} 步）`; }
+          try { localStorage.setItem(KEY, current); } catch (e) {}
         };
+      function undoAction() {
+        if (!history.length) return;
+        people = JSON.parse(history.pop());
+        selected = Math.min(selected, people.length - 1);
+        lastSnapshot = JSON.stringify(people);
+        closeModal();
+        render();
+      }
+      function resetAll() {
+        if (!confirm('確定全部重新開始？\n將清除所有人員及班別修改，恢復最初範例班表。\n可使用「復原」回到重來之前，建議先匯出 JSON 備份。')) return;
+        people = JSON.parse(JSON.stringify(originalPeople));
+        selected = 0;
+        allStart = '2026-10-12'; allEnd = '2026-11-03';
+        closeModal();
+        render();
+      }
+      document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z') {
+          const tag = document.activeElement?.tagName;
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable) return;
+          e.preventDefault(); undoAction();
+        }
+      });
       function esc(s) {
         return String(s ?? "").replace(
           /[&<>"']/g,
@@ -715,7 +756,7 @@
           let key = iso(d),
             shift = p.shifts[key] || "",
             weekend = [0, 6].includes(d.getDay());
-          cells += `<div class="day ${weekend ? "weekend" : ""}" onclick="editShift('${key}')" title="${esc(key)}：${esc(shift || "未排班")}"><span class="month">${d.getMonth() + 1}</span><span class="date">${d.getDate()}</span>${shift ? `<span class="shift ${shift === "報到" ? "checkin" : ""}">${esc(shift)}</span>` : ""}</div>`;
+          cells += `<div class="day ${weekend ? "weekend" : ""}" onclick="editShift('${key}')" draggable="${!!shift}" data-person="${selected}" data-date="${key}" ondragstart="shiftDragStart(event)" ondragover="shiftDragOver(event)" ondragleave="shiftDragLeave(event)" ondrop="shiftDrop(event)" ondragend="shiftDragEnd(event)" title="${esc(key)}：${esc(shift || "未排班")}"><span class="month">${d.getMonth() + 1}</span><span class="date">${d.getDate()}</span>${shift ? `<span class="shift ${shift === "報到" ? "checkin" : ""}">${esc(shift)}</span>` : ""}</div>`;
         }
         let heads = "";
         for (let i = 0; i < 7; i++)
@@ -723,6 +764,7 @@
         $("sheet").innerHTML =
           `<div class="sheet-header"><div><div class="brand">臺南郵局運輸股</div><h1>見習排班表</h1></div><div class="detail">見習期間：${fmt(p.periodStart)}-${fmt(p.periodEnd)}　<strong>${esc(p.type)}</strong> 見習人員：${esc(p.name)}</div></div><div class="days">${heads}${cells}</div><div class="sheet-foot">點擊日期可編輯｜空白表示未排班</div>`;
         persist();
+        renderAll();
       }
       function selectPerson(i) {
         selected = i;
@@ -766,11 +808,13 @@
         selected = Math.min(selected, people.length - 1);
         render();
       }
-      function editShift(key) {
+      function editShift(key, personIndex = selected) {
         editing = key;
+        editingPerson = personIndex;
         $("editTitle").textContent =
           `${fmt(key)}　${["日", "一", "二", "三", "四", "五", "六"][date(key).getDay()]}`;
-        $("shiftInput").value = active().shifts[key] || "";
+        $("editTitle").textContent = `${people[personIndex].name} · ` + $("editTitle").textContent;
+        $("shiftInput").value = people[personIndex].shifts[key] || "";
         $("quick").innerHTML = [
           "報到",
           "早1",
@@ -806,12 +850,159 @@
       function closeModal() {
         $("modal").classList.remove("show");
       }
+      // 七休一：任意連續七個日曆日不得全部排入工作班別；報到、休假及空白不計工作。
+      const NON_WORK = new Set(['', '報到', '休', '休假', '例假', '休息日', '輪休', '特休', '公休', '補休', '請假', '病假', '事假']);
+      function isWorkShift(v) { return !NON_WORK.has(String(v ?? '').trim()); }
+      function sevenDayViolations(shifts) {
+        const worked = Object.keys(shifts || {}).filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k) && isWorkShift(shifts[k])).sort();
+        const set = new Set(worked), found = [], marked = new Set();
+        for (const start of worked) {
+          let d = date(start), streak = [];
+          for(let n=0;n<7;n++) { const key=iso(d); if(!set.has(key))break; streak.push(key); d.setDate(d.getDate()+1); }
+          if(streak.length===7) {found.push({start, end:streak[6]}); streak.forEach(k=>marked.add(k));}
+        }
+        return {found, marked};
+      }
+      function checkProposedChanges(changes) {
+        const clones = new Map();
+        for(const {person,key,value} of changes) {
+          if(!clones.has(person)) clones.set(person,{...people[person].shifts});
+          if(value) clones.get(person)[key]=value; else delete clones.get(person)[key];
+        }
+        for(const [i,shifts] of clones) {
+          const before=sevenDayViolations(people[i].shifts).found;
+          const existing=new Set(before.map(x=>x.start));
+          const added=sevenDayViolations(shifts).found.filter(x=>!existing.has(x.start));
+          if(added.length) {
+            alert(`七休一檢核未通過！\n${people[i].name}：${added.map(x=>x.start+' ～ '+x.end).join('、')}\n不得連續工作7天，本次修改未儲存。`);
+            return false;
+          }
+        }
+        return true;
+      }
       function commitShift() {
         let v = $("shiftInput").value.trim();
-        if (v) active().shifts[editing] = v;
-        else delete active().shifts[editing];
+        const target = people[editingPerson ?? selected];
+        if (!checkProposedChanges([{person:editingPerson ?? selected,key:editing,value:v}])) return;
+        if (v) target.shifts[editing] = v;
+        else delete target.shifts[editing];
         closeModal();
         render();
+      }
+      // 拖曳預設移動班別；按 Ctrl/Option 拖曳則複製。若目的格已有班別，移動時互換，複製時詢問覆蓋。
+      let dragShift = null;
+      function shiftDragStart(e) {
+        const cell = e.currentTarget;
+        const i = Number(cell.dataset.person), key = cell.dataset.date;
+        if (!people[i]?.shifts?.[key]) { e.preventDefault(); return; }
+        dragShift = {i, key};
+        e.dataTransfer.effectAllowed = 'copyMove';
+        e.dataTransfer.setData('text/plain', JSON.stringify(dragShift));
+        cell.classList.add('drag-source');
+      }
+      function shiftDragOver(e) {
+        if (!dragShift) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = (e.ctrlKey || e.altKey) ? 'copy' : 'move';
+        e.currentTarget.classList.add('drag-target');
+      }
+      function shiftDragLeave(e) { e.currentTarget.classList.remove('drag-target'); }
+      function shiftDragEnd() {
+        dragShift = null;
+        document.querySelectorAll('.drag-source,.drag-target').forEach(x=>x.classList.remove('drag-source','drag-target'));
+      }
+      function shiftDrop(e) {
+        e.preventDefault();
+        const dest = e.currentTarget;
+        dest.classList.remove('drag-target');
+        if (!dragShift) return;
+        const {i,key} = dragShift, j=Number(dest.dataset.person), targetKey=dest.dataset.date;
+        if (i===j && key===targetKey) { shiftDragEnd(); return; }
+        const source=people[i]?.shifts, target=people[j]?.shifts;
+        if (!source || !target || !source[key]) { shiftDragEnd(); return; }
+        const value=source[key], old=target[targetKey] || '';
+        const copy=e.ctrlKey || e.altKey;
+        const changes = copy ? [{person:j,key:targetKey,value}] : [
+          {person:j,key:targetKey,value}, {person:i,key,value:old}
+        ];
+        if (!checkProposedChanges(changes)) {shiftDragEnd();return;}
+        if (copy) {
+          if (old && !confirm(`目標已有「${old}」，確定以「${value}」覆蓋？`)) { shiftDragEnd(); return; }
+          target[targetKey]=value;
+        } else {
+          // 同人跨日期或跨人拖曳皆支援；有班別時互換，避免資料遺失。
+          target[targetKey]=value;
+          if (old) source[key]=old;
+          else delete source[key];
+        }
+        shiftDragEnd();
+        render();
+      }
+      function setMode(m) {
+        mode = m;
+        document.querySelector('.previewbox').classList.toggle('all-mode', m === 'all');
+        $('personalBtn').classList.toggle('active', m === 'personal');
+        $('allBtn').classList.toggle('active', m === 'all');
+        $('allStart').parentElement.style.display = m === 'all' ? '' : 'none';
+        $('allEnd').parentElement.style.display = m === 'all' ? '' : 'none';
+        document.querySelector('.modebar .note').style.display = m === 'all' ? '' : 'none';
+        document.querySelector('.previewhead h2').textContent = m === 'all' ? '全員每日排班總覽' : '班表即時預覽';
+        renderAll();
+      }
+      function changeAllRange() {
+        allStart = $('allStart').value;
+        allEnd = $('allEnd').value;
+        renderAll();
+      }
+      function renderAll() {
+        if (!$('allTable')) return;
+        $('allStart').value = allStart;
+        $('allEnd').value = allEnd;
+        const begin = date(allStart), end = date(allEnd);
+        if (isNaN(begin) || isNaN(end) || end < begin) {
+          $('allSummary').textContent = '請選擇正確的日期區間';
+          $('allTable').innerHTML = '';
+          return;
+        }
+        const count = Math.round((end - begin) / 86400000) + 1;
+        if (count > 120) {
+          $('allSummary').textContent = '單次最多顯示120天，請縮短日期範圍';
+          $('allTable').innerHTML = '';
+          return;
+        }
+        const days = Array.from({length:count}, (_,i)=>{let d=new Date(begin);d.setDate(d.getDate()+i);return {key:iso(d),dow:d.getDay(),month:d.getMonth()+1,day:d.getDate()}});
+        const duplicate = new Map();
+        const restChecks = people.map(p=>sevenDayViolations(p.shifts));
+        const restIssues = restChecks.flatMap((r,i)=>r.found.map(x=>`${people[i].name}：${x.start}～${x.end}`));
+        for(const d of days){
+          const groups = new Map();
+          people.forEach((p,i)=>{
+            const v = String((p.shifts||{})[d.key]||'').trim();
+            if(v && v !== '報到'){
+              if(!groups.has(v))groups.set(v,[]);
+              groups.get(v).push(i);
+            }
+          });
+          for(const [v,ids] of groups)if(ids.length>1)duplicate.set(d.key+'|'+v,ids);
+        }
+        const weekdays=['日','一','二','三','四','五','六'];
+        let html='<thead><tr><th class="person-col">見習人員 / 日期</th>';
+        for(const d of days)html+=`<th class="dayhead ${[0,6].includes(d.dow)?'weekend-col':''}">${d.month}/${d.day}<small>週${weekdays[d.dow]}</small></th>`;
+        html+='</tr></thead><tbody>';
+        people.forEach((p,i)=>{
+          html+=`<tr class="${i===selected?'selected-row':''}"><th class="person-col" onclick="selectPerson(${i})" title="切換個人編輯">${esc(p.name)}<small style="display:block;font-weight:400">${esc(p.type)}</small></th>`;
+          for(const d of days){
+            const v=String((p.shifts||{})[d.key]||'').trim(), dup=duplicate.has(d.key+'|'+v);
+            const outside = d.key < p.periodStart || d.key > p.periodEnd;
+            const seven = restChecks[i].marked.has(d.key);
+            html+=`<td class="cell ${dup?'duplicate':''} ${seven?'seven-violation':''} ${v==='報到'?'checkin':''} ${!v&&outside?'out-period':''}" onclick="editShift('${d.key}',${i})" draggable="${!!v}" data-person="${i}" data-date="${d.key}" ondragstart="shiftDragStart(event)" ondragover="shiftDragOver(event)" ondragleave="shiftDragLeave(event)" ondrop="shiftDrop(event)" ondragend="shiftDragEnd(event)" title="${esc(p.name)}｜${d.key}｜${esc(v||'未排班')}${dup?'｜重複班別':''}${seven?'｜連續7天工作':''}">${v?esc(v):'<span class="empty">＋</span>'}${dup?'<span class="dup-icon">⚠ 重複</span>':''}${seven?'<span class="dup-icon">⚠ 七休一</span>':''}</td>`;
+          }
+          html+='</tr>';
+        });
+        html+='</tbody>';
+        $('allTable').innerHTML=html;
+        const descriptions=[...duplicate.entries()].map(([k,ids])=>{let [d,v]=k.split('|');return `${d.slice(5)} ${v}：${ids.map(i=>people[i].name).join('、')}`});
+        $('allSummary').innerHTML=`共 ${people.length} 位人員 · ${count} 天 · <strong>${duplicate.size} 組重複班別</strong>`+(descriptions.length?`<div style="margin-top:5px">${descriptions.map(esc).join('； ')}</div>`:' · 無重複班別') + `<div style="margin-top:6px"><strong>七休一違規：${restIssues.length} 組</strong>${restIssues.length?'｜'+restIssues.map(esc).join('； '):'｜全部符合連續工作不超過6天'}</div>`;
       }
       function download(blob, name) {
         let a = document.createElement("a"),
@@ -877,6 +1068,7 @@
         });
       }
       async function exportPNG() {
+        if(mode==='all'){alert('全員總覽請使用「列印班表」並選擇另存 PDF；PNG 匯出目前適用個人月曆。');return;}
         try {
           let c = await capture();
           c.toBlob(
@@ -890,6 +1082,7 @@
         }
       }
       async function exportPDF() {
+        if(mode==='all'){window.print();return;}
         try {
           let c = await capture();
           if (!window.jspdf) {
@@ -930,6 +1123,7 @@
         }
       }
       render();
+      setMode('personal');
     </script>
   </body>
 </html>
