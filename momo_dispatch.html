@@ -2923,7 +2923,7 @@
             class="p-3 sm:p-6 overflow-y-auto flex-1 bg-slate-50 min-h-[320px] sm:min-h-[420px]"
           >
             <div
-              v-if="['mails', 'duration', 'trips'].includes(trendModal.type) && trendModal.scale === 'daily' && !trendModal.showAll"
+              v-if="['mails', 'duration', 'trips'].includes(trendModal.type) && !trendModal.showAll"
               class="trend-scroll-hint"
             >
               <span class="material-icons text-sm">swipe</span>
@@ -2934,7 +2934,7 @@
               class="trend-scroll-hint"
             >
               <span class="material-icons text-sm">insights</span>
-              全部總覽：完整時間範圍自動壓縮顯示，並加入自適應趨勢線
+              全部總覽：保留整體趨勢與自適應趨勢線，可左右滑動瀏覽完整日期
             </div>
             <div
               class="trend-chart-shell w-full relative"
@@ -2962,7 +2962,7 @@
               @click="toggleTrendShowAll"
               type="button"
               :class="['px-4 py-2 font-bold text-xs sm:text-sm rounded-lg transition-all inline-flex items-center gap-1.5', trendModal.showAll ? 'bg-emerald-600 text-white hover:bg-emerald-500' : 'bg-cyan-700 text-white hover:bg-cyan-600']"
-              :title="trendModal.showAll ? '切回原本可左右滑動的細部模式' : '將全部資料壓縮至同一畫面，快速掌握長期趨勢'"
+              :title="trendModal.showAll ? '切回原本可左右滑動的細部模式' : '以較密集的長幅圖表顯示完整歷史，可左右滑動觀察長期趨勢'"
             >
               <span class="material-icons text-sm"
                 >{{ trendModal.showAll ? 'zoom_in' : 'fit_screen' }}</span
@@ -4450,9 +4450,10 @@
             const scrollableDailyTypes = ["mails", "duration", "trips"];
             const showAll = Boolean(trendModal.value.showAll);
             const isScrollableDailyChart =
-              scale === "daily" &&
-              scrollableDailyTypes.includes(type) &&
-              !showAll;
+              scrollableDailyTypes.includes(type) && !showAll;
+            // 總覽也保留全部資料點，使用較密集的單點寬度，避免資料越多越擠。
+            const isScrollableOverview =
+              showAll && scrollableDailyTypes.includes(type);
 
             if (viewport && content) {
               const isMobile = window.innerWidth <= 768;
@@ -4463,13 +4464,19 @@
               };
               const pointWidth = pointWidthMap[type] || (isMobile ? 44 : 58);
               const minimumWidth = Math.max(viewport.clientWidth || 0, 320);
+              const overviewPointWidth = isMobile ? 13 : 17;
               const desiredWidth = isScrollableDailyChart
                 ? Math.max(minimumWidth, labels.length * pointWidth)
-                : minimumWidth;
+                : isScrollableOverview
+                  ? Math.max(minimumWidth, labels.length * overviewPointWidth)
+                  : minimumWidth;
 
               content.style.width = `${desiredWidth}px`;
               content.style.minWidth = `${desiredWidth}px`;
-              viewport.style.overflowX = showAll ? "hidden" : "auto";
+              viewport.style.overflowX =
+                isScrollableDailyChart || isScrollableOverview
+                  ? "auto"
+                  : "hidden";
               viewport.scrollLeft = 0;
             }
 
@@ -4478,8 +4485,12 @@
             // X 軸核心防錯設定：限制最大顯示刻度為 12 個，其餘點自動 skip，絕不發生文字重疊
             const overviewTickLimit = (() => {
               if (!showAll) return 12;
-              const width = viewport?.clientWidth || window.innerWidth || 900;
-              return Math.max(5, Math.min(12, Math.floor(width / 105)));
+              const width =
+                content?.clientWidth ||
+                viewport?.clientWidth ||
+                window.innerWidth ||
+                900;
+              return Math.max(5, Math.floor(width / 105));
             })();
 
             const xAxisConfig = {
@@ -4878,7 +4889,9 @@
             });
 
             chartInstance = new Chart(ctx, chartConfig);
-            setupTrendChartScroller(isScrollableDailyChart);
+            setupTrendChartScroller(
+              isScrollableDailyChart || isScrollableOverview,
+            );
           };
 
           const parseMinsOnly = (str) => {
