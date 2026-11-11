@@ -1,7 +1,7 @@
 {
   "schema": "tainan_post_momo_details.v1",
   "title": "MOMO進出口統計詳情資料庫",
-  "updatedAt": "2026-11-11T13:43:08.507Z",
+  "updatedAt": "2026-11-11T14:00:16.087Z",
   "reports": {
     "2026-08-05": {
       "date": "2026-08-05",
@@ -18842,7 +18842,7 @@
       "weekday": "週日",
       "unit": "臺南郵局運輸股",
       "title": "MOMO進出口統計表",
-      "generatedAt": "2026-11-11T09:45:33.168Z",
+      "generatedAt": "2026-11-11T13:54:43.632Z",
       "inbound": {
         "stages": [
           {
@@ -19035,9 +19035,9 @@
         "totalCarts": 180,
         "momoTotal": 180,
         "packageTotal": 0,
-        "mailCount": null,
-        "averagePerCart": 0,
-        "averagePerTrip": 0,
+        "mailCount": 6031,
+        "averagePerCart": 33.50555555555555,
+        "averagePerTrip": 603.1,
         "outboundInboundRatio": 1.005586592178771,
         "note": ""
       },
@@ -19053,7 +19053,7 @@
       "weekday": "週一",
       "unit": "臺南郵局運輸股",
       "title": "MOMO進出口統計表",
-      "generatedAt": "2026-11-11T10:04:22.262Z",
+      "generatedAt": "2026-11-11T14:00:16.087Z",
       "inbound": {
         "stages": [
           {
@@ -19278,9 +19278,9 @@
         "totalCarts": 230,
         "momoTotal": 170,
         "packageTotal": 60,
-        "mailCount": null,
-        "averagePerCart": 0,
-        "averagePerTrip": 0,
+        "mailCount": 6062,
+        "averagePerCart": 26.356521739130436,
+        "averagePerTrip": 433,
         "outboundInboundRatio": 1.25,
         "note": ""
       },
